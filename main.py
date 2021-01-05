@@ -311,7 +311,8 @@ class LinkedIn:
         try:
             search_location = WebDriverWait(self.driver, 5).until(
                 expected_conditions.presence_of_element_located((
-                    By.CSS_SELECTOR, ".jobs-search-box__text-input[aria-label='Search location']"))
+                    By.CSS_SELECTOR, ".jobs-search-box__text-input[aria-label='Search location']"
+                ))
             )
 
             search_location.clear()
