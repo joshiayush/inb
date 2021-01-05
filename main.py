@@ -1,9 +1,24 @@
-# importing webdriver from selenium
+# importing `webdriver` from `selenium`
 from selenium import webdriver
-# importing Keys from common.keys
+# importing `Keys` from `common.keys`
 from selenium.webdriver.common.keys import Keys
-# importing json to read our config.json file
+# importing `expected_conditions` from `support`
+from selenium.webdriver.support import expected_conditions
+# importing `WebDriverWait` from `support.ui`
+from selenium.webdriver.support.ui import WebDriverWait
+# importing `By` from `common.by`
+from selenium.webdriver.common.by import By
+# importing `NoSuchElementException` and `ElementClickInterceptedException` from `exceptions`
+from selenium.common.exceptions import (
+    NoSuchElementException,
+    ElementClickInterceptedException
+)
+# importing `ActionChains` from `action_chains`
+from selenium.webdriver.common.action_chains import ActionChains
+# importing `json`
 import json
+# importing `regex`
+import re
 
 
 class LinkedIn:
@@ -21,26 +36,15 @@ class LinkedIn:
             data: is the data including credentials, job search keywords
 
             and job location.
-        """
 
-        """
-        User Email
+        Initializing, User Email, User Password, Job Keywords and Job location.
         """
         self.email = data["email"]
 
-        """
-        User Password
-        """
         self.password = data["password"]
 
-        """
-        Job Keywords
-        """
         self.keywords = data["keywords"]
 
-        """
-        Job Location
-        """
         self.location = data["location"]
 
         """
@@ -70,7 +74,7 @@ class LinkedIn:
             executable_path: chromedriver absolute executable path
             options: chromedriver options
 
-        If you want to know what chromedriver options are go check out the 
+        If you want to know what chromedriver options are go check out the
 
         following link,
 
@@ -83,7 +87,7 @@ class LinkedIn:
         """
         Setting the browser to incognito using a command line
 
-        flag `--incognito`. This is because using a incognito window 
+        flag `--incognito`. This is because using a incognito window
 
         makes it possible to log in as a 'test' user, with none of your
 
@@ -91,7 +95,7 @@ class LinkedIn:
 
         To know more about chrome options go and visit the site,
 
-        http://peter.sh/experiments/chromium-command-line-switches/  
+        http://peter.sh/experiments/chromium-command-line-switches/
         """
         self.options.add_argument("--incognito")
 
@@ -103,7 +107,7 @@ class LinkedIn:
 
         If you are willing to know more about chrome options,
 
-        http://peter.sh/experiments/chromium-command-line-switches/ 
+        http://peter.sh/experiments/chromium-command-line-switches/
 
         go and visit the site.
         """
@@ -141,7 +145,7 @@ class LinkedIn:
         """
         Function `enter_email()` enters the email in the email input field
 
-        using function `find_element_by_name()` which first finds the email 
+        using function `find_element_by_name()` which first finds the email
 
         element by name `session_key` and then clears the field using function
 
@@ -154,7 +158,7 @@ class LinkedIn:
                 name: the name of the element to find.
         send_keys():
             Args:
-                *value: A string for typing, or setting form fields. For 
+                *value: A string for typing, or setting form fields. For
                 setting file input, this could be a local file path.
         """
         login_email = self.driver.find_element_by_name("session_key")
@@ -167,7 +171,7 @@ class LinkedIn:
         """
         Function `enter_password()` enters the password in the password input field
 
-        using function `find_element_by_name()` which first finds the password 
+        using function `find_element_by_name()` which first finds the password
 
         element by name `session_password` and then clears the field using function
 
@@ -180,12 +184,12 @@ class LinkedIn:
                 name: the name of the element to find.
         send_keys():
             Args:
-                *value: A string for typing, or setting form fields. For 
+                *value: A string for typing, or setting form fields. For
                 setting file input, this could be a local file path.
 
         This function unlike the `enter_email()` also sends the field object
 
-        a `ENTER` event so to start the login process. 
+        a `ENTER` event so to start the login process.
         """
         login_password = self.driver.find_element_by_name("session_password")
 
@@ -197,11 +201,11 @@ class LinkedIn:
 
     def fill_credentials(self):
         """
-        Function `fill_credentials()` fills the user credentials in the 
+        Function `fill_credentials()` fills the user credentials in the
 
         desired fields by invoking function, `enter_email()` which enters the email
 
-        in the desired field and function `enter_password()` which enters the 
+        in the desired field and function `enter_password()` which enters the
 
         password in the desired field.
 
@@ -212,34 +216,21 @@ class LinkedIn:
 
         self.enter_password()
 
-    def login(self):
-        """
-        Function `login()` logs into your personal LinkedIn profile
-
-        Args:
-            self: object used to execute various functions in our LinkedIn class
-        """
-        self.get_login_page()
-
-        self.fill_credentials()
-
-        self.find_jobs()
-
     def click_on_job_box(self):
         """
-        Function `click_on_job_box()` clicks on the job box as soon the page 
+        Function `click_on_job_box()` clicks on the job box as soon the page
 
         is loaded. This happens with the help of function `click()` which performs
 
-        a click on the given object and to find the object we use the function 
+        a click on the given object and to find the object we use the function
 
         `find_element_by_link_text()` that finds the job box element and then returns
 
-        it. 
+        it.
 
         find_element_by_link_text():
             Args:
-                link_text: the text of the element to be found  
+                link_text: the text of the element to be found
         """
         jobs_link = self.driver.find_element_by_link_text("Jobs")
 
@@ -253,24 +244,34 @@ class LinkedIn:
 
         and then stores it in the `search_keywords` object then executes a `clear()` function on
 
-        that element so to clear the previously input value or the buffer and then sends the 
+        that element so to clear the previously input value or the buffer and then sends the
 
-        job keywords to the input field using the function `send_keys()`
+        job keywords to the input field using the function `send_keys()` but before that it waits
+
+        for the element to arrive using `WebDriverWait()` class constructor and applying a `until()`
+
+        function on the returned object.
 
         find_element_by_css_selector():
             Args:
-                css_selector: CSS selector string, ex: `a.#navhome` 
+                css_selector: CSS selector string, ex: `a.#navhome`
         send_keys():
             Args:
-                *value: A string for typing, or setting form fields. For 
+                *value: A string for typing, or setting form fields. For
                 setting file input, this could be a local file path.
         """
-        search_keywords = self.driver.find_element_by_css_selector(
-            ".jobs-search-box__text-input[aria-label='Search jobs']")
+        try:
+            search_keywords = WebDriverWait(self.driver, 5).until(expected_conditions.presence_of_element_located((
+                By.CSS_SELECTOR, ".jobs-search-box__text-input[aria-label='Search jobs']")))
 
-        search_keywords.clear()
+            search_keywords.clear()
 
-        search_keywords.send_keys(self.keywords)
+            search_keywords.send_keys(self.keywords)
+
+        except NoSuchElementException as error:
+            print("There is a problem finding the element.")
+
+            print("Error: ", error)
 
     def enter_job_location(self):
         """
@@ -280,30 +281,43 @@ class LinkedIn:
 
         and then stores it in the `search_location` object then executes a `clear()` function on
 
-        that element so to clear the previously input value or the buffer and then sends the 
+        that element so to clear the previously input value or the buffer and then sends the
 
-        job location to the input field using the function `send_keys()`
+        job location to the input field using the function `send_keys()` but before that it waits
+
+        for the element to arrive using `WebDriverWait()` class constructor and applying a `until()`
+
+        function on the returned object.
 
         find_element_by_css_selector():
             Args:
-                css_selector: CSS selector string, ex: `a.#navhome` 
+                css_selector: CSS selector string, ex: `a.#navhome`
         send_keys():
             Args:
-                *value: A string for typing, or setting form fields. For 
+                *value: A string for typing, or setting form fields. For
                 setting file input, this could be a local file path.
 
-        This function unlike `enter_job_keyword()` also sends the field object 
+        This function unlike `enter_job_keyword()` also sends the field object
 
         a `ENTER` event so to start searching for available jobs.
         """
-        search_location = self.driver.find_element_by_css_selector(
-            ".jobs-search-box__text-input[aria-label='Search location']")
+        try:
+            search_location = WebDriverWait(self.driver, 5).until(expected_conditions.presence_of_element_located((
+                By.CSS_SELECTOR, ".jobs-search-box__text-input[aria-label='Search location']")))
 
-        search_location.clear()
+            search_location.clear()
 
-        search_location.send_keys(self.location)
+            search_location.send_keys(self.location)
 
-        search_location.send_keys(Keys.RETURN)
+            search_location.send_keys(Keys.RETURN)
+
+        except NoSuchElementException as error:
+            print("There is a problem finding the element.")
+
+            print("Error: ", error)
+
+    def apply_filter(self):
+        pass
 
     def find_jobs(self):
         """
@@ -311,16 +325,33 @@ class LinkedIn:
 
         `enter_job_keyword()` which enters the given keywords in the input field
 
-        and function `enter_job_location()` which enters the given job loation in the 
+        and function `enter_job_location()` which enters the given job loation in the
 
-        input field. 
+        input field.
 
         Args:
             self: object that is used to call the following functions
         """
+        self.click_on_job_box()
+
         self.enter_job_keyword()
 
         self.enter_job_location()
+
+        self.apply_filter()
+
+    def login(self):
+        """
+        Function `login()` logs into your personal LinkedIn profile
+
+        Args:
+            self: object used to execute various functions in our LinkedIn class
+        """
+        self.get_login_page()
+
+        self.fill_credentials()
+
+        self.find_jobs()
 
 
 if __name__ == "__main__":
