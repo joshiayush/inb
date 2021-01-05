@@ -240,17 +240,19 @@ class LinkedIn:
         """
         Function `enter_job_keyword()` enters the given job keyword in the desired
 
-        field, it first gets the field element using the function `find_element_by_css_selector()`
+        field, it first gets the field element using the function 
 
-        and then stores it in the `search_keywords` object then executes a `clear()` function on
+        `find_element_by_css_selector()` and then stores it in the `search_keywords` 
 
-        that element so to clear the previously input value or the buffer and then sends the
+        object then executes a `clear()` function on that element so to clear the 
 
-        job keywords to the input field using the function `send_keys()` but before that it waits
+        previously input value or the buffer and then sends the job keywords to the 
 
-        for the element to arrive using `WebDriverWait()` class constructor and applying a `until()`
+        input field using the function `send_keys()` but before that it waits
 
-        function on the returned object.
+        for the element to arrive using `WebDriverWait()` class constructor and 
+
+        applying a `until()` function on the returned object.
 
         find_element_by_css_selector():
             Args:
@@ -280,17 +282,19 @@ class LinkedIn:
         """
         Function `enter_job_location()` enters the given job location in the desired
 
-        field, it first gets the field element using the function `find_element_by_css_selector()`
+        field, it first gets the field element using the function 
 
-        and then stores it in the `search_location` object then executes a `clear()` function on
+        `find_element_by_css_selector()` and then stores it in the `search_location` 
 
-        that element so to clear the previously input value or the buffer and then sends the
+        object then executes a `clear()` function on that element so to clear the previously 
 
-        job location to the input field using the function `send_keys()` but before that it waits
+        input value or the buffer and then sends the job location to the input field using 
 
-        for the element to arrive using `WebDriverWait()` class constructor and applying a `until()`
+        the function `send_keys()` but before that it waits for the element to arrive using 
 
-        function on the returned object.
+        `WebDriverWait()` class constructor and applying a `until()` function on the returned 
+
+        object.
 
         find_element_by_css_selector():
             Args:
