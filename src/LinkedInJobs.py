@@ -5,7 +5,7 @@ From `linkedin` importing `LinkedIn` class, `webdriver`, `Keys`,
 
 `ElementClickInterceptedException`, `ActionChains`, `json`, and `re`
 """
-from linkedin import (
+from LinkedIn import (
     LinkedIn,
     webdriver,
     Keys,
@@ -15,7 +15,6 @@ from linkedin import (
     NoSuchElementException,
     ElementClickInterceptedException,
     ActionChains,
-    json,
     re
 )
 
@@ -86,9 +85,9 @@ class LinkedInJobs(LinkedIn):
 
         applying a `until()` function on the returned object.
 
-        find_element_by_css_selector():
+        presence_of_element_located(): <- Class
             Args:
-                css_selector: CSS selector string, ex: `a.#navhome`
+                locator: CSS selector string, ex: `a.#navhome`
         send_keys():
             Args:
                 *value: A string for typing, or setting form fields. For
@@ -96,18 +95,15 @@ class LinkedInJobs(LinkedIn):
         """
         try:
             search_keywords = WebDriverWait(self.driver, 5).until(
-                expected_conditions.presence_of_element_located((
-                    By.CSS_SELECTOR, ".jobs-search-box__text-input[aria-label='Search jobs']"
-                ))
+                expected_conditions.presence_of_element_located(
+                    (By.CSS_SELECTOR,
+                     ".jobs-search-box__text-input[aria-label='Search jobs']")
+                )
             )
-
             search_keywords.clear()
-
             search_keywords.send_keys(self.keywords)
-
         except NoSuchElementException as error:
             print("There is a problem finding the element.")
-
             print("Error: ", error)
 
     def enter_job_location(self):
@@ -128,9 +124,9 @@ class LinkedInJobs(LinkedIn):
 
         object.
 
-        find_element_by_css_selector():
+        presence_Of_element_located(): <- Class
             Args:
-                css_selector: CSS selector string, ex: `a.#navhome`
+                locator: CSS selector string, ex: `a.#navhome`
         send_keys():
             Args:
                 *value: A string for typing, or setting form fields. For
@@ -142,24 +138,120 @@ class LinkedInJobs(LinkedIn):
         """
         try:
             search_location = WebDriverWait(self.driver, 5).until(
-                expected_conditions.presence_of_element_located((
-                    By.CSS_SELECTOR, ".jobs-search-box__text-input[aria-label='Search location']"
-                ))
+                expected_conditions.presence_of_element_located(
+                    (By.CSS_SELECTOR,
+                     ".jobs-search-box__text-input[aria-label='Search location']")
+                )
             )
-
             search_location.clear()
-
             search_location.send_keys(self.location)
-
             search_location.send_keys(Keys.RETURN)
-
         except NoSuchElementException as error:
             print("There is a problem finding the element.")
+            print("Error: ", error)
 
+    def click_filter_button(self):
+        """
+        Function `click_filter_button()` clicks on the filter button which is
+
+        on the linkedin page. It does so by using a constructor function of 
+
+        class `WebDriverWait()` which waits until the element arrives, the waiting 
+
+        process happens for one second if the element does not come then the `except`
+
+        clause comes in play. If the element arrives before the dead line, it returns
+
+        the element and stores in a object called `all_filters_button` then applies 
+
+        a `click()` function on it.
+        """
+        try:
+            all_filters_button = WebDriverWait(self.driver, 1).until(
+                expected_conditions.presence_of_element_located(
+                    (By.XPATH, "//button[@data-control-name='all_filters']")
+                )
+            )
+            all_filters_button.click()
+        except NoSuchElementException as error:
+            print("There is a problem finding the element.")
+            print("Error: ", error)
+
+    def click_easy_apply(self):
+        """
+        Function `click_easy_apply()` clicks on the `easy apply` checkbox which is
+
+        on the linkedin's filter page. It does so by using a constructor function of 
+
+        class `WebDriverWait()` which waits until the element (checkbox or the filters page)
+
+        arrives, the waiting  process happens for one second if the element does not
+
+        come then the `except` clause comes in play. If the element arrives before
+
+        the dead line, it returns the element and stores in a object called 
+
+        `easy_apply_button` then applies a `click()` function on it.
+        """
+        try:
+            easy_apply_button = WebDriverWait(self.driver, 1).until(
+                expected_conditions.presence_of_element_located(
+                    (By.XPATH, "//label[@for='f_LF-f_AL']")
+                )
+            )
+            easy_apply_button.click()
+        except NoSuchElementException as error:
+            print("There is a problem finding the element.")
+            print("Error: ", error)
+
+    def click_apply_button(self):
+        """
+        Function `click_apply_button()` clicks on the apply button which is
+
+        on the linkedin's filter page. It does so by using a constructor function of 
+        
+        class `WebDriverWait()` which waits until the element (apply button) arrives, 
+        
+        the waiting process happens for one second if the element does not come then 
+        
+        the `except` clause comes in play. If the element arrives before the dead line, 
+        
+        it returns the element and stores in a object called `apply_filter_button` 
+        
+        then applies a `click()` function on it.
+        """
+        try:
+            apply_filter_button = WebDriverWait(self.driver, 1).until(
+                expected_conditions.presence_of_element_located(
+                    (By.XPATH,
+                     "//button[@data-control-name='all_filters_apply']")
+                )
+            )
+            apply_filter_button.click()
+        except NoSuchElementException as error:
+            print("There is a problem finding the element.")
             print("Error: ", error)
 
     def apply_filter(self):
-        pass
+        """
+        Function `apply_filter()` starts applying filters for the job,
+
+        for now it only applies a filter called `easy apply linkedin`, more 
+
+        functionality for this function will be coded soon.
+
+        This function first clicks the filter button then applies a filter
+
+        and then clicks on apply button.
+
+        Args:
+            self: object used to call the following functions. 
+        """
+        self.click_filter_button()
+
+        self.click_easy_apply()
+
+        self.click_apply_button()
 
     def find_jobs(self):
         """
