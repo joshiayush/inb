@@ -24,7 +24,7 @@ class LinkedInJobs(LinkedIn):
     Controls LinkedIn Jobs, more functionality will be coded soon.
 
     Parent:
-        LinkedIn: our main LinkedIn class which takes care of enabling of 
+        LinkedIn: our main LinkedIn class which takes care of enabling of
         the webdriver and the login process.
     """
 
@@ -63,25 +63,37 @@ class LinkedInJobs(LinkedIn):
             Args:
                 link_text: the text of the element to be found
         """
-        jobs_link = self.driver.find_element_by_link_text("Jobs")
+        try:
+            jobs_link = WebDriverWait(self.driver, 5).until(
+                expected_conditions.presence_of_element_located(
+                    (By.LINK_TEXT, "Jobs")
+                )
+            )
+            jobs_link.click()
 
-        jobs_link.click()
+        except (
+            NoSuchElementException,
+            ElementClickInterceptedException,
+            Exception
+        ) as error:
+            print("There is a problem finding the element.")
+            print("Error: ", error)
 
     def enter_job_keyword(self):
         """
         Function `enter_job_keyword()` enters the given job keyword in the desired
 
-        field, it first gets the field element using the function 
+        field, it first gets the field element using the function
 
-        `find_element_by_css_selector()` and then stores it in the `search_keywords` 
+        `find_element_by_css_selector()` and then stores it in the `search_keywords`
 
-        object then executes a `clear()` function on that element so to clear the 
+        object then executes a `clear()` function on that element so to clear the
 
-        previously input value or the buffer and then sends the job keywords to the 
+        previously input value or the buffer and then sends the job keywords to the
 
         input field using the function `send_keys()` but before that it waits
 
-        for the element to arrive using `WebDriverWait()` class constructor and 
+        for the element to arrive using `WebDriverWait()` class constructor and
 
         applying a `until()` function on the returned object.
 
@@ -102,7 +114,12 @@ class LinkedInJobs(LinkedIn):
             )
             search_keywords.clear()
             search_keywords.send_keys(self.keywords)
-        except NoSuchElementException as error:
+
+        except (
+            NoSuchElementException,
+            ElementClickInterceptedException,
+            Exception
+        ) as error:
             print("There is a problem finding the element.")
             print("Error: ", error)
 
@@ -110,17 +127,17 @@ class LinkedInJobs(LinkedIn):
         """
         Function `enter_job_location()` enters the given job location in the desired
 
-        field, it first gets the field element using the function 
+        field, it first gets the field element using the function
 
-        `find_element_by_css_selector()` and then stores it in the `search_location` 
+        `find_element_by_css_selector()` and then stores it in the `search_location`
 
-        object then executes a `clear()` function on that element so to clear the previously 
+        object then executes a `clear()` function on that element so to clear the previously
 
-        input value or the buffer and then sends the job location to the input field using 
+        input value or the buffer and then sends the job location to the input field using
 
-        the function `send_keys()` but before that it waits for the element to arrive using 
+        the function `send_keys()` but before that it waits for the element to arrive using
 
-        `WebDriverWait()` class constructor and applying a `until()` function on the returned 
+        `WebDriverWait()` class constructor and applying a `until()` function on the returned
 
         object.
 
@@ -146,7 +163,12 @@ class LinkedInJobs(LinkedIn):
             search_location.clear()
             search_location.send_keys(self.location)
             search_location.send_keys(Keys.RETURN)
-        except NoSuchElementException as error:
+
+        except (
+            NoSuchElementException,
+            ElementClickInterceptedException,
+            Exception
+        ) as error:
             print("There is a problem finding the element.")
             print("Error: ", error)
 
@@ -154,15 +176,15 @@ class LinkedInJobs(LinkedIn):
         """
         Function `click_filter_button()` clicks on the filter button which is
 
-        on the linkedin page. It does so by using a constructor function of 
+        on the linkedin page. It does so by using a constructor function of
 
-        class `WebDriverWait()` which waits until the element arrives, the waiting 
+        class `WebDriverWait()` which waits until the element arrives, the waiting
 
         process happens for one second if the element does not come then the `except`
 
         clause comes in play. If the element arrives before the dead line, it returns
 
-        the element and stores in a object called `all_filters_button` then applies 
+        the element and stores in a object called `all_filters_button` then applies
 
         a `click()` function on it.
         """
@@ -173,7 +195,12 @@ class LinkedInJobs(LinkedIn):
                 )
             )
             all_filters_button.click()
-        except NoSuchElementException as error:
+
+        except (
+            NoSuchElementException,
+            ElementClickInterceptedException,
+            Exception
+        ) as error:
             print("There is a problem finding the element.")
             print("Error: ", error)
 
@@ -200,7 +227,12 @@ class LinkedInJobs(LinkedIn):
                 )
             )
             easy_apply_button.click()
-        except NoSuchElementException as error:
+
+        except (
+            NoSuchElementException,
+            ElementClickInterceptedException,
+            Exception
+        ) as error:
             print("There is a problem finding the element.")
             print("Error: ", error)
 
@@ -209,15 +241,15 @@ class LinkedInJobs(LinkedIn):
         Function `click_apply_button()` clicks on the apply button which is
 
         on the linkedin's filter page. It does so by using a constructor function of 
-        
+
         class `WebDriverWait()` which waits until the element (apply button) arrives, 
-        
+
         the waiting process happens for one second if the element does not come then 
-        
+
         the `except` clause comes in play. If the element arrives before the dead line, 
-        
+
         it returns the element and stores in a object called `apply_filter_button` 
-        
+
         then applies a `click()` function on it.
         """
         try:
@@ -228,7 +260,12 @@ class LinkedInJobs(LinkedIn):
                 )
             )
             apply_filter_button.click()
-        except NoSuchElementException as error:
+
+        except (
+            NoSuchElementException,
+            ElementClickInterceptedException,
+            Exception
+        ) as error:
             print("There is a problem finding the element.")
             print("Error: ", error)
 
