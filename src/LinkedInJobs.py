@@ -45,7 +45,7 @@ class LinkedInJobs(LinkedIn):
 
         self.location = super(LinkedInJobs, self).get_job_location()
 
-        self.find_jobs()
+        self.run()
 
     def click_on_job_box(self):
         """
@@ -74,9 +74,8 @@ class LinkedInJobs(LinkedIn):
         except (
             NoSuchElementException,
             ElementClickInterceptedException,
-            Exception
         ) as error:
-            print("There is a problem finding the element.")
+            print("There is a problem finding Job box.")
             print("Error: ", error)
 
     def enter_job_keyword(self):
@@ -109,7 +108,7 @@ class LinkedInJobs(LinkedIn):
             search_keywords = WebDriverWait(self.driver, 5).until(
                 expected_conditions.presence_of_element_located(
                     (By.CSS_SELECTOR,
-                     ".jobs-search-box__text-input[aria-label='Search jobs']")
+                     "div.relative input[aria-label='Search by title, skill, or company']")
                 )
             )
             search_keywords.clear()
@@ -118,9 +117,8 @@ class LinkedInJobs(LinkedIn):
         except (
             NoSuchElementException,
             ElementClickInterceptedException,
-            Exception
         ) as error:
-            print("There is a problem finding the element.")
+            print("There is a problem finding Job keyword box.")
             print("Error: ", error)
 
     def enter_job_location(self):
@@ -157,7 +155,7 @@ class LinkedInJobs(LinkedIn):
             search_location = WebDriverWait(self.driver, 5).until(
                 expected_conditions.presence_of_element_located(
                     (By.CSS_SELECTOR,
-                     ".jobs-search-box__text-input[aria-label='Search location']")
+                     "div.relative input[aria-label='City, state, or zip code']")
                 )
             )
             search_location.clear()
@@ -167,9 +165,8 @@ class LinkedInJobs(LinkedIn):
         except (
             NoSuchElementException,
             ElementClickInterceptedException,
-            Exception
         ) as error:
-            print("There is a problem finding the element.")
+            print("There is a problem finding Job location box.")
             print("Error: ", error)
 
     def click_filter_button(self):
@@ -199,9 +196,8 @@ class LinkedInJobs(LinkedIn):
         except (
             NoSuchElementException,
             ElementClickInterceptedException,
-            Exception
         ) as error:
-            print("There is a problem finding the element.")
+            print("There is a problem finding filter button.")
             print("Error: ", error)
 
     def click_easy_apply(self):
@@ -221,8 +217,8 @@ class LinkedInJobs(LinkedIn):
         `easy_apply_button` then applies a `click()` function on it.
         """
         try:
-            easy_apply_button = WebDriverWait(self.driver, 1).until(
-                expected_conditions.presence_of_element_located(
+            easy_apply_button = WebDriverWait(self.driver, 5).until(
+                expected_conditions.element_to_be_clickable(
                     (By.XPATH, "//label[@for='f_LF-f_AL']")
                 )
             )
@@ -231,9 +227,8 @@ class LinkedInJobs(LinkedIn):
         except (
             NoSuchElementException,
             ElementClickInterceptedException,
-            Exception
         ) as error:
-            print("There is a problem finding the element.")
+            print("There is a problem finding easy apply button.")
             print("Error: ", error)
 
     def click_apply_button(self):
@@ -253,8 +248,8 @@ class LinkedInJobs(LinkedIn):
         then applies a `click()` function on it.
         """
         try:
-            apply_filter_button = WebDriverWait(self.driver, 1).until(
-                expected_conditions.presence_of_element_located(
+            apply_filter_button = WebDriverWait(self.driver, 5).until(
+                expected_conditions.element_to_be_clickable(
                     (By.XPATH,
                      "//button[@data-control-name='all_filters_apply']")
                 )
@@ -264,9 +259,8 @@ class LinkedInJobs(LinkedIn):
         except (
             NoSuchElementException,
             ElementClickInterceptedException,
-            Exception
         ) as error:
-            print("There is a problem finding the element.")
+            print("There is a problem finding apply button.")
             print("Error: ", error)
 
     def apply_filter(self):
@@ -310,6 +304,16 @@ class LinkedInJobs(LinkedIn):
         self.enter_job_location()
 
         self.apply_filter()
+
+    def run(self):
+        """
+        Function run() is the main function from where the 
+
+        bot starts searching for the jobs by executing the
+
+        function called find_jobs()
+        """
+        self.find_jobs()
 
 
 if __name__ == "__main__":

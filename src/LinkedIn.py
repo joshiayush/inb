@@ -82,7 +82,7 @@ class LinkedIn(object):
         """
         Opening config.json file as `config` object
         """
-        with open("/Python/LinkedIn Automater/src/config.json") as config:
+        with open("/Python/LinkedIn Automater/json/config.json") as config:
             """
             Loading data in `data` object
             """
