@@ -42,7 +42,8 @@ from selenium.webdriver.common.by import By
 # importing `NoSuchElementException` and `ElementClickInterceptedException` from `exceptions`
 from selenium.common.exceptions import (
     NoSuchElementException,
-    ElementClickInterceptedException
+    ElementClickInterceptedException,
+    TimeoutException
 )
 # importing `ActionChains` from `action_chains`
 from selenium.webdriver.common.action_chains import ActionChains
