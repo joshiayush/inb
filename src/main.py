@@ -1,4 +1,7 @@
-from LinkedInConnections import LinkedInConnections
+from LinkedInConnections import (
+    LinkedInConnectionsGuided,
+    LinkedInConnectionsAuto
+)
 from LinkedInJobs import LinkedInJobs
 
 

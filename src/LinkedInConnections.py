@@ -18,6 +18,7 @@ from LinkedIn import (
     ActionChains,
     re,
 )
+import time
 import colorama
 
 
@@ -204,6 +205,90 @@ class LinkedInConnectionsAuto(LinkedIn):
     def __init__(self):
         super(LinkedInConnectionsAuto, self).__init__()
 
+        self.run()
+
+    def get_my_network(self):
+        """
+        Function get_my_network() changes the url by executing
+
+        function `get()` from webdriver
+        """
+        self.driver.get("https://www.linkedin.com/mynetwork/")
+
+    def get_aria_label(self, button, _type):
+        """
+        Function get_aria_label() retrieves the value of 
+
+        attribute 'aria-label' using the webdriver function
+
+        'get_attribute()' which returns the value given to 
+
+        that attribute.
+
+        Args:
+            button: button element in which the program has
+            to click
+
+            _type: is the status is it sending or failed
+        """
+        if (_type == "sending"):
+            print(
+                "Sending invitation to Person labelled by >>> '",
+                button.get_attribute("aria-label").strip(),
+                "'",
+                "(status -> ",
+                _type.strip(),
+                ")"
+            )
+        elif (_type == "failed"):
+            print(f"{colorama.Fore.RED}",
+                  "Sending invitation to Person labelled by >>> '",
+                  button.get_attribute("aria-label").strip(),
+                  "'",
+                  "(status -> ",
+                  _type.strip(),
+                  ")",
+                  f"{colorama.Fore.RESET}"
+                  )
+
+    def find_buttons(self):
+        """
+        Function find_buttons() finds the buttons in the network
+
+        page using webdriver function `find_elements_by_css_selector()`
+
+        and then if they are enabled it executes `click()` function
+
+        on them if not it handles the exception smoothly
+        """
+        invite_buttons = WebDriverWait(self.driver, 30).until(
+            expected_conditions.presence_of_element_located(
+                (By.CSS_SELECTOR, "button[aria-label^='Invite']")
+            )
+        )
+
+        for button in invite_buttons:
+            # accessing each list item
+            try:
+                # sending button to function get_aria_label()
+                self.get_aria_label(button, "sending")
+                # executing click() operation on the button
+                button.click()
+            except ElementClickInterceptedException:
+                # handling ElementClickInterceptedException exception
+                self.get_aria_label(button, "failed")
+                continue
+
+    def run(self):
+        """
+        Function run() is the main function from where the 
+
+        program starts doing its job
+        """
+        self.get_my_network()
+
+        self.find_buttons()
+
 
 if __name__ == "__main__":
-    LinkedInConnectionsGuided()
+    LinkedInConnectionsAuto()
