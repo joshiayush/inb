@@ -261,11 +261,8 @@ class LinkedInConnectionsAuto(LinkedIn):
 
         on them if not it handles the exception smoothly
         """
-        invite_buttons = WebDriverWait(self.driver, 30).until(
-            expected_conditions.presence_of_element_located(
-                (By.CSS_SELECTOR, "button[aria-label^='Invite']")
-            )
-        )
+        invite_buttons = self.driver.find_elements_by_css_selector(
+            "button[aria-label^='Invite']")
 
         for button in invite_buttons:
             # accessing each list item
@@ -279,6 +276,45 @@ class LinkedInConnectionsAuto(LinkedIn):
                 self.get_aria_label(button, "failed")
                 continue
 
+    def scroll_to_bottom(self):
+        """
+        Function scroll_to_bottom() scrolls the page to its maximum
+
+        height it keeps doing this until the page height becomes limited
+
+        we need this functionality because the page we are targetting here
+
+        is a dynamically loading page with the help of function execute_script()
+
+        we are able to scroll the page to its bottom, execute_script()
+
+        takes javascript statements as its querry and then performs operations
+        """
+        old_position = 0
+
+        new_position = None
+
+        while new_position != old_position:
+            # Get old scroll position
+            old_position = self.driver.execute_script(
+                ("return (window.pageYOffset !== undefined) ?"
+                 " window.pageYOffset : (document.documentElement ||"
+                 " document.body.parentNode || document.body);"))
+            # call find_buttons() function once the page is loaded
+            self.find_buttons()
+            # sleep for atleast 1 second before the next move
+            time.sleep(1)
+            # execute script
+            self.driver.execute_script((
+                "var scrollingElement = (document.scrollingElement ||"
+                " document.body);scrollingElement.scrollTop ="
+                " scrollingElement.scrollHeight;"))
+            # Get new position
+            new_position = self.driver.execute_script(
+                ("return (window.pageYOffset !== undefined) ?"
+                 " window.pageYOffset : (document.documentElement ||"
+                 " document.body.parentNode || document.body);"))
+
     def run(self):
         """
         Function run() is the main function from where the 
@@ -287,7 +323,10 @@ class LinkedInConnectionsAuto(LinkedIn):
         """
         self.get_my_network()
 
-        self.find_buttons()
+        # sleep for 10 seconds after going to the network page
+        time.sleep(10)
+
+        self.scroll_to_bottom()
 
 
 if __name__ == "__main__":
