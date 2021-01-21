@@ -25,15 +25,29 @@ import urllib.parse
 
 class LinkedInConnections(LinkedIn):
 
-    def __init__(self):
-        self.linkedin = "https://www.linkedin.com/"
-        self.search = "search/results/"
-        self.people = "people/?keywords=__key__&origin=GLOBAL_SEARCH_HEADER"
-        self.connections_link = ""
-
+    def __init__(self, _type):
         super(LinkedInConnections, self).__init__()
 
-        self.run()
+        self.method = input(
+            "Search method (default -> auto/A) or (keyword based/K): ")
+
+        if _type == "auto" and self.method.lower() == "k":
+            self.linkedin = "https://www.linkedin.com/"
+            self.search = "search/results/"
+            self.people = "people/?"
+            self.geoUrn = "geoUrn="
+            self.geoIndia = '%5B"102713980"%5D&'
+            self.geoUSA = '%5B"103644278"%5D&'
+            self.geoCalifornia = '%5B"102095887"%5D&'
+            self.geoSanFranciscoBA = '%5B"90000084"%5D&'
+            self.geoSanFranciscoCA = '%5B"102277331"%5D&'
+            self.location = ""
+            self.origins = ["SWITCH_SEARCH_VERTICAL", "FACETED_SEARCH"]
+            self.origin = self.origins[0]
+            self.keywords = f"keywords=__key__&origin={self.origin}"
+            self.connections_link = ""
+
+            self.run()
 
     def quote_url(self, url, safe=f"~@#$&()*!+=:;,.?/\\"):
         """
@@ -52,7 +66,20 @@ class LinkedInConnections(LinkedIn):
         link by encoding 
         """
         self.connections_link = self.quote_url(
-            self.linkedin + self.search + self.people)
+            self.linkedin + self.search + self.people + self.location + self.keywords + self.origin)
+
+        print(self.connections_link)
+
+    def getUrn(self, key):
+        Urns = {
+            "India": self.geoIndia,
+            "United States": self.geoUSA,
+            "California, United States": self.geoCalifornia,
+            "Sanfrancisco Bay Area": self.geoSanFranciscoBA,
+            "Sanfrancisco, CA": self.geoSanFranciscoCA
+        }
+
+        return Urns[key]
 
     def apply_keyword(self, keyword):
         """
@@ -60,7 +87,18 @@ class LinkedInConnections(LinkedIn):
 
         linkedin connections link
         """
-        self.people = self.people.replace("__key__", keyword)
+        self.keywords = self.keywords.replace("__key__", keyword[0])
+
+        if (keyword[1] == "All"):
+            self.origin = self.origins[1]
+            self.keywords = f"keywords=__key__&origin={self.origin}"
+            self.location = self.geoUrn + self.geoIndia + self.geoUSA + \
+                self.geoCalifornia + self.geoSanFranciscoBA + \
+                self.geoSanFranciscoCA
+        else:
+            self.origin = self.origins[1]
+            self.keywords = f"keywords=__key__&origin={self.origin}"
+            self.location = self.getUrn(keyword[1])
 
     def get_keywords(self):
         """
@@ -70,7 +108,17 @@ class LinkedInConnections(LinkedIn):
         """
         keyword = input("Enter Connection Keywords: ")
 
-        return keyword
+        print("Location available:")
+        print("India")
+        print("United States")
+        print("California, United States")
+        print("Sanfrancisco Bay Area")
+        print("Sanfrancisco, CA")
+
+        location = "All"
+        location = input("Enter Location (default -> All): ")
+
+        return [keyword, location]
 
     def run(self):
         """
@@ -85,7 +133,7 @@ class LinkedInConnections(LinkedIn):
         self.driver.get(self.connections_link)
 
 
-class LinkedInConnectionsGuided(LinkedIn):
+class LinkedInConnectionsGuided(LinkedInConnections):
     """
     Controls LinkedIn Connections, its name is LinkedInConnectionsGuided
 
@@ -108,7 +156,7 @@ class LinkedInConnectionsGuided(LinkedIn):
 
         this class
         """
-        super(LinkedInConnectionsGuided, self).__init__()
+        super(LinkedInConnectionsGuided, self).__init__("guided")
 
         self.run()
 
@@ -250,7 +298,7 @@ class LinkedInConnectionsGuided(LinkedIn):
         self.start_guided_mode()
 
 
-class LinkedInConnectionsAuto(LinkedIn):
+class LinkedInConnectionsAuto(LinkedInConnections):
     """
     Controls LinkedIn Connections, its name is LinkedInConnectionsAuto
 
@@ -266,7 +314,7 @@ class LinkedInConnectionsAuto(LinkedIn):
     """
 
     def __init__(self):
-        super(LinkedInConnectionsAuto, self).__init__()
+        super(LinkedInConnectionsAuto, self).__init__("auto")
 
         self.run()
 
@@ -276,7 +324,10 @@ class LinkedInConnectionsAuto(LinkedIn):
 
         function `get()` from webdriver
         """
-        self.driver.get("https://www.linkedin.com/mynetwork/")
+        if self.method.lower() == "k":
+            self.driver.get(self.connections_link)
+        else:
+            self.driver.get("https://www.linkedin.com/mynetwork/")
 
     def get_aria_label(self, button, _type):
         """
@@ -389,8 +440,8 @@ class LinkedInConnectionsAuto(LinkedIn):
         # sleep for 10 seconds after going to the network page
         time.sleep(10)
 
-        self.scroll_to_bottom()
+        # self.scroll_to_bottom()
 
 
 if __name__ == "__main__":
-    LinkedInConnections()
+    LinkedInConnectionsAuto()
