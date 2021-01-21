@@ -20,6 +20,69 @@ from LinkedIn import (
 )
 import time
 import colorama
+import urllib.parse
+
+
+class LinkedInConnections(LinkedIn):
+
+    def __init__(self):
+        self.linkedin = "https://www.linkedin.com/"
+        self.search = "search/results/"
+        self.people = "people/?keywords=__key__&origin=GLOBAL_SEARCH_HEADER"
+        self.connections_link = ""
+
+        super(LinkedInConnections, self).__init__()
+
+        self.run()
+
+    def quote_url(self, url, safe=f"~@#$&()*!+=:;,.?/\\"):
+        """
+        URL-encodes a string (either str (i.e. ASCII) or unicode);
+
+        uses de-facto UTF-8 encoding to handle Unicode codepoints
+
+        in given string.
+        """
+        return urllib.parse.quote(url.encode('utf-8'), safe)
+
+    def form_connection_link(self):
+        """
+        Function form_connection_link() forms a linkedin connections
+
+        link by encoding 
+        """
+        self.connections_link = self.quote_url(
+            self.linkedin + self.search + self.people)
+
+    def apply_keyword(self, keyword):
+        """
+        Function apply_keyword() applies keyword to a part of the
+
+        linkedin connections link
+        """
+        self.people = self.people.replace("__key__", keyword)
+
+    def get_keywords(self):
+        """
+        Function get_keywords() asks the user for the keywords that
+
+        has to be applied when searching for people
+        """
+        keyword = input("Enter Connection Keywords: ")
+
+        return keyword
+
+    def run(self):
+        """
+        Function run() is our main function from where the
+
+        LinkedIn automation starts
+        """
+        self.apply_keyword(self.get_keywords())
+
+        self.form_connection_link()
+
+        self.driver.get(self.connections_link)
 
 
 class LinkedInConnectionsGuided(LinkedIn):
@@ -41,7 +104,7 @@ class LinkedInConnectionsGuided(LinkedIn):
         """
         Function __init__() is the constructor function of class
 
-        LinkedInConnectionsGuided() which intializes objects for 
+        LinkedInConnectionsGuided() which intializes objects for
 
         this class
         """
@@ -51,11 +114,11 @@ class LinkedInConnectionsGuided(LinkedIn):
 
     def get_aria_label(self, button, _type):
         """
-        Function get_aria_label() retrieves the value of 
+        Function get_aria_label() retrieves the value of
 
         attribute 'aria-label' using the webdriver function
 
-        'get_attribute()' which returns the value given to 
+        'get_attribute()' which returns the value given to
 
         that attribute.
 
@@ -87,21 +150,21 @@ class LinkedInConnectionsGuided(LinkedIn):
 
     def target_individual_list(self, lists):
         """
-        Function target_individual_list() targets <li> items 
+        Function target_individual_list() targets <li> items
 
         individually and then finds the invite button which is
 
-        nested inside <li> item and then performs a click() 
+        nested inside <li> item and then performs a click()
 
         operation on it, if ElementClickInterceptedException
 
-        comes which will come at one point then it handles it 
+        comes which will come at one point then it handles it
 
         smoothly.
 
         Args:
             lists: it is a list object that contains <li> items
-            in it 
+            in it
         """
         # iterating through the lists
         for _list in lists:
@@ -143,7 +206,7 @@ class LinkedInConnectionsGuided(LinkedIn):
         """
         Function get_suggestion_box_by_id() targets the suggestion
 
-        box given by the linkedin application (basically it is the 
+        box given by the linkedin application (basically it is the
 
         box where linkedin keeps people that matches with my profile)
 
@@ -168,7 +231,7 @@ class LinkedInConnectionsGuided(LinkedIn):
 
         mode in which the user itself has to guide the program
 
-        finding the suggestion box by entering the ID of the 
+        finding the suggestion box by entering the ID of the
 
         suggestion box manually
         """
@@ -178,7 +241,7 @@ class LinkedInConnectionsGuided(LinkedIn):
 
     def run(self):
         """
-        Function run() is the main function from where the 
+        Function run() is the main function from where the
 
         program starts doing its job
         """
@@ -217,11 +280,11 @@ class LinkedInConnectionsAuto(LinkedIn):
 
     def get_aria_label(self, button, _type):
         """
-        Function get_aria_label() retrieves the value of 
+        Function get_aria_label() retrieves the value of
 
         attribute 'aria-label' using the webdriver function
 
-        'get_attribute()' which returns the value given to 
+        'get_attribute()' which returns the value given to
 
         that attribute.
 
@@ -317,7 +380,7 @@ class LinkedInConnectionsAuto(LinkedIn):
 
     def run(self):
         """
-        Function run() is the main function from where the 
+        Function run() is the main function from where the
 
         program starts doing its job
         """
@@ -330,4 +393,4 @@ class LinkedInConnectionsAuto(LinkedIn):
 
 
 if __name__ == "__main__":
-    LinkedInConnectionsAuto()
+    LinkedInConnections()
