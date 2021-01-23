@@ -1,21 +1,14 @@
-"""
-From `linkedin` importing `LinkedIn` class, `webdriver`, `Keys`,
-
-`WebdriverWait`, `expected_conditions`, `By`, `NoSuchElementException`,
-
-`ElementClickInterceptedException`, `ActionChains`, `json`, and `re`
-"""
 from LinkedIn import (
-    LinkedIn,
-    webdriver,
-    Keys,
-    WebDriverWait,
-    expected_conditions,
-    By,
-    NoSuchElementException,
-    ElementClickInterceptedException,
-    ActionChains,
-    re
+    LinkedIn,  # importing `LinkedIn`
+    webdriver,  # importing `webdriver`
+    Keys,  # importing `keys`
+    WebDriverWait,  # importing `WebDriverWait`
+    expected_conditions,  # importing `expected_conditions`
+    By,  # importing `By`
+    NoSuchElementException,  # importing `NoSuchElementException`
+    ElementClickInterceptedException,  # importing `ElementClickInterceptedException`
+    ActionChains,  # importing `ActionChains`
+    re  # importing `regex` (re)
 )
 
 

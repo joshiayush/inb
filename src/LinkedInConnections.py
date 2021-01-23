@@ -1,25 +1,21 @@
-"""
-From `linkedin` importing `LinkedIn` class, `webdriver`, `Keys`,
-
-`WebdriverWait`, `expected_conditions`, `By`, `NoSuchElementException`,
-
-`ElementClickInterceptedException`, `ActionChains`, `json`, and `re`
-"""
 from LinkedIn import (
-    LinkedIn,
-    webdriver,
-    Keys,
-    WebDriverWait,
-    expected_conditions,
-    By,
-    NoSuchElementException,
-    ElementClickInterceptedException,
-    TimeoutException,
-    ActionChains,
-    re,
+    LinkedIn,  # importing `LinkedIn` class
+    webdriver,  # importing `webdriver`
+    Keys,  # importing `keys`
+    WebDriverWait,  # importing `WebDriverWait`
+    expected_conditions,  # importing `expected_conditions`
+    By,  # importing `By`
+    NoSuchElementException,  # importing `NoSuchElementException`
+    ElementClickInterceptedException,  # importing `ElementClickInterceptedException`
+    TimeoutException,  # importing `TimeoutException`
+    ActionChains,  # importing `ActionsChains`
+    re,  # importing `regex` module
 )
+# importing `time` module
 import time
+# importing `colorama`
 import colorama
+# importing `urllib.parse`
 import urllib.parse
 
 
@@ -32,22 +28,31 @@ class LinkedInConnections(LinkedIn):
             "Search method (default -> auto/A) or (keyword based/K): ")
 
         if _type == "auto" and self.method.lower() == "k":
-            self.linkedin = "https://www.linkedin.com/"
-            self.search = "search/results/"
-            self.people = "people/?"
-            self.geoUrn = "geoUrn="
-            self.geoIndia = '%5B"102713980"%5D&'
-            self.geoUSA = '%5B"103644278"%5D&'
-            self.geoCalifornia = '%5B"102095887"%5D&'
-            self.geoSanFranciscoBA = '%5B"90000084"%5D&'
-            self.geoSanFranciscoCA = '%5B"102277331"%5D&'
-            self.location = ""
-            self.origins = ["SWITCH_SEARCH_VERTICAL", "FACETED_SEARCH"]
-            self.origin = self.origins[0]
-            self.keywords = f"keywords=__key__&origin={self.origin}"
-            self.connections_link = ""
-
+            """call init_vars to initialize the variables"""
+            self.init_vars()
+            """call run function"""
             self.run()
+
+    def init_vars(self):
+        """
+        Function init_vars() initializes all the variables
+
+        that are required to implement search functionality
+        """
+        self.linkedin = "https://www.linkedin.com/"
+        self.search = "search/results/"
+        self.people = "people/?"
+        self.geoUrn = "geoUrn="
+        self.geoIndia = '%5B"102713980"%5D&'
+        self.geoUSA = '%5B"103644278"%5D&'
+        self.geoCalifornia = '%5B"102095887"%5D&'
+        self.geoSanFranciscoBA = '%5B"90000084"%5D&'
+        self.geoSanFranciscoCA = '%5B"102277331"%5D&'
+        self.location = ""
+        self.origins = ["SWITCH_SEARCH_VERTICAL", "FACETED_SEARCH"]
+        self.origin = self.origins[0]
+        self.keywords = f"keywords=__key__&origin={self.origin}"
+        self.connections_link = ""
 
     def quote_url(self, url, safe=f"~@#$&()*!+=:;,.?/\\"):
         """
