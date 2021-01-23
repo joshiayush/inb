@@ -445,7 +445,7 @@ class LinkedInConnectionsAuto(LinkedInConnections):
         # sleep for 10 seconds after going to the network page
         time.sleep(10)
 
-        # self.scroll_to_bottom()
+        self.scroll_to_bottom()
 
 
 if __name__ == "__main__":
