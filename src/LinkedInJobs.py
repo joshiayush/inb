@@ -1,14 +1,14 @@
 from LinkedIn import (
-    LinkedIn,  # importing `LinkedIn`
-    webdriver,  # importing `webdriver`
-    Keys,  # importing `keys`
-    WebDriverWait,  # importing `WebDriverWait`
-    expected_conditions,  # importing `expected_conditions`
-    By,  # importing `By`
-    NoSuchElementException,  # importing `NoSuchElementException`
-    ElementClickInterceptedException,  # importing `ElementClickInterceptedException`
-    ActionChains,  # importing `ActionChains`
-    re  # importing `regex` (re)
+    LinkedIn,                           # * importing `LinkedIn`
+    webdriver,                          # * importing `webdriver`
+    Keys,                               # * importing `keys`
+    WebDriverWait,                      # * importing `WebDriverWait`
+    expected_conditions,                # * importing `expected_conditions`
+    By,                                 # * importing `By`
+    NoSuchElementException,             # * importing `NoSuchElementException`
+    ElementClickInterceptedException,   # * importing `ElementClickInterceptedException`
+    ActionChains,                       # * importing `ActionChains`
+    re                                  # * importing `regex` (re)
 )
 
 

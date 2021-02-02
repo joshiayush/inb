@@ -1,21 +1,21 @@
 from LinkedIn import (
-    LinkedIn,  # importing `LinkedIn` class
-    webdriver,  # importing `webdriver`
-    Keys,  # importing `keys`
-    WebDriverWait,  # importing `WebDriverWait`
-    expected_conditions,  # importing `expected_conditions`
-    By,  # importing `By`
-    NoSuchElementException,  # importing `NoSuchElementException`
-    ElementClickInterceptedException,  # importing `ElementClickInterceptedException`
-    TimeoutException,  # importing `TimeoutException`
-    ActionChains,  # importing `ActionsChains`
-    re,  # importing `regex` module
+    LinkedIn,                           # * importing `LinkedIn` class
+    webdriver,                          # * importing `webdriver`
+    Keys,                               # * importing `keys`
+    WebDriverWait,                      # * importing `WebDriverWait`
+    expected_conditions,                # * importing `expected_conditions`
+    By,                                 # * importing `By`
+    NoSuchElementException,             # * importing `NoSuchElementException`
+    ElementClickInterceptedException,   # * importing `ElementClickInterceptedException`
+    TimeoutException,                   # * importing `TimeoutException`
+    ActionChains,                       # * importing `ActionsChains`
+    re,                                 # * importing `regex` module
 )
-# importing `time` module
+# * importing `time` module
 import time
-# importing `colorama`
+# * importing `colorama`
 import colorama
-# importing `urllib.parse`
+# * importing `urllib.parse`
 import urllib.parse
 
 

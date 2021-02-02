@@ -73,6 +73,12 @@ class Main(object):
         print(" %s" % (
             self.data["user_password"] if self.data["user_password"] else "use config.user.password to add user password"))
 
+        if self.data["job_keywords"] or self.data["job_location"]:
+            print(" Job Keywords -> %s" %
+                  (self.data["job_keywords"] if self.data["job_keywords"] else None))
+            print(" Job Location -> %s" %
+                  (self.data["job_location"] if self.data["job_location"] else None))
+
     def dev_details(self):
         print(" Name -> Ayush Joshi")
         print(" Email:")
@@ -140,6 +146,7 @@ class Main(object):
 
     def linkedin_command_usage(self):
         print()
+        print(" Missing flags [send] [invitation-manager] [mynetwork]")
         print(" Usage:")
         print(" command -> linkedin")
         print(" activates the given linkedin process")
