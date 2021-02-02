@@ -1,8 +1,6 @@
-from LinkedInConnections import (
-    LinkedInConnectionsGuided,
-    LinkedInConnectionsAuto
-)
-from LinkedInJobs import LinkedInJobs
+import LinkedIn
+import LinkedInConnections
+import LinkedInJobs
 import os
 import readline
 
@@ -16,14 +14,19 @@ class Main(object):
         self.run()
 
     def init_vars(self):
-        self.user_email = ""
-        self.user_password = ""
+        self.data = {
+            "user_email": "",
+            "user_password": "",
+            "job_keywords": "",
+            "job_location": "",
+            "driver_path": "/Python/LinkedIn Automater/driver/chromedriver"
+        }
 
     def init_commands(self):
         self.commands = {
             "exit": quit,
             "help": self._help,
-            "showcredentials": self.show,
+            "show": self.show,
             "devdetails": self.dev_details
         }
 
@@ -36,8 +39,16 @@ class Main(object):
         print(" saves the user's password as a credential field")
         print(" usage -> config.user.password=jhas'][/.fd0q3';")
         print()
-        print(" command -> showcredentials")
-        print(" puts the entered credentials on the screen")
+        print(" command -> config.job.keywords")
+        print(" saves the job keywords")
+        print(" usage -> config.job.keywords=Data Science")
+        print()
+        print(" command -> config.job.location")
+        print(" saves the job location")
+        print(" usage -> config.job.location=Sanfransisco")
+        print()
+        print(" command -> show")
+        print(" puts the entered user details on the screen")
         print()
         print(" command -> linkedin")
         print(" activates the given linkedin process")
@@ -58,9 +69,9 @@ class Main(object):
 
     def show(self):
         print(" %s" % (
-            self.user_email if self.user_email else "use config.user.email to add user email"))
+            self.data["user_email"] if self.data["user_email"] else "use config.user.email to add user email"))
         print(" %s" % (
-            self.user_password if self.user_password else "use config.user.password to add user password"))
+            self.data["user_password"] if self.data["user_password"] else "use config.user.password to add user password"))
 
     def dev_details(self):
         print(" Name -> Ayush Joshi")
@@ -80,11 +91,9 @@ class Main(object):
 
     def clear(self):
         """
-        Function clear() clears the terminal screen
-
-        for windows we use command `cls` and for linux
-
-        based system we use command `clear`
+        ? Function clear() clears the terminal screen
+        ? for windows we use command `cls` and for linux
+        ? based system we use command `clear`
         """
         if os.name == 'nt':
             _ = os.system('cls')
@@ -129,23 +138,63 @@ class Main(object):
         if self.command:
             print(f" `{self.command}` is not recognized as an internal command")
 
+    def linkedin_command_usage(self):
+        print()
+        print(" Usage:")
+        print(" command -> linkedin")
+        print(" activates the given linkedin process")
+        print(" usage -> linkedin send")
+        print(" flag [send] starts the process of sending invitation")
+        print(
+            " usage -> linkedin invitation-manager [show/withdraw] [--send/--recieve]")
+        print(" flag [invitation-manager] handles the invitation manager tab")
+        print(
+            " flag [show] shows the given type of invitation that you have in your account like send or recieved")
+        print(" flag [withdraw] withdraws all the pending invitations")
+        print(" usage -> linkedin mynetwork sendmessage")
+        print(" flag [mynetwork] is the connection tab")
+        print(" flag [sendmessage] sends a formal greet message to connections")
+        print()
+
     def handle_linkedin_commands(self):
-        pass
+        if self.command.split(" ")[1] == "send":
+            if self.data["user_email"] and self.data["user_password"]:
+                LinkedInConnections.LinkedInConnectionsAuto(self.data)
+            else:
+                print(
+                    " Need credentials first use config.user.email/password to add them")
+        elif self.command.split(" ")[1] == "invitation-manager":
+            pass
+        elif self.command.split(" ")[1] == "mynetwork":
+            pass
+        else:
+            print("'%s' is not a linkedin command" %
+                  (self.command.split(" ")[1]))
 
     def handle_configs(self):
-        if "email" in self.command:
-            self.user_email = self.command[self.command.find("=")+1:]
-        elif "password" in self.command:
-            self.user_password = self.command[self.command.find("=")+1:]
+        if "user.email" in self.command:
+            self.data["user_email"] = self.command[self.command.find(
+                "=")+1:].strip()
+        elif "user.password" in self.command:
+            self.data["user_password"] = self.command[self.command.find(
+                "=")+1:].strip()
+        elif "job.keywords" in self.command:
+            self.data["job_keywords"] = self.command[self.command.find(
+                "=")+1:].strip()
+        elif "job.location" in self.command:
+            self.data["job_location"] = self.command[self.command.find(
+                "=")+1:].strip()
 
     def run(self):
         while True:
             self.command = self._input()
-            if "linkedin" in self.command:
+            if self.command.split(" ")[0] == "linkedin" and len(self.command.split(" ")) > 1:
                 self.handle_linkedin_commands()
+            elif self.command == "linkedin":
+                self.linkedin_command_usage()
             elif "=" in self.command:
                 self.handle_configs()
-            elif "=" not in self.command:
+            else:
                 # get() method of dictionary data type returns
                 # value of passed argument if it is present
                 # in dictionary otherwise second argument will
