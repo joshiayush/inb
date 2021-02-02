@@ -13,6 +13,8 @@ import os
 # * key gets printed and we don't need that we need the cursor
 # * moving on pressing arrow keys.
 import readline
+# * importing `getpass` to take user password
+import getpass
 
 
 class Main(object):
@@ -68,13 +70,15 @@ class Main(object):
             * show: shows the entered details
             * devdetails: prints the developer details
             * linkedin: activates the automation process
+            * clear: clears the screen
         """
         self.commands = {
             "exit": quit,
             "help": self._help,
             "show": self.show,
             "devdetails": self.dev_details,
-            "linkedin": self.handle_linkedin_commands
+            "linkedin": self.handle_linkedin_commands,
+            "clear": self.home
         }
 
     def _help(self):
@@ -90,8 +94,9 @@ class Main(object):
         print(" usage -> config.user.email=example@gmail.com")
         print()
         print(" command -> config.user.password")
-        print(" saves the user's password as a credential field")
-        print(" usage -> config.user.password=jhas'][/.fd0q3';")
+        print(" saves the user's password as a credential field by prompting a password console")
+        print(" usage -> config.user.password")
+        print(" Passowrd: ")
         print()
         print(" command -> config.job.keywords")
         print(" saves the job keywords")
@@ -132,8 +137,8 @@ class Main(object):
         print(" %s" % (
             self.data["user_email"] if self.data["user_email"] else "use config.user.email to add user email"))
         print(" %s" % (
-            self.data["user_password"] if self.data["user_password"] else "use config.user.password to add user password"))
-
+            "*"*len(self.data["user_password"]) if self.data["user_password"] else "use config.user.password to add user password"))
+        
         # ! we print the information about job keys once we have any of
         # ! these two field otherwise we don't show it
         if self.data["job_keywords"] or self.data["job_location"]:
@@ -141,6 +146,14 @@ class Main(object):
                   (self.data["job_keywords"] if self.data["job_keywords"] else None))
             print(" Job Location -> %s" %
                   (self.data["job_location"] if self.data["job_location"] else None))
+
+        ch = input(" Show password anyway? [y/N]: ")
+        
+        if ch.lower() == "y":
+            print(" %s" % (
+                self.data["user_email"] if self.data["user_email"] else "use config.user.email to add user email"))
+            print(" %s" % (
+                self.data["user_password"] if self.data["user_password"] else "use config.user.password to add user password"))
 
     def dev_details(self):
         """
@@ -329,15 +342,16 @@ class Main(object):
         if "user.email" in self.command:
             self.data["user_email"] = self.command[self.command.find(
                 "=")+1:].strip()
-        elif "user.password" in self.command:
-            self.data["user_password"] = self.command[self.command.find(
-                "=")+1:].strip()
+        elif "config.user.password" == self.command:   
+            self.data["user_password"] = getpass.getpass(prompt=" Password: ")
         elif "job.keywords" in self.command:
             self.data["job_keywords"] = self.command[self.command.find(
                 "=")+1:].strip()
         elif "job.location" in self.command:
             self.data["job_location"] = self.command[self.command.find(
                 "=")+1:].strip()
+        else:
+            self.Error()
 
     def run(self):
         """
@@ -358,7 +372,7 @@ class Main(object):
             elif self.command == "linkedin":
                 # ? show the linkedin command usage
                 self.linkedin_command_usage()
-            elif "=" in self.command:
+            elif "=" in self.command or "user.password" in self.command:
                 # ? handle the config command
                 self.handle_configs()
             else:
