@@ -25,7 +25,7 @@ class LinkedInConnections(LinkedIn):
         super(LinkedInConnections, self).__init__(data)
 
         self.method = input(
-            "Search method (default -> auto/A) or (keyword based/K): ")
+            "Search method [recommended auto for noobs] (default -> auto/A) or (keyword based/K): ")
 
         if _type == "auto" and self.method.lower() == "k":
             """call init_vars to initialize the variables"""
