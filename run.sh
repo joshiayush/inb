@@ -151,3 +151,5 @@ function main() {
         installPython
     fi
 }
+
+main
