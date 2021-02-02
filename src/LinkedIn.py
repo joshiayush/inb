@@ -1,4 +1,5 @@
-# *                                                                                  
+
+# *
 # *
 # * Selenium is a portable framework for testing web applications.
 # *
@@ -28,7 +29,7 @@
 # *
 # * one more thing that I want to mention here if you wonder that why this
 # * guy has inserted symbols like (*, ?, @, !, :) in comments then boy/girl
-# * you really need to install 'Better Comments' extension if you are in 
+# * you really need to install 'Better Comments' extension if you are in
 # * VSCode it's really awesome
 # *
 # * installation:

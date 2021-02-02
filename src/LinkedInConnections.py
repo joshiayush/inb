@@ -28,10 +28,8 @@ class LinkedInConnections(LinkedIn):
             "Search method [recommended auto for noobs] (default -> auto/A) or (keyword based/K): ")
 
         if _type == "auto" and self.method.lower() == "k":
-            """call init_vars to initialize the variables"""
-            self.init_vars()
-            """call run function"""
-            self.run()
+            self.init_vars()        # ? call init_vars to initialize the variables
+            self.run()              # ? call run function
 
     def init_vars(self):
         """

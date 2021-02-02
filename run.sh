@@ -56,7 +56,7 @@ function installOnUbuntu() {
     echo "Installing Python on Ubuntu Linux"
     # ! update package list
     sudo apt-get update
-    # ! install python3 and pip3 
+    # ! install python3 and pip3
     sudo apt-get install python3.8 python3-pip
     # ! install selenium
     pip3 install selenium
@@ -95,7 +95,7 @@ function installOnWindows() {
 
 # ? function that install python on OSX system
 # ?
-# ! To install python and selenium on OSX we first need to install Apple’s 
+# ! To install python and selenium on OSX we first need to install Apple’s
 # ! Xcode program which is necessary for iOS development as well as most
 # ! programming tasks,
 # ! then we need to install homebrew utility,
@@ -173,7 +173,7 @@ function main() {
         echo "Python is installed"
         runProgram python "linux"
     # ! check if python is present command 'py' is for windows, /dev/null makes the grep output disappear
-    elif py --version | grep "Python*"; then
+    elif py --version | grep "Python*" >/dev/null; then
         echo "Python is installed"
         runProgram py "windows"
     # ! install python if python is not present
