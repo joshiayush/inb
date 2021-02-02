@@ -128,6 +128,10 @@ function installPython() {
         echo "Piece"
     fi
 }
+
+# ? function main is the main function that starts the execution of the 
+# ? linkedin automator program it first checks if the requirements are
+# ? present or not then it takes actions accordingly
 function main() {
     # ! check if python3 is present, /dev/null makes the grep output disappear
     if python3 --version | grep "Python*" >/dev/null; then
