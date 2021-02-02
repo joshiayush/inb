@@ -6,7 +6,8 @@ from LinkedIn import (
     expected_conditions,                # * importing `expected_conditions`
     By,                                 # * importing `By`
     NoSuchElementException,             # * importing `NoSuchElementException`
-    ElementClickInterceptedException,   # * importing `ElementClickInterceptedException`
+    # * importing `ElementClickInterceptedException`
+    ElementClickInterceptedException,
     TimeoutException,                   # * importing `TimeoutException`
     ActionChains,                       # * importing `ActionsChains`
     re,                                 # * importing `regex` module
@@ -378,20 +379,28 @@ class LinkedInConnectionsAuto(LinkedInConnections):
 
         on them if not it handles the exception smoothly
         """
-        invite_buttons = self.driver.find_elements_by_css_selector(
-            "button[aria-label^='Invite']")
-
-        for button in invite_buttons:
-            # accessing each list item
-            try:
-                # sending button to function get_aria_label()
-                self.get_aria_label(button, "sending")
-                # executing click() operation on the button
-                button.click()
-            except ElementClickInterceptedException:
-                # handling ElementClickInterceptedException exception
-                self.get_aria_label(button, "failed")
-                continue
+        try:
+            invite_buttons = WebDriverWait(self.driver, 10).until(
+                expected_conditions.presence_of_all_elements_located(
+                    (By.CSS_SELECTOR, "button[aria-label^='Invite']")
+                )
+            )
+            for button in invite_buttons:
+                # accessing each list item
+                try:
+                    # sending button to function get_aria_label()
+                    self.get_aria_label(button, "sending")
+                    # executing click() operation on the button
+                    button.click()
+                except ElementClickInterceptedException:
+                    # handling ElementClickInterceptedException exception
+                    self.get_aria_label(button, "failed")
+                    continue
+        except (
+            NoSuchElementException,
+            ElementClickInterceptedException
+        ) as error:
+            print("Can't find the element: ", error)
 
     def scroll_to_bottom(self):
         """
@@ -412,21 +421,21 @@ class LinkedInConnectionsAuto(LinkedInConnections):
         new_position = None
 
         while new_position != old_position:
-            # Get old scroll position
+            # ? Get old scroll position
             old_position = self.driver.execute_script(
                 ("return (window.pageYOffset !== undefined) ?"
                  " window.pageYOffset : (document.documentElement ||"
                  " document.body.parentNode || document.body);"))
-            # call find_buttons() function once the page is loaded
+            # ? call find_buttons() function once the page is loaded
             self.find_buttons()
-            # sleep for atleast 1 second before the next move
+            # ? sleep for atleast 1 second before the next move
             time.sleep(1)
-            # execute script
+            # ? execute script
             self.driver.execute_script((
                 "var scrollingElement = (document.scrollingElement ||"
                 " document.body);scrollingElement.scrollTop ="
                 " scrollingElement.scrollHeight;"))
-            # Get new position
+            # ? Get new position
             new_position = self.driver.execute_script(
                 ("return (window.pageYOffset !== undefined) ?"
                  " window.pageYOffset : (document.documentElement ||"
@@ -440,7 +449,121 @@ class LinkedInConnectionsAuto(LinkedInConnections):
         """
         self.get_my_network()
 
-        # sleep for 10 seconds after going to the network page
-        time.sleep(10)
-
         self.scroll_to_bottom()
+
+
+class InvitationManager(LinkedIn):
+    """
+
+    """
+
+    def __init__(self, data):
+        """
+        Constructor __init__() initializes the InvitationManager
+
+        object.
+
+        ! Args:
+            * data: user data field 
+        """
+        super(InvitationManager, self).__init__(data)
+
+    def show_sent(self):
+        """
+
+        """
+        pass
+
+    def show_recieved(self):
+        """
+
+        """
+        pass
+
+    def show(self, _type):
+        """
+        Method show() shows the invitations send or recieved
+
+        ! Args:
+            * _type: is the type of invitation user want to see
+            * send or recieved 
+        """
+        pass
+
+    def withdraw(self, mark):
+        """
+
+        """
+        pass
+
+
+class MyNetwork(LinkedIn):
+
+    def __init__(self, data):
+        super(MyNetwork, self).__init__(data)
+        self.init_vars()
+
+    def init_vars(self):
+        self.connections_url = "https://www.linkedin.com/mynetwork/invite-connect/connections/"
+
+    def get_connections_page(self):
+        self.driver.get(self.connections_url)
+
+    def get_profiles_container(self):
+        return self.driver.find_element_by_css_selector(
+            "section[class^=mn-connections]").find_element_by_tag_name("ul")
+
+    def get_profiles(self):
+        for _list in self.get_profiles_container().find_elements_by_tag_name("li"):
+            pass
+
+    def get_old_position(self):
+        # ? Get old scroll position
+        return self.driver.execute_script(
+            ("return (window.pageYOffset !== undefined) ?"
+             " window.pageYOffset : (document.documentElement ||"
+             " document.body.parentNode || document.body);"))
+
+    def execute_javascript(self):
+        # ? execute script
+        self.driver.execute_script((
+            "var scrollingElement = (document.scrollingElement ||"
+            " document.body);scrollingElement.scrollTop ="
+            " scrollingElement.scrollHeight;"))
+
+    def get_new_position(self):
+        # ? Get new position
+        return self.driver.execute_script(
+            ("return (window.pageYOffset !== undefined) ?"
+             " window.pageYOffset : (document.documentElement ||"
+             " document.body.parentNode || document.body);"))
+
+    def scroll_to_bottom(self):
+        """
+        Function scroll_to_bottom() scrolls the page to its maximum
+
+        height it keeps doing this until the page height becomes limited
+
+        we need this functionality because the page we are targetting here
+
+        is a dynamically loading page with the help of function execute_script()
+
+        we are able to scroll the page to its bottom, execute_script()
+
+        takes javascript statements as its querry and then performs operations
+        """
+        old_position = 0
+
+        new_position = None
+
+        while new_position != old_position:
+            # ? get old position
+            old_position = self.get_old_position()
+            # ? sleep for atleast 1 second before the next move
+            time.sleep(1)
+            # ? get new position
+            new_position = self.get_new_position()
+
+    def show(self):
+        self.get_connections_page()
+        self.get_profiles()
