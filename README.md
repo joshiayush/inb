@@ -18,7 +18,7 @@ Adds email to configurations.
 
 Adds password to configurations by allowing you to enter the password in password prompt
 
-we have used `getpass.getpass()` method for this functionality.
+I used `getpass.getpass()` method for this functionality.
 
 Once you are done adding configurations you can run the command.
 
