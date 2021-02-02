@@ -7,3 +7,5 @@ In the project directory, you can run:
 ### `./run.sh`
 
 Runs the program
+
+![Home Page](./Output/HomeScreen.png)
