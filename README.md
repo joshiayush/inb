@@ -6,20 +6,22 @@ In the project directory, you can run:
 
 ### `./run.sh`
 
-Runs the program
+Runs the program.
 
 ![Home Page](./Output/HomeScreen.png)
 
 ### `config.user.email=example@gmail.com`
 
-Adds email to configurations
+Adds email to configurations.
 
-### `config.user.password=00000000`
+### `config.user.password`
 
-Adds password to configurations
+Adds password to configurations by allowing you to enter the password in password prompt
 
-Once you are done adding configurations you can run the command
+we have used `getpass.getpass()` method for this functionality.
+
+Once you are done adding configurations you can run the command.
 
 ### `linkedin send`
 
-It will start sending invitation
+It will start sending invitation.
