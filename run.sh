@@ -51,37 +51,52 @@ function getSystemInfo() {
     esac
 }
 
-# ! function that install python on Ubuntu platform
+# ! function that install python and selenium on Ubuntu platform
 function installOnUbuntu() {
     echo "Installing Python on Ubuntu Linux"
+    # ! update package list
     sudo apt-get update
+    # ! install python3 and pip3 
     sudo apt-get install python3.8 python3-pip
+    # ! install selenium
+    pip3 install selenium
 }
 
-# ! function that install python on Linux Mint platform
+# ! function that install python and selenium on Linux Mint platform
 function installOnMint() {
     echo "Installing Python on Linux Mint"
+    # ! add personal package archive deadsnakes/ppa
     sudo add-apt-repository ppa:deadsnakes/ppa
+    # ! update package list
     sudo apt-get update
+    # ! install python3 and pip3
     sudo apt-get install python3.8 python3-pip
+    # ! install selenium
+    pip3 install selenium
 }
 
-# ! function that install python on Arch Linux platform
+# ! function that install python and selenium on Arch Linux platform
 function installOnArch() {
     echo "Installing Python on Arch Linux"
+    # ! install python
     packman -S python
+    # ! install selenium
+    pip install selenium
 }
 
-# ! function that install python in Windows using Microsoft
+# ! function that install python and selenium in Windows using Microsoft
 # ! installer
 function installOnWindows() {
+    # ! install python
     msiexec /i python-3.8.msi TARGETDIR=C:\Python
+    # ! install selenium
+    pip3 install selenium
 }
 
 # ? function that install python on OSX system
 # ?
-# ! To install python on OSX we first need to install Apple’s Xcode
-# ! program which is necessary for iOS development as well as most
+# ! To install python and selenium on OSX we first need to install Apple’s 
+# ! Xcode program which is necessary for iOS development as well as most
 # ! programming tasks,
 # ! then we need to install homebrew utility,
 # ! then we can install python
@@ -92,6 +107,8 @@ function installOnOSX() {
     ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
     # ! install python3
     brew install python3
+    # ! install selenium
+    pip3 install selenium
 }
 
 # ? function that returns the name of the operating system that the
