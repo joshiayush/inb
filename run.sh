@@ -21,8 +21,18 @@
 # ? here the program start its execution
 # ? `$1` is the first argument of the function
 # ? `runProgram` and its value is the python
-# ? interpreter i.e., python[2/3]
-function runProgram() { $1 src/main.py; }
+# ? interpreter i.e., python[2/3], we check the
+# ? system here because Windows uses '\' for navigation
+# ? and Linux '/'
+function runProgram() {
+    if [ "$2" = "linux" ]; then
+        $1 src/main.py
+    elif [ "$2" = "windows" ]; then
+        $1 src\main.py
+    else
+        echo "System not identified"
+    fi
+}
 
 # ! function to confirm the user decision of Installing
 # ! python if it is not installed
@@ -129,26 +139,26 @@ function installPython() {
     fi
 }
 
-# ? function main is the main function that starts the execution of the 
+# ? function main is the main function that starts the execution of the
 # ? linkedin automator program it first checks if the requirements are
 # ? present or not then it takes actions accordingly
 function main() {
     # ! check if python3 is present, /dev/null makes the grep output disappear
     if python3 --version | grep "Python*" >/dev/null; then
         echo "Python is installed"
-        runProgram python3
+        runProgram python3 "linux"
     # ! check if python2 is present, /dev/null makes the grep output disappear
     elif python2 --version | grep "Python*" >/dev/null; then
         echo "Python is installed"
-        runProgram python2
+        runProgram python2 "linux"
     # ! check if python is present, /dev/null makes the grep output disappear
     elif python --version | grep "Python*" >/dev/null; then
         echo "Python is installed"
-        runProgram python
+        runProgram python "linux"
     # ! check if python is present command 'py' is for windows, /dev/null makes the grep output disappear
     elif py --version | grep "Python*"; then
         echo "Python is installed"
-        py src\main.py
+        runProgram py "windows"
     # ! install python if python is not present
     else
         echo "Python is not installed"
@@ -156,4 +166,5 @@ function main() {
     fi
 }
 
+# ! start
 main
