@@ -62,16 +62,56 @@ function installOnArch() {
     packman -S python
 }
 
+# ! function that install python in Windows using Microsoft
+# ! installer
+function installOnWindows() {
+    msiexec /i python-3.8.msi TARGETDIR=C:\Python
+}
+
+# ? function that install python on OSX system
+# ?
+# ! To install python on OSX we first need to install Apple’s Xcode
+# ! program which is necessary for iOS development as well as most
+# ! programming tasks,
+# ! then we need to install homebrew utility,
+# ! then we can install python
+function installOnOSX() {
+    # ! install xcode
+    xcode-select --install
+    # ! install homebrew utility
+    ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
+    # ! install python3
+    brew install python3
+}
+
+# ? function that returns the name of the operating system that the
+# ? user is running in its system variable OSTYPE is a predefined
+# ? variable that stores the name of the Operating System that is
+# ? running currently
+function getOsInfo() {
+    echo $OSTYPE
+}
+
 # ? function that does the actual installation of the python interpreter
 # ? based on the current running platform
 function install() {
-    platform=$(getSystemInfo)
-
-    case "$platform" in
-    Ubuntu) installOnUbuntu ;;
-    Mint) installOnMint ;;
-    Arch) installOnArch ;;
-    *) exit ;;
+    case "$(getOsInfo)" in
+    linux*)
+        # * install python based on the running platform
+        case "$(getSystemInfo)" in
+        Ubuntu) installOnUbuntu ;;
+        Mint) installOnMint ;;
+        Arch) installOnArch ;;
+        *) exit ;;
+        esac
+        ;;
+    msys*)
+        installOnWindows
+        ;;
+    darwin*)
+        installOnOSX
+        ;;
+    *) echo "System Information not found download Python Manually" ;;
     esac
 }
 
@@ -88,21 +128,26 @@ function installPython() {
         echo "Piece"
     fi
 }
-
-# ! check if python3 is present
-if python3 --version | grep "Python*" >/dev/null; then
-    echo "Python is installed"
-    runProgram python3
-# ! check if python2 is present
-elif python2 --version | grep "Python*" >/dev/null; then
-    echo "Python is installed"
-    runProgram python2
-# ! check if python is present
-elif python --version | grep "Python*" >/dev/null; then
-    echo "Python is installed"
-    runProgram python
-# ! install python if python is not present
-else
-    echo "Python is not installed"
-    installPython
-fi
+function main() {
+    # ! check if python3 is present, /dev/null makes the grep output disappear
+    if python3 --version | grep "Python*" >/dev/null; then
+        echo "Python is installed"
+        runProgram python3
+    # ! check if python2 is present, /dev/null makes the grep output disappear
+    elif python2 --version | grep "Python*" >/dev/null; then
+        echo "Python is installed"
+        runProgram python2
+    # ! check if python is present, /dev/null makes the grep output disappear
+    elif python --version | grep "Python*" >/dev/null; then
+        echo "Python is installed"
+        runProgram python
+    # ! check if python is present command 'py' is for windows, /dev/null makes the grep output disappear
+    elif py --version | grep "Python*"; then
+        echo "Python is installed"
+        py src\main.py
+    # ! install python if python is not present
+    else
+        echo "Python is not installed"
+        installPython
+    fi
+}
