@@ -47,22 +47,19 @@ from selenium.common.exceptions import (
 )
 # importing `ActionChains` from `action_chains`
 from selenium.webdriver.common.action_chains import ActionChains
-# importing `json`
-import json
 # importing `regex`
 import re
 
 
 class LinkedIn(object):
 
-    def __init__(self):
+    def __init__(self, data):
         """
         Initializing the `LinkedIn` class
         """
-        self.load_configurations()
-
-        self.email = self.data["email"]
-        self.password = self.data["password"]
+        self.data = data
+        self.email = self.data["user_email"]
+        self.password = self.data["user_password"]
 
         """
         Making an option object for our chromedriver
@@ -78,16 +75,6 @@ class LinkedIn(object):
         Calling `login()` function which will login for us
         """
         self.login()
-
-    def load_configurations(self):
-        """
-        Opening config.json file as `config` object
-        """
-        with open("/Python/LinkedIn Automater/json/config.json") as config:
-            """
-            Loading data in `data` object
-            """
-            self.data = json.load(config)
 
     def set_browser_incognito_mode(self):
         """
@@ -127,8 +114,8 @@ class LinkedIn(object):
 
         in driver testing and automation.
 
-        Args:
-            self: is the object from which the options are to be updated
+        ! Args:
+            * self: is the object from which the options are to be updated
         """
         self.set_browser_incognito_mode()
 
@@ -144,9 +131,9 @@ class LinkedIn(object):
 
         which takes following arguments.
 
-        Args:
-            executable_path: chromedriver absolute executable path
-            options: chromedriver options
+        ! Args:
+            * executable_path: chromedriver absolute executable path
+            * options: chromedriver options
 
         If you want to know what chromedriver options are go check out the
 
@@ -171,8 +158,8 @@ class LinkedIn(object):
 
         of our `webdriver` class
 
-        Args:
-            url: page's url
+        ! Args:
+            * url: page's url
         """
         self.driver.get("https://www.linkedin.com/login")
 
@@ -188,13 +175,13 @@ class LinkedIn(object):
 
         buffer and then it sends the email address using function `send_keys()`.
 
-        find_element_by_name():
-            Args:
-                name: the name of the element to find.
-        send_keys():
-            Args:
-                *value: A string for typing, or setting form fields. For
-                setting file input, this could be a local file path.
+        ? find_element_by_name():
+            ! Args:
+                * name: the name of the element to find.
+        ? send_keys():
+            ! Args:
+                * *value: A string for typing, or setting form fields. For
+                * setting file input, this could be a local file path.
         """
         login_email = self.driver.find_element_by_name("session_key")
 
@@ -214,13 +201,13 @@ class LinkedIn(object):
 
         buffer and then it sends the password using function `send_keys()`.
 
-        find_element_by_name():
-            Args:
-                name: the name of the element to find.
-        send_keys():
-            Args:
-                *value: A string for typing, or setting form fields. For
-                setting file input, this could be a local file path.
+        ? find_element_by_name():
+            ! Args:
+                * name: the name of the element to find.
+        ? send_keys():
+            ! Args:
+                * *value: A string for typing, or setting form fields. For
+                * setting file input, this could be a local file path.
 
         This function unlike the `enter_email()` also sends the field object
 
@@ -244,8 +231,8 @@ class LinkedIn(object):
 
         password in the desired field.
 
-        Args:
-            self: object used to invoke the functions `enter_email()` and `enter_password()`
+        ! Args:
+            * self: object used to invoke the functions `enter_email()` and `enter_password()`
         """
         self.enter_email()
 
@@ -255,8 +242,8 @@ class LinkedIn(object):
         """
         Function `login()` logs into your personal LinkedIn profile
 
-        Args:
-            self: object used to execute various functions in our LinkedIn class
+        ! Args:
+            * self: object used to execute various functions in our LinkedIn class
         """
         self.get_login_page()
 
@@ -266,10 +253,10 @@ class LinkedIn(object):
         """
         Function `get_job_keywords()` returns the job keywords.
         """
-        return self.data["keywords"]
+        return self.data["job_keywords"]
 
     def get_job_location(self):
         """
         Function `get_job_location()` returns the job location.
         """
-        return self.data["location"]
+        return self.data["job_location"]

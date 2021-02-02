@@ -16,23 +16,22 @@ class LinkedInJobs(LinkedIn):
     """
     Controls LinkedIn Jobs, more functionality will be coded soon.
 
-    Parent:
-        LinkedIn: our main LinkedIn class which takes care of enabling of
-        the webdriver and the login process.
+    ! Parent:
+        * LinkedIn: our main LinkedIn class which takes care of enabling of
+        * the webdriver and the login process.
     """
 
-    def __init__(self):
+    def __init__(self, data):
         """
         Parameter Initialization.
 
-        Args:
-            data: is the data including credentials, job search keywords
-
-            and job location.
+        ! Args:
+            * data: is the data including credentials, job search keywords
+            * and job location.
 
         Initializing, User Email, User Password, Job Keywords and Job location.
         """
-        super(LinkedInJobs, self).__init__()
+        super(LinkedInJobs, self).__init__(data)
 
         self.keywords = super(LinkedInJobs, self).get_job_keywords()
 
@@ -52,9 +51,9 @@ class LinkedInJobs(LinkedIn):
 
         it.
 
-        find_element_by_link_text():
-            Args:
-                link_text: the text of the element to be found
+        ? find_element_by_link_text():
+            ! Args:
+                * link_text: the text of the element to be found
         """
         try:
             jobs_link = WebDriverWait(self.driver, 5).until(
@@ -89,13 +88,13 @@ class LinkedInJobs(LinkedIn):
 
         applying a `until()` function on the returned object.
 
-        presence_of_element_located(): <- Class
-            Args:
-                locator: CSS selector string, ex: `a.#navhome`
-        send_keys():
-            Args:
-                *value: A string for typing, or setting form fields. For
-                setting file input, this could be a local file path.
+        ? presence_of_element_located(): <- Class
+            ! Args:
+                * locator: CSS selector string, ex: `a.#navhome`
+        ? send_keys():
+            ! Args:
+                * *value: A string for typing, or setting form fields. For
+                * setting file input, this could be a local file path.
         """
         try:
             search_keywords = WebDriverWait(self.driver, 5).until(
@@ -132,13 +131,13 @@ class LinkedInJobs(LinkedIn):
 
         object.
 
-        presence_Of_element_located(): <- Class
-            Args:
-                locator: CSS selector string, ex: `a.#navhome`
-        send_keys():
-            Args:
-                *value: A string for typing, or setting form fields. For
-                setting file input, this could be a local file path.
+        ? presence_Of_element_located(): <- Class
+            ! Args:
+                * locator: CSS selector string, ex: `a.#navhome`
+        ? send_keys():
+            ! Args:
+                * *value: A string for typing, or setting form fields. For
+                * setting file input, this could be a local file path.
 
         This function unlike `enter_job_keyword()` also sends the field object
 
@@ -268,8 +267,8 @@ class LinkedInJobs(LinkedIn):
 
         and then clicks on apply button.
 
-        Args:
-            self: object used to call the following functions. 
+        ! Args:
+            * self: object used to call the following functions. 
         """
         self.click_filter_button()
 
@@ -287,8 +286,8 @@ class LinkedInJobs(LinkedIn):
 
         input field.
 
-        Args:
-            self: object that is used to call the following functions
+        ! Args:
+            * self: object that is used to call the following functions
         """
         self.click_on_job_box()
 
@@ -307,10 +306,3 @@ class LinkedInJobs(LinkedIn):
         function called find_jobs()
         """
         self.find_jobs()
-
-
-if __name__ == "__main__":
-    """
-    Executing LinkedIn constructor
-    """
-    LinkedInJobs()

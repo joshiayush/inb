@@ -21,8 +21,8 @@ import urllib.parse
 
 class LinkedInConnections(LinkedIn):
 
-    def __init__(self, _type):
-        super(LinkedInConnections, self).__init__()
+    def __init__(self, _type, data):
+        super(LinkedInConnections, self).__init__(data)
 
         self.method = input(
             "Search method (default -> auto/A) or (keyword based/K): ")
@@ -148,12 +148,12 @@ class LinkedInConnectionsGuided(LinkedInConnections):
 
     auto mode will be coded once finished coding LinkedInConnectionsGuided.
 
-    Parent:
-        LinkedIn: our main LinkedIn class which takes care of enabling of
-        the webdriver and the login process.
+    ! Parent:
+        * LinkedIn: our main LinkedIn class which takes care of enabling of
+        * the webdriver and the login process.
     """
 
-    def __init__(self):
+    def __init__(self, data):
         """
         Function __init__() is the constructor function of class
 
@@ -161,7 +161,7 @@ class LinkedInConnectionsGuided(LinkedInConnections):
 
         this class
         """
-        super(LinkedInConnectionsGuided, self).__init__("guided")
+        super(LinkedInConnectionsGuided, self).__init__("guided", data)
 
         self.run()
 
@@ -175,11 +175,11 @@ class LinkedInConnectionsGuided(LinkedInConnections):
 
         that attribute.
 
-        Args:
-            button: button element in which the program has
-            to click
+        ! Args:
+            * button: button element in which the program has
+            * to click
 
-            _type: is the status is it sending or failed
+            * _type: is the status is it sending or failed
         """
         if (_type == "sending"):
             print(
@@ -215,9 +215,9 @@ class LinkedInConnectionsGuided(LinkedInConnections):
 
         smoothly.
 
-        Args:
-            lists: it is a list object that contains <li> items
-            in it
+        ! Args:
+            * lists: it is a list object that contains <li> items
+            * in it
         """
         # iterating through the lists
         for _list in lists:
@@ -248,8 +248,8 @@ class LinkedInConnectionsGuided(LinkedInConnections):
 
         individually
 
-        Args:
-            suggestion_box: element that contains the list items
+        ! Args:
+            * suggestion_box: element that contains the list items
         """
         lists = suggestion_box.find_elements_by_tag_name("li")
 
@@ -263,8 +263,8 @@ class LinkedInConnectionsGuided(LinkedInConnections):
 
         box where linkedin keeps people that matches with my profile)
 
-        Args:
-            _id: id of the suggestion box
+        ! Args:
+            * _id: id of the suggestion box
         """
         suggestion_box = self.driver.find_element_by_id(_id)
 
@@ -313,13 +313,13 @@ class LinkedInConnectionsAuto(LinkedInConnections):
 
     the LinkedInConnectionsGuided class.
 
-    Parent:
-        LinkedIn: our main LinkedIn class which takes care of enabling of
-        the webdriver and the login process.
+    ! Parent:
+        * LinkedIn: our main LinkedIn class which takes care of enabling of
+        * the webdriver and the login process.
     """
 
-    def __init__(self):
-        super(LinkedInConnectionsAuto, self).__init__("auto")
+    def __init__(self, data):
+        super(LinkedInConnectionsAuto, self).__init__("auto", data)
 
         self.run()
 
@@ -344,11 +344,11 @@ class LinkedInConnectionsAuto(LinkedInConnections):
 
         that attribute.
 
-        Args:
-            button: button element in which the program has
-            to click
+        ! Args:
+            * button: button element in which the program has
+            * to click
 
-            _type: is the status is it sending or failed
+            * _type: is the status is it sending or failed
         """
         if (_type == "sending"):
             print(
@@ -446,7 +446,3 @@ class LinkedInConnectionsAuto(LinkedInConnections):
         time.sleep(10)
 
         self.scroll_to_bottom()
-
-
-if __name__ == "__main__":
-    LinkedInConnectionsAuto()
