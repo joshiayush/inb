@@ -101,9 +101,11 @@ class Main(object):
         return os.get_terminal_size()
 
     def get_horiz_coords(self):
-        if self.terminal_size()[0] >= 158:
+        if self.terminal_size()[0] >= 150:
             return [48, 5]
-        elif self.terminal_size()[0] >= 90:
+        elif self.terminal_size()[0] >= 80:
+            return [15, 2]
+        else:
             return [15, 2]
 
     def home(self):
