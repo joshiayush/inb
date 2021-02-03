@@ -15,6 +15,8 @@ import os
 import readline
 # * importing `getpass` to take user password
 import getpass
+# * importing `colorama`
+import colorama
 
 
 class Main(object):
@@ -55,7 +57,8 @@ class Main(object):
             "user_password": "",
             "job_keywords": "",
             "job_location": "",
-            "driver_path": "/Python/LinkedIn Automater/driver/chromedriver"
+            "driver_path": "/Python/LinkedIn Automater/driver/chromedriver",
+            "headless": True
         }
 
     def init_commands(self):
@@ -81,6 +84,29 @@ class Main(object):
             "clear": self.home
         }
 
+    def style(self, style):
+        styles = {
+            "bright": colorama.Style.BRIGHT,
+            "dim": colorama.Style.DIM,
+            "normal": colorama.Style.NORMAL,
+            "reset": colorama.Style.RESET_ALL
+        }
+
+        return styles.get(style, colorama.Style.RESET_ALL)
+
+    def colorFore(self, color):
+        colors = {
+            "red": colorama.Fore.RED,
+            "green": colorama.Fore.GREEN,
+            "blue": colorama.Fore.BLUE,
+            "reset": colorama.Fore.RESET,
+            "lightred": colorama.Fore.LIGHTRED_EX,
+            "lightgreen": colorama.Fore.LIGHTGREEN_EX,
+            "lightblue": colorama.Fore.LIGHTBLUE_EX
+        }
+
+        return colors.get(color, colorama.Fore.RESET)
+
     def _help(self):
         """
         Method _help() provides a manual to the user, this guide
@@ -89,42 +115,80 @@ class Main(object):
 
         start linkedin automation.
         """
-        print(" command -> config.user.email")
-        print(" saves the given user's name as a credential field")
-        print(" usage -> config.user.email=example@gmail.com")
-        print()
-        print(" command -> config.user.password")
-        print(" saves the user's password as a credential field by prompting a password console")
-        print(" usage -> config.user.password")
-        print(" Passowrd: ")
-        print()
-        print(" command -> config.job.keywords")
-        print(" saves the job keywords")
-        print(" usage -> config.job.keywords=Data Science")
-        print()
-        print(" command -> config.job.location")
-        print(" saves the job location")
-        print(" usage -> config.job.location=Sanfransisco")
-        print()
-        print(" command -> show")
-        print(" puts the entered user details on the screen")
-        print()
-        print(" command -> linkedin")
-        print(" activates the given linkedin process")
-        print(" usage -> linkedin send")
-        print(" flag [send] starts the process of sending invitation")
+        print(f""" {self.style("bright")}""")
         print(
-            " usage -> linkedin invitation-manager [show/withdraw] [--send/--recieve]")
-        print(" flag [invitation-manager] handles the invitation manager tab")
+            f""" {self.colorFore("green")}command -> config.user.email""")
         print(
-            " flag [show] shows the given type of invitation that you have in your account like send or recieved")
-        print(" flag [withdraw] withdraws all the pending invitations")
-        print(" usage -> linkedin mynetwork sendmessage")
-        print(" flag [mynetwork] is the connection tab")
-        print(" flag [sendmessage] sends a formal greet message to connections")
+            f""" {self.colorFore("blue")}saves the given user's name as a credential field""")
+        print(
+            f""" {self.colorFore("blue")}usage -> config.user.email=example@gmail.com{self.colorFore("reset")}""")
         print()
-        print(" command -> devdetails")
-        print(" prints the developer details like media links, emails and LinkedIn")
+        print(f""" {self.colorFore("green")}command -> config.user.password""")
+        print(f""" {self.colorFore("blue")}saves the user's password as a credential field by prompting a password console""")
+        print(f""" {self.colorFore("blue")}usage -> config.user.password""")
+        print(f""" {self.colorFore("blue")}Passowrd: {self.colorFore("reset")}""")
+        print()
+        print(f""" {self.colorFore("green")}command -> config.job.keywords""")
+        print(f""" {self.colorFore("blue")}saves the job keywords""")
+        print(
+            f""" {self.colorFore("blue")}usage -> config.job.keywords=Data Science{self.colorFore("reset")}""")
+        print()
+        print(f""" {self.colorFore("green")}command -> config.job.location""")
+        print(f""" {self.colorFore("blue")}saves the job location""")
+        print(
+            f""" {self.colorFore("blue")}usage -> config.job.location=Sanfransisco{self.colorFore("reset")}""")
+        print()
+        print(f""" {self.colorFore("green")}Available Locations:\n""")
+        print(f""" {self.colorFore("green")}-> India""")
+        print(f""" {self.colorFore("green")}-> USA""")
+        print(f""" {self.colorFore("green")}-> California""")
+        print(f""" {self.colorFore("green")}-> Sanfransisco BA""")
+        print(f""" {self.colorFore("green")}-> Sanfransisco CA""")
+        print()
+        print(
+            f""" {self.colorFore("blue")}If you want to select more than one location simple enter like this:""")
+        print(f""" {self.colorFore("blue")}config.job.location=India+USA+California+Sanfransisco BA+Sanfransisco CA  (default search location)""")
+        print(f""" {self.colorFore("blue")}Or""")
+        print(
+            f""" {self.colorFore("blue")}config.job.location=[India]+[USA]+[California]+[Sanfransisco BA]+[Sanfransisco CA]""")
+        print(f""" {self.colorFore("blue")}'[]' means that these terms may or may not be there in the location key, if you leave that field empty,""")
+        print(
+            f""" {self.colorFore("blue")}it will by default search in all the location.{self.colorFore("reset")}""")
+        print()
+        print(f""" {self.colorFore("green")}command -> show""")
+        print(
+            f""" {self.colorFore("blue")}puts the entered user details on the screen{self.colorFore("reset")}""")
+        print()
+        print(f""" {self.colorFore("green")}command -> linkedin""")
+        print(f""" {self.colorFore("blue")}activates the given linkedin process""")
+        print()
+        print(f""" {self.colorFore("blue")}usage -> linkedin send""")
+        print(
+            f""" {self.colorFore("green")}flag [send] starts the process of sending invitation""")
+        print(
+            f""" {self.colorFore("green")}linkedin [send] [--auto][--guided] [--headless]""")
+        print()
+        print(
+            f""" {self.colorFore("blue")}usage -> linkedin [invitation-manager] [show/withdraw] [--send/--recieve] [--headless]""")
+        print(
+            f""" {self.colorFore("green")}flag [invitation-manager] handles the invitation manager tab""")
+        print()
+        print(
+            f""" {self.colorFore("green")}flag [show] shows the given type of invitation that you have in your account like send or recieved""")
+        print()
+        print(
+            f""" {self.colorFore("green")}flag [withdraw] withdraws all the pending invitations""")
+        print(
+            f""" {self.colorFore("blue")}usage -> linkedin [mynetwork] [sendmessage] [--headless]""")
+        print(
+            f""" {self.colorFore("green")}flag [mynetwork] is the connection tab""")
+        print()
+        print(
+            f""" {self.colorFore("green")}flag [sendmessage] sends a formal greet message to connections{self.colorFore("reset")}""")
+        print()
+        print(f""" {self.colorFore("green")}command -> devdetails""")
+        print(
+            f""" {self.colorFore("blue")}prints the developer details like media links, emails and LinkedIn{self.colorFore("reset")}""")
 
     def show(self):
         """
@@ -134,28 +198,30 @@ class Main(object):
 
         entered.
         """
-        print(" %s" % (
+        print(f""" {self.colorFore("green") + self.style("bright")}%s""" % (
             self.data["user_email"] if self.data["user_email"] else "use config.user.email to add user email"))
-        print(" %s" % (
+        print(f""" {self.colorFore("green") + self.style("bright")}%s""" % (
             "*"*len(self.data["user_password"]) if self.data["user_password"] else "use config.user.password to add user password"))
 
         # ! we print the information about job keys once we have any of
         # ! these two field otherwise we don't show it
         if self.data["job_keywords"] or self.data["job_location"]:
-            print(" Job Keywords -> %s" %
+            print(f""" {self.colorFore("green") + self.style("bright")}Job Keywords -> %s""" %
                   (self.data["job_keywords"] if self.data["job_keywords"] else None))
-            print(" Job Location -> %s" %
+            print(f""" {self.colorFore("green") + self.style("bright")}Job Location -> %s""" %
                   (self.data["job_location"] if self.data["job_location"] else None))
 
         try:
-            ch = input(" Show password anyway? [y/N]: ") if self.data["user_password"] else "n"
+            ch = input(
+                f""" {self.colorFore("green") + self.style("bright")}Show password anyway? [y/N]: """) if self.data["user_password"] else "n"
             if ch.lower() == "y":
-                print(" %s" % (
+                print(f""" {self.colorFore("green") + self.style("bright")}%s""" % (
                     self.data["user_email"] if self.data["user_email"] else "use config.user.email to add user email"))
-                print(" %s" % (
+                print(f""" {self.colorFore("green") + self.style("bright")}%s""" % (
                     self.data["user_password"] if self.data["user_password"] else "use config.user.password to add user password"))
         except KeyboardInterrupt:
-            print("\n Piece")
+            print(
+                f"""\n {self.colorFore("green") + self.style("bright")}Piece{self.style("reset")}""")
             quit()
 
     def dev_details(self):
@@ -166,12 +232,15 @@ class Main(object):
 
         profiles and mail address.
         """
-        print(" Name -> Ayush Joshi")
-        print(" Email:")
-        print(" -> ayush854032@gmail.com (primary)")
-        print(" -> joshiayush.joshiayush@gmail.com")
-        print(" GitHub -> https://github.com/JoshiAyush")
-        print(" LinkedIn -> https://www.linkedin.com/in/ayush-joshi-3600a01b7/")
+        print(
+            f""" {self.colorFore("green") + self.style("bright")}Name -> Ayush Joshi""")
+        print(f""" {self.colorFore("green")}Email:""")
+        print(f""" {self.colorFore("green")}-> ayush854032@gmail.com (primary)""")
+        print(f""" {self.colorFore("green")}-> joshiayush.joshiayush@gmail.com""")
+        print(
+            f""" {self.colorFore("green")}GitHub -> https://github.com/JoshiAyush""")
+        print(
+            f""" {self.colorFore("green")}LinkedIn -> https://www.linkedin.com/in/ayush-joshi-3600a01b7/{self.colorFore("reset")}""")
 
     def _input(self):
         """
@@ -185,11 +254,14 @@ class Main(object):
             * returns the entered value
         """
         try:
-            inp = input("\n LinkedIn/> ")
+            inp = input(
+                f"""\n {self.colorFore("green") + self.style("bright")}LinkedIn/> """)
+            print(end=f"""{self.style("reset")}""")
             return inp
 
         except KeyboardInterrupt:
-            print("\n Piece")
+            print(
+                f"""\n {self.colorFore("green") + self.style("bright")}Piece{self.style("reset")}""")
             quit()              # ? exit program silently
 
     def clear(self):
@@ -258,7 +330,7 @@ class Main(object):
         self.clear()                # ? clears the screen first
 
         x, y = self.get_coords()    # ? get the co-ordinates
-
+        print(self.colorFore("green") + self.style("bright"))
         self.gotoxy(x, y)           # ? apply co-ordinates
         print(r"\\                      \\  //                  \\  \\             ")
         self.gotoxy(x, y+1)         # ? apply co-ordinates
@@ -274,6 +346,7 @@ class Main(object):
 
         # ? show a tip to automation
         print("\n Type help for more information!", end="\n")
+        print(self.colorFore("reset"))
 
     def Error(self):
         """
@@ -282,7 +355,8 @@ class Main(object):
         not recognized.
         """
         if self.command:
-            print(f" `{self.command}` is not recognized as an internal command")
+            print(
+                f""" {self.colorFore("red")}`{self.command}` is not recognized as an internal command{self.colorFore("reset")}""")
 
     def linkedin_command_usage(self):
         """
@@ -292,23 +366,30 @@ class Main(object):
 
         mistakenly applied wrong flags with the linkedin command.
         """
-        print()
-        print(" Missing flags [send] [invitation-manager] [mynetwork]")
-        print(" Usage:")
-        print(" command -> linkedin")
-        print(" activates the given linkedin process")
-        print(" usage -> linkedin send")
-        print(" flag [send] starts the process of sending invitation")
+        print(self.style("bright"))
         print(
-            " usage -> linkedin invitation-manager [show/withdraw] [--send/--recieve]")
-        print(" flag [invitation-manager] handles the invitation manager tab")
+            f""" {self.colorFore("green")}Missing flags [send] [invitation-manager] [mynetwork]""")
+        print(f""" {self.colorFore("blue")}Usage:""")
+        print(f""" {self.colorFore("blue")}command -> linkedin""")
+        print(f""" {self.colorFore("blue")}activates the given linkedin process""")
+        print(f""" {self.colorFore("blue")}usage -> linkedin send""")
         print(
-            " flag [show] shows the given type of invitation that you have in your account like send or recieved")
-        print(" flag [withdraw] withdraws all the pending invitations")
-        print(" usage -> linkedin mynetwork sendmessage")
-        print(" flag [mynetwork] is the connection tab")
-        print(" flag [sendmessage] sends a formal greet message to connections")
-        print()
+            f""" {self.colorFore("green")}flag [send] starts the process of sending invitation""")
+        print(
+            f""" {self.colorFore("blue")}usage -> linkedin invitation-manager [show/withdraw] [--send/--recieve]""")
+        print(
+            f""" {self.colorFore("green")}flag [invitation-manager] handles the invitation manager tab""")
+        print(
+            f""" {self.colorFore("green")}flag [show] shows the given type of invitation that you have in your account like send or recieved""")
+        print(
+            f""" {self.colorFore("green")}flag [withdraw] withdraws all the pending invitations""")
+        print(
+            f""" {self.colorFore("blue")}usage -> linkedin mynetwork sendmessage""")
+        print(
+            f""" {self.colorFore("green")}flag [mynetwork] is the connection tab""")
+        print(
+            f""" {self.colorFore("green")}flag [sendmessage] sends a formal greet message to connections""")
+        print(self.colorFore("reset"))
 
     def handle_linkedin_commands(self):
         """

@@ -25,10 +25,7 @@ class LinkedInConnections(LinkedIn):
     def __init__(self, _type, data):
         super(LinkedInConnections, self).__init__(data)
 
-        self.method = input(
-            "Search method [recommended auto for noobs] (default -> auto/A) or (keyword based/K): ")
-
-        if _type == "auto" and self.method.lower() == "k":
+        if _type == "auto":
             self.init_vars()        # ? call init_vars to initialize the variables
             self.run()              # ? call run function
 
@@ -322,7 +319,7 @@ class LinkedInConnectionsAuto(LinkedInConnections):
 
     def __init__(self, data):
         super(LinkedInConnectionsAuto, self).__init__("auto", data)
-
+        self.clicked = set([None])
         self.run()
 
     def get_my_network(self):
@@ -331,10 +328,7 @@ class LinkedInConnectionsAuto(LinkedInConnections):
 
         function `get()` from webdriver
         """
-        if self.method.lower() == "k":
-            self.driver.get(self.connections_link)
-        else:
-            self.driver.get("https://www.linkedin.com/mynetwork/")
+        self.driver.get("https://www.linkedin.com/mynetwork/")
 
     def get_aria_label(self, button, _type):
         """
@@ -391,10 +385,12 @@ class LinkedInConnectionsAuto(LinkedInConnections):
             for button in invite_buttons:
                 # ! accessing each list item
                 try:
-                    # ! sending button to function get_aria_label()
-                    self.get_aria_label(button, "sending")
-                    # ! executing click() operation on the button
-                    button.click()
+                    if button not in self.clicked:
+                        # ! sending button to function get_aria_label()
+                        self.get_aria_label(button, "sending")
+                        # ! executing click() operation on the button
+                        button.click()
+                        self.clicked.add(button)
                 except ElementNotInteractableException:
                     print("You got blocked")
                     quit()
@@ -402,6 +398,9 @@ class LinkedInConnectionsAuto(LinkedInConnections):
                     # ! handling ElementClickInterceptedException exception
                     self.get_aria_label(button, "failed")
                     continue
+                if button is invite_buttons[-1]:
+                    LinkedIn.execute_javascript(self)
+                    self.find_buttons()
         except (
             NoSuchElementException,
             ElementClickInterceptedException
@@ -446,7 +445,9 @@ class LinkedInConnectionsAuto(LinkedInConnections):
         """
         self.get_my_network()
 
-        self.scroll_to_bottom()
+        # self.scroll_to_bottom()
+
+        self.find_buttons()
 
 
 class InvitationManager(LinkedIn):

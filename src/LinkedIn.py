@@ -116,6 +116,9 @@ class LinkedIn(object):
         """
         self.options.add_argument("--ignore-certificate-errors")
 
+    def set_headless(self):
+        self.options.add_argument("headless")
+
     def get_chrome_driver_options(self):
         """
         Function get_chrome_driver_options() returns a set of chrome options
@@ -130,6 +133,8 @@ class LinkedIn(object):
         self.set_browser_incognito_mode()
 
         self.set_ignore_certificate_error()
+
+        self.set_headless() if self.data["headless"] else False
 
         return self.options
 
