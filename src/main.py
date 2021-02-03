@@ -116,79 +116,131 @@ class Main(object):
         start linkedin automation.
         """
         print(f""" {self.style("bright")}""")
-        print(
-            f""" {self.colorFore("green")}command -> config.user.email""")
+
+        print(f""" {self.colorFore("green")}command -> config.user.email""")
+
         print(
             f""" {self.colorFore("blue")}saves the given user's name as a credential field""")
+
         print(
             f""" {self.colorFore("blue")}usage -> config.user.email=example@gmail.com{self.colorFore("reset")}""")
+
         print()
+
         print(f""" {self.colorFore("green")}command -> config.user.password""")
-        print(f""" {self.colorFore("blue")}saves the user's password as a credential field by prompting a password console""")
+
+        print(f""" {self.colorFore("blue")}saves the user's passwordas a credential field by prompting a password console""")
+
         print(f""" {self.colorFore("blue")}usage -> config.user.password""")
+
         print(f""" {self.colorFore("blue")}Passowrd: {self.colorFore("reset")}""")
+
         print()
+
         print(f""" {self.colorFore("green")}command -> config.job.keywords""")
+
         print(f""" {self.colorFore("blue")}saves the job keywords""")
+
         print(
             f""" {self.colorFore("blue")}usage -> config.job.keywords=Data Science{self.colorFore("reset")}""")
+
         print()
+
         print(f""" {self.colorFore("green")}command -> config.job.location""")
+
         print(f""" {self.colorFore("blue")}saves the job location""")
+
         print(
             f""" {self.colorFore("blue")}usage -> config.job.location=Sanfransisco{self.colorFore("reset")}""")
+
         print()
+
         print(f""" {self.colorFore("green")}Available Locations:\n""")
+
         print(f""" {self.colorFore("green")}-> India""")
+
         print(f""" {self.colorFore("green")}-> USA""")
+
         print(f""" {self.colorFore("green")}-> California""")
+
         print(f""" {self.colorFore("green")}-> Sanfransisco BA""")
+
         print(f""" {self.colorFore("green")}-> Sanfransisco CA""")
+
         print()
+
         print(
-            f""" {self.colorFore("blue")}If you want to select more than one location simple enter like this:""")
+            f""" {self.colorFore("blue")}If you want to select more thanone location simple enter like this:""")
+
         print(f""" {self.colorFore("blue")}config.job.location=India+USA+California+Sanfransisco BA+Sanfransisco CA  (default search location)""")
+
         print(f""" {self.colorFore("blue")}Or""")
+
         print(
             f""" {self.colorFore("blue")}config.job.location=[India]+[USA]+[California]+[Sanfransisco BA]+[Sanfransisco CA]""")
+
         print(f""" {self.colorFore("blue")}'[]' means that these terms may or may not be there in the location key, if you leave that field empty,""")
+
         print(
             f""" {self.colorFore("blue")}it will by default search in all the location.{self.colorFore("reset")}""")
+
         print()
+
         print(f""" {self.colorFore("green")}command -> show""")
+
         print(
             f""" {self.colorFore("blue")}puts the entered user details on the screen{self.colorFore("reset")}""")
+
         print()
+
         print(f""" {self.colorFore("green")}command -> linkedin""")
+
         print(f""" {self.colorFore("blue")}activates the given linkedin process""")
+
         print()
+
         print(f""" {self.colorFore("blue")}usage -> linkedin send""")
+
         print(
             f""" {self.colorFore("green")}flag [send] starts the process of sending invitation""")
+
         print(
             f""" {self.colorFore("green")}linkedin [send] [--auto][--guided] [--headless]""")
+
         print()
+
         print(
             f""" {self.colorFore("blue")}usage -> linkedin [invitation-manager] [show/withdraw] [--send/--recieve] [--headless]""")
+
         print(
             f""" {self.colorFore("green")}flag [invitation-manager] handles the invitation manager tab""")
+
         print()
+
         print(
             f""" {self.colorFore("green")}flag [show] shows the given type of invitation that you have in your account like send or recieved""")
+
         print()
+
         print(
             f""" {self.colorFore("green")}flag [withdraw] withdraws all the pending invitations""")
+
         print(
             f""" {self.colorFore("blue")}usage -> linkedin [mynetwork] [sendmessage] [--headless]""")
+
         print(
             f""" {self.colorFore("green")}flag [mynetwork] is the connection tab""")
+
         print()
+
         print(
             f""" {self.colorFore("green")}flag [sendmessage] sends a formal greet message to connections{self.colorFore("reset")}""")
+
         print()
+
         print(f""" {self.colorFore("green")}command -> devdetails""")
-        print(
-            f""" {self.colorFore("blue")}prints the developer details like media links, emails and LinkedIn{self.colorFore("reset")}""")
+
+        print(f""" {self.colorFore("blue")}prints the developer details like media links, emails and LinkedIn{self.colorFore("reset")}""")
 
     def show(self):
         """
@@ -211,6 +263,8 @@ class Main(object):
             print(f""" {self.colorFore("green") + self.style("bright")}Job Location -> %s""" %
                   (self.data["job_location"] if self.data["job_location"] else None))
 
+        # ! ask the user if (s)he want to see the password if yes show
+        # ! them if not don't show them
         try:
             ch = input(
                 f""" {self.colorFore("green") + self.style("bright")}Show password anyway? [y/N]: """) if self.data["user_password"] else "n"
@@ -234,11 +288,16 @@ class Main(object):
         """
         print(
             f""" {self.colorFore("green") + self.style("bright")}Name -> Ayush Joshi""")
+        
         print(f""" {self.colorFore("green")}Email:""")
+        
         print(f""" {self.colorFore("green")}-> ayush854032@gmail.com (primary)""")
+        
         print(f""" {self.colorFore("green")}-> joshiayush.joshiayush@gmail.com""")
+        
         print(
             f""" {self.colorFore("green")}GitHub -> https://github.com/JoshiAyush""")
+        
         print(
             f""" {self.colorFore("green")}LinkedIn -> https://www.linkedin.com/in/ayush-joshi-3600a01b7/{self.colorFore("reset")}""")
 
@@ -367,28 +426,42 @@ class Main(object):
         mistakenly applied wrong flags with the linkedin command.
         """
         print(self.style("bright"))
+
         print(
             f""" {self.colorFore("green")}Missing flags [send] [invitation-manager] [mynetwork]""")
+        
         print(f""" {self.colorFore("blue")}Usage:""")
+        
         print(f""" {self.colorFore("blue")}command -> linkedin""")
+        
         print(f""" {self.colorFore("blue")}activates the given linkedin process""")
+        
         print(f""" {self.colorFore("blue")}usage -> linkedin send""")
+        
         print(
             f""" {self.colorFore("green")}flag [send] starts the process of sending invitation""")
+        
         print(
             f""" {self.colorFore("blue")}usage -> linkedin invitation-manager [show/withdraw] [--send/--recieve]""")
+        
         print(
             f""" {self.colorFore("green")}flag [invitation-manager] handles the invitation manager tab""")
+        
         print(
             f""" {self.colorFore("green")}flag [show] shows the given type of invitation that you have in your account like send or recieved""")
+        
         print(
             f""" {self.colorFore("green")}flag [withdraw] withdraws all the pending invitations""")
+        
         print(
             f""" {self.colorFore("blue")}usage -> linkedin mynetwork sendmessage""")
+        
         print(
             f""" {self.colorFore("green")}flag [mynetwork] is the connection tab""")
+        
         print(
             f""" {self.colorFore("green")}flag [sendmessage] sends a formal greet message to connections""")
+        
         print(self.colorFore("reset"))
 
     def handle_linkedin_commands(self):
@@ -406,7 +479,7 @@ class Main(object):
                 LinkedInConnections.LinkedInConnectionsAuto(self.data)
             else:
                 print(
-                    " Need credentials first use config.user.email/password to add them")
+                    f""" {self.colorFore("green") + self.style("bright")}Need credentials first use config.user.email/password to add them{self.colorFore("reset")}""")
         elif self.command.split(" ")[1] == "invitation-manager":
             pass
         elif self.command.split(" ")[1] == "mynetwork":
