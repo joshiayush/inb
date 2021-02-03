@@ -18,6 +18,8 @@ import time
 import colorama
 # * importing `urllib.parse`
 import urllib.parse
+import functools
+import operator
 
 
 class LinkedInConnections(LinkedIn):
@@ -36,19 +38,32 @@ class LinkedInConnections(LinkedIn):
         that are required to implement search functionality
         """
         self.linkedin = "https://www.linkedin.com/"
+        
         self.search = "search/results/"
+        
         self.people = "people/?"
+        
         self.geoUrn = "geoUrn="
-        self.geoIndia = '%5B"102713980"%5D&'
-        self.geoUSA = '%5B"103644278"%5D&'
-        self.geoCalifornia = '%5B"102095887"%5D&'
-        self.geoSanFranciscoBA = '%5B"90000084"%5D&'
-        self.geoSanFranciscoCA = '%5B"102277331"%5D&'
-        self.location = ""
+        
+        self.__identifiers__ = {
+            "india": '%5B"102713980"%5D&',
+            "usa": '%5B"103644278"%5D&',
+            "california": '%5B"102095887"%5D&',
+            "sanfranciscoba": '%5B"90000084"%5D&',
+            "sanfranciscoca": '%5B"102277331"%5D&'
+        }
+        
+        self.location = self.geoUrn + functools.reduce(operator.add, self.__identifiers__.values())
+        
         self.origins = ["SWITCH_SEARCH_VERTICAL", "FACETED_SEARCH"]
-        self.origin = self.origins[0]
-        self.keywords = f"keywords=__key__&origin={self.origin}"
+        
+        self.keywords = f"""keywords=__key__&origin={self.origins[0]}"""
+        
         self.connections_link = ""
+
+    def get_location_identifier(self, country):
+
+        return self.__identifiers__.get(country, None)
 
     def quote_url(self, url, safe=f"~@#$&()*!+=:;,.?/\\"):
         """
@@ -67,17 +82,17 @@ class LinkedInConnections(LinkedIn):
         link by encoding 
         """
         self.connections_link = self.quote_url(
-            self.linkedin + self.search + self.people + self.location + self.keywords + self.origin)
+            self.linkedin + self.search + self.people + self.location + self.keywords + self.origins[0])
 
         print(self.connections_link)
 
     def getUrn(self, key):
         Urns = {
-            "India": self.geoIndia,
-            "United States": self.geoUSA,
-            "California, United States": self.geoCalifornia,
-            "Sanfrancisco Bay Area": self.geoSanFranciscoBA,
-            "Sanfrancisco, CA": self.geoSanFranciscoCA
+            "India": self.get_location_identifier("india"),
+            "United States": self.get_location_identifier("usa"),
+            "California, United States": self.get_location_identifier("california"),
+            "Sanfrancisco Bay Area": self.get_location_identifier("sanfranciscoba"),
+            "Sanfrancisco, CA": self.get_location_identifier("sanfranciscoca")
         }
 
         return Urns[key]
@@ -91,14 +106,9 @@ class LinkedInConnections(LinkedIn):
         self.keywords = self.keywords.replace("__key__", keyword[0])
 
         if (keyword[1] == "All"):
-            self.origin = self.origins[1]
-            self.keywords = f"keywords=__key__&origin={self.origin}"
-            self.location = self.geoUrn + self.geoIndia + self.geoUSA + \
-                self.geoCalifornia + self.geoSanFranciscoBA + \
-                self.geoSanFranciscoCA
+            self.keywords = f"""keywords=__key__&origin={self.origins[1]}"""
         else:
-            self.origin = self.origins[1]
-            self.keywords = f"keywords=__key__&origin={self.origin}"
+            self.keywords = f"""keywords=__key__&origin={self.origins[1]}"""
             self.location = self.getUrn(keyword[1])
 
     def get_keywords(self):
@@ -215,26 +225,26 @@ class LinkedInConnectionsGuided(LinkedInConnections):
             * lists: it is a list object that contains <li> items
             * in it
         """
-        # iterating through the lists
+        # ! iterating through the lists
         for _list in lists:
-            # targetting lists bottom container
+            # ! targetting lists bottom container
             list_bottom_container = _list.find_element_by_css_selector(
                 ".discover-entity-type-card__bottom-container")
-            # targetting lists footer component
+            # ! targetting lists footer component
             list_footer = list_bottom_container.find_element_by_tag_name(
                 "footer")
-            # targetting lists invite button
+            # ! targetting lists invite button
             invite_button = list_footer.find_element_by_tag_name("button")
             try:
                 self.get_aria_label(invite_button, "sending")
-                # performing click on invite button using driver.click() method
+                # ! performing click on invite button using driver.click() method
                 invite_button.click()
             except ElementNotInteractableException:
                 print("You got Blocked")
                 quit()
             except ElementClickInterceptedException:
                 self.get_aria_label(invite_button, "failed")
-                # continue if Exception
+                # ! continue if Exception
                 continue
 
     def get_list_items(self, suggestion_box):
