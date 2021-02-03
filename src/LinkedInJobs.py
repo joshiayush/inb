@@ -6,7 +6,7 @@ from LinkedIn import (
     expected_conditions,                # * importing `expected_conditions`
     By,                                 # * importing `By`
     NoSuchElementException,             # * importing `NoSuchElementException`
-    ElementClickInterceptedException,   # * importing `ElementClickInterceptedException`
+    ElementClickInterceptedException,   # * importing `ElementClickInterception`
     ActionChains,                       # * importing `ActionChains`
     re                                  # * importing `regex` (re)
 )
