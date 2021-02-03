@@ -6,7 +6,8 @@ from LinkedIn import (
     expected_conditions,                # * importing `expected_conditions`
     By,                                 # * importing `By`
     NoSuchElementException,             # * importing `NoSuchElementException`
-    ElementClickInterceptedException,   # * importing `ElementClickInterceptedException`
+    ElementClickInterceptedException,   # * importing `ElementClickInterception`
+    ElementNotInteractableException,    # * importing `ElementNotInteractable`
     TimeoutException,                   # * importing `TimeoutException`
     ActionChains,                       # * importing `ActionsChains`
     re,                                 # * importing `regex` module
@@ -231,6 +232,9 @@ class LinkedInConnectionsGuided(LinkedInConnections):
                 self.get_aria_label(invite_button, "sending")
                 # performing click on invite button using driver.click() method
                 invite_button.click()
+            except ElementNotInteractableException:
+                print("You got Blocked")
+                quit()
             except ElementClickInterceptedException:
                 self.get_aria_label(invite_button, "failed")
                 # continue if Exception
@@ -385,14 +389,17 @@ class LinkedInConnectionsAuto(LinkedInConnections):
                 )
             )
             for button in invite_buttons:
-                # accessing each list item
+                # ! accessing each list item
                 try:
-                    # sending button to function get_aria_label()
+                    # ! sending button to function get_aria_label()
                     self.get_aria_label(button, "sending")
-                    # executing click() operation on the button
+                    # ! executing click() operation on the button
                     button.click()
+                except ElementNotInteractableException:
+                    print("You got blocked")
+                    quit()
                 except ElementClickInterceptedException:
-                    # handling ElementClickInterceptedException exception
+                    # ! handling ElementClickInterceptedException exception
                     self.get_aria_label(button, "failed")
                     continue
         except (
@@ -420,25 +427,16 @@ class LinkedInConnectionsAuto(LinkedInConnections):
         new_position = None
 
         while new_position != old_position:
-            # ? Get old scroll position
-            old_position = self.driver.execute_script(
-                ("return (window.pageYOffset !== undefined) ?"
-                 " window.pageYOffset : (document.documentElement ||"
-                 " document.body.parentNode || document.body);"))
+            # ? Get old window.pageYOffset
+            old_position = LinkedIn.get_page_y_offset(self)
             # ? call find_buttons() function once the page is loaded
             self.find_buttons()
             # ? sleep for atleast 1 second before the next move
             time.sleep(1)
-            # ? execute script
-            self.driver.execute_script((
-                "var scrollingElement = (document.scrollingElement ||"
-                " document.body);scrollingElement.scrollTop ="
-                " scrollingElement.scrollHeight;"))
-            # ? Get new position
-            new_position = self.driver.execute_script(
-                ("return (window.pageYOffset !== undefined) ?"
-                 " window.pageYOffset : (document.documentElement ||"
-                 " document.body.parentNode || document.body);"))
+            # ? execute javascript
+            LinkedIn.execute_javascript(self)
+            # ? Get new window.pageYOffset
+            new_position = LinkedIn.get_page_y_offset(self)
 
     def run(self):
         """
@@ -516,27 +514,6 @@ class MyNetwork(LinkedIn):
         for _list in self.get_profiles_container().find_elements_by_tag_name("li"):
             pass
 
-    def get_old_position(self):
-        # ? Get old scroll position
-        return self.driver.execute_script(
-            ("return (window.pageYOffset !== undefined) ?"
-             " window.pageYOffset : (document.documentElement ||"
-             " document.body.parentNode || document.body);"))
-
-    def execute_javascript(self):
-        # ? execute script
-        self.driver.execute_script((
-            "var scrollingElement = (document.scrollingElement ||"
-            " document.body);scrollingElement.scrollTop ="
-            " scrollingElement.scrollHeight;"))
-
-    def get_new_position(self):
-        # ? Get new position
-        return self.driver.execute_script(
-            ("return (window.pageYOffset !== undefined) ?"
-             " window.pageYOffset : (document.documentElement ||"
-             " document.body.parentNode || document.body);"))
-
     def scroll_to_bottom(self):
         """
         Function scroll_to_bottom() scrolls the page to its maximum
@@ -556,12 +533,14 @@ class MyNetwork(LinkedIn):
         new_position = None
 
         while new_position != old_position:
-            # ? get old position
-            old_position = self.get_old_position()
+            # ? get old window.pageYOffset
+            old_position = LinkedIn.get_page_y_offset(self)
             # ? sleep for atleast 1 second before the next move
             time.sleep(1)
-            # ? get new position
-            new_position = self.get_new_position()
+            # ? execute javascript
+            LinkedIn.execute_javascript(self)
+            # ? get new window.pageYOffset
+            new_position = LinkedIn.get_page_y_offset(self)
 
     def show(self):
         self.get_connections_page()
