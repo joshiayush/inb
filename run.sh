@@ -51,6 +51,22 @@ function getSystemInfo() {
     esac
 }
 
+# ! function to install the program dependencies like selenium module,
+# ! webdriver-manager, urllib module
+function installDependencies() {
+    # ! start installing program dependencies
+    echo "Installing dependencies..."
+    echo "Installing Selenium"
+    # ! install selenium
+    pip3 install selenium
+    echo "Installing URL handling python module (urllib)"
+    # ! install urllib3
+    pip3 install urllib3
+    echo "Installing WebDriver Manager"
+    # ! install webdriver-manager
+    pip3 install webdriver-manager
+}
+
 # ! function that install python and selenium on Ubuntu platform
 function installOnUbuntu() {
     echo "Installing Python on Ubuntu Linux"
@@ -58,8 +74,8 @@ function installOnUbuntu() {
     sudo apt-get update
     # ! install python3 and pip3
     sudo apt-get install python3.8 python3-pip
-    # ! install selenium
-    pip3 install selenium
+    # ! installing program dependencies
+    installDependencies
 }
 
 # ! function that install python and selenium on Linux Mint platform
@@ -71,8 +87,8 @@ function installOnMint() {
     sudo apt-get update
     # ! install python3 and pip3
     sudo apt-get install python3.8 python3-pip
-    # ! install selenium
-    pip3 install selenium
+    # ! installing program dependencies
+    installDependencies
 }
 
 # ! function that install python and selenium on Arch Linux platform
@@ -80,8 +96,8 @@ function installOnArch() {
     echo "Installing Python on Arch Linux"
     # ! install python
     packman -S python
-    # ! install selenium
-    pip install selenium
+    # ! installing program dependencies
+    installDependencies
 }
 
 # ! function that install python and selenium in Windows using Microsoft
@@ -89,8 +105,8 @@ function installOnArch() {
 function installOnWindows() {
     # ! install python
     msiexec /i python-3.8.msi TARGETDIR=C:\Python
-    # ! install selenium
-    pip3 install selenium
+    # ! installing program dependencies
+    installDependencies
 }
 
 # ? function that install python on OSX system
@@ -107,8 +123,8 @@ function installOnOSX() {
     ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
     # ! install python3
     brew install python3
-    # ! install selenium
-    pip3 install selenium
+    # ! installing program dependencies
+    installDependencies
 }
 
 # ? function that returns the name of the operating system that the
