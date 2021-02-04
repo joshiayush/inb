@@ -455,8 +455,6 @@ class LinkedInConnectionsAuto(LinkedInConnections):
         """
         self.get_my_network()
 
-        # self.scroll_to_bottom()
-
         self.find_buttons()
 
 
