@@ -31,6 +31,7 @@ class Main(object):
 
     any deign Idea in my mind yet.  
     """
+    THEME = "parrot"
 
     def __init__(self):
         """
@@ -61,12 +62,21 @@ class Main(object):
             "headless": True
         }
         self.theme = "parrot"
+        self.help_with = {
+            "linkedin": Main.help_with_linkedin,
+            "show": Main.help_with_show,
+            "devdetails": Main.help_with_devdetails,
+            "clear": Main.help_with_clear,
+            "exit": Main.help_with_exit
+        }
 
-    def set_theme(self, _theme):
+    @staticmethod
+    def set_theme(_theme):
         if _theme == "--parrot":
-            self.theme = "parrot"
+            Main.THEME = "parrot"
         elif _theme == "--normal":
-            self.theme = "normal"
+            Main.THEME = "normal"
+        Main.home()
 
     def init_commands(self):
         """
@@ -91,7 +101,8 @@ class Main(object):
             "clear": self.home
         }
 
-    def style(self, style):
+    @staticmethod
+    def style(style):
         styles = {
             "bright": colorama.Style.BRIGHT,
             "dim": colorama.Style.DIM,
@@ -101,7 +112,8 @@ class Main(object):
 
         return styles.get(style, colorama.Style.RESET_ALL)
 
-    def colorFore(self, color):
+    @staticmethod
+    def colorFore(color):
         colors = {
             "red": colorama.Fore.RED,
             "green": colorama.Fore.GREEN,
@@ -112,10 +124,37 @@ class Main(object):
             "lightblue": colorama.Fore.LIGHTBLUE_EX
         }
 
-        if self.theme == "parrot":
+        if Main.THEME == "parrot":
             return colors.get(color, colorama.Fore.RESET)
-        elif self.theme == "normal":
+        elif Main.THEME == "normal":
             return colors.get(color, colorama.Fore.RESET) if color == "red" or color == "reset" else " \b"
+
+    @staticmethod
+    def help_with_linkedin():
+        """
+        Method help_with_linkedin() shows how you can use the linkedin
+
+        command in case you missed the flags with the linkedin command or 
+
+        mistakenly applied wrong flags with the linkedin command.
+        """
+        pass
+
+    @staticmethod
+    def help_with_show():
+        pass
+
+    @staticmethod
+    def help_with_devdetails():
+        pass
+
+    @staticmethod
+    def help_with_clear():
+        pass
+
+    @staticmethod
+    def help_with_exit():
+        pass
 
     def _help(self, _with=None):
         """
@@ -125,36 +164,50 @@ class Main(object):
 
         start linkedin automation.
         """
-        self._print(f"""{self.style("bright")}""")
-        self._print(f"""{self.colorFore("green")}""")
-        
-        self._print(f"""LinkedIn Bash, version 1.2.0(1)-release (xrh-cclnk)""")
-        self._print(f"""These commands are defined internally. Type 'help' to see this list.""")
-        self._print(f"""Type 'command' --help to know more about that command.""")
-        self._print(f"""""")
-        self._print(f"""A ([]) around a command means that the command is optional.""")
-        self._print(f"""A (^) next to command means that the command is the default command.""")
-        self._print(f"""A (<>) around a name means that the field is required.""")
-        self._print(f"""A (*) next to a name means that the command is disabled.""") 
-        self._print(f"""""")
-        self._print(f"""linkedin [send] [suggestions^] --auto^/--guided [--headless]""") 
-        self._print(f"""linkedin [send] [search industry=example&&location=india+usa+...] --auto^/--guided [--headless]""") 
-        self._print(f"""linkedin [invitation-manager*] [show*] --sent*/--recieved* [--headless]""")
-        self._print(f"""linkedin [invitation-manager*] [withdraw*] [all*^/over > <days>*] [--headless]""")
-        self._print(f"""linkedin [mynetwork*] [show*] [all*/page > 1^+2+3+...*] [--headless]""")
-        self._print(f"""linkedin [mynetwork*] [sendmessage*] [all*] [--greet*^] [--headless]""")
-        self._print(f"""""")
-        self._print(f"""show""")
-        self._print(f"""""")
-        self._print(f"""devdetails""")
-        self._print(f"""""")
-        self._print(f"""theme <--parrot^/--normal>""")
-        self._print(f"""""")
-        self._print(f"""clear""")
-        self._print(f"""""")
-        self._print(f"""exit""")
-
-        self._print(f"""{self.colorFore("reset")}""")
+        self._print(f"""{Main.style("bright")}""")
+        self._print(f"""{Main.colorFore("green")}""")
+        if _with == None:
+            self._print(
+                f"""LinkedIn Bash, version 1.2.0(1)-release (xrh-cclnk)""")
+            self._print(
+                f"""These commands are defined internally. Type 'help' to see this list.""")
+            self._print(
+                f"""Type 'command' --help to know more about that command.""")
+            self._print(f"""""")
+            self._print(
+                f"""A ([]) around a command means that the command is optional.""")
+            self._print(
+                f"""A (^) next to command means that the command is the default command.""")
+            self._print(
+                f"""A (<>) around a name means that the field is required.""")
+            self._print(
+                f"""A (*) next to a name means that the command is disabled.""")
+            self._print(f"""""")
+            self._print(
+                f"""linkedin [send] [suggestions^] --auto^/--guided [--headless]""")
+            self._print(
+                f"""linkedin [send] [search industry=example&&location=india+usa+...] --auto^/--guided [--headless]""")
+            self._print(
+                f"""linkedin [invitation-manager*] [show*] --sent*/--recieved* [--headless]""")
+            self._print(
+                f"""linkedin [invitation-manager*] [withdraw*] [all*^/over > <days>*] [--headless]""")
+            self._print(
+                f"""linkedin [mynetwork*] [show*] [all*/page > 1^+2+3+...*] [--headless]""")
+            self._print(
+                f"""linkedin [mynetwork*] [sendmessage*] [all*] [--greet*^] [--headless]""")
+            self._print(f"""""")
+            self._print(f"""show""")
+            self._print(f"""""")
+            self._print(f"""devdetails""")
+            self._print(f"""""")
+            self._print(f"""theme <--parrot^/--normal>""")
+            self._print(f"""""")
+            self._print(f"""clear""")
+            self._print(f"""""")
+            self._print(f"""exit""")
+        else:
+            pass
+        self._print(f"""{Main.colorFore("reset")}""")
 
     def show(self):
         """
@@ -164,32 +217,32 @@ class Main(object):
 
         entered.
         """
-        print(f""" {self.colorFore("green")}{self.style("bright")}%s""" % (
+        print(f""" {Main.colorFore("green")}{Main.style("bright")}%s""" % (
             self.data["user_email"] if self.data["user_email"] else "use config.user.email to add user email"))
-        print(f""" {self.colorFore("green")}{self.style("bright")}%s""" % (
+        print(f""" {Main.colorFore("green")}{Main.style("bright")}%s""" % (
             "*"*len(self.data["user_password"]) if self.data["user_password"] else "use config.user.password to add user password"))
 
         # ! we print the information about job keys once we have any of
         # ! these two field otherwise we don't show it
         if self.data["job_keywords"] or self.data["job_location"]:
-            print(f""" {self.colorFore("green")}{self.style("bright")}Job Keywords -> %s""" %
+            print(f""" {Main.colorFore("green")}{Main.style("bright")}Job Keywords -> %s""" %
                   (self.data["job_keywords"] if self.data["job_keywords"] else None))
-            print(f""" {self.colorFore("green")}{self.style("bright")}Job Location -> %s""" %
+            print(f""" {Main.colorFore("green")}{Main.style("bright")}Job Location -> %s""" %
                   (self.data["job_location"] if self.data["job_location"] else None))
 
         # ! ask the user if (s)he want to see the password if yes show
         # ! them if not don't show them
         try:
             ch = input(
-                f""" {self.colorFore("green")}{self.style("bright")}Show password anyway? [y/N]: """) if self.data["user_password"] else "n"
+                f""" {Main.colorFore("green")}{Main.style("bright")}Show password anyway? [y/N]: """) if self.data["user_password"] else "n"
             if ch.lower() == "y":
-                print(f""" {self.colorFore("green")}{self.style("bright")}%s""" % (
+                print(f""" {Main.colorFore("green")}{Main.style("bright")}%s""" % (
                     self.data["user_email"] if self.data["user_email"] else "use config.user.email to add user email"))
-                print(f""" {self.colorFore("green")}{self.style("bright")}%s""" % (
+                print(f""" {Main.colorFore("green")}{Main.style("bright")}%s""" % (
                     self.data["user_password"] if self.data["user_password"] else "use config.user.password to add user password"))
         except KeyboardInterrupt:
             print(
-                f"""\n {self.colorFore("green")}{self.style("bright")}Piece{self.style("reset")}""")
+                f"""\n {Main.colorFore("green")}{Main.style("bright")}Piece{Main.style("reset")}""")
             quit()
 
     def dev_details(self):
@@ -201,19 +254,19 @@ class Main(object):
         profiles and mail address.
         """
         print(
-            f""" {self.colorFore("green") + self.style("bright")}Name -> Ayush Joshi""")
+            f""" {Main.colorFore("green") + Main.style("bright")}Name -> Ayush Joshi""")
 
-        print(f""" {self.colorFore("green")}Email:""")
+        print(f""" {Main.colorFore("green")}Email:""")
 
-        print(f""" {self.colorFore("green")}-> ayush854032@gmail.com (primary)""")
+        print(f""" {Main.colorFore("green")}-> ayush854032@gmail.com (primary)""")
 
-        print(f""" {self.colorFore("green")}-> joshiayush.joshiayush@gmail.com""")
-
-        print(
-            f""" {self.colorFore("green")}GitHub -> https://github.com/JoshiAyush""")
+        print(f""" {Main.colorFore("green")}-> joshiayush.joshiayush@gmail.com""")
 
         print(
-            f""" {self.colorFore("green")}LinkedIn -> https://www.linkedin.com/in/ayush-joshi-3600a01b7/{self.colorFore("reset")}""")
+            f""" {Main.colorFore("green")}GitHub -> https://github.com/JoshiAyush""")
+
+        print(
+            f""" {Main.colorFore("green")}LinkedIn -> https://www.linkedin.com/in/ayush-joshi-3600a01b7/{Main.colorFore("reset")}""")
 
     def _input(self):
         """
@@ -228,13 +281,13 @@ class Main(object):
         """
         try:
             inp = input(
-                f"""\n {self.colorFore("green")}{self.style("bright")}LinkedIn/> """)
-            print(end=f"""{self.style("reset")}""")
+                f"""\n {Main.colorFore("green")}{Main.style("bright")}LinkedIn/> """)
+            print(end=f"""{Main.style("reset")}""")
             return inp
 
         except KeyboardInterrupt:
             print(
-                f"""\n {self.colorFore("green")}{self.style("bright")}Piece{self.style("reset")}""")
+                f"""\n {Main.colorFore("green")}{Main.style("bright")}Piece{Main.style("reset")}""")
             quit()              # ? exit program silently
 
     def _print(self, string, **kwargs):
@@ -243,7 +296,8 @@ class Main(object):
         else:
             print(f""" {string}""")
 
-    def clear(self):
+    @staticmethod
+    def clear():
         """
         Method clear() clears the terminal screen
 
@@ -256,7 +310,8 @@ class Main(object):
         elif os.name == 'posix':
             _ = os.system('clear')
 
-    def gotoxy(self, x, y):
+    @staticmethod
+    def gotoxy(x, y):
         """
         Method gotoxy() sets the console cursor position.
 
@@ -266,7 +321,8 @@ class Main(object):
         """
         print("%c[%d;%df" % (0x1B, y, x), end='')
 
-    def terminal_size(self):
+    @staticmethod
+    def terminal_size():
         """
         Method terminal_size() returns the size of the terminal when 
 
@@ -281,7 +337,8 @@ class Main(object):
         """
         return os.get_terminal_size()
 
-    def get_coords(self):
+    @staticmethod
+    def get_coords():
         """
         Method get_coords() returns the co-ordinates that are
 
@@ -292,41 +349,42 @@ class Main(object):
         ! return:
             * co-ordinates that sets the Logo nearly to the center 
         """
-        if self.terminal_size()[0] >= 150:
+        if Main.terminal_size()[0] >= 150:
             return [48, 5]                      # ? return [48, 5] if full size
-        elif self.terminal_size()[0] >= 80:
+        elif Main.terminal_size()[0] >= 80:
             return [15, 2]                      # ? return [15, 2] if half size
         else:
             # ? else return [15, 2] (predicted)
             return [15, 2]
 
-    def home(self):
+    @staticmethod
+    def home():
         """
         Method home() prints the home logo on the screen which makes 
 
         the application more professional.
         """
-        self.clear()                # ? clears the screen first
+        Main.clear()                # ? clears the screen first
 
-        x, y = self.get_coords()    # ? get the co-ordinates
-        print(self.style("bright"))
-        print(self.colorFore("green"))
-        self.gotoxy(x, y)           # ? apply co-ordinates
+        x, y = Main.get_coords()    # ? get the co-ordinates
+        print(Main.style("bright"))
+        print(Main.colorFore("green"))
+        Main.gotoxy(x, y)           # ? apply co-ordinates
         print(r"\\                      \\  //                  \\  \\             ")
-        self.gotoxy(x, y+1)         # ? apply co-ordinates
+        Main.gotoxy(x, y+1)         # ? apply co-ordinates
         print(r"\\        ()            \\ //                   \\  \\             ")
-        self.gotoxy(x, y+2)         # ? apply co-ordinates
+        Main.gotoxy(x, y+2)         # ? apply co-ordinates
         print(r"\\        \\  \\\\\\\\  \\//    \\\\\\\\        \\  \\  \\\\\\\\\  ")
-        self.gotoxy(x, y+3)         # ? apply co-ordinates
+        Main.gotoxy(x, y+3)         # ? apply co-ordinates
         print(r"\\        \\  \\    \\  \\\\    \\ ===//  \\\\\\\\  \\  \\     \\  ")
-        self.gotoxy(x, y+4)         # ? apply co-ordinates
+        Main.gotoxy(x, y+4)         # ? apply co-ordinates
         print(r"\\        \\  \\    \\  \\ \\   \\        \\    \\  \\  \\     \\  ")
-        self.gotoxy(x, y+5)         # ? apply co-ordinates
+        Main.gotoxy(x, y+5)         # ? apply co-ordinates
         print(r"\\\\\\\\  \\  \\    \\  \\  \\  \\\\\\\\  \\\\\\\\  \\  \\     \\  ")
 
         # ? show a tip to automation
         print("\n Type help for more information!", end="\n")
-        print(self.colorFore("reset"))
+        print(Main.colorFore("reset"))
 
     def Error(self):
         """
@@ -336,16 +394,7 @@ class Main(object):
         """
         if self.command:
             print(
-                f""" {self.colorFore("red")}{self.style("bright")}`{self.command}` is not recognized as an internal command{self.colorFore("reset")}""")
-
-    def linkedin_command_usage(self):
-        """
-        Method linkedin_command_usage() shows how you can use the linkedin
-
-        command in case you missed the flags with the linkedin command or 
-
-        mistakenly applied wrong flags with the linkedin command.
-        """
+                f""" {Main.colorFore("red")}{Main.style("bright")}`{self.command}` is not recognized as an internal command{Main.colorFore("reset")}""")
 
     def handle_linkedin_commands(self):
         """
@@ -362,7 +411,7 @@ class Main(object):
                 LinkedInConnections.LinkedInConnectionsAuto(self.data)
             else:
                 print(
-                    f""" {self.colorFore("green")}{self.style("bright")}Need credentials first use config.user.email/password to add them{self.colorFore("reset")}""")
+                    f""" {Main.colorFore("green")}{Main.style("bright")}Need credentials first use config.user.email/password to add them{Main.colorFore("reset")}""")
         elif self.command.split(" ")[1] == "invitation-manager":
             pass
         elif self.command.split(" ")[1] == "mynetwork":
@@ -411,9 +460,9 @@ class Main(object):
                 self.handle_linkedin_commands()
             elif self.command == "linkedin":
                 # ? show the linkedin command usage
-                self.linkedin_command_usage()
+                self.help_with_linkedin()
             elif " " in self.command and self.command.split(" ")[0].strip() == "theme" and len(self.command.split(" ")) == 2:
-                self.set_theme(self.command.split(" ")[1].strip())
+                Main.set_theme(self.command.split(" ")[1].strip())
             elif "=" in self.command or "config.user.password" in self.command:
                 # ? handle the config command
                 self.handle_configs()
