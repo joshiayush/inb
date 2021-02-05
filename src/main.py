@@ -71,7 +71,7 @@ class Main(object):
             "theme": self.handle_theme_commands,
             "clear": self.handle_clear_commands,
             "help": self.handle_help_commands,
-            "exit": quit,
+            "exit": self.handle_exit_command,
         }
 
     def init_vars(self):
@@ -99,6 +99,22 @@ class Main(object):
         }
 
         self.theme = "parrot"
+
+    @staticmethod
+    def terminal_size():
+        """
+        Method terminal_size() returns the size of the terminal when 
+
+        the LinkedIn Automator program executed, this functionality
+
+        is required in order to set the Home Logo according to the
+
+        terminal size.
+
+        ! return:
+            * terminal size
+        """
+        return os.get_terminal_size()
 
     @staticmethod
     def get_coords():
@@ -156,6 +172,17 @@ class Main(object):
         elif Main.THEME == "normal":
             return colors.get(color, colorama.Fore.RESET) if color == "red" or color == "reset" else " \b"
 
+    @staticmethod
+    def match_string_with_colorama_objects(string):
+        if string == Main.style("bright") or string == Main.style("dim") or string == Main.style("normal") \
+                or string == Main.style("reset"):
+            return True
+        elif string == Main.colorFore("red") or string == Main.colorFore("green") or string == Main.colorFore("blue") \
+                or string == Main.colorFore("reset"):
+            return True
+        else:
+            return False
+
     def clear(self):
         """
         Method clear() clears the terminal screen
@@ -210,22 +237,39 @@ class Main(object):
             * returns the entered value
         """
         try:
-            inp = input(
-                f"""\n {Main.colorFore("green")}{Main.style("bright")}LinkedIn/> """)
-            Main._print(f"""""", end=f"""{Main.style("reset")}""")
+            Main._print(f"""{Main.style("bright")}""", end="")
+            Main._print(f"""{Main.colorFore("green")}""", end="")
+
+            inp = input(f"""\n LinkedIn/> """)
+
+            Main._print(f"""{Main.colorFore("reset")}""", end="")
+            Main._print(f"""{Main.style("reset")}""", end="")
+
             return inp
 
         except KeyboardInterrupt:
-            Main._print(
-                f"""\n {Main.colorFore("green")}{Main.style("bright")}Piece{Main.style("reset")}""")
-            quit()              # ? exit program silently
+            Main._print(f"""{Main.style("bright")}""", end="")
+            Main._print(f"""{Main.colorFore("green")}""", end="")
+
+            Main._print(f"""\n Piece""")
+
+            Main._print(f"""{Main.colorFore("reset")}""", end="")
+            Main._print(f"""{Main.style("reset")}""", end="")
+
+            exit()              # ? exit program silently
 
     @staticmethod
     def _print(string, **kwargs):
-        if kwargs:
-            print(f""" {string}""", **kwargs)
+        if Main.match_string_with_colorama_objects(string):
+            if kwargs:
+                print(f"""{string}""", end="")
+            else:
+                print(f"""{string}""")
         else:
-            print(f""" {string}""")
+            if kwargs:
+                print(f""" {string}""", **kwargs)
+            else:
+                print(f""" {string}""")
 
     def set_theme(self, _theme):
         if _theme == "--parrot":
@@ -247,7 +291,9 @@ class Main(object):
 
         mistakenly applied wrong flags with the linkedin command.
         """
-        Main._print(f"""{Main.style("bright")}{Main.colorFore("green")}""")
+        Main._print(f"""{Main.style("bright")}""", end="")
+        Main._print(f"""{Main.colorFore("green")}""", end="")
+
         Main._print(
             f"""linkedin [send] [suggestions^] --auto/--guided [--headless]""")
         Main._print(f"""`linkedin` command handles the linkedin process.""")
@@ -289,12 +335,12 @@ class Main(object):
             f"""`--headless` flag tells the program to start automation without opening the browser.""")
         Main._print(f"""""")
         Main._print(
-            f"""linkedin [invitation-manager*] [withdraw*] [all*^/over > <days>*] [--headless]""")
+            f"""linkedin [invitation-manager*] [ignore*/withdraw*] [all*^/over > <days>*] [--headless]""")
         Main._print(f"""`linkedin` command handles the linkedin process.""")
         Main._print(
             f"""`invitation-manager` flag tells the linkedin to start performing operations on""")
         Main._print(
-            f"""`withdraw` flag tell the linkedin that you want to activate invitation withdrawing process.""")
+            f"""`ignore/withdraw` flag tells the linkedin that you want to activate invitation ignoring or withdrawing process.""")
         Main._print(
             f"""`all/over > <days>` flag tell to either withdraw all the sent invitations or""")
         Main._print(
@@ -325,76 +371,252 @@ class Main(object):
             f"""`--greet` flag tells the linkedin to send greet message.""")
         Main._print(
             f"""`--headless` flag tells the program to start automation without opening the browser.""")
-        Main._print(f"""{Main.colorFore("reset")}""")
+
+        Main._print(f"""{Main.colorFore("reset")}""", end="")
+        Main._print(f"""{Main.style("reset")}""", end="")
 
     @staticmethod
     def help_with_show():
-        Main._print(f"""{Main.style("bright")}{Main.colorFore("green")}""")
+        Main._print(f"""{Main.style("bright")}""", end="")
+        Main._print(f"""{Main.colorFore("green")}""", end="")
+
         Main._print(f"""`show` shows all the details you have entered like:""")
         Main._print(f"""user.email""")
         Main._print(
             f"""user.password (asks first if you want to see it really or not)""")
         Main._print(f"""job.keywords""")
         Main._print(f"""job.location""")
-        Main._print(f"""{Main.colorFore("reset")}""")
+
+        Main._print(f"""{Main.colorFore("reset")}""", end="")
+        Main._print(f"""{Main.style("reset")}""", end="")
 
     @staticmethod
     def help_with_developer():
-        Main._print(f"""{Main.style("bright")}{Main.colorFore("green")}""")
+        Main._print(f"""{Main.style("bright")}""", end="")
+        Main._print(f"""{Main.colorFore("green")}""", end="")
+
         Main._print(f"""`developer` shows the developer details like:""")
         Main._print(f"""his number, email, profiles ...""")
-        Main._print(f"""{Main.colorFore("reset")}""")
+
+        Main._print(f"""{Main.colorFore("reset")}""", end="")
+        Main._print(f"""{Main.style("reset")}""", end="")
 
     @staticmethod
     def help_with_theme():
-        Main._print(f"""{Main.style("bright")}{Main.colorFore("green")}""")
+        Main._print(f"""{Main.style("bright")}""", end="")
+        Main._print(f"""{Main.colorFore("green")}""", end="")
+
         Main._print(
             f"""`theme --parrot/--normal` changes the cli (command line theme) according to the given theme value.""")
-        Main._print(f"""{Main.colorFore("reset")}""")
+
+        Main._print(f"""{Main.colorFore("reset")}""", end="")
+        Main._print(f"""{Main.style("reset")}""", end="")
 
     @staticmethod
     def help_with_clear():
-        Main._print(f"""{Main.style("bright")}{Main.colorFore("green")}""")
+        Main._print(f"""{Main.style("bright")}""", end="")
+        Main._print(f"""{Main.colorFore("green")}""", end="")
+
         Main._print(f"""`clear` clears the screen""")
-        Main._print(f"""{Main.colorFore("reset")}""")
+
+        Main._print(f"""{Main.colorFore("reset")}""", end="")
+        Main._print(f"""{Main.style("reset")}""", end="")
 
     @staticmethod
     def help_with_exit():
-        Main._print(f"""{Main.style("bright")}{Main.colorFore("green")}""")
+        Main._print(f"""{Main.style("bright")}""", end="")
+        Main._print(f"""{Main.colorFore("green")}""", end="")
+
         Main._print(
             f"""`exit` exits the program and also does flushing jobs.""")
-        Main._print(f"""{Main.colorFore("")}""")
+
+        Main._print(f"""{Main.colorFore("reset")}""", end="")
+        Main._print(f"""{Main.style("reset")}""", end="")
 
     @staticmethod
     def help_with_help():
-        Main._print(f"""{Main.style("bright")}{Main.colorFore("green")}""")
+        Main._print(f"""{Main.style("bright")}""", end="")
+        Main._print(f"""{Main.colorFore("green")}""", end="")
+
         Main._print(
             f"""`help` prints a list of commands that the Linkedin Automater have.""")
-        Main._print(f"""{Main.colorFore("reset")}""")
+
+        Main._print(f"""{Main.colorFore("reset")}""", end="")
+        Main._print(f"""{Main.style("reset")}""", end="")
 
     def get_command_lenght(self):
         return len(self.command.split(" "))
 
     def get_command_at_index(self, index):
-        return self.command.split(" ")[index]
+        return self.command.split(" ")[index].strip()
+
+    def handle_linkedin_commands(self):
+        """
+        Method handle_linkedin_commands() calls the main LinkedIn classes
+
+        according to the commands given by the user, it checks the flags
+
+        that are applied with the `linkedin` command and calls the LinkedIn
+
+        classes accordingly.
+        """
+        if self.command.split(" ")[1] == "send":
+            if self.data["user_email"] and self.data["user_password"]:
+                LinkedInConnections.LinkedInConnectionsAuto(self.data)
+            else:
+                Main._print(f"""{Main.style("bright")}""", end="")
+                Main._print(f"""{Main.colorFore("blue")}""", end="")
+
+                Main._print(
+                    f"""Need credentials first use config.user.email/password to add them.""")
+
+                Main._print(f"""{Main.colorFore("reset")}""", end="")
+                Main._print(f"""{Main.style("reset")}""", end="")
+        elif self.command.split(" ")[1] == "invitation-manager":
+            pass
+        elif self.command.split(" ")[1] == "mynetwork":
+            pass
+        else:
+            print("'%s' is not a linkedin command" %
+                  (self.command.split(" ")[1]))
+
+    @staticmethod
+    def show_job_details(self):
+        """
+        Function show_job_details() prints the job details that the user entered
+
+        we print the information about job keys once we have any of these two 
+
+        field otherwise we don't show it.
+        """
+        if self.data["job_keywords"] or self.data["job_location"]:
+            Main._print(f"""{Main.style("bright")}""", end="")
+            Main._print(f"""{Main.colorFore("green")}""", end="")
+
+            Main._print(f"""Job Keywords -> %s""" %
+                        (self.data["job_keywords"] if self.data["job_keywords"] else None))
+            Main._print(f"""Job Location -> %s""" %
+                        (self.data["job_location"] if self.data["job_location"] else None))
+
+            Main._print(f"""{Main.colorFore("reset")}""", end="")
+            Main._print(f"""{Main.style("reset")}""", end="")
+
+    @staticmethod
+    def ask_to_show_password(self):
+        """
+        Function ask_to_show_password() asks the user if (s)he want to see the 
+
+        password if yes show them if not don't show them, this is for security
+
+        purpose.
+        """
+        try:
+            Main._print(f"""{Main.style("bright")}""", end="")
+            Main._print(f"""{Main.colorFore("blue")}""", end="")
+
+            ch = input(
+                f""" Show password anyway? [y/N]: """) if self.data["user_password"] else "n"
+
+            Main._print(f"""{Main.colorFore("reset")}""", end="")
+            Main._print(f"""{Main.style("reset")}""", end="")
+
+            if ch.lower() == "y":
+                Main._print(f"""{Main.style("bright")}""", end="")
+                Main._print(f"""{Main.colorFore("green")}""", end="")
+
+                Main._print(f"""%s""" % (
+                    self.data["user_email"] if self.data["user_email"] else "use config.user.email to add user email"))
+                Main._print(f"""%s""" % (
+                    self.data["user_password"] if self.data["user_password"] else "use config.user.password to add user password"))
+
+                Main._print(f"""{Main.colorFore("reset")}""", end="")
+                Main._print(f"""{Main.style("reset")}""", end="")
+        except KeyboardInterrupt:
+            Main._print(f"""{Main.style("bright")}""", end="")
+            Main._print(f"""{Main.colorFore("green")}""", end="")
+
+            Main._print(f"""\n Piece""")
+
+            Main._print(f"""Main.colorFore("reset")""", end="")
+            Main._print(f"""Main.style("reset")""", end="")
+
+            quit()
+
+    def handle_show_commands(self):
+        """
+        Method show() gets executed once the user hit the command `show` this basically 
+
+        prints the information that user had entered.
+        """
+        Main._print(f"""{Main.style("bright")}""", end="")
+        Main._print(f"""{Main.colorFore("green")}""", end="")
+
+        Main._print(f"""%s""" % (
+            self.data["user_email"] if self.data["user_email"] else "use config.user.email to add user email"))
+        Main._print(f"""%s""" % (
+            "*"*len(self.data["user_password"]) if self.data["user_password"] else "use config.user.password to add user password"))
+
+        Main._print(f"""{Main.colorFore("reset")}""", end="")
+        Main._print(f"""{Main.style("reset")}""", end="")
+
+        Main.show_job_details(self)
+
+        Main.ask_to_show_password(self)
+
+    def handle_developer_commands(self):
+        """
+        Method dev_details() gets executed once the user hits the command `devdetails` 
+
+        it basically shows the user's network profiles and mail address.
+        """
+        Main._print(f"""{Main.style("bright")}""", end="")
+        Main._print(f"""{Main.colorFore("green")}""", end="")
+
+        Main._print(f"""Name     :  Ayush Joshi""")
+        Main._print(f"""Email    :  ayush854032@gmail.com (primary)""")
+        Main._print(f"""Email    :  joshiayush.joshiayush@gmail.com""")
+        Main._print(f"""Mobile   :  +91 8941854032 (Only WhatsApp)""")
+        Main._print(f"""GitHub   :  https://github.com/JoshiAyush""")
+        Main._print(
+            f"""LinkedIn :  https://www.linkedin.com/in/ayush-joshi-3600a01b7/{Main.colorFore("reset")}""")
+
+        Main._print(f"""{Main.colorFore("reset")}""", end="")
+        Main._print(f"""{Main.style("reset")}""", end="")
+
+    def handle_theme_commands(self):
+        if self.get_command_lenght() >= 3 and self.get_command_at_index(2) == "--help":
+            Main.help_with_theme()
+            if self.get_command_lenght() > 3:
+                self.command = (
+                    "command " + self.get_command_at_index(3)).strip()
+                self.Error()
+        elif self.get_command_lenght() >= 3 and (
+                self.get_command_at_index(2) == "--parrot" or self.get_command_at_index(2) == "--normal"):
+            self.set_theme(self.get_command_at_index(2).strip())
+        else:
+            Main.help_with_theme()
+
+    def handle_clear_commands(self):
+        if self.get_command_lenght() == 2 and self.get_command_at_index(1) == "clear":
+            self.home()
+        elif self.get_command_lenght() >= 3 and self.get_command_at_index(2) == "--help":
+            Main.help_with_clear()
+            if self.get_command_lenght() > 3:
+                self.command = (
+                    "command " + self.get_command_at_index(3)).strip()
+                self.Error()
+        else:
+            pass
 
     def handle_help_commands(self):
         """
-        Method _help() provides a manual to the user, this guide
+        Method _help() provides a manual to the user, this guide is contains every 
 
-        is contains every information that a user needs in order to
-
-        start linkedin automation.
+        information that a user needs in order to start linkedin automation.
         """
-        if len(self.command.split(" ")) >= 3 and self.command.split(" ")[2] == "--help":
-            Main.help_with_help()
-            if len(self.command.split(" ")) > 3:
-                self.command = (
-                    "command " + self.command.split(" ")[3]).strip()
-                self.Error()
-        else:
-            Main._print(f"""{Main.style("bright")}""")
-            Main._print(f"""{Main.colorFore("green")}""")
+        if self.get_command_lenght() == 2 and self.get_command_at_index(1) == "help":
+            Main._print(f"""{Main.style("bright")}""", end="")
+            Main._print(f"""{Main.colorFore("green")}""", end="")
 
             Main._print(
                 f"""LinkedIn Bash, version 1.2.0(1)-release (xrh-cclnk)""")
@@ -421,7 +643,7 @@ class Main(object):
             Main._print(
                 f"""linkedin [invitation-manager*] [show*] --sent*/--recieved* [--headless]""")
             Main._print(
-                f"""linkedin [invitation-manager*] [withdraw*] [all*^/over > <days>*] [--headless]""")
+                f"""linkedin [invitation-manager*] [ignore*/withdraw*] [all*^/over > <days>*] [--headless]""")
             Main._print(
                 f"""linkedin [mynetwork*] [show*] [all*/page > 1^+2+3+...*] [--headless]""")
             Main._print(
@@ -437,176 +659,102 @@ class Main(object):
             Main._print(f"""""")
             Main._print(f"""exit""")
 
-            Main._print(f"""{Main.colorFore("reset")}""")
+            Main._print(f"""{Main.colorFore("reset")}""", end="")
+            Main._print(f"""{Main.style("reset")}""", end="")
+        elif self.get_command_lenght() >= 3 and self.get_command_at_index(2) == "--help":
+            Main.help_with_help()
+            if self.get_command_lenght() > 3:
+                self.command = (
+                    "command " + self.command.split(" ")[3]).strip()
+                self.Error()
+        else:
+            pass
 
-    @staticmethod
-    def show_job_details(self):
-        """
-        Function show_job_details() prints the job details that the user entered
+    def handle_exit_command(self):
+        if self.get_command_lenght() == 2 and self.get_command_at_index(1) == "exit":
+            Main._print(f"""{Main.style("bright")}""", end="")
+            Main._print(f"""{Main.colorFore("green")}""", end="")
 
-        we print the information about job keys once we have any of these two 
+            Main._print(f"""Piece""")
 
-        field otherwise we don't show it.
-        """
-        if self.data["job_keywords"] or self.data["job_location"]:
-            Main._print(f"""{Main.colorFore("green")}{Main.style("bright")}Job Keywords -> %s""" %
-                        (self.data["job_keywords"] if self.data["job_keywords"] else None))
-            Main._print(f"""{Main.colorFore("green")}{Main.style("bright")}Job Location -> %s""" %
-                        (self.data["job_location"] if self.data["job_location"] else None))
-
-    @staticmethod
-    def ask_to_show_password(self):
-        """
-        Function ask_to_show_password() asks the user if (s)he want to see the 
-
-        password if yes show them if not don't show them, this is for security
-
-        purpose.
-        """
-        try:
-            ch = input(
-                f""" {Main.colorFore("green")}{Main.style("bright")}Show password anyway? [y/N]: """) if self.data["user_password"] else "n"
-            if ch.lower() == "y":
-                print(f""" {Main.colorFore("green")}{Main.style("bright")}%s""" % (
-                    self.data["user_email"] if self.data["user_email"] else "use config.user.email to add user email"))
-                print(f""" {Main.colorFore("green")}{Main.style("bright")}%s""" % (
-                    self.data["user_password"] if self.data["user_password"] else "use config.user.password to add user password"))
-        except KeyboardInterrupt:
-            print(
-                f"""\n {Main.colorFore("green")}{Main.style("bright")}Piece{Main.style("reset")}""")
-            quit()
-
-    def handle_show_commands(self):
-        """
-        Method show() gets executed once the user hit the command
-
-        `show` this basically prints the information that user had
-
-        entered.
-        """
-        Main._print(f"""{Main.colorFore("green")}{Main.style("bright")}%s""" % (
-            self.data["user_email"] if self.data["user_email"] else "use config.user.email to add user email"))
-        Main._print(f"""{Main.colorFore("green")}{Main.style("bright")}%s""" % (
-            "*"*len(self.data["user_password"]) if self.data["user_password"] else "use config.user.password to add user password"))
-
-        Main.show_job_details(self)
-
-        Main.ask_to_show_password(self)
-
-    def handle_developer_commands(self):
-        """
-        Method dev_details() gets executed once the user hits the 
-
-        command `devdetails` it basically shows the user's network
-
-        profiles and mail address.
-        """
-        Main._print(f"""{Main.style("bright")}""")
-        Main._print(f"""{Main.colorFore("green")}""")
-
-        Main._print(f"""Name     :  Ayush Joshi""")
-        Main._print(f"""Email    :  ayush854032@gmail.com (primary)""")
-        Main._print(f"""Email    :  joshiayush.joshiayush@gmail.com""")
-        Main._print(f"""Mobile   :  +91 8941854032 (Only WhatsApp)""")
-        Main._print(f"""GitHub   :  https://github.com/JoshiAyush""")
-        Main._print(
-            f"""LinkedIn :  https://www.linkedin.com/in/ayush-joshi-3600a01b7/{Main.colorFore("reset")}""")
-
-        Main._print(f"""{Main.colorFore("reset")}""")
-
-    def handle_theme_commands(self):
-        if self.get_command_lenght() >= 3 and self.get_command_at_index(2) == "--help":
-            Main.help_with_theme()
+            Main._print(f"""{Main.colorFore("reset")}""", end="")
+            Main._print(f"""{Main.style("reset")}""", end="")
+            exit()
+        elif self.get_command_lenght() >= 3 and self.get_command_at_index(2) == "--help":
+            Main.help_with_exit()
             if self.get_command_lenght() > 3:
                 self.command = (
                     "command " + self.get_command_at_index(3)).strip()
                 self.Error()
-        elif self.get_command_lenght() >= 3 and (
-                self.get_command_at_index(2) == "--parrot" or self.get_command_at_index(2) == "--normal"):
-            self.set_theme(self.get_command_at_index(2).strip())
         else:
-            Main.help_with_theme()
-
-    def handle_clear_commands(self):
-        self.home()
-
-    @staticmethod
-    def terminal_size():
-        """
-        Method terminal_size() returns the size of the terminal when 
-
-        the LinkedIn Automator program executed, this functionality
-
-        is required in order to set the Home Logo according to the
-
-        terminal size.
-
-        ! return:
-            * terminal size
-        """
-        return os.get_terminal_size()
+            pass
 
     def Error(self):
         """
-        Method Error() gets called when the entered command is
+        Method Error() gets called when the entered command is not recognized.
 
-        not recognized.
+        We say 'self.command[8:]' because this way we are triming the 'command '
+
+        from the entered command because we don't want to confuse the user.
         """
         if self.command:
-            print(
-                f""" {Main.colorFore("red")}{Main.style("bright")}`{self.command[8:]}` is not recognized as an internal command{Main.colorFore("reset")}""")
+            Main._print(f"""{Main.style("bright")}""", end="")
+            Main._print(f"""{Main.colorFore("red")}""", end="")
 
-    def handle_linkedin_commands(self):
-        """
-        Method handle_linkedin_commands() calls the main LinkedIn classes
+            Main._print(
+                f"""`{self.command[8:]}` is not recognized as an internal command.""")
 
-        according to the commands given by the user, it checks the flags
-
-        that are applied with the `linkedin` command and calls the LinkedIn
-
-        classes accordingly.
-        """
-        if self.command.split(" ")[1] == "send":
-            if self.data["user_email"] and self.data["user_password"]:
-                LinkedInConnections.LinkedInConnectionsAuto(self.data)
-            else:
-                print(
-                    f""" {Main.colorFore("green")}{Main.style("bright")}Need credentials first use config.user.email/password to add them{Main.colorFore("reset")}""")
-        elif self.command.split(" ")[1] == "invitation-manager":
-            pass
-        elif self.command.split(" ")[1] == "mynetwork":
-            pass
-        else:
-            print("'%s' is not a linkedin command" %
-                  (self.command.split(" ")[1]))
+            Main._print(f"""{Main.colorFore("reset")}""", end="")
+            Main._print(f"""{Main.style("reset")}""", end="")
 
     def handle_configs(self):
         """
-        Method handle_configs() basically saves the user's configurations
+        Method handle_configs() basically saves the user's configurations that are 
 
-        that are passed by hitting the command `config.user.email/password`
+        passed by hitting the command `config.user.email/password` or 
 
-        or `config.job/keywords/location`.
+        `config.job/keywords/location`. We use re.compile() and re.search() method
+
+        here to find the pattern in the command.
         """
         if "config.user.password" == self.get_command_at_index(1):
             self.data["user_password"] = getpass.getpass(prompt=" Password: ")
+
         elif re.compile(r"config.user.email=*").search(self.command):
             self.data["user_email"] = self.command[self.command.find(
                 "=")+1:].strip()
+
         elif re.compile(r"config.job.keywords=*").search(self.command):
             self.data["job_keywords"] = self.command[self.command.find(
                 "=")+1:].strip()
+
         elif re.compile(r"config.job.location=*").search(self.command):
             self.data["job_location"] = self.command[self.command.find(
                 "=")+1:].strip()
+
         else:
             self.Error()
 
     def handle_commands(self):
+        """
+        Method handle_commands() does the actually handling of the commands entered,
+
+        we first find pattern for 'configuration' commands using the re.compile() and
+
+        re.search() method, which finds the pattern in the entered command and calls
+
+        'handle_configs()' method if it founds any match if not it calls the functions
+
+        according to the command entered and if still does not find any function call
+
+        for the entered command it just hits the self.Error() method.   
+        """
         _config_regex_ = re.compile(
             r"config.user.email|config.user.password|config.job.keywords|config.job.location")
+
         if _config_regex_.search(self.command):
             self.handle_configs()
+
         else:
             # ? get() method of dictionary data type returns
             # ? value of passed argument if it is present
@@ -616,18 +764,19 @@ class Main(object):
 
     def run(self):
         """
-        Method run() runs a infinite loop and starts the `cli`
+        Method run() runs a infinite loop and starts the `cli` (Command Line Interface) 
 
-        (Command Line Interface) and it actually starts listening
+        and it actually starts listening to the commands and then it calls the function 
 
-        to the commands and then it takes action accordingly.
+        handle_commands() which handles the commands.
         """
         while True:
             # ? get the command and add 'command ' in it this way we
             # ? can handle the commands situated at list indices.
             self.command = ("command " + self._input()).strip()
-
-            self.handle_commands()
+            # ? calling function handle commands that is going to
+            # ? perform operations as per command
+            self.handle_commands() if self.get_command_lenght() > 1 else False
 
 
 # ! Execute program
