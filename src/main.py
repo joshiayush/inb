@@ -30,6 +30,9 @@ class Main(object):
     have `GUI` (Graphical User Interface) here because I don't have
 
     any deign Idea in my mind yet.  
+
+    ! Class Variable:
+        * THEME: is the theme for our cli (command line interface)
     """
     THEME = "parrot"
 
@@ -70,14 +73,6 @@ class Main(object):
             "exit": Main.help_with_exit
         }
 
-    @staticmethod
-    def set_theme(_theme):
-        if _theme == "--parrot":
-            Main.THEME = "parrot"
-        elif _theme == "--normal":
-            Main.THEME = "normal"
-        Main.home()
-
     def init_commands(self):
         """
         Method init_commands() initialize the commands that LinkedIn
@@ -96,10 +91,48 @@ class Main(object):
             "exit": quit,
             "help": self._help,
             "show": self.show,
-            "devdetails": self.dev_details,
+            "developer": self.developer,
             "linkedin": self.handle_linkedin_commands,
             "clear": self.home
         }
+
+    @staticmethod
+    def set_theme(_theme):
+        if _theme == "--parrot":
+            Main.THEME = "parrot"
+        elif _theme == "--normal":
+            Main.THEME = "normal"
+        Main.home()
+
+    @staticmethod
+    def _input():
+        """
+        Method _input() is a dedicated input method for our LinkedIn
+
+        `cli` (Command Line Interface), it also handles the Keyboard
+
+        interrupt error.
+
+        ! return:
+            * returns the entered value
+        """
+        try:
+            inp = input(
+                f"""\n {Main.colorFore("green")}{Main.style("bright")}LinkedIn/> """)
+            Main._print(f"""""", end=f"""{Main.style("reset")}""")
+            return inp
+
+        except KeyboardInterrupt:
+            Main._print(
+                f"""\n {Main.colorFore("green")}{Main.style("bright")}Piece{Main.style("reset")}""")
+            quit()              # ? exit program silently
+
+    @staticmethod
+    def _print(string, **kwargs):
+        if kwargs:
+            print(f""" {string}""", **kwargs)
+        else:
+            print(f""" {string}""")
 
     @staticmethod
     def style(style):
@@ -118,10 +151,7 @@ class Main(object):
             "red": colorama.Fore.RED,
             "green": colorama.Fore.GREEN,
             "blue": colorama.Fore.BLUE,
-            "reset": colorama.Fore.RESET,
-            "lightred": colorama.Fore.LIGHTRED_EX,
-            "lightgreen": colorama.Fore.LIGHTGREEN_EX,
-            "lightblue": colorama.Fore.LIGHTBLUE_EX
+            "reset": colorama.Fore.RESET
         }
 
         if Main.THEME == "parrot":
@@ -180,7 +210,8 @@ class Main(object):
                 f"""A (^) next to command means that the command is the default command.""")
             Main._print(
                 f"""A (<>) around a name means that the field is required.""")
-            Main._print(f"""A (/) between commands means that you can write either of these but not all.""")
+            Main._print(
+                f"""A (/) between commands means that you can write either of these but not all.""")
             Main._print(
                 f"""A (*) next to a name means that the command is disabled.""")
             Main._print(f"""""")
@@ -199,7 +230,7 @@ class Main(object):
             Main._print(f"""""")
             Main._print(f"""show""")
             Main._print(f"""""")
-            Main._print(f"""devdetails""")
+            Main._print(f"""developer""")
             Main._print(f"""""")
             Main._print(f"""theme <--parrot^/--normal>""")
             Main._print(f"""""")
@@ -218,18 +249,18 @@ class Main(object):
 
         entered.
         """
-        print(f""" {Main.colorFore("green")}{Main.style("bright")}%s""" % (
+        Main._print(f"""{Main.colorFore("green")}{Main.style("bright")}%s""" % (
             self.data["user_email"] if self.data["user_email"] else "use config.user.email to add user email"))
-        print(f""" {Main.colorFore("green")}{Main.style("bright")}%s""" % (
+        Main._print(f"""{Main.colorFore("green")}{Main.style("bright")}%s""" % (
             "*"*len(self.data["user_password"]) if self.data["user_password"] else "use config.user.password to add user password"))
 
         # ! we print the information about job keys once we have any of
         # ! these two field otherwise we don't show it
         if self.data["job_keywords"] or self.data["job_location"]:
-            print(f""" {Main.colorFore("green")}{Main.style("bright")}Job Keywords -> %s""" %
-                  (self.data["job_keywords"] if self.data["job_keywords"] else None))
-            print(f""" {Main.colorFore("green")}{Main.style("bright")}Job Location -> %s""" %
-                  (self.data["job_location"] if self.data["job_location"] else None))
+            Main._print(f"""{Main.colorFore("green")}{Main.style("bright")}Job Keywords -> %s""" %
+                        (self.data["job_keywords"] if self.data["job_keywords"] else None))
+            Main._print(f"""{Main.colorFore("green")}{Main.style("bright")}Job Location -> %s""" %
+                        (self.data["job_location"] if self.data["job_location"] else None))
 
         # ! ask the user if (s)he want to see the password if yes show
         # ! them if not don't show them
@@ -246,7 +277,8 @@ class Main(object):
                 f"""\n {Main.colorFore("green")}{Main.style("bright")}Piece{Main.style("reset")}""")
             quit()
 
-    def dev_details(self):
+    @staticmethod
+    def developer():
         """
         Method dev_details() gets executed once the user hits the 
 
@@ -254,49 +286,17 @@ class Main(object):
 
         profiles and mail address.
         """
-        print(
-            f""" {Main.colorFore("green") + Main.style("bright")}Name -> Ayush Joshi""")
+        Main._print(f"""{Main.style("bright")}""")
+        Main._print(f"""{Main.colorFore("green")}""")
 
-        print(f""" {Main.colorFore("green")}Email:""")
+        Main._print(f"""Name     :  Ayush Joshi""")
+        Main._print(f"""Email    :  ayush854032@gmail.com (primary)""")
+        Main._print(f"""Email    :  joshiayush.joshiayush@gmail.com""")
+        Main._print(f"""Mobile   :  +91 8941854032 (Only WhatsApp)""")
+        Main._print(f"""GitHub   :  https://github.com/JoshiAyush""")
+        Main._print(f"""LinkedIn :  https://www.linkedin.com/in/ayush-joshi-3600a01b7/{Main.colorFore("reset")}""")
 
-        print(f""" {Main.colorFore("green")}-> ayush854032@gmail.com (primary)""")
-
-        print(f""" {Main.colorFore("green")}-> joshiayush.joshiayush@gmail.com""")
-
-        print(
-            f""" {Main.colorFore("green")}GitHub -> https://github.com/JoshiAyush""")
-
-        print(
-            f""" {Main.colorFore("green")}LinkedIn -> https://www.linkedin.com/in/ayush-joshi-3600a01b7/{Main.colorFore("reset")}""")
-
-    def _input(self):
-        """
-        Method _input() is a dedicated input method for our LinkedIn
-
-        `cli` (Command Line Interface), it also handles the Keyboard
-
-        interrupt error.
-
-        ! return:
-            * returns the entered value
-        """
-        try:
-            inp = input(
-                f"""\n {Main.colorFore("green")}{Main.style("bright")}LinkedIn/> """)
-            print(end=f"""{Main.style("reset")}""")
-            return inp
-
-        except KeyboardInterrupt:
-            print(
-                f"""\n {Main.colorFore("green")}{Main.style("bright")}Piece{Main.style("reset")}""")
-            quit()              # ? exit program silently
-
-    @staticmethod
-    def _print(string, **kwargs):
-        if kwargs:
-            print(f""" {string}""", **kwargs)
-        else:
-            print(f""" {string}""")
+        Main._print(f"""{Main.colorFore("reset")}""")
 
     @staticmethod
     def clear():
