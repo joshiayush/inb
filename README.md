@@ -12,7 +12,7 @@ It will install dependencies if they are not present in your system,
 
 it can install `python` interpreter `selenium`, `urllib`, `webdriver-manager`
 
-packages on your system.
+packages on your system.    
 
 ### `config.user.email=example@gmail.com`
 
