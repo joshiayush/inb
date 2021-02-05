@@ -8,6 +8,12 @@ In the project directory, you can run:
 
 Runs the program.
 
+It will install dependencies if they are not present in your system,
+
+it can install `python` interpreter `selenium`, `urllib`, `webdriver-manager`
+
+packages on your system.
+
 ### `config.user.email=example@gmail.com`
 
 Adds email to configurations.
