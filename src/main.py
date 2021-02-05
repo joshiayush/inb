@@ -48,32 +48,6 @@ class Main(object):
 
         self.home()             # ? prints the logo
 
-        self.run()              # ? start taking input
-
-    def init_vars(self):
-        """
-        Method init_vars() intialize the dictionary that holds
-
-        the user's details like credentials and jobs search, etc.
-        """
-        self.data = {
-            "user_email": "",
-            "user_password": "",
-            "job_keywords": "",
-            "job_location": "",
-            "driver_path": "/Python/LinkedIn Automater/driver/chromedriver",
-            "headless": True
-        }
-        self.theme = "parrot"
-        self.help_with = {
-            "linkedin": Main.help_with_linkedin,
-            "show": Main.help_with_show,
-            "developer": Main.help_with_developer,
-            "theme": Main.help_with_theme,
-            "clear": Main.help_with_clear,
-            "exit": Main.help_with_exit
-        }
-
     def init_commands(self):
         """
         Method init_commands() initialize the commands that LinkedIn
@@ -89,24 +63,137 @@ class Main(object):
             * clear: clears the screen
         """
         self.commands = {
-            "exit": quit,
-            "help": self._help,
-            "show": self.show,
-            "developer": self.developer,
             "linkedin": self.handle_linkedin_commands,
-            "clear": self.home
+            "show": self.handle_show_commands,
+            "developer": self.handle_developer_commands,
+            "theme": self.handle_theme_commands,
+            "clear": self.handle_clear_commands,
+            "help": self.handle_help_commands,
+            "exit": quit,
         }
 
+    def init_vars(self):
+        """
+        Method init_vars() intialize the dictionary that holds
+
+        the user's details like credentials and jobs search, etc.
+        """
+        self.data = {
+            "user_email": "",
+            "user_password": "",
+            "job_keywords": "",
+            "job_location": "",
+            "driver_path": "/Python/LinkedIn Automater/driver/chromedriver",
+            "headless": True
+        }
+
+        self.help_with = {
+            "linkedin": Main.help_with_linkedin,
+            "show": Main.help_with_show,
+            "developer": Main.help_with_developer,
+            "theme": Main.help_with_theme,
+            "clear": Main.help_with_clear,
+            "exit": Main.help_with_exit
+        }
+
+        self.theme = "parrot"
+
     @staticmethod
-    def set_theme(_theme):
-        if _theme == "--parrot":
-            Main.THEME = "parrot"
-            Main.home()
-        elif _theme == "--normal":
-            Main.THEME = "normal"
-            Main.home()
+    def get_coords():
+        """
+        Method get_coords() returns the co-ordinates that are
+
+        needed to set the Home Logo nearly to the center according
+
+        to the terminal size.
+
+        ! return:
+            * co-ordinates that sets the Logo nearly to the center 
+        """
+        if Main.terminal_size()[0] >= 150:
+            return [48, 5]                      # ? return [48, 5] if full size
+        elif Main.terminal_size()[0] >= 80:
+            return [15, 2]                      # ? return [15, 2] if half size
         else:
-            Main._print(f"""'{_theme}' can't be recognized as a 'theme' command""")
+            # ? else return [15, 2] (predicted)
+            return [15, 2]
+
+    @staticmethod
+    def gotoxy(x, y):
+        """
+        Method gotoxy() sets the console cursor position.
+
+        ! Args:
+            * x: column number for the cursor
+            * y: row number for the cursor
+        """
+        print("%c[%d;%df" % (0x1B, y, x), end='')
+
+    @staticmethod
+    def style(style):
+        styles = {
+            "bright": colorama.Style.BRIGHT,
+            "dim": colorama.Style.DIM,
+            "normal": colorama.Style.NORMAL,
+            "reset": colorama.Style.RESET_ALL
+        }
+
+        return styles.get(style, colorama.Style.RESET_ALL)
+
+    @staticmethod
+    def colorFore(color):
+        colors = {
+            "red": colorama.Fore.RED,
+            "green": colorama.Fore.GREEN,
+            "blue": colorama.Fore.BLUE,
+            "reset": colorama.Fore.RESET
+        }
+
+        if Main.THEME == "parrot":
+            return colors.get(color, colorama.Fore.RESET)
+        elif Main.THEME == "normal":
+            return colors.get(color, colorama.Fore.RESET) if color == "red" or color == "reset" else " \b"
+
+    def clear(self):
+        """
+        Method clear() clears the terminal screen
+
+        for windows we use command `cls` and for linux
+
+        based system we use command `clear`
+        """
+        if os.name == 'nt':
+            _ = os.system('cls')
+        elif os.name == 'posix':
+            _ = os.system('clear')
+
+    def home(self):
+        """
+        Method home() prints the home logo on the screen which makes 
+
+        the application more professional.
+        """
+        self.clear()                # ? clears the screen first
+
+        x, y = Main.get_coords()    # ? get the co-ordinates
+        print(Main.style("bright"))
+        print(Main.colorFore("green"))
+        Main.gotoxy(x, y)           # ? apply co-ordinates
+        print(r"\\                      \\  //                  \\  \\             ")
+        Main.gotoxy(x, y+1)         # ? apply co-ordinates
+        print(r"\\        ()            \\ //                   \\  \\             ")
+        Main.gotoxy(x, y+2)         # ? apply co-ordinates
+        print(r"\\        \\  \\\\\\\\  \\//    \\\\\\\\        \\  \\  \\\\\\\\\  ")
+        Main.gotoxy(x, y+3)         # ? apply co-ordinates
+        print(r"\\        \\  \\    \\  \\\\    \\ ===//  \\\\\\\\  \\  \\     \\  ")
+        Main.gotoxy(x, y+4)         # ? apply co-ordinates
+        print(r"\\        \\  \\    \\  \\ \\   \\        \\    \\  \\  \\     \\  ")
+        Main.gotoxy(x, y+5)         # ? apply co-ordinates
+        print(r"\\\\\\\\  \\  \\    \\  \\  \\  \\\\\\\\  \\\\\\\\  \\  \\     \\  ")
+
+        # ? show a tip to automation
+        print("\n Type help for more information!", end="\n")
+        print(Main.colorFore("reset"))
 
     @staticmethod
     def _input():
@@ -138,30 +225,16 @@ class Main(object):
         else:
             print(f""" {string}""")
 
-    @staticmethod
-    def style(style):
-        styles = {
-            "bright": colorama.Style.BRIGHT,
-            "dim": colorama.Style.DIM,
-            "normal": colorama.Style.NORMAL,
-            "reset": colorama.Style.RESET_ALL
-        }
-
-        return styles.get(style, colorama.Style.RESET_ALL)
-
-    @staticmethod
-    def colorFore(color):
-        colors = {
-            "red": colorama.Fore.RED,
-            "green": colorama.Fore.GREEN,
-            "blue": colorama.Fore.BLUE,
-            "reset": colorama.Fore.RESET
-        }
-
-        if Main.THEME == "parrot":
-            return colors.get(color, colorama.Fore.RESET)
-        elif Main.THEME == "normal":
-            return colors.get(color, colorama.Fore.RESET) if color == "red" or color == "reset" else " \b"
+    def set_theme(self, _theme):
+        if _theme == "--parrot":
+            Main.THEME = "parrot"
+            self.home()
+        elif _theme == "--normal":
+            Main.THEME = "normal"
+            self.home()
+        else:
+            Main._print(
+                f"""'{_theme}' can't be recognized as a 'theme' command""")
 
     @staticmethod
     def help_with_linkedin():
@@ -172,7 +245,7 @@ class Main(object):
 
         mistakenly applied wrong flags with the linkedin command.
         """
-        Main._print(f"""""")
+        Main._print(f"""{Main.style("bright")}{Main.colorFore("green")}""")
         Main._print(
             f"""linkedin [send] [suggestions^] --auto/--guided [--headless]""")
         Main._print(f"""`linkedin` command handles the linkedin process.""")
@@ -250,48 +323,60 @@ class Main(object):
             f"""`--greet` flag tells the linkedin to send greet message.""")
         Main._print(
             f"""`--headless` flag tells the program to start automation without opening the browser.""")
-        Main._print(f"""""")
+        Main._print(f"""{Main.colorFore("reset")}""")
 
     @staticmethod
     def help_with_show():
-        Main._print(f"""""")
+        Main._print(f"""{Main.style("bright")}{Main.colorFore("green")}""")
         Main._print(f"""`show` shows all the details you have entered like:""")
         Main._print(f"""user.email""")
         Main._print(
             f"""user.password (asks first if you want to see it really or not)""")
         Main._print(f"""job.keywords""")
         Main._print(f"""job.location""")
-        Main._print(f"""""")
+        Main._print(f"""{Main.colorFore("reset")}""")
 
     @staticmethod
     def help_with_developer():
-        Main._print(f"""""")
+        Main._print(f"""{Main.style("bright")}{Main.colorFore("green")}""")
         Main._print(f"""`developer` shows the developer details like:""")
         Main._print(f"""his number, email, profiles ...""")
-        Main._print(f"""""")
+        Main._print(f"""{Main.colorFore("reset")}""")
 
     @staticmethod
     def help_with_theme():
-        Main._print(f"""""")
-        Main._print(f"""`theme --parrot/--normal`""")
+        Main._print(f"""{Main.style("bright")}{Main.colorFore("green")}""")
         Main._print(
-            f"""changes the cli (command line theme) according to the given theme value.""")
-        Main._print(f"""""")
+            f"""`theme --parrot/--normal` changes the cli (command line theme) according to the given theme value.""")
+        Main._print(f"""{Main.colorFore("reset")}""")
 
     @staticmethod
     def help_with_clear():
-        Main._print(f"""""")
+        Main._print(f"""{Main.style("bright")}{Main.colorFore("green")}""")
         Main._print(f"""`clear` clears the screen""")
-        Main._print(f"""""")
+        Main._print(f"""{Main.colorFore("reset")}""")
 
     @staticmethod
     def help_with_exit():
-        Main._print(f"""""")
+        Main._print(f"""{Main.style("bright")}{Main.colorFore("green")}""")
         Main._print(
             f"""`exit` exits the program and also does flushing jobs.""")
-        Main._print(f"""""")
+        Main._print(f"""{Main.colorFore("")}""")
 
-    def _help(self, _with=None):
+    @staticmethod
+    def help_with_help():
+        Main._print(f"""{Main.style("bright")}{Main.colorFore("green")}""")
+        Main._print(
+            f"""`help` prints a list of commands that the Linkedin Automater have.""")
+        Main._print(f"""{Main.colorFore("reset")}""")
+
+    def get_command_lenght(self):
+        return len(self.command.split(" "))
+
+    def get_command_at_index(self, index):
+        return self.command.split(" ")[index]
+
+    def handle_help_commands(self):
         """
         Method _help() provides a manual to the user, this guide
 
@@ -299,9 +384,16 @@ class Main(object):
 
         start linkedin automation.
         """
-        Main._print(f"""{Main.style("bright")}""")
-        Main._print(f"""{Main.colorFore("green")}""")
-        if _with == None:
+        if len(self.command.split(" ")) >= 3 and self.command.split(" ")[2] == "--help":
+            Main.help_with_help()
+            if len(self.command.split(" ")) > 3:
+                self.command = (
+                    "command " + self.command.split(" ")[3]).strip()
+                self.Error()
+        else:
+            Main._print(f"""{Main.style("bright")}""")
+            Main._print(f"""{Main.colorFore("green")}""")
+
             Main._print(
                 f"""LinkedIn Bash, version 1.2.0(1)-release (xrh-cclnk)""")
             Main._print(
@@ -342,17 +434,16 @@ class Main(object):
             Main._print(f"""clear""")
             Main._print(f"""""")
             Main._print(f"""exit""")
-        else:
-            pass
-        Main._print(f"""{Main.colorFore("reset")}""")
+
+            Main._print(f"""{Main.colorFore("reset")}""")
 
     @staticmethod
     def show_job_details(self):
         """
         Function show_job_details() prints the job details that the user entered
-        
+
         we print the information about job keys once we have any of these two 
-        
+
         field otherwise we don't show it.
         """
         if self.data["job_keywords"] or self.data["job_location"]:
@@ -365,9 +456,9 @@ class Main(object):
     def ask_to_show_password(self):
         """
         Function ask_to_show_password() asks the user if (s)he want to see the 
-        
+
         password if yes show them if not don't show them, this is for security
-        
+
         purpose.
         """
         try:
@@ -383,7 +474,7 @@ class Main(object):
                 f"""\n {Main.colorFore("green")}{Main.style("bright")}Piece{Main.style("reset")}""")
             quit()
 
-    def show(self):
+    def handle_show_commands(self):
         """
         Method show() gets executed once the user hit the command
 
@@ -400,8 +491,7 @@ class Main(object):
 
         Main.ask_to_show_password(self)
 
-    @staticmethod
-    def developer():
+    def handle_developer_commands(self):
         """
         Method dev_details() gets executed once the user hits the 
 
@@ -422,30 +512,21 @@ class Main(object):
 
         Main._print(f"""{Main.colorFore("reset")}""")
 
-    @staticmethod
-    def clear():
-        """
-        Method clear() clears the terminal screen
+    def handle_theme_commands(self):
+        if self.get_command_lenght() >= 3 and self.get_command_at_index(2) == "--help":
+            Main.help_with_theme()
+            if self.get_command_lenght() > 3:
+                self.command = (
+                    "command " + self.get_command_at_index(3)).strip()
+                self.Error()
+        elif self.get_command_lenght() >= 3 and (
+                self.get_command_at_index(2) == "--parrot" or self.get_command_at_index(2) == "--normal"):
+            self.set_theme(self.get_command_at_index(2).strip())
+        else:
+            Main.help_with_theme()
 
-        for windows we use command `cls` and for linux
-
-        based system we use command `clear`
-        """
-        if os.name == 'nt':
-            _ = os.system('cls')
-        elif os.name == 'posix':
-            _ = os.system('clear')
-
-    @staticmethod
-    def gotoxy(x, y):
-        """
-        Method gotoxy() sets the console cursor position.
-
-        ! Args:
-            * x: column number for the cursor
-            * y: row number for the cursor
-        """
-        print("%c[%d;%df" % (0x1B, y, x), end='')
+    def handle_clear_commands(self):
+        self.home()
 
     @staticmethod
     def terminal_size():
@@ -463,55 +544,6 @@ class Main(object):
         """
         return os.get_terminal_size()
 
-    @staticmethod
-    def get_coords():
-        """
-        Method get_coords() returns the co-ordinates that are
-
-        needed to set the Home Logo nearly to the center according
-
-        to the terminal size.
-
-        ! return:
-            * co-ordinates that sets the Logo nearly to the center 
-        """
-        if Main.terminal_size()[0] >= 150:
-            return [48, 5]                      # ? return [48, 5] if full size
-        elif Main.terminal_size()[0] >= 80:
-            return [15, 2]                      # ? return [15, 2] if half size
-        else:
-            # ? else return [15, 2] (predicted)
-            return [15, 2]
-
-    @staticmethod
-    def home():
-        """
-        Method home() prints the home logo on the screen which makes 
-
-        the application more professional.
-        """
-        Main.clear()                # ? clears the screen first
-
-        x, y = Main.get_coords()    # ? get the co-ordinates
-        print(Main.style("bright"))
-        print(Main.colorFore("green"))
-        Main.gotoxy(x, y)           # ? apply co-ordinates
-        print(r"\\                      \\  //                  \\  \\             ")
-        Main.gotoxy(x, y+1)         # ? apply co-ordinates
-        print(r"\\        ()            \\ //                   \\  \\             ")
-        Main.gotoxy(x, y+2)         # ? apply co-ordinates
-        print(r"\\        \\  \\\\\\\\  \\//    \\\\\\\\        \\  \\  \\\\\\\\\  ")
-        Main.gotoxy(x, y+3)         # ? apply co-ordinates
-        print(r"\\        \\  \\    \\  \\\\    \\ ===//  \\\\\\\\  \\  \\     \\  ")
-        Main.gotoxy(x, y+4)         # ? apply co-ordinates
-        print(r"\\        \\  \\    \\  \\ \\   \\        \\    \\  \\  \\     \\  ")
-        Main.gotoxy(x, y+5)         # ? apply co-ordinates
-        print(r"\\\\\\\\  \\  \\    \\  \\  \\  \\\\\\\\  \\\\\\\\  \\  \\     \\  ")
-
-        # ? show a tip to automation
-        print("\n Type help for more information!", end="\n")
-        print(Main.colorFore("reset"))
-
     def Error(self):
         """
         Method Error() gets called when the entered command is
@@ -520,7 +552,7 @@ class Main(object):
         """
         if self.command:
             print(
-                f""" {Main.colorFore("red")}{Main.style("bright")}`{self.command}` is not recognized as an internal command{Main.colorFore("reset")}""")
+                f""" {Main.colorFore("red")}{Main.style("bright")}`{self.command[8:]}` is not recognized as an internal command{Main.colorFore("reset")}""")
 
     def handle_linkedin_commands(self):
         """
@@ -557,7 +589,7 @@ class Main(object):
         if "config.user.email" in self.command:
             self.data["user_email"] = self.command[self.command.find(
                 "=")+1:].strip()
-        elif "config.user.password" == self.command:
+        elif "config.user.password" == self.get_command_at_index(1):
             self.data["user_password"] = getpass.getpass(prompt=" Password: ")
         elif "config.job.keywords" in self.command:
             self.data["job_keywords"] = self.command[self.command.find(
@@ -568,6 +600,16 @@ class Main(object):
         else:
             self.Error()
 
+    def handle_commands(self):
+        if "config" in self.get_command_at_index(1):
+            self.handle_configs()
+        else:
+            # ? get() method of dictionary data type returns
+            # ? value of passed argument if it is present
+            # ? in dictionary otherwise second argument will
+            # ? be assigned as default value of passed argument.
+            self.commands.get(self.command.split(" ")[1], self.Error)()
+
     def run(self):
         """
         Method run() runs a infinite loop and starts the `cli`
@@ -577,29 +619,13 @@ class Main(object):
         to the commands and then it takes action accordingly.
         """
         while True:
-            # ? get the command
-            self.command = self._input()
+            # ? get the command and add 'command ' in it this way we
+            # ? can handle the commands situated at list indices.
+            self.command = ("command " + self._input()).strip()
 
-            # ? parse the command
-            if self.command.split(" ")[0] == "linkedin" and len(self.command.split(" ")) > 1:
-                # ? handle the linkedin commands
-                self.handle_linkedin_commands()
-            elif self.command == "linkedin":
-                # ? show the linkedin command usage
-                self.help_with_linkedin()
-            elif " " in self.command and self.command.split(" ")[0].strip() == "theme" and len(self.command.split(" ")) == 2:
-                Main.set_theme(self.command.split(" ")[1].strip())
-            elif "=" in self.command or "config.user.password" in self.command:
-                # ? handle the config command
-                self.handle_configs()
-            else:
-                # ? get() method of dictionary data type returns
-                # ? value of passed argument if it is present
-                # ? in dictionary otherwise second argument will
-                # ? be assigned as default value of passed argument
-                self.commands.get(self.command, self.Error)()
+            self.handle_commands()
 
 
 # ! Execute program
 if __name__ == "__main__":
-    Main()
+    Main().run()
