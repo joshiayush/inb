@@ -101,9 +101,12 @@ class Main(object):
     def set_theme(_theme):
         if _theme == "--parrot":
             Main.THEME = "parrot"
+            Main.home()
         elif _theme == "--normal":
             Main.THEME = "normal"
-        Main.home()
+            Main.home()
+        else:
+            Main._print(f"""'{_theme}' can't be recognized as a 'theme' command""")
 
     @staticmethod
     def _input():

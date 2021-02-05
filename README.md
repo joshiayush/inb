@@ -8,7 +8,7 @@ In the project directory, you can run:
 
 Runs the program.
 
-![Home Page](./Output/HomeScreen.png)
+![Home Page](./Output/LinkedInHome.png)
 
 ### `config.user.email=example@gmail.com`
 
