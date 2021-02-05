@@ -164,50 +164,51 @@ class Main(object):
 
         start linkedin automation.
         """
-        self._print(f"""{Main.style("bright")}""")
-        self._print(f"""{Main.colorFore("green")}""")
+        Main._print(f"""{Main.style("bright")}""")
+        Main._print(f"""{Main.colorFore("green")}""")
         if _with == None:
-            self._print(
+            Main._print(
                 f"""LinkedIn Bash, version 1.2.0(1)-release (xrh-cclnk)""")
-            self._print(
+            Main._print(
                 f"""These commands are defined internally. Type 'help' to see this list.""")
-            self._print(
+            Main._print(
                 f"""Type 'command' --help to know more about that command.""")
-            self._print(f"""""")
-            self._print(
+            Main._print(f"""""")
+            Main._print(
                 f"""A ([]) around a command means that the command is optional.""")
-            self._print(
+            Main._print(
                 f"""A (^) next to command means that the command is the default command.""")
-            self._print(
+            Main._print(
                 f"""A (<>) around a name means that the field is required.""")
-            self._print(
+            Main._print(f"""A (/) between commands means that you can write either of these but not all.""")
+            Main._print(
                 f"""A (*) next to a name means that the command is disabled.""")
-            self._print(f"""""")
-            self._print(
+            Main._print(f"""""")
+            Main._print(
                 f"""linkedin [send] [suggestions^] --auto^/--guided [--headless]""")
-            self._print(
+            Main._print(
                 f"""linkedin [send] [search industry=example&&location=india+usa+...] --auto^/--guided [--headless]""")
-            self._print(
+            Main._print(
                 f"""linkedin [invitation-manager*] [show*] --sent*/--recieved* [--headless]""")
-            self._print(
+            Main._print(
                 f"""linkedin [invitation-manager*] [withdraw*] [all*^/over > <days>*] [--headless]""")
-            self._print(
+            Main._print(
                 f"""linkedin [mynetwork*] [show*] [all*/page > 1^+2+3+...*] [--headless]""")
-            self._print(
+            Main._print(
                 f"""linkedin [mynetwork*] [sendmessage*] [all*] [--greet*^] [--headless]""")
-            self._print(f"""""")
-            self._print(f"""show""")
-            self._print(f"""""")
-            self._print(f"""devdetails""")
-            self._print(f"""""")
-            self._print(f"""theme <--parrot^/--normal>""")
-            self._print(f"""""")
-            self._print(f"""clear""")
-            self._print(f"""""")
-            self._print(f"""exit""")
+            Main._print(f"""""")
+            Main._print(f"""show""")
+            Main._print(f"""""")
+            Main._print(f"""devdetails""")
+            Main._print(f"""""")
+            Main._print(f"""theme <--parrot^/--normal>""")
+            Main._print(f"""""")
+            Main._print(f"""clear""")
+            Main._print(f"""""")
+            Main._print(f"""exit""")
         else:
             pass
-        self._print(f"""{Main.colorFore("reset")}""")
+        Main._print(f"""{Main.colorFore("reset")}""")
 
     def show(self):
         """
@@ -290,7 +291,8 @@ class Main(object):
                 f"""\n {Main.colorFore("green")}{Main.style("bright")}Piece{Main.style("reset")}""")
             quit()              # ? exit program silently
 
-    def _print(self, string, **kwargs):
+    @staticmethod
+    def _print(string, **kwargs):
         if kwargs:
             print(f""" {string}""", **kwargs)
         else:
