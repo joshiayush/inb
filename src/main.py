@@ -633,7 +633,17 @@ class Main(object):
 
         `linkedin` command and calls the LinkedIn classes accordingly.
         """
-        if self.command.split(" ")[2] == "send":
+        if self.get_command_lenght() == 2:
+            Main._print(f"""{Main.style("bright")}""", end="")
+            Main._print(f"""{Main.colorFore("blue")}""", end="")
+
+            Main._print(f"""Command 'linkedin' cannot be referenced without a flag""")
+
+            Main._print(f"""{Main.colorFore("reset")}""", end="")
+            Main._print(f"""{Main.style("reset")}""", end="")
+
+            Main.help_with_linkedin()
+        elif self.get_command_lenght() >= 3 and self.get_command_at_index(2) == "send":
             if self.data["user_email"] and self.data["user_password"]:
                 LinkedInConnections.LinkedInConnectionsAuto(self.data)
             else:
@@ -645,9 +655,9 @@ class Main(object):
 
                 Main._print(f"""{Main.colorFore("reset")}""", end="")
                 Main._print(f"""{Main.style("reset")}""", end="")
-        elif self.command.split(" ")[2] == "invitation-manager":
+        elif self.get_command_at_index(2) == "invitation-manager":
             pass
-        elif self.command.split(" ")[2] == "mynetwork":
+        elif self.get_command_at_index(2) == "mynetwork":
             pass
         else:
             Main._print(f"""'%s' is not a linkedin command""" %
