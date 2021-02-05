@@ -17,6 +17,8 @@ import readline
 import getpass
 # * importing `colorama`
 import colorama
+# * importing `re` regex
+import re
 
 
 class Main(object):
@@ -586,22 +588,24 @@ class Main(object):
 
         or `config.job/keywords/location`.
         """
-        if "config.user.email" in self.command:
+        if "config.user.password" == self.get_command_at_index(1):
+            self.data["user_password"] = getpass.getpass(prompt=" Password: ")
+        elif re.compile(r"config.user.email=*").search(self.command):
             self.data["user_email"] = self.command[self.command.find(
                 "=")+1:].strip()
-        elif "config.user.password" == self.get_command_at_index(1):
-            self.data["user_password"] = getpass.getpass(prompt=" Password: ")
-        elif "config.job.keywords" in self.command:
+        elif re.compile(r"config.job.keywords=*").search(self.command):
             self.data["job_keywords"] = self.command[self.command.find(
                 "=")+1:].strip()
-        elif "config.job.location" in self.command:
+        elif re.compile(r"config.job.location=*").search(self.command):
             self.data["job_location"] = self.command[self.command.find(
                 "=")+1:].strip()
         else:
             self.Error()
 
     def handle_commands(self):
-        if "config" in self.get_command_at_index(1):
+        _config_regex_ = re.compile(
+            r"config.user.email|config.user.password|config.job.keywords|config.job.location")
+        if _config_regex_.search(self.command):
             self.handle_configs()
         else:
             # ? get() method of dictionary data type returns
