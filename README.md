@@ -8,8 +8,6 @@ In the project directory, you can run:
 
 Runs the program.
 
-![Home Page](./Output/LinkedInHome.png)
-
 ### `config.user.email=example@gmail.com`
 
 Adds email to configurations.
@@ -25,3 +23,5 @@ Once you are done adding configurations you can run the command.
 ### `linkedin send`
 
 It will start sending invitation.
+
+## `Happy Hacking`
