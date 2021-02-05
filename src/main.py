@@ -170,51 +170,83 @@ class Main(object):
         mistakenly applied wrong flags with the linkedin command.
         """
         Main._print(f"""""")
-        Main._print(f"""linkedin [send] [suggestions^] --auto/--guided [--headless]""")
+        Main._print(
+            f"""linkedin [send] [suggestions^] --auto/--guided [--headless]""")
         Main._print(f"""`linkedin` command handles the linkedin process.""")
-        Main._print(f"""`send` flag sends invitations according to the path given to it.""")
-        Main._print(f"""`suggestions` flag lets linkedin know that it must use""") 
+        Main._print(
+            f"""`send` flag sends invitations according to the path given to it.""")
+        Main._print(
+            f"""`suggestions` flag lets linkedin know that it must use""")
         Main._print(f"""'MyNetwork' tab as a target.""")
-        Main._print(f"""`--auto/--guided` flag tells the linkedin to start process in auto(recommended) or guided mode.""")
-        Main._print(f"""`--headless` flag tells the program to start automation without opening the browser.""")
+        Main._print(
+            f"""`--auto/--guided` flag tells the linkedin to start process in auto(recommended) or guided mode.""")
+        Main._print(
+            f"""`--headless` flag tells the program to start automation without opening the browser.""")
         Main._print(f"""""")
-        Main._print(f"""linkedin [send] [search industry=example&&location=india+usa+...] --auto^/--guided [--headless]""")
+        Main._print(
+            f"""linkedin [send] [search industry=example&&location=india+usa+...] --auto^/--guided [--headless]""")
         Main._print(f"""`linkedin` command handles the linkedin process.""")
-        Main._print(f"""`send` flag sends invitations according to the path given to it.""")
-        Main._print(f"""`search industry=example&&location=india+usa+...` flag lets linkedin know that it must""") 
-        Main._print(f"""go and search for people associated to the given industry and living in the given location.""")
-        Main._print(f"""`--auto/--guided` flag tells the linkedin to start process in auto(recommended) or guided mode.""")
-        Main._print(f"""`--headless` flag tells the program to start automation without opening the browser.""")
+        Main._print(
+            f"""`send` flag sends invitations according to the path given to it.""")
+        Main._print(
+            f"""`search industry=example&&location=india+usa+...` flag lets linkedin know that it must""")
+        Main._print(
+            f"""go and search for people associated to the given industry and living in the given location.""")
+        Main._print(
+            f"""`--auto/--guided` flag tells the linkedin to start process in auto(recommended) or guided mode.""")
+        Main._print(
+            f"""`--headless` flag tells the program to start automation without opening the browser.""")
         Main._print(f"""""")
-        Main._print(f"""linkedin [invitation-manager*] [show*] --sent*/--recieved* [--headless]""")
+        Main._print(
+            f"""linkedin [invitation-manager*] [show*] --sent*/--recieved* [--headless]""")
         Main._print(f"""`linkedin` command handles the linkedin process.""")
-        Main._print(f"""`invitation-manager` flag tells the linkedin to start performing operations on""")
+        Main._print(
+            f"""`invitation-manager` flag tells the linkedin to start performing operations on""")
         Main._print(f"""invitation manager tab.""")
-        Main._print(f"""`show` flag show tells the linkedin to show the people my account want to connect with.""")
-        Main._print(f"""`--sent/--recieved` flag tells the linkedin to fetch either sent invitations or recieved ones.""")
-        Main._print(f"""`--headless` flag tells the program to start automation without opening the browser.""")
+        Main._print(
+            f"""`show` flag show tells the linkedin to show the people my account want to connect with.""")
+        Main._print(
+            f"""`--sent/--recieved` flag tells the linkedin to fetch either sent invitations or recieved ones.""")
+        Main._print(
+            f"""`--headless` flag tells the program to start automation without opening the browser.""")
         Main._print(f"""""")
-        Main._print(f"""linkedin [invitation-manager*] [withdraw*] [all*^/over > <days>*] [--headless]""")
+        Main._print(
+            f"""linkedin [invitation-manager*] [withdraw*] [all*^/over > <days>*] [--headless]""")
         Main._print(f"""`linkedin` command handles the linkedin process.""")
-        Main._print(f"""`invitation-manager` flag tells the linkedin to start performing operations on""")
-        Main._print(f"""`withdraw` flag tell the linkedin that you want to activate invitation withdrawing process.""")
-        Main._print(f"""`all/over > <days>` flag tell to either withdraw all the sent invitations or""")
-        Main._print(f"""use the amount of days given to withdraw sent invitations accordingly.""")
-        Main._print(f"""`--headless` flag tells the program to start automation without opening the browser.""")
+        Main._print(
+            f"""`invitation-manager` flag tells the linkedin to start performing operations on""")
+        Main._print(
+            f"""`withdraw` flag tell the linkedin that you want to activate invitation withdrawing process.""")
+        Main._print(
+            f"""`all/over > <days>` flag tell to either withdraw all the sent invitations or""")
+        Main._print(
+            f"""use the amount of days given to withdraw sent invitations accordingly.""")
+        Main._print(
+            f"""`--headless` flag tells the program to start automation without opening the browser.""")
         Main._print(f"""""")
-        Main._print(f"""linkedin [mynetwork*] [show*] [all*/page > 1^+2+3+...*] [--headless]""")
+        Main._print(
+            f"""linkedin [mynetwork*] [show*] [all*/page > 1^+2+3+...*] [--headless]""")
         Main._print(f"""`linkedin` command handles the linkedin process.""")
-        Main._print(f"""`mynetwork` flag tell the linkedin to start operating on MyNetworks.""")
-        Main._print(f"""`all/page > 1+2+3+...` flag tells either show all connections or use the pages given.""")
-        Main._print(f"""`--headless` flag tells the program to start automation without opening the browser.""")
+        Main._print(
+            f"""`mynetwork` flag tell the linkedin to start operating on MyNetworks.""")
+        Main._print(
+            f"""`all/page > 1+2+3+...` flag tells either show all connections or use the pages given.""")
+        Main._print(
+            f"""`--headless` flag tells the program to start automation without opening the browser.""")
         Main._print(f"""""")
-        Main._print(f"""linkedin [mynetwork*] [sendmessage*] [all*] [--greet*^] [--headless]""")
+        Main._print(
+            f"""linkedin [mynetwork*] [sendmessage*] [all*] [--greet*^] [--headless]""")
         Main._print(f"""`linkedin` command handles the linkedin process.""")
-        Main._print(f"""`mynetwork` flag tell the linkedin to start operating on MyNetworks.""")
-        Main._print(f"""`sendmessage` flag tells the linkedin to send messages to connections.""")
-        Main._print(f"""`all` flag tells the linkedin to use all connections.""")
-        Main._print(f"""`--greet` flag tells the linkedin to send greet message.""")
-        Main._print(f"""`--headless` flag tells the program to start automation without opening the browser.""")
+        Main._print(
+            f"""`mynetwork` flag tell the linkedin to start operating on MyNetworks.""")
+        Main._print(
+            f"""`sendmessage` flag tells the linkedin to send messages to connections.""")
+        Main._print(
+            f"""`all` flag tells the linkedin to use all connections.""")
+        Main._print(
+            f"""`--greet` flag tells the linkedin to send greet message.""")
+        Main._print(
+            f"""`--headless` flag tells the program to start automation without opening the browser.""")
         Main._print(f"""""")
 
     @staticmethod
@@ -222,7 +254,8 @@ class Main(object):
         Main._print(f"""""")
         Main._print(f"""`show` shows all the details you have entered like:""")
         Main._print(f"""user.email""")
-        Main._print(f"""user.password (asks first if you want to see it really or not)""")
+        Main._print(
+            f"""user.password (asks first if you want to see it really or not)""")
         Main._print(f"""job.keywords""")
         Main._print(f"""job.location""")
         Main._print(f"""""")
@@ -238,7 +271,8 @@ class Main(object):
     def help_with_theme():
         Main._print(f"""""")
         Main._print(f"""`theme --parrot/--normal`""")
-        Main._print(f"""changes the cli (command line theme) according to the given theme value.""")
+        Main._print(
+            f"""changes the cli (command line theme) according to the given theme value.""")
         Main._print(f"""""")
 
     @staticmethod
@@ -250,7 +284,8 @@ class Main(object):
     @staticmethod
     def help_with_exit():
         Main._print(f"""""")
-        Main._print(f"""`exit` exits the program and also does flushing jobs.""")
+        Main._print(
+            f"""`exit` exits the program and also does flushing jobs.""")
         Main._print(f"""""")
 
     def _help(self, _with=None):
@@ -310,8 +345,13 @@ class Main(object):
 
     @staticmethod
     def show_job_details(self):
-        # ! we print the information about job keys once we have any of
-        # ! these two field otherwise we don't show it
+        """
+        Function show_job_details() prints the job details that the user entered
+        
+        we print the information about job keys once we have any of these two 
+        
+        field otherwise we don't show it.
+        """
         if self.data["job_keywords"] or self.data["job_location"]:
             Main._print(f"""{Main.colorFore("green")}{Main.style("bright")}Job Keywords -> %s""" %
                         (self.data["job_keywords"] if self.data["job_keywords"] else None))
@@ -320,8 +360,13 @@ class Main(object):
 
     @staticmethod
     def ask_to_show_password(self):
-        # ! ask the user if (s)he want to see the password if yes show
-        # ! them if not don't show them
+        """
+        Function ask_to_show_password() asks the user if (s)he want to see the 
+        
+        password if yes show them if not don't show them, this is for security
+        
+        purpose.
+        """
         try:
             ch = input(
                 f""" {Main.colorFore("green")}{Main.style("bright")}Show password anyway? [y/N]: """) if self.data["user_password"] else "n"
