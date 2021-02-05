@@ -24,4 +24,4 @@ Once you are done adding configurations you can run the command.
 
 It will start sending invitation.
 
-# `Happy Hacking`
+### `Happy Hacking`
