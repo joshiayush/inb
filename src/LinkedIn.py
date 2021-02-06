@@ -3,15 +3,13 @@
 # *
 # * Selenium is a portable framework for testing web applications.
 # *
-# * Selenium provides a playback tool for authoring functional tests
-# * without the need to learn a test scripting language (Selenium IDE).
+# * Selenium provides a playback tool for authoring functional tests without the need to
+# * learn a test scripting language (Selenium IDE).
 # *
-# * It also provides a test domain-specific language (Selenese) to write
-# * tests in a number of popular programming languages, including C#,
-# * Groovy, Java, Perl, PHP, Python, Ruby and Scala.
+# * It also provides a test domain-specific language (Selenese) to write tests in a number
+# * of popular programming languages, including C#, Groovy, Java, Perl, PHP, Python, Ruby and Scala.
 # *
-# * The tests can then run against most modern web browsers. Selenium
-# * runs on Windows, Linux, and macOS.
+# * The tests can then run against most modern web browsers. Selenium runs on Windows, Linux, and macOS.
 # *
 # * It is open-source software released under the Apache License 2.0.
 # *
@@ -27,10 +25,9 @@
 # *
 # * https://www.linkedin.com/in/ayush-joshi-3600a01b7
 # *
-# * one more thing that I want to mention here if you wonder that why this
-# * guy has inserted symbols like (*, ?, @, !, :) in comments then boy/girl
-# * you really need to install 'Better Comments' extension if you are in
-# * VSCode it's really awesome
+# * one more thing that I want to mention here if you wonder that why this guy has inserted symbols
+# * like (*, ?, @, !, :) in comments then boy/girl you really need to install 'Better Comments'
+# * extension if you are in VSCode it's really awesome
 # *
 # * installation:
 # * code --install-extension aaron-bond.better-comments
