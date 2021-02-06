@@ -64,6 +64,7 @@ class Main(object):
             * exit       : exit from the program
         """
         self.commands = {
+            "config": self.handle_config,
             "linkedin": self.handle_linkedin_commands,
             "show": self.handle_show_commands,
             "developer": self.handle_developer_commands,
@@ -384,7 +385,17 @@ class Main(object):
 
     @staticmethod
     def help_with_configs():
-        pass
+        Main._print(f"""{Main.style("bright")}""", end="")
+        Main._print(f"""{Main.colorFore("blue")}""", end="")
+
+        Main._print(f"""config.user.email=example@email.com""")
+        Main._print(f"""config.user.password (hit enter)""")
+        Main._print(f"""Password: """)
+        Main._print(f"""config.job.keywords=Data%Science (use '%' for space)""")
+        Main._print(f"""config.job.location=Sanfrancisco%CA""")
+
+        Main._print(f"""{Main.colorFore("reset")}""", end="")
+        Main._print(f"""{Main.style("reset")}""", end="")
 
     @staticmethod
     def help_with_linkedin():
@@ -424,7 +435,8 @@ class Main(object):
             f"""`search industry=example&&location=india+usa+...` flag lets linkedin know that it must""")
         Main._print(
             f"""go and search for people associated to the given industry (use (%) for space between words in industry)""")
-        Main._print(f"""and living in the given location.""")
+        Main._print(
+            f"""and living in the given location. You can always add location.""")
         Main._print(
             f"""`--auto/--guided` flag tells the linkedin to start process in auto(recommended) or guided mode.""")
         Main._print(
@@ -606,6 +618,9 @@ class Main(object):
 
         Main._print(f"""{Main.colorFore("reset")}""", end="")
         Main._print(f"""{Main.style("reset")}""", end="")
+
+    def handle_config(self):
+        Main.help_with_configs()
 
     def get_command_lenght(self):
         """
@@ -892,7 +907,7 @@ class Main(object):
                     "command " + self.get_command_at_index(3)).strip()
                 self.Error()
         else:
-            pass
+            Main.help_with_clear()
 
     def handle_help_commands(self):
         """
@@ -960,7 +975,7 @@ class Main(object):
                     "command " + self.command.split(" ")[3]).strip()
                 self.Error()
         else:
-            pass
+            Main.help_with_help()
 
     def handle_exit_commands(self):
         """
@@ -990,7 +1005,7 @@ class Main(object):
                     "command " + self.get_command_at_index(3)).strip()
                 self.Error()
         else:
-            pass
+            Main.help_with_exit()
 
     def Error(self):
         """
