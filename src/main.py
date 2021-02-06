@@ -419,7 +419,8 @@ class Main(object):
         Main._print(
             f"""`search industry=example&&location=india+usa+...` flag lets linkedin know that it must""")
         Main._print(
-            f"""go and search for people associated to the given industry and living in the given location.""")
+            f"""go and search for people associated to the given industry (use (%) for space between words in industry)""")
+        Main._print(f"""and living in the given location.""")
         Main._print(
             f"""`--auto/--guided` flag tells the linkedin to start process in auto(recommended) or guided mode.""")
         Main._print(
@@ -627,13 +628,12 @@ class Main(object):
 
     def handle_send_commands(self):
         if self.get_command_lenght() >= 5:
-            print("handling send commands ...")
             if self.get_command_at_index(3) == "suggestions" and \
                     (self.get_command_at_index(4) == "--auto" or self.get_command_at_index(4) == "--guided"):
                 self.data["headless"] = True if self.get_command_lenght() >= 6 and \
                     self.get_command_at_index(5) == "--headless" else False
             elif self.get_command_at_index(3) == "search" and \
-                re.compile(r"industry=\s&&location=\s", re.IGNORECASE).search(self.get_command_at_index(4))\
+                re.compile(r"industry=(\w)+&&location=(\w\+?)+", re.IGNORECASE).search(self.get_command_at_index(4))\
                     and (self.get_command_at_index(5) == "--auto" or self.get_command_at_index(5) == "--guided"):
                 self.data["headless"] = True if self.get_command_lenght() >= 7 and \
                     self.get_command_at_index(6) == "--headless" else False
@@ -991,15 +991,15 @@ class Main(object):
         if "config.user.password" == self.get_command_at_index(1):
             self.data["user_password"] = getpass.getpass(prompt=" Password: ")
 
-        elif re.compile(r"config.user.email=\s", re.IGNORECASE).search(self.command):
+        elif re.compile(r"(config\.user\.email)=\w+", re.IGNORECASE).search(self.command):
             self.data["user_email"] = self.command[self.command.find(
                 "=")+1:].strip()
 
-        elif re.compile(r"config.job.keywords=\s", re.IGNORECASE).search(self.command):
+        elif re.compile(r"(config\.job\.keywords)=\w+", re.IGNORECASE).search(self.command):
             self.data["job_keywords"] = self.command[self.command.find(
                 "=")+1:].strip()
 
-        elif re.compile(r"config.job.location=\s", re.IGNORECASE).search(self.command):
+        elif re.compile(r"(config\.job\.location)=\w+", re.IGNORECASE).search(self.command):
             self.data["job_location"] = self.command[self.command.find(
                 "=")+1:].strip()
 
@@ -1021,9 +1021,9 @@ class Main(object):
         method.
         """
         _config_regex_ = re.compile(
-            r"config.user.email|config.user.password|config.job.keywords|config.job.location", re.IGNORECASE)
+            r"(config\.user\.email).\w+|(config\.user\.password)|(config\.job\.keywords).\w+|(config\.job\.location).\w+")
 
-        if _config_regex_.search(self.command):
+        if _config_regex_.search(self.get_command_at_index(1)):
             self.handle_configs()
 
         else:
