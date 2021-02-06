@@ -383,6 +383,10 @@ class Main(object):
                 f"""'{_theme}' can't be recognized as a 'theme' command""")
 
     @staticmethod
+    def help_with_configs():
+        pass
+
+    @staticmethod
     def help_with_linkedin():
         """
         Method help_with_linkedin() shows how you can use the linkedin command in case
@@ -626,26 +630,51 @@ class Main(object):
         """
         return self.command.split(" ")[index].strip()
 
+    def get_search_query(self):
+        querry = self.get_command_at_index(4)
+
+        if len(querry.split("&&")) == 2:
+            if "industry=" in querry.split("&&")[0] and "location=" in querry.split("&&")[1]:
+                return True
+        return False
+
     def handle_send_commands(self):
         if self.get_command_lenght() >= 5:
+
             if self.get_command_at_index(3) == "suggestions" and \
                     (self.get_command_at_index(4) == "--auto" or self.get_command_at_index(4) == "--guided"):
+
                 self.data["headless"] = True if self.get_command_lenght() >= 6 and \
                     self.get_command_at_index(5) == "--headless" else False
-            elif self.get_command_at_index(3) == "search" and \
-                re.compile(r"(industry)(=)(\W+)(&&)(location)(=)(\W+\+?)", re.IGNORECASE).search(self.get_command_at_index(4))\
-                    and (self.get_command_at_index(5) == "--auto" or self.get_command_at_index(5) == "--guided"):
+
+                if self.data["user_email"] and self.data["user_password"]:
+                    pass
+                else:
+                    Main._print(f"""{Main.style("bright")}""", end="")
+                    Main._print(f"""{Main.colorFore("blue")}""", end="")
+
+                    Main._print(
+                        f"""Need credentials first use config.user.email/password to add them.""")
+
+                    Main._print(f"""{Main.colorFore("reset")}""", end="")
+                    Main._print(f"""{Main.style("reset")}""", end="")
+            elif self.get_command_at_index(3) == "search" and self.get_search_query() and \
+                    (self.get_command_at_index(5) == "--auto" or self.get_command_at_index(5) == "--guided"):
+
                 self.data["headless"] = True if self.get_command_lenght() >= 7 and \
                     self.get_command_at_index(6) == "--headless" else False
-                print("starting search ...")
-        #     Main._print(f"""{Main.style("bright")}""", end="")
-        #     Main._print(f"""{Main.colorFore("blue")}""", end="")
 
-        #     Main._print(
-        #         f"""Need credentials first use config.user.email/password to add them.""")
+                if self.data["user_email"] and self.data["user_password"]:
+                    pass
+                else:
+                    Main._print(f"""{Main.style("bright")}""", end="")
+                    Main._print(f"""{Main.colorFore("blue")}""", end="")
 
-        #     Main._print(f"""{Main.colorFore("reset")}""", end="")
-        #     Main._print(f"""{Main.style("reset")}""", end="")
+                    Main._print(
+                        f"""Need credentials first use config.user.email/password to add them.""")
+
+                    Main._print(f"""{Main.colorFore("reset")}""", end="")
+                    Main._print(f"""{Main.style("reset")}""", end="")
 
     def handle_invitation_manager_commands(self):
         pass
@@ -973,6 +1002,14 @@ class Main(object):
             Main._print(f"""{Main.colorFore("reset")}""", end="")
             Main._print(f"""{Main.style("reset")}""", end="")
 
+    def check_email(self):
+        if re.search(r"^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$", self.command[self.command.find("=")+1:].strip()):
+            return True
+        elif re.search(r"^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w+$", self.command[self.command.find("=")+1:].strip()):
+            return True
+        else:
+            return False
+
     def handle_configs(self):
         """
         Method handle_configs() basically saves the user's configurations that are passed
@@ -989,8 +1026,18 @@ class Main(object):
             self.data["user_password"] = getpass.getpass(prompt=" Password: ")
 
         elif re.compile(r"(config\.user\.email)=\w+", re.IGNORECASE).search(self.command):
-            self.data["user_email"] = self.command[self.command.find(
-                "=")+1:].strip()
+            if self.check_email():
+                self.data["user_email"] = self.command[self.command.find(
+                    "=")+1:].strip()
+            else:
+                Main._print(f"""{Main.style("bright")}""", end="")
+                Main._print(f"""{Main.colorFore("red")}""", end="")
+
+                Main._print(
+                    f"""'{self.command[self.command.find("=")+1:].strip()}' is not a valid email address!""")
+
+                Main._print(f"""{Main.colorFore("rest")}""", end="")
+                Main._print(f"""{Main.style("reset")}""", end="")
 
         elif re.compile(r"(config\.job\.keywords)=\w+", re.IGNORECASE).search(self.command):
             self.data["job_keywords"] = self.command[self.command.find(
@@ -1001,7 +1048,7 @@ class Main(object):
                 "=")+1:].strip()
 
         else:
-            self.Error()
+            Main.help_with_configs()
 
     def handle_commands(self):
         """
@@ -1018,7 +1065,7 @@ class Main(object):
         method.
         """
         _config_regex_ = re.compile(
-            r"(config\.user\.email).\w+|(config\.user\.password)|(config\.job\.keywords).\w+|(config\.job\.location).\w+", re.IGNORECASE)
+            r"(config\.user\.email).?(\w+)?|(config\.user\.password)|(config\.job\.keywords).?(\w+)?|(config\.job\.location).?(\w+)?", re.IGNORECASE)
 
         if _config_regex_.search(self.get_command_at_index(1)):
             self.handle_configs()
