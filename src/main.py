@@ -633,14 +633,11 @@ class Main(object):
                 self.data["headless"] = True if self.get_command_lenght() >= 6 and \
                     self.get_command_at_index(5) == "--headless" else False
             elif self.get_command_at_index(3) == "search" and \
-                re.compile(r"industry=(\w)+&&location=(\w\+?)+", re.IGNORECASE).search(self.get_command_at_index(4))\
+                re.compile(r"(industry)(=)(\W+)(&&)(location)(=)(\W+\+?)", re.IGNORECASE).search(self.get_command_at_index(4))\
                     and (self.get_command_at_index(5) == "--auto" or self.get_command_at_index(5) == "--guided"):
                 self.data["headless"] = True if self.get_command_lenght() >= 7 and \
                     self.get_command_at_index(6) == "--headless" else False
                 print("starting search ...")
-        # if self.data["user_email"] and self.data["user_password"]:
-        #     LinkedInConnections.LinkedInConnectionsAuto(self.data)
-        # else:
         #     Main._print(f"""{Main.style("bright")}""", end="")
         #     Main._print(f"""{Main.colorFore("blue")}""", end="")
 
