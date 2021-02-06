@@ -400,7 +400,7 @@ class Main(object):
         access to the object.
         """
         Main._print(f"""{Main.style("bright")}""", end="")
-        Main._print(f"""{Main.colorFore("green")}""", end="")
+        Main._print(f"""{Main.colorFore("blue")}""", end="")
 
         Main._print(
             f"""linkedin [send] [suggestions^] --auto/--guided [--headless]""")
@@ -496,13 +496,13 @@ class Main(object):
         function access to the object.
         """
         Main._print(f"""{Main.style("bright")}""", end="")
-        Main._print(f"""{Main.colorFore("green")}""", end="")
+        Main._print(f"""{Main.colorFore("blue")}""", end="")
 
         Main._print(f"""`show` shows all the details you have entered like:""")
-        Main._print(f"""user.email""")
+        Main._print(f"""user.email,""")
         Main._print(
-            f"""user.password (asks first if you want to see it really or not)""")
-        Main._print(f"""job.keywords""")
+            f"""user.password (asks first if you want to see it really or not),""")
+        Main._print(f"""job.keywords,""")
         Main._print(f"""job.location""")
 
         Main._print(f"""{Main.colorFore("reset")}""", end="")
@@ -520,7 +520,7 @@ class Main(object):
         function access to the object.
         """
         Main._print(f"""{Main.style("bright")}""", end="")
-        Main._print(f"""{Main.colorFore("green")}""", end="")
+        Main._print(f"""{Main.colorFore("blue")}""", end="")
 
         Main._print(f"""`developer` shows the developer details like:""")
         Main._print(f"""his number, email, profiles ...""")
@@ -540,7 +540,7 @@ class Main(object):
         to the object its no use giving this function access to the object.
         """
         Main._print(f"""{Main.style("bright")}""", end="")
-        Main._print(f"""{Main.colorFore("green")}""", end="")
+        Main._print(f"""{Main.colorFore("blue")}""", end="")
 
         Main._print(
             f"""`theme --parrot/--normal` changes the cli (command line theme) according to the given theme value.""")
@@ -560,7 +560,7 @@ class Main(object):
         function access to the object.
         """
         Main._print(f"""{Main.style("bright")}""", end="")
-        Main._print(f"""{Main.colorFore("green")}""", end="")
+        Main._print(f"""{Main.colorFore("blue")}""", end="")
 
         Main._print(f"""`clear` clears the screen""")
 
@@ -579,7 +579,7 @@ class Main(object):
         function access to the object.
         """
         Main._print(f"""{Main.style("bright")}""", end="")
-        Main._print(f"""{Main.colorFore("green")}""", end="")
+        Main._print(f"""{Main.colorFore("blue")}""", end="")
 
         Main._print(
             f"""`exit` exits the program and also does flushing jobs.""")
@@ -599,7 +599,7 @@ class Main(object):
         function access to the object.
         """
         Main._print(f"""{Main.style("bright")}""", end="")
-        Main._print(f"""{Main.colorFore("green")}""", end="")
+        Main._print(f"""{Main.colorFore("blue")}""", end="")
 
         Main._print(
             f"""`help` prints a list of commands that the Linkedin Automater have.""")
@@ -630,7 +630,7 @@ class Main(object):
         """
         return self.command.split(" ")[index].strip()
 
-    def get_search_query(self):
+    def check_search_query(self):
         querry = self.get_command_at_index(4)
 
         if len(querry.split("&&")) == 2:
@@ -658,7 +658,7 @@ class Main(object):
 
                     Main._print(f"""{Main.colorFore("reset")}""", end="")
                     Main._print(f"""{Main.style("reset")}""", end="")
-            elif self.get_command_at_index(3) == "search" and self.get_search_query() and \
+            elif self.get_command_at_index(3) == "search" and self.check_search_query() and \
                     (self.get_command_at_index(5) == "--auto" or self.get_command_at_index(5) == "--guided"):
 
                 self.data["headless"] = True if self.get_command_lenght() >= 7 and \
@@ -804,20 +804,25 @@ class Main(object):
 
         prints the information that user had entered like email, password, job keys/location.
         """
-        Main._print(f"""{Main.style("bright")}""", end="")
-        Main._print(f"""{Main.colorFore("green")}""", end="")
+        if self.get_command_lenght() == 2:
+            Main._print(f"""{Main.style("bright")}""", end="")
+            Main._print(f"""{Main.colorFore("green")}""", end="")
 
-        Main._print(f"""%s""" % (
-            self.data["user_email"] if self.data["user_email"] else "use config.user.email to add user email"))
-        Main._print(f"""%s""" % (
-            "*"*len(self.data["user_password"]) if self.data["user_password"] else "use config.user.password to add user password"))
+            Main._print(f"""%s""" % (
+                self.data["user_email"] if self.data["user_email"] else "use config.user.email to add user email"))
+            Main._print(f"""%s""" % (
+                "*"*len(self.data["user_password"]) if self.data["user_password"] else "use config.user.password to add user password"))
 
-        Main._print(f"""{Main.colorFore("reset")}""", end="")
-        Main._print(f"""{Main.style("reset")}""", end="")
+            Main._print(f"""{Main.colorFore("reset")}""", end="")
+            Main._print(f"""{Main.style("reset")}""", end="")
 
-        Main.show_job_details(self)
+            Main.show_job_details(self)
 
-        Main.ask_to_show_password(self)
+            Main.ask_to_show_password(self)
+        elif self.get_command_lenght() >= 3 and self.get_command_at_index(2) == "--help":
+            Main.help_with_show()
+        else:
+            pass
 
     def handle_developer_commands(self):
         """
@@ -825,19 +830,24 @@ class Main(object):
 
         basically shows the developer's network profiles and mail address.
         """
-        Main._print(f"""{Main.style("bright")}""", end="")
-        Main._print(f"""{Main.colorFore("green")}""", end="")
+        if self.get_command_lenght() == 2:
+            Main._print(f"""{Main.style("bright")}""", end="")
+            Main._print(f"""{Main.colorFore("green")}""", end="")
 
-        Main._print(f"""Name     :  Ayush Joshi""")
-        Main._print(f"""Email    :  ayush854032@gmail.com (primary)""")
-        Main._print(f"""Email    :  joshiayush.joshiayush@gmail.com""")
-        Main._print(f"""Mobile   :  +91 8941854032 (Only WhatsApp)""")
-        Main._print(f"""GitHub   :  https://github.com/JoshiAyush""")
-        Main._print(
-            f"""LinkedIn :  https://www.linkedin.com/in/ayush-joshi-3600a01b7/{Main.colorFore("reset")}""")
+            Main._print(f"""Name     :  Ayush Joshi""")
+            Main._print(f"""Email    :  ayush854032@gmail.com (primary)""")
+            Main._print(f"""Email    :  joshiayush.joshiayush@gmail.com""")
+            Main._print(f"""Mobile   :  +91 8941854032 (Only WhatsApp)""")
+            Main._print(f"""GitHub   :  https://github.com/JoshiAyush""")
+            Main._print(
+                f"""LinkedIn :  https://www.linkedin.com/in/ayush-joshi-3600a01b7/{Main.colorFore("reset")}""")
 
-        Main._print(f"""{Main.colorFore("reset")}""", end="")
-        Main._print(f"""{Main.style("reset")}""", end="")
+            Main._print(f"""{Main.colorFore("reset")}""", end="")
+            Main._print(f"""{Main.style("reset")}""", end="")
+        elif self.get_command_lenght() >= 3 and self.get_command_at_index(2) == "--help":
+            Main.help_with_developer()
+        else:
+            pass
 
     def handle_theme_commands(self):
         """
