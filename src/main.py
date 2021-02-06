@@ -22,25 +22,20 @@ import re
 
 
 class Main(object):
-    """
-    Class Main is the main class that gets executed after the user hits the command `./run.sh` 
+    """Class Main is the main class that gets executed after the user 
+    hits the command `./run.sh` on the terminal screen, this class gives 
+    the `cli` (Command Line Interface) to the user. We don't have `GUI` 
+    (Graphical User Interface) here because I don't have any deign Idea 
+    in my mind yet.
 
-    on the terminal screen, this class gives the `cli` (Command Line Interface) to the user. 
-
-    We don't have `GUI` (Graphical User Interface) here because I don't have any deign Idea in 
-
-    my mind yet.
-
-    ! Class Variable:
-        * THEME: is the theme for our cli (command line interface).
+    Class Variable:
+        THEME: is the theme for our cli (command line interface).
     """
     THEME = "parrot"
 
     def __init__(self):
-        """
-        Method __init__() initializes the commands and required variables, it also prints the Logo 
-
-        on the screen.
+        """Method __init__() initializes the commands and required variables, 
+        it also prints the Logo on the screen.
         """
         self.init_commands()    # ? initialize commands
 
@@ -49,12 +44,10 @@ class Main(object):
         self.home()             # ? prints the logo
 
     def init_commands(self):
-        """
-        Method init_commands() initialize the commands that LinkedIn Automater provides for now we 
+        """Method init_commands() initialize the commands that LinkedIn 
+        Automater provides for now we have following commands,
 
-        have following commands,
-
-        ! Commands:
+        Commands:
             * linkedin   : activates the automation process
             * show       : shows the entered details
             * developer  : prints the developer details
@@ -75,14 +68,12 @@ class Main(object):
         }
 
     def init_vars(self):
-        """
-        Method init_vars() intialize the dictionary that holds the user's details like credentials 
-
-        and jobs search, etc, it also initializes a dictionary which conatins commands and their 
-
-        corresponding help functions, there's one more variable that gets initializes that is the 
-
-        theme variable for our cli (Command Line Interface).
+        """Method init_vars() intialize the dictionary that holds the 
+        user's details like credentials and jobs search, etc, it also 
+        initializes a dictionary which conatins commands and their 
+        corresponding help functions, there's one more variable that 
+        gets initializes that is the theme variable for our cli 
+        (Command Line Interface).
         """
         self.data = {
             "user_email": "",
@@ -106,33 +97,26 @@ class Main(object):
 
     @staticmethod
     def terminal_size():
-        """
-        Function terminal_size() returns the size of the terminal when the LinkedIn Automator program 
+        """Function terminal_size() returns the size of the terminal when 
+        the LinkedIn Automator program executed, this functionality is required
+        in order to set the Home Logo according to the terminal size. We declare 
+        this method static because we don't need to give this function an access 
+        to the object its no use giving this function access to the object.
 
-        executed, this functionality is required in order to set the Home Logo according to the terminal 
-
-        size. We declare this method static because we don't need to give this function an access to the 
-
-        object its no use giving this function access to the object.
-
-        ! return:
-            * terminal size.
+        return:
+            terminal size.
         """
         return os.get_terminal_size()
 
     @staticmethod
     def get_coords():
-        """
-        Function get_coords() returns the co-ordinates that are needed to set the Home Logo nearly to 
+        """Function get_coords() returns the co-ordinates that are needed to set 
+        the Home Logo nearly to the center according to the terminal size. We 
+        declare this function static because we don't need to give this function 
+        an access to the object its no use giving this function access to the object.
 
-        the center according to the terminal size. We declare this function static because we don't 
-
-        need to give this function an access to the object its no use giving this function access to 
-
-        the object.
-
-        ! return:
-            * co-ordinates that sets the Logo nearly to the center.
+        return:
+            co-ordinates that sets the Logo nearly to the center.
         """
         if Main.terminal_size()[0] >= 150:
             return [48, 5]                      # ? return [48, 5] if full size
@@ -143,35 +127,29 @@ class Main(object):
 
     @staticmethod
     def gotoxy(x, y):
-        """
-        Function gotoxy() sets the console cursor position. We declare this function static because we 
+        """Function gotoxy() sets the console cursor position. We declare this 
+        function static because we don't need to give this function an access 
+        to the object its no use giving this function access to the object.
 
-        don't need to give this function an access to the object its no use giving this function access 
-
-        to the object.
-
-        ! Args:
-            * x: column number for the cursor.
-            * y: row number for the cursor.
+        Args:
+            x: column number for the cursor.
+            y: row number for the cursor.
         """
         print("%c[%d;%df" % (0x1B, y, x), end='')
 
     @staticmethod
     def style(style):
-        """
-        Function style() returns the text style that we are printing on the terminal, it uses 'colorama' 
+        """Function style() returns the text style that we are printing on the 
+        terminal, it uses 'colorama' module to generate unicode for the given 
+        style value. We declare this function static because we don't need to 
+        give this function an access to the object its no use giving this 
+        function access to the object.
 
-        module to generate unicode for the given style value. We declare this function static because we 
+        Args:
+            style: it is the style to be given to the text on the screen.
 
-        don't need to give this function an access to the object its no use giving this function access 
-
-        to the object.
-
-        ! Args:
-            * style: it is the style to be given to the text on the screen.
-
-        ! return:
-            * text style.
+        return:
+            text style.
         """
         styles = {
             "bright": colorama.Style.BRIGHT,
@@ -184,22 +162,18 @@ class Main(object):
 
     @staticmethod
     def colorFore(color):
-        """
-        Function colorFore() returns the text color according to the theme enabled, it returns the 
+        """Function colorFore() returns the text color according to the theme 
+        enabled, it returns the text color only if the theme is set to '--parrot' 
+        otherwise it only returns a unicode for color 'red' or 'reset' command if 
+        the theme is set to '--normal'. We declare this function static because 
+        we don't need to give this function an access to the object its no use 
+        giving this function access to the object.
 
-        text color only if the theme is set to '--parrot' otherwise it only returns a unicode for 
+        Args:
+            color: it is the color that we need to return the unicode for.
 
-        color 'red' or 'reset' command if the theme is set to '--normal'. We declare this function 
-
-        static because we don't need to give this function an access to the object its no use giving 
-
-        this function access to the object.
-
-        ! Args:
-            * color: it is the color that we need to return the unicode for.
-
-        ! return:
-            * unicode for color.
+        return:
+            unicode for color.
         """
         colors = {
             "red": colorama.Fore.RED,
@@ -217,25 +191,20 @@ class Main(object):
 
     @staticmethod
     def match_string_with_colorama_objects(string):
-        """
-        Function match_string_with_colorama_objects() returns a boolean True value if the string 
+        """Function match_string_with_colorama_objects() returns a boolean True 
+        value if the string matches with a colorama generated unicode otherwise 
+        it returns False. This functionality is needed to perfectly print strings 
+        on the terminal window because for print functionality I have created a 
+        class method which adds a space before every string given to it. We declare 
+        this function static because we don't need to give this function an access 
+        to the object its no use giving this function access to the object.
 
-        matches with a colorama generated unicode otherwise it returns False. This functionality is 
+        Args:
+            string: it is the string that we need to match with the colorama generated
+            unicode
 
-        needed to perfectly print strings on the terminal window because for print functionality I 
-
-        have created a class method which adds a space before every string given to it. We declare 
-
-        this function static because we don't need to give this function an access to the object its 
-
-        no use giving this function access to the object.
-
-        ! Args:
-            * string: it is the string that we need to match with the colorama generated
-            * unicode
-
-        ! return:
-            * return a boolean value
+        return:
+            return a boolean value
         """
         if string == Main.style("bright") or string == Main.style("dim") or string == Main.style("normal") \
                 or string == Main.style("reset"):
@@ -247,10 +216,8 @@ class Main(object):
             return False
 
     def clear(self):
-        """
-        Method clear() clears the terminal screen for windows we use command `cls` and for linux 
-
-        based system we use command `clear`.
+        """Method clear() clears the terminal screen for windows we use command 
+        `cls` and for linux based system we use command `clear`.
         """
         if os.name == 'nt':
             os.system('cls')
@@ -258,10 +225,8 @@ class Main(object):
             os.system('clear')
 
     def home(self):
-        """
-        Method home() prints the home logo on the screen which makes the application look more 
-
-        sexy.
+        """Method home() prints the home logo on the screen which makes the 
+        application look more sexy.
         """
         self.clear()                # ? clears the screen first
 
@@ -291,17 +256,14 @@ class Main(object):
 
     @staticmethod
     def _input():
-        """
-        Function _input() is a dedicated input method for our LinkedIn `cli` (Command Line Interface), 
+        """Function _input() is a dedicated input method for our LinkedIn `cli` 
+        (Command Line Interface), it also handles the Keyboard interrupt error. 
+        We declare this function static because we don't need to give this 
+        function an access to the object its no use giving this function access 
+        to the object.
 
-        it also handles the Keyboard interrupt error. We declare this function static because we don't 
-
-        need to give this function an access to the object its no use giving this function access to 
-
-        the object.
-
-        ! return:
-            * returns the entered value
+        return:
+            returns the entered value
         """
         try:
             Main._print(f"""{Main.style("bright")}""", end="")
@@ -327,18 +289,15 @@ class Main(object):
 
     @staticmethod
     def _print(string, **kwargs):
-        """
-        Function _print() is a dedicated print() function for our cli (Command Line Interface) 
+        """Function _print() is a dedicated print() function for our cli 
+        (Command Line Interface) it basically adds a space to every value 
+        that needs to be printed on the terminal. We declare this function 
+        static because we don't need to give this function an access to the 
+        object its no use giving this function access to the object.
 
-        it basically adds a space to every value that needs to be printed on the terminal. We 
-
-        declare this function static because we don't need to give this function an access to 
-
-        the object its no use giving this function access to the object.
-
-        ! Args:
-            * string: it is the string that needs to be printed on the terminal.
-            * **kwargs: are the key-value pair that print method takes besides string.
+        Args:
+            string: it is the string that needs to be printed on the terminal.
+            **kwargs: are the key-value pair that print method takes besides string.
         """
         # ! don't add space to the print value if the print value is a colorama
         # ! generated unicode
@@ -354,12 +313,12 @@ class Main(object):
                 print(f""" {string}""")
 
     def set_theme(self, _theme):
-        """
-        Function set_theme() sets the cli (Command Line Interface) theme according to the value given.
+        """Function set_theme() sets the cli (Command Line Interface) theme 
+        according to the value given.
 
-        ! Args:
-            * _theme: it is the theme that the we need to give to our cli after
-            * user has entered it.
+        Args:
+            _theme: it is the theme that the we need to give to our cli after
+            user has entered it.
         """
         if _theme == "--parrot":
             Main.THEME = "parrot"
@@ -373,6 +332,8 @@ class Main(object):
 
     @staticmethod
     def help_with_configs():
+        """Function help_with_configs()
+        """
         Main._print(f"""{Main.style("bright")}""", end="")
         Main._print(f"""{Main.colorFore("blue")}""", end="")
 
@@ -387,14 +348,12 @@ class Main(object):
 
     @staticmethod
     def help_with_linkedin():
-        """
-        Method help_with_linkedin() shows how you can use the linkedin command in case you missed the 
-
-        flags with the linkedin command or mistakenly applied wrong flags with the linkedin command. 
-
-        We declare this function static because we don't need to give this function an access to the 
-
-        object its no use giving this function access to the object.
+        """Method help_with_linkedin() shows how you can use the linkedin 
+        command in case you missed the flags with the linkedin command or 
+        mistakenly applied wrong flags with the linkedin command. We declare 
+        this function static because we don't need to give this function an 
+        access to the object its no use giving this function access to the 
+        object.
         """
         Main._print(f"""{Main.style("bright")}""", end="")
         Main._print(f"""{Main.colorFore("blue")}""", end="")
@@ -484,12 +443,11 @@ class Main(object):
 
     @staticmethod
     def help_with_show():
-        """
-        Function help_with_show() shows you how you can use the 'show' command in case you entered 
-
-        wrong command. We declare this function static because we don't need to give this function 
-
-        an access to the object its no use giving this function access to the object.
+        """Function help_with_show() shows you how you can use the 
+        'show' command in case you entered wrong command. We declare 
+        this function static because we don't need to give this function 
+        an access to the object its no use giving this function access 
+        to the object.
         """
         Main._print(f"""{Main.style("bright")}""", end="")
         Main._print(f"""{Main.colorFore("blue")}""", end="")
@@ -506,12 +464,11 @@ class Main(object):
 
     @staticmethod
     def help_with_developer():
-        """
-        Function help_with_developer() shows you how you can use the 'developer' command in case 
-
-        you entered wrong command. We declare this function static because we don't need to give 
-
-        this function an access to the object its no use giving this function access to the object.
+        """Function help_with_developer() shows you how you can use the 
+        'developer' command in case you entered wrong command. We declare 
+        this function static because we don't need to give this function 
+        an access to the object its no use giving this function access to 
+        the object.
         """
         Main._print(f"""{Main.style("bright")}""", end="")
         Main._print(f"""{Main.colorFore("blue")}""", end="")
@@ -524,14 +481,11 @@ class Main(object):
 
     @staticmethod
     def help_with_theme():
-        """
-        Function help_with_theme() shows you how you can use the 'theme' command in case you entered 
-
-        wrong command or entered a un-matching flag. We declare this function static because we don't 
-
-        need to give this function an access to the object its no use giving this function access to 
-
-        the object.
+        """Function help_with_theme() shows you how you can use the 
+        'theme' command in case you entered wrong command or entered 
+        a un-matching flag. We declare this function static because 
+        we don't need to give this function an access to the object 
+        its no use giving this function access to the object.
         """
         Main._print(f"""{Main.style("bright")}""", end="")
         Main._print(f"""{Main.colorFore("blue")}""", end="")
@@ -544,12 +498,11 @@ class Main(object):
 
     @staticmethod
     def help_with_clear():
-        """
-        Function help_with_clear() shows you how you can use the 'clear' command in case you entered 
-
-        wrong command. We declare this function static because we don't need to give this function an 
-
-        access to the object its no use giving this function access to the object.
+        """Function help_with_clear() shows you how you can use the 
+        'clear' command in case you entered wrong command. We declare 
+        this function static because we don't need to give this function 
+        an access to the object its no use giving this function access 
+        to the object.
         """
         Main._print(f"""{Main.style("bright")}""", end="")
         Main._print(f"""{Main.colorFore("blue")}""", end="")
@@ -561,12 +514,11 @@ class Main(object):
 
     @staticmethod
     def help_with_exit():
-        """
-        Function help_with_exit() shows you how you can use the 'exit' command in case you entered 
-
-        wrong command. We declare this function static because we don't need to give this function 
-
-        an access to the object its no use giving this function access to the object.
+        """Function help_with_exit() shows you how you can use the 
+        'exit' command in case you entered wrong command. We declare 
+        this function static because we don't need to give this function 
+        an access to the object its no use giving this function access 
+        to the object.
         """
         Main._print(f"""{Main.style("bright")}""", end="")
         Main._print(f"""{Main.colorFore("blue")}""", end="")
@@ -579,12 +531,11 @@ class Main(object):
 
     @staticmethod
     def help_with_help():
-        """
-        Function help_with_help() shows you how you can use the 'help' command in case you entered 
-
-        wrong command. We declare this function static because we don't need to give this function 
-
-        an access to the object its no use giving this function access to the object.
+        """Function help_with_help() shows you how you can use the 
+        'help' command in case you entered wrong command. We declare 
+        this function static because we don't need to give this function 
+        an access to the object its no use giving this function access 
+        to the object.
         """
         Main._print(f"""{Main.style("bright")}""", end="")
         Main._print(f"""{Main.colorFore("blue")}""", end="")
@@ -599,25 +550,19 @@ class Main(object):
         Main.help_with_configs()
 
     def get_command_lenght(self):
-        """
-        Method get_command_lenght() returns the lenght of the command entered. We first change 
+        """Method get_command_lenght() returns the lenght of the command 
+        entered. We first change the entered string to a list object by 
+        spliting the string on ' ' (whitespaces) then we return the lenght.
 
-        the entered string to a list object by spliting the string on ' ' (whitespaces) then we 
-
-        return the lenght.
-
-        ! return:
-            * lenght of the command entered.
+        return:
+            lenght of the command entered.
         """
         return len(self.command.split(" "))
 
     def get_command_at_index(self, index):
-        """
-        Method get_command_at_index() returns a value at a given index of the command after changing 
-
-        the string to a list object. We also use strip() function to cut all the leading and trailing 
-
-        whitespaces.
+        """Method get_command_at_index() returns a value at a given index 
+        of the command after changing the string to a list object. We also 
+        use strip() function to cut all the leading and trailing whitespaces.
         """
         try:
             return self.command.split(" ")[index].strip()
@@ -633,35 +578,27 @@ class Main(object):
         return False
 
     def handle_send_commands(self):
-        """
-        Method handle_send_commands() handles the operations when you apply flag 'send' with
-
-        'linkedin' command. We handle operation in two ways where one is when the user enters
-
-        exact number of flags with these commands and the other is when user ommits the default
-
+        """Method handle_send_commands() handles the operations when you 
+        apply flag 'send' with 'linkedin' command. We handle operation in 
+        two ways where one is when the user enters exact number of flags 
+        with these commands and the other is when user ommits the default
         flags.
 
-        ! Usage:
-            * -> linkedin [send] [suggestions^] --auto^/--guided [--headless]
+        Usage:
+            -> linkedin [send] [suggestions^] --auto^/--guided [--headless]
 
-            * -> linkedin [send] [search industry=example&&location=india+usa+...] --auto^/--guided [--headless]
+            -> linkedin [send] [search industry=example&&location=india+usa+...] --auto^/--guided [--headless]
         """
         if self.get_command_lenght() >= 5:
-            """
-            If user entered command with exact number of flags required with that command then 
-
-            we perform the following operations where we take actions according to the flags 
-
-            'suggestions' or 'search' in this case the parsing of arguments is done by targetting 
-
-            their positions, remember flag 'suggestions' is default means even if the user ommits 
-
-            it linkedin must go to the suggestion box to send invitations to people and the flag 
-
-            '--auto' is also a default flag in case user omits it linkedin should start the process 
-
-            in auto mode.
+            """If user entered command with exact number of flags required 
+            with that command then we perform the following operations where 
+            we take actions according to the flags 'suggestions' or 'search' 
+            in this case the parsing of arguments is done by targetting their 
+            positions, remember flag 'suggestions' is default means even if 
+            the user ommits it linkedin must go to the suggestion box to send 
+            invitations to people and the flag '--auto' is also a default flag 
+            in case user omits it linkedin should start the process in auto 
+            mode.
             """
             if self.get_command_at_index(3) == "suggestions" and \
                     (self.get_command_at_index(4) == "--auto" or self.get_command_at_index(4) == "--guided"):
@@ -701,14 +638,11 @@ class Main(object):
                     Main._print(f"""{Main.style("reset")}""", end="")
 
         elif self.get_command_lenght() >= 3:
-            """
-            If user omits the default flags with the command then the following operations will 
-
-            be executed where again we are parsing the arguments according to their position in 
-
-            the list that we get after spliting the entire command at " ", and this time their position 
-
-            is different.
+            """If user omits the default flags with the command then the 
+            following operations will be executed where again we are parsing 
+            the arguments according to their position in the list that we 
+            get after spliting the entire command at " ", and this time their 
+            position is different.
             """
             if True:
                 if self.data["user_email"] and self.data["user_password"]:
@@ -750,11 +684,9 @@ class Main(object):
         pass
 
     def handle_linkedin_commands(self):
-        """
-        Method handle_linkedin_commands() calls the main LinkedIn classes according to the commands 
-
-        given by the user, it checks the flags that are applied with the `linkedin` command and calls 
-
+        """Method handle_linkedin_commands() calls the main LinkedIn 
+        classes according to the commands given by the user, it checks 
+        the flags that are applied with the `linkedin` command and calls 
         the LinkedIn classes accordingly.
         """
         if self.get_command_lenght() == 2 and self.get_command_at_index(1) == "linkedin":
@@ -792,21 +724,17 @@ class Main(object):
 
     @staticmethod
     def show_job_details(self):
-        """
-        Function show_job_details() prints the job details that the user entered we print the 
+        """Function show_job_details() prints the job details that the 
+        user entered we print the information about job keys once we have 
+        any of these two fields otherwise we don't show it. We declare this 
+        function static because we don't need to give this function an access 
+        to the object for just a print functionality its no use giving this 
+        function access to the object. Although it recieves an argument 'self' 
+        but it is not a object but it is a parameter object that we need in 
+        order to access user details.
 
-        information about job keys once we have any of these two fields otherwise we don't show it. 
-
-        We declare this function static because we don't need to give this function an access to 
-
-        the object for just a print functionality its no use giving this function access to the object. 
-
-        Although it recieves an argument 'self' but it is not a object but it is a parameter object 
-
-        that we need in order to access user details.
-
-        ! Args:
-            * self: it is the parameter object that has the user details in it.
+        Args:
+            self: it is the parameter object that has the user details in it.
         """
         if self.data["job_keywords"] or self.data["job_location"]:
             Main._print(f"""{Main.style("bright")}""", end="")
@@ -822,21 +750,17 @@ class Main(object):
 
     @staticmethod
     def ask_to_show_password(self):
-        """
-        Function ask_to_show_password() asks the user if (s)he want to see the password if yes 
+        """Function ask_to_show_password() asks the user if (s)he want 
+        to see the password if yes show them if not don't show them, 
+        this is for security purpose. We declare this function static 
+        because we don't need to give this function an access to the 
+        object for just a print functionality its no use giving this 
+        function access to the object. Although it recieves an argument 
+        'self' but it is not a object but it is a parameter object that 
+        we need in order to access user details.
 
-        show them if not don't show them, this is for security purpose. We declare this function 
-
-        static because we don't need to give this function an access to the object for just a print 
-
-        functionality its no use giving this function access to the object. Although it recieves an 
-
-        argument 'self' but it is not a object but it is a parameter object that we need in order 
-
-        to access user details.
-
-        ! Args:
-            * self: it is a parameter object that has user details in it.
+        Args:
+            self: it is a parameter object that has user details in it.
         """
         try:
             Main._print(f"""{Main.style("bright")}""", end="")
@@ -871,10 +795,10 @@ class Main(object):
             quit()
 
     def handle_show_commands(self):
-        """
-        Method show() gets executed once the user hit the command `show` this basically prints 
-
-        the information that user had entered like email, password, job keys/location.
+        """Method show() gets executed once the user hit the 
+        command `show` this basically prints the information 
+        that user had entered like email, password, job 
+        keys/location.
         """
         if self.get_command_lenght() == 2:
             Main._print(f"""{Main.style("bright")}""", end="")
@@ -897,10 +821,9 @@ class Main(object):
             pass
 
     def handle_developer_commands(self):
-        """
-        Method developer() gets executed once the user hits the command `devdetails` it basically 
-
-        shows the developer's network profiles and mail address.
+        """Method developer() gets executed once the user hits 
+        the command `devdetails` it basically shows the developer's 
+        network profiles and mail address.
         """
         if self.get_command_lenght() == 2:
             Main._print(f"""{Main.style("bright")}""", end="")
@@ -922,14 +845,11 @@ class Main(object):
             pass
 
     def handle_theme_commands(self):
-        """
-        Method handle_theme_commands() handles the 'theme' commands it calls the set_theme() function 
-
-        once it confirms that the flag that is given with the theme command is an actual theme flag. 
-
-        We does a lot of argument parsing in this function as you can see this is to fetch the right 
-
-        flag and if not found raise an error.
+        """Method handle_theme_commands() handles the 'theme' commands 
+        it calls the set_theme() function once it confirms that the flag 
+        that is given with the theme command is an actual theme flag. We 
+        does a lot of argument parsing in this function as you can see 
+        this is to fetch the right flag and if not found raise an error.
         """
         if self.get_command_lenght() >= 3 and self.get_command_at_index(2) == "--help":
             Main.help_with_theme()
@@ -944,16 +864,12 @@ class Main(object):
             Main.help_with_theme()
 
     def handle_clear_commands(self):
-        """
-        Method handle_clear_commands() handles the 'clear' commands it calls the home() function 
-
-        once it confirms that the given command is exactly a 'clear' command, it also checks for 
-
-        the flag that is given with the 'clear' command is an actual 'clear' flag. We does a lot 
-
-        of argument parsing in this function as you can see this is to fetch the right flag and 
-
-        if not found raise an error.
+        """Method handle_clear_commands() handles the 'clear' commands 
+        it calls the home() function once it confirms that the given 
+        command is exactly a 'clear' command, it also checks for the flag 
+        that is given with the 'clear' command is an actual 'clear' flag. 
+        We does a lot of argument parsing in this function as you can see 
+        this is to fetch the right flag and if not found raise an error.
         """
         if self.get_command_lenght() == 2 and self.get_command_at_index(1) == "clear":
             self.home()
@@ -967,16 +883,13 @@ class Main(object):
             Main.help_with_clear()
 
     def handle_help_commands(self):
-        """
-        Method hanlde_help_commands() handles the 'help' command it provides a manual to the user 
-
-        if it identifies that the given command is an actual help command, this guide contains every 
-
-        information that a user needs in order to start linkedin automation. We does a lot of argument 
-
-        parsing in this function as you can see this is to fetch the right flag and if not found raise 
-
-        an error.
+        """Method hanlde_help_commands() handles the 'help' command 
+        it provides a manual to the user if it identifies that the 
+        given command is an actual help command, this guide contains 
+        every information that a user needs in order to start linkedin 
+        automation. We does a lot of argument parsing in this function 
+        as you can see this is to fetch the right flag and if not found 
+        raise an error.
         """
         if self.get_command_lenght() == 2 and self.get_command_at_index(1) == "help":
             Main._print(f"""{Main.style("bright")}""", end="")
@@ -1037,14 +950,13 @@ class Main(object):
             Main.help_with_help()
 
     def handle_exit_commands(self):
-        """
-        Method handle_exit_commands() handles the 'exit' commands it calls the python's exit() function 
-
-        once it confirms that the given command is exactly a 'exit' command, it also checks for the flag 
-
-        that is given with the 'exit' command is an actual 'exit' flag. We does a lot of argument parsing 
-
-        in this function as you can see this is to fetch the right flag and if not found raise an error.
+        """Method handle_exit_commands() handles the 'exit' commands 
+        it calls the python's exit() function once it confirms that 
+        the given command is exactly a 'exit' command, it also checks 
+        for the flag that is given with the 'exit' command is an actual 
+        'exit' flag. We does a lot of argument parsing in this function 
+        as you can see this is to fetch the right flag and if not found 
+        raise an error.
         """
         if self.get_command_lenght() == 2 and self.get_command_at_index(1) == "exit":
             Main._print(f"""{Main.style("bright")}""", end="")
@@ -1065,12 +977,11 @@ class Main(object):
             Main.help_with_exit()
 
     def Error(self):
-        """
-        Method Error() gets called when the entered command is not recognized. We say 'self.command[8:]' 
-
-        because this way we are triming the 'command ' from the entered command because we don't want to 
-
-        confuse the user by showing him/her what is going in the background.
+        """Method Error() gets called when the entered command 
+        is not recognized. We say 'self.command[8:]' because this 
+        way we are triming the 'command ' from the entered command 
+        because we don't want to confuse the user by showing him/her 
+        what is going in the background.
         """
         if self.command:
             Main._print(f"""{Main.style("bright")}""", end="")
@@ -1083,6 +994,9 @@ class Main(object):
             Main._print(f"""{Main.style("reset")}""", end="")
 
     def check_email(self):
+        """
+        Method check_email()
+        """
         if re.search(r"^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$", self.command[self.command.find("=")+1:].strip()):
             return True
         elif re.search(r"^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w+$", self.command[self.command.find("=")+1:].strip()):
@@ -1091,16 +1005,12 @@ class Main(object):
             return False
 
     def handle_configs(self):
-        """
-        Method handle_configs() basically saves the user's configurations that are passed by hitting 
-
-        the command `config.user.email/password` or `config.job/keywords/location`. We use re.compile() 
-
-        and re.search() method here to find the pattern in the command. We does a lot of argument parsing 
-
-        in this function as you can see this is to fetch the right commands and flags and if not found 
-
-        raise an error.
+        """Method handle_configs() basically saves the user's configurations 
+        that are passed by hitting the command `config.user.email/password` 
+        or `config.job/keywords/location`. We use re.compile() and re.search() 
+        method here to find the pattern in the command. We does a lot of argument 
+        parsing in this function as you can see this is to fetch the right 
+        commands and flags and if not found raise an error.
         """
         if "config.user.password" == self.get_command_at_index(1):
             self.data["user_password"] = getpass.getpass(prompt=" Password: ")
@@ -1131,16 +1041,13 @@ class Main(object):
             Main.help_with_configs()
 
     def handle_commands(self):
-        """
-        Method handle_commands() does the actually handling of the commands entered, we first find 
-
-        pattern for 'configuration' commands using the re.compile() and re.search() method, which finds 
-
-        the pattern in the entered command and calls 'handle_configs()' method if it finds any match if 
-
-        not it calls the functions according to the commands entered and if still does not find any 
-
-        function call for the entered command it just hits the self.Error() method.
+        """Method handle_commands() does the actually handling of the 
+        commands entered, we first find pattern for 'configuration' 
+        commands using the re.compile() and re.search() method, which 
+        finds the pattern in the entered command and calls 'handle_configs()' 
+        method if it finds any match if not it calls the functions according 
+        to the commands entered and if still does not find any function call 
+        for the entered command it just hits the self.Error() method.
         """
         _config_regex_ = re.compile(
             r"(config\.user\.email).?(\w+)?|(config\.user\.password)|(config\.job\.keywords).?(\w+)?|(config\.job\.location).?(\w+)?", re.IGNORECASE)
@@ -1156,12 +1063,10 @@ class Main(object):
             self.commands.get(self.command.split(" ")[1], self.Error)()
 
     def run(self):
-        """
-        Method run() runs a infinite loop and starts the `cli` (Command Line Interface) and it actually 
-
-        starts listening to the commands and then it calls the function handle_commands() which handles 
-
-        the commands.
+        """Method run() runs a infinite loop and starts the `cli` 
+        (Command Line Interface) and it actually starts listening 
+        to the commands and then it calls the function 
+        handle_commands() which handles the commands.
         """
         while True:
             # ? get the command and add 'command ' in it this way we
