@@ -1021,7 +1021,7 @@ class Main(object):
         method.
         """
         _config_regex_ = re.compile(
-            r"(config\.user\.email).\w+|(config\.user\.password)|(config\.job\.keywords).\w+|(config\.job\.location).\w+")
+            r"(config\.user\.email).\w+|(config\.user\.password)|(config\.job\.keywords).\w+|(config\.job\.location).\w+", re.IGNORECASE)
 
         if _config_regex_.search(self.get_command_at_index(1)):
             self.handle_configs()
