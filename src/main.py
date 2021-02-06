@@ -654,8 +654,36 @@ class Main(object):
         return False
 
     def handle_send_commands(self):
-        if self.get_command_lenght() >= 5:
+        """
+        Method handle_send_commands() handles the operations when you apply flag 'send' with
 
+        'linkedin' command. We handle operation in two ways where one is when the user enters
+
+        exact number of flags with these commands and the other is when user ommits the default
+
+        flags.
+
+        ! Usage:
+            * -> linkedin [send] [suggestions^] --auto^/--guided [--headless]
+
+            * -> linkedin [send] [search industry=example&&location=india+usa+...] --auto^/--guided [--headless]
+        """
+        if self.get_command_lenght() >= 5:
+            """
+            If user entered command with exact number of flags required with that command
+
+            then we perform the following operations where we take actions according to the
+
+            flags 'suggestions' or 'search' in this case the parsing of arguments is done by
+
+            targetting their positions, remember flag 'suggestions' is default means even if 
+
+            the user omits it linkedin must go to the suggestion box to send invitations to
+
+            people and the flag '--auto' is also a default flag in case user omits it linkedin
+
+            should start the process in auto mode.
+            """
             if self.get_command_at_index(3) == "suggestions" and \
                     (self.get_command_at_index(4) == "--auto" or self.get_command_at_index(4) == "--guided"):
 
@@ -673,11 +701,52 @@ class Main(object):
 
                     Main._print(f"""{Main.colorFore("reset")}""", end="")
                     Main._print(f"""{Main.style("reset")}""", end="")
+
             elif self.get_command_at_index(3) == "search" and self.check_search_query() and \
                     (self.get_command_at_index(5) == "--auto" or self.get_command_at_index(5) == "--guided"):
 
                 self.data["headless"] = True if self.get_command_lenght() >= 7 and \
                     self.get_command_at_index(6) == "--headless" else False
+
+                if self.data["user_email"] and self.data["user_password"]:
+                    pass
+                else:
+                    Main._print(f"""{Main.style("bright")}""", end="")
+                    Main._print(f"""{Main.colorFore("blue")}""", end="")
+
+                    Main._print(
+                        f"""Need credentials first use config.user.email/password to add them.""")
+
+                    Main._print(f"""{Main.colorFore("reset")}""", end="")
+                    Main._print(f"""{Main.style("reset")}""", end="")
+
+        elif self.get_command_lenght() >= 3:
+            """
+            If user omits the default flags with the command then the following operations
+
+            will be executed where again we are parsing the arguments according to their
+
+            position in the list that we get after spliting the entire command at " ", and
+
+            this time their position is different.
+            """
+            if self.get_command_at_index(3) == "--headless":
+                if self.data["user_email"] and self.data["user_password"]:
+                    pass
+                else:
+                    Main._print(f"""{Main.style("bright")}""", end="")
+                    Main._print(f"""{Main.colorFore("blue")}""", end="")
+
+                    Main._print(
+                        f"""Need credentials first use config.user.email/password to add them.""")
+
+                    Main._print(f"""{Main.colorFore("reset")}""", end="")
+                    Main._print(f"""{Main.style("reset")}""", end="")
+
+            elif self.get_command_at_index(3) == "search" and self.check_search_query():
+
+                self.data["headless"] = True if self.get_command_lenght() >= 6 and \
+                    self.get_command_at_index(5) == "--headless" else False
 
                 if self.data["user_email"] and self.data["user_password"]:
                     pass
@@ -716,20 +785,27 @@ class Main(object):
             Main._print(f"""{Main.style("reset")}""", end="")
 
             Main.help_with_linkedin()
+
         elif self.get_command_lenght() >= 3:
+
             if self.get_command_at_index(2) == "send":
                 self.handle_send_commands()
+
             elif self.get_command_at_index(2) == "invitation-manager":
                 self.handle_invitation_manager_commands()
+
             elif self.get_command_at_index(2) == "mynetwork":
                 self.handle_mynetwork_commands()
+
             elif self.get_command_at_index(2 == "--help"):
                 Main.help_with_linkedin()
+
             else:
                 Main._print(
                     f"""'{self.get_command_at_index(2)}' is not a 'linkedin' command""")
+
         else:
-            pass
+            Main.help_with_linkedin()
 
     @staticmethod
     def show_job_details(self):
@@ -948,13 +1024,15 @@ class Main(object):
             Main._print(
                 f"""linkedin [send] [search industry=example&&location=india+usa+...] --auto^/--guided [--headless]""")
             Main._print(
-                f"""linkedin [invitation-manager*] [show*] --sent*/--recieved* [--headless]""")
+                f"""linkedin [invitation-manager*] [show*] --sent*^/--recieved* [--headless]""")
             Main._print(
                 f"""linkedin [invitation-manager*] [ignore*/withdraw*] [all*^/over > <days>*] [--headless]""")
             Main._print(
-                f"""linkedin [mynetwork*] [show*] [all*/page > 1^+2+3+...*] [--headless]""")
+                f"""linkedin [mynetwork*] [show*] [all*^/page > 1^+2+3+...*] [--headless]""")
             Main._print(
-                f"""linkedin [mynetwork*] [sendmessage*] [all*] [--greet*^] [--headless]""")
+                f"""linkedin [mynetwork*] [sendmessage*] [all*^] [--greet*^] [--headless]""")
+            Main._print(f"""""")
+            Main._print(f"""config""")
             Main._print(f"""""")
             Main._print(f"""show""")
             Main._print(f"""""")
