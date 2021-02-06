@@ -59,44 +59,35 @@ from selenium.common.exceptions import (
 from selenium.webdriver.common.action_chains import ActionChains
 # * importing `regex`
 import re
+import colorama
 
 
 class LinkedIn(object):
 
     def __init__(self, data):
-        """
-        Initializing the `LinkedIn` class
-        """
+        """Initializing the `LinkedIn` class."""
         self.data = data
         self.email = self.data["user_email"]
         self.password = self.data["user_password"]
 
-        """
-        Making an option object for our chromedriver
-        """
+        """Making an option object for our chromedriver."""
         self.options = webdriver.ChromeOptions()
 
-        """
-        Turning webdriver on
-        """
+        """Turning webdriver on."""
         self.enable_webdriver_chrome()
 
-        """
-        Calling `login()` function which will login for us
-        """
+        """Calling `login()` function which will login for us."""
         self.login()
 
     def set_browser_incognito_mode(self):
         """
-        Setting the browser to incognito using a command line
+        Setting the browser to incognito using a command line flag `--incognito`. This is 
 
-        flag `--incognito`. This is because using a incognito window
+        because using a incognito window makes it possible to log in as a 'test' user, with 
 
-        makes it possible to log in as a 'test' user, with none of your
+        none of your admin history remembered on the browser and we want that. To know more 
 
-        admin history remembered on the browser and we want that.
-
-        To know more about chrome options go and visit the site,
+        about chrome options go and visit the site,
 
         http://peter.sh/experiments/chromium-command-line-switches/
         """
@@ -104,15 +95,11 @@ class LinkedIn(object):
 
     def set_ignore_certificate_error(self):
         """
-        To disable the error windows related with certificate errors
+        To disable the error windows related with certificate errors we are using a command line 
 
-        we are using a command line flag `--ignore-certificate-errors`.
+        flag `--ignore-certificate-errors`. If you are willing to know more about chrome options,
 
-        If you are willing to know more about chrome options,
-
-        http://peter.sh/experiments/chromium-command-line-switches/
-
-        go and visit the site.
+        http://peter.sh/experiments/chromium-command-line-switches/ go and visit the site.
         """
         self.options.add_argument("--ignore-certificate-errors")
 
@@ -121,11 +108,9 @@ class LinkedIn(object):
 
     def get_chrome_driver_options(self):
         """
-        Function get_chrome_driver_options() returns a set of chrome options
+        Function get_chrome_driver_options() returns a set of chrome options to be added during the 
 
-        to be added during the execution of chromedriver. These options help
-
-        in driver testing and automation.
+        execution of chromedriver. These options help in driver testing and automation.
 
         ! Args:
             * self: is the object from which the options are to be updated
@@ -140,19 +125,15 @@ class LinkedIn(object):
 
     def enable_webdriver_chrome(self):
         """
-        Function enable_web_driver() makes a webdriver object called
+        Function enable_web_driver() makes a webdriver object called `self.driver` by executing 
 
-        `self.driver` by executing the `webdriver.Chrome()` constructor
-
-        which takes following arguments.
+        the `webdriver.Chrome()` constructor which takes following arguments.
 
         ! Args:
             * executable_path: chromedriver absolute executable path
             * options: chromedriver options
 
-        If you want to know what chromedriver options are go check out the
-
-        following link,
+        If you want to know what chromedriver options are go check out the following link,
 
         http://peter.sh/experiments/chromium-command-line-switches/
         """
@@ -161,17 +142,15 @@ class LinkedIn(object):
 
     def disable_webdriver_chrome(self):
         """
-        Function `disable_webdriver_chrome()` close the webdriver session
+        Function `disable_webdriver_chrome()` close the webdriver session by executing a function 
 
-        by executing a function called `close()`.
+        called `close()`.
         """
         self.driver.close()
 
     def get_login_page(self):
         """
-        Redirecting to the LinkedIn login page using `get()` function
-
-        of our `webdriver` class
+        Redirecting to the LinkedIn login page using `get()` function of our `webdriver` class.
 
         ! Args:
             * url: page's url
@@ -180,23 +159,21 @@ class LinkedIn(object):
 
     def enter_email(self):
         """
-        Function `enter_email()` enters the email in the email input field
+        Function `enter_email()` enters the email in the email input field using function 
 
-        using function `find_element_by_name()` which first finds the email
+        `find_element_by_name()` which first finds the email element by name `session_key` and 
 
-        element by name `session_key` and then clears the field using function
+        then clears the field using function `clear()` which is needed to clear previously input 
 
-        `clear()` which is needed to clear previously input value or to clear the
-
-        buffer and then it sends the email address using function `send_keys()`.
+        value or to clear the buffer and then it sends the email address using function `send_keys()`.
 
         ? find_element_by_name():
             ! Args:
                 * name: the name of the element to find.
         ? send_keys():
             ! Args:
-                * *value: A string for typing, or setting form fields. For
-                * setting file input, this could be a local file path.
+                * *value: A string for typing, or setting form fields. For setting file input, this 
+                * could be a local file path.
         """
         login_email = self.driver.find_element_by_name("session_key")
 
@@ -206,27 +183,25 @@ class LinkedIn(object):
 
     def enter_password(self):
         """
-        Function `enter_password()` enters the password in the password input field
+        Function `enter_password()` enters the password in the password input field using function 
 
-        using function `find_element_by_name()` which first finds the password
+        `find_element_by_name()` which first finds the password element by name `session_password` 
 
-        element by name `session_password` and then clears the field using function
+        and then clears the field using function `clear()` which is needed to clear previously input 
 
-        `clear()` which is needed to clear previously input value or to clear the
-
-        buffer and then it sends the password using function `send_keys()`.
+        value or to clear the buffer and then it sends the password using function `send_keys()`.
 
         ? find_element_by_name():
             ! Args:
                 * name: the name of the element to find.
         ? send_keys():
             ! Args:
-                * *value: A string for typing, or setting form fields. For
-                * setting file input, this could be a local file path.
+                * *value: A string for typing, or setting form fields. For setting file input, 
+                * this could be a local file path.
 
-        This function unlike the `enter_email()` also sends the field object
+        This function unlike the `enter_email()` also sends the field object a `ENTER` event 
 
-        a `ENTER` event so to start the login process.
+        so to start the login process.
         """
         login_password = self.driver.find_element_by_name("session_password")
 
@@ -238,13 +213,11 @@ class LinkedIn(object):
 
     def fill_credentials(self):
         """
-        Function `fill_credentials()` fills the user credentials in the
+        Function `fill_credentials()` fills the user credentials in the desired fields by invoking 
 
-        desired fields by invoking function, `enter_email()` which enters the email
+        function, `enter_email()` which enters the email in the desired field and function 
 
-        in the desired field and function `enter_password()` which enters the
-
-        password in the desired field.
+        `enter_password()` which enters the password in the desired field.
 
         ! Args:
             * self: object used to invoke the functions `enter_email()` and `enter_password()`
@@ -255,7 +228,7 @@ class LinkedIn(object):
 
     def login(self):
         """
-        Function `login()` logs into your personal LinkedIn profile
+        Function `login()` logs into your personal LinkedIn profile.
 
         ! Args:
             * self: object used to execute various functions in our LinkedIn class
@@ -265,31 +238,25 @@ class LinkedIn(object):
         self.fill_credentials()
 
     def get_job_keywords(self):
-        """
-        Function `get_job_keywords()` returns the job keywords.
-        """
+        """Function `get_job_keywords()` returns the job keywords."""
         return self.data["job_keywords"]
 
     def get_job_location(self):
-        """
-        Function `get_job_location()` returns the job location.
-        """
+        """Function `get_job_location()` returns the job location."""
         return self.data["job_location"]
 
     @staticmethod
     def get_page_y_offset(self):
         """
-        Function get_page_y_offset() returns the window.pageYOffset
+        Function get_page_y_offset() returns the window.pageYOffset of the webpage, we need that 
 
-        of the webpage, we need that so we can keep on scrolling untill
+        so we can keep on scrolling untill the page offset becomes constant. Declaration of this 
 
-        the page offset becomes constant. Declaration of this method is
-
-        static because we want to use this function across multiple classes.
+        method is static because we want to use this function across multiple classes.
 
         ! Args:
-            * self: is not a object here but it is a parameter object that
-            * has a property 'driver' and we need that
+            * self: is not a object here but it is a parameter object that has a property 'driver' 
+            * and we need that
 
         ! return:
             window.pageYOffset
@@ -303,17 +270,46 @@ class LinkedIn(object):
     @staticmethod
     def execute_javascript(self):
         """
-        Function execute_javascript() scrolls the web page to the very
+        Function execute_javascript() scrolls the web page to the very bottom of it using the 
 
-        bottom of it using the 'document.scrollingElement.scrollTop'
-
-        property.
+        'document.scrollingElement.scrollTop' property.
 
         ! Args:
-            * self: it is a parameter object that has a property
-            * 'driver' in it and we need that to access the webpage
+            * self: it is a parameter object that has a property 'driver' in it and we need 
+            * that to access the webpage
         """
         self.driver.execute_script((
             "var scrollingElement = (document.scrollingElement || document.body);"
             "scrollingElement.scrollTop = scrollingElement.scrollHeight;"
         ))
+
+    @staticmethod
+    def get_aria_label(button, _type):
+        """
+        Function get_aria_label() retrieves the value of attribute 'aria-label' using the webdriver 
+
+        function 'get_attribute()' which returns the value given to that attribute.
+
+        ! Args:
+            * button: button element in which the program has to click
+            * _type: is the status is it sending or failed
+        """
+        if (_type == "sending"):
+            print(
+                "Sending invitation to Person labelled by >>> '",
+                button.get_attribute("aria-label").strip(),
+                "'",
+                "(status -> ",
+                _type.strip(),
+                ")"
+            )
+        elif (_type == "failed"):
+            print(f"{colorama.Fore.RED}",
+                  "Sending invitation to Person labelled by >>> '",
+                  button.get_attribute("aria-label").strip(),
+                  "'",
+                  "(status -> ",
+                  _type.strip(),
+                  ")",
+                  f"{colorama.Fore.RESET}"
+                  )

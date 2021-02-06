@@ -643,7 +643,10 @@ class Main(object):
 
         cut all the leading and trailing whitespaces.
         """
-        return self.command.split(" ")[index].strip()
+        try:
+            return self.command.split(" ")[index].strip()
+        except IndexError:
+            return None
 
     def check_search_query(self):
         querry = self.get_command_at_index(4)
@@ -691,7 +694,8 @@ class Main(object):
                     self.get_command_at_index(5) == "--headless" else False
 
                 if self.data["user_email"] and self.data["user_password"]:
-                    pass
+                    LinkedInConnections.LinkedInConnectionsAuto(
+                        self.data).run()
                 else:
                     Main._print(f"""{Main.style("bright")}""", end="")
                     Main._print(f"""{Main.colorFore("blue")}""", end="")
@@ -730,9 +734,12 @@ class Main(object):
 
             this time their position is different.
             """
-            if self.get_command_at_index(3) == "--headless":
+            if True:
                 if self.data["user_email"] and self.data["user_password"]:
-                    pass
+                    self.data["headless"] = True if self.get_command_at_index(
+                        3) == "--headless" else False
+                    LinkedInConnections.LinkedInConnectionsAuto(
+                        self.data).run()
                 else:
                     Main._print(f"""{Main.style("bright")}""", end="")
                     Main._print(f"""{Main.colorFore("blue")}""", end="")
