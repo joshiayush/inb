@@ -12,7 +12,7 @@ It will install dependencies if they are not present in your system,
 
 it can install `python` interpreter `selenium`, `urllib`, `webdriver-manager`
 
-packages on your system.    
+packages on your system.
 
 ### `config.user.email=example@gmail.com`
 
@@ -29,5 +29,13 @@ Once you are done adding configurations you can run the command.
 ### `linkedin send`
 
 It will start sending invitation.
+
+## Commands
+
+### `linkedin send suggestions --auto --headless`
+
+Starts sending invitations to LinkedIn suggestions `--headless` starts
+
+the automation without opening the browser.
 
 ### `Happy Hacking`
