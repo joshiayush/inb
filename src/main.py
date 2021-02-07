@@ -61,6 +61,7 @@ class Main(object):
             "config": self.handle_config,
             "linkedin": self.handle_linkedin_commands,
             "show": self.handle_show_commands,
+            "delete": self.handle_delete_commands,
             "developer": self.handle_developer_commands,
             "theme": self.handle_theme_commands,
             "clear": self.handle_clear_commands,
@@ -412,84 +413,96 @@ class Main(object):
         Main._print(f"""{Main.colorFore("blue")}""", end="")
 
         Main._print(
-            f"""linkedin [send] [suggestions^] --auto/--guided [--headless]""")
-        Main._print(f"""`linkedin` command handles the linkedin process.""")
+            f"""linkedin [send] [suggestions^] --auto/--guided [--headless] [--use-cache]""")
+        Main._print(f"""'linkedin' command handles the linkedin process.""")
         Main._print(
-            f"""`send` flag sends invitations according to the path given to it.""")
+            f"""'send' flag sends invitations according to the path given to it.""")
         Main._print(
-            f"""`suggestions` flag lets linkedin know that it must use""")
+            f"""'suggestions' flag lets linkedin know that it must use""")
         Main._print(f"""'MyNetwork' tab as a target.""")
         Main._print(
-            f"""`--auto/--guided` flag tells the linkedin to start process in auto(recommended) or guided mode.""")
+            f"""'--auto/--guided' flag tells the linkedin to start process in auto(recommended) or guided mode.""")
         Main._print(
-            f"""`--headless` flag tells the program to start automation without opening the browser.""")
+            f"""'--headless' flag tells the program to start automation without opening the browser.""")
+        Main._print(
+            f"""'--use-cache' uses cache (if stored) for authentication.""")
         Main._print(f"""""")
         Main._print(
             f"""linkedin [send] [search industry=example&&location=india+usa+...] --auto^/--guided [--headless]""")
-        Main._print(f"""`linkedin` command handles the linkedin process.""")
+        Main._print(f"""'linkedin' command handles the linkedin process.""")
         Main._print(
-            f"""`send` flag sends invitations according to the path given to it.""")
+            f"""'send' flag sends invitations according to the path given to it.""")
         Main._print(
-            f"""`search industry=example&&location=india+usa+...` flag lets linkedin know that it must""")
+            f"""'search industry=example&&location=india+usa+...' flag lets linkedin know that it must""")
         Main._print(
             f"""go and search for people associated to the given industry (use (%) for space between words in industry)""")
         Main._print(
             f"""and living in the given location. You can always add location.""")
         Main._print(
-            f"""`--auto/--guided` flag tells the linkedin to start process in auto(recommended) or guided mode.""")
+            f"""'--auto/--guided' flag tells the linkedin to start process in auto(recommended) or guided mode.""")
         Main._print(
-            f"""`--headless` flag tells the program to start automation without opening the browser.""")
+            f"""'--headless' flag tells the program to start automation without opening the browser.""")
+        Main._print(
+            f"""'--use-cache' uses cache (if stored) for authentication.""")
         Main._print(f"""""")
         Main._print(
             f"""linkedin [invitation-manager*] [show*] --sent*/--recieved* [--headless]""")
-        Main._print(f"""`linkedin` command handles the linkedin process.""")
+        Main._print(f"""'linkedin' command handles the linkedin process.""")
         Main._print(
-            f"""`invitation-manager` flag tells the linkedin to start performing operations on""")
+            f"""'invitation-manager' flag tells the linkedin to start performing operations on""")
         Main._print(f"""invitation manager tab.""")
         Main._print(
-            f"""`show` flag show tells the linkedin to show the people my account want to connect with.""")
+            f"""'show' flag show tells the linkedin to show the people my account want to connect with.""")
         Main._print(
-            f"""`--sent/--recieved` flag tells the linkedin to fetch either sent invitations or recieved ones.""")
+            f"""'--sent/--recieved' flag tells the linkedin to fetch either sent invitations or recieved ones.""")
         Main._print(
-            f"""`--headless` flag tells the program to start automation without opening the browser.""")
+            f"""'--headless' flag tells the program to start automation without opening the browser.""")
+        Main._print(
+            f"""'--use-cache' uses cache (if stored) for authentication.""")
         Main._print(f"""""")
         Main._print(
             f"""linkedin [invitation-manager*] [ignore*/withdraw*] [all*^/over > <days>*] [--headless]""")
-        Main._print(f"""`linkedin` command handles the linkedin process.""")
+        Main._print(f"""'linkedin' command handles the linkedin process.""")
         Main._print(
-            f"""`invitation-manager` flag tells the linkedin to start performing operations on""")
+            f"""'invitation-manager' flag tells the linkedin to start performing operations on""")
         Main._print(
-            f"""`ignore/withdraw` flag tells the linkedin that you want to activate invitation ignoring or withdrawing process.""")
+            f"""'ignore/withdraw' flag tells the linkedin that you want to activate invitation ignoring or withdrawing process.""")
         Main._print(
-            f"""`all/over > <days>` flag tell to either withdraw all the sent invitations or""")
+            f"""'all/over > <days>' flag tell to either withdraw all the sent invitations or""")
         Main._print(
             f"""use the amount of days given to withdraw sent invitations accordingly.""")
         Main._print(
-            f"""`--headless` flag tells the program to start automation without opening the browser.""")
+            f"""'--headless' flag tells the program to start automation without opening the browser.""")
+        Main._print(
+            f"""'--use-cache' uses cache (if stored) for authentication.""")
         Main._print(f"""""")
         Main._print(
             f"""linkedin [mynetwork*] [show*] [all*/page > 1^+2+3+...*] [--headless]""")
-        Main._print(f"""`linkedin` command handles the linkedin process.""")
+        Main._print(f"""'linkedin' command handles the linkedin process.""")
         Main._print(
-            f"""`mynetwork` flag tell the linkedin to start operating on MyNetworks.""")
+            f"""'mynetwork' flag tell the linkedin to start operating on MyNetworks.""")
         Main._print(
-            f"""`all/page > 1+2+3+...` flag tells either show all connections or use the pages given.""")
+            f"""'all/page > 1+2+3+...' flag tells either show all connections or use the pages given.""")
         Main._print(
-            f"""`--headless` flag tells the program to start automation without opening the browser.""")
+            f"""'--headless' flag tells the program to start automation without opening the browser.""")
+        Main._print(
+            f"""'--use-cache' uses cache (if stored) for authentication.""")
         Main._print(f"""""")
         Main._print(
             f"""linkedin [mynetwork*] [sendmessage*] [all*] [--greet*^] [--headless]""")
-        Main._print(f"""`linkedin` command handles the linkedin process.""")
+        Main._print(f"""'linkedin' command handles the linkedin process.""")
         Main._print(
-            f"""`mynetwork` flag tell the linkedin to start operating on MyNetworks.""")
+            f"""'mynetwork' flag tell the linkedin to start operating on MyNetworks.""")
         Main._print(
-            f"""`sendmessage` flag tells the linkedin to send messages to connections.""")
+            f"""'sendmessage' flag tells the linkedin to send messages to connections.""")
         Main._print(
-            f"""`all` flag tells the linkedin to use all connections.""")
+            f"""'all' flag tells the linkedin to use all connections.""")
         Main._print(
-            f"""`--greet` flag tells the linkedin to send greet message.""")
+            f"""'--greet' flag tells the linkedin to send greet message.""")
         Main._print(
-            f"""`--headless` flag tells the program to start automation without opening the browser.""")
+            f"""'--headless' flag tells the program to start automation without opening the browser.""")
+        Main._print(
+            f"""'--use-cache' uses cache (if stored) for authentication.""")
 
         Main._print(f"""{Main.colorFore("reset")}""", end="")
         Main._print(f"""{Main.style("reset")}""", end="")
@@ -505,12 +518,28 @@ class Main(object):
         Main._print(f"""{Main.style("bright")}""", end="")
         Main._print(f"""{Main.colorFore("blue")}""", end="")
 
-        Main._print(f"""`show` shows all the details you have entered like:""")
+        Main._print(f"""'show' shows all the details you have entered like:""")
         Main._print(f"""user.email,""")
         Main._print(
             f"""user.password (asks first if you want to see it really or not),""")
         Main._print(f"""job.keywords,""")
         Main._print(f"""job.location""")
+
+        Main._print(f"""{Main.colorFore("reset")}""", end="")
+        Main._print(f"""{Main.style("reset")}""", end="")
+
+    @staticmethod
+    def help_with_delete():
+        Main._print(f"""{Main.style("bright")}""", end="")
+        Main._print(f"""{Main.colorFore("blue")}""", end="")
+
+        Main._print(f"""'delete' command deletes the cache stored.""")
+
+        Main._print(f"""{Main.colorFore("blue")}""", end="")
+
+        Main._print(f"""Usage: delete --cache""")
+
+        Main._print(f"""{Main.colorFore("reset")}""", end="")
 
         Main._print(f"""{Main.colorFore("reset")}""", end="")
         Main._print(f"""{Main.style("reset")}""", end="")
@@ -526,7 +555,7 @@ class Main(object):
         Main._print(f"""{Main.style("bright")}""", end="")
         Main._print(f"""{Main.colorFore("blue")}""", end="")
 
-        Main._print(f"""`developer` shows the developer details like:""")
+        Main._print(f"""'developer' shows the developer details like:""")
         Main._print(f"""his number, email, profiles ...""")
 
         Main._print(f"""{Main.colorFore("reset")}""", end="")
@@ -544,7 +573,7 @@ class Main(object):
         Main._print(f"""{Main.colorFore("blue")}""", end="")
 
         Main._print(
-            f"""`theme --parrot/--normal` changes the cli (command line theme) according to the given theme value.""")
+            f"""'theme --parrot/--normal' changes the cli (command line theme) according to the given theme value.""")
 
         Main._print(f"""{Main.colorFore("reset")}""", end="")
         Main._print(f"""{Main.style("reset")}""", end="")
@@ -560,7 +589,7 @@ class Main(object):
         Main._print(f"""{Main.style("bright")}""", end="")
         Main._print(f"""{Main.colorFore("blue")}""", end="")
 
-        Main._print(f"""`clear` clears the screen""")
+        Main._print(f"""'clear' clears the screen""")
 
         Main._print(f"""{Main.colorFore("reset")}""", end="")
         Main._print(f"""{Main.style("reset")}""", end="")
@@ -577,7 +606,7 @@ class Main(object):
         Main._print(f"""{Main.colorFore("blue")}""", end="")
 
         Main._print(
-            f"""`exit` exits the program and also does flushing jobs.""")
+            f"""'exit' exits the program and also does flushing jobs.""")
 
         Main._print(f"""{Main.colorFore("reset")}""", end="")
         Main._print(f"""{Main.style("reset")}""", end="")
@@ -594,7 +623,7 @@ class Main(object):
         Main._print(f"""{Main.colorFore("blue")}""", end="")
 
         Main._print(
-            f"""`help` prints a list of commands that the Linkedin Automater have.""")
+            f"""'help' prints a list of commands that the Linkedin Automater have.""")
 
         Main._print(f"""{Main.colorFore("reset")}""", end="")
         Main._print(f"""{Main.style("reset")}""", end="")
@@ -871,6 +900,43 @@ class Main(object):
         elif self.get_command_lenght() >= 3 and self.get_command_at_index(2) == "--help":
             Main.help_with_show()
         else:
+            Main.help_with_show()
+
+    def delete_cache(self):
+        """Method delete_cache() deletes the stored cache (User credentials)
+        if exists, we use os.path.exists() to check if the file is present or
+        not if present we remove it.
+        """
+        if os.path.exists(self.__credentials_file):
+            os.remove(self.__credentials_file)
+        else:
+            Main._print(f"""{Main.style("bright")}""", end="")
+            Main._print(f"""{Main.colorFore("red")}""", end="")
+
+            Main._print(f"""There's no credential file exists to delete.""")
+
+            Main._print(f"""{Main.colorFore("reset")}""", end="")
+            Main._print(f"""{Main.style("reset")}""", end="")
+
+    def handle_delete_commands(self):
+        """Method handle_delete_commands() gets executed once 
+        the user hits the command `delete` this basically deletes
+        the cache stored (User credentials) if exists.
+        """
+        if self.get_command_lenght() == 2 and self.get_command_at_index(1) == "delete":
+            Main._print(f"""{Main.style("bright")}""", end="")
+            Main._print(f"""{Main.colorFore("red")}""", end="")
+
+            Main._print(f"""command 'delete' cannot be reference alone.""")
+
+            Main._print(f"""{Main.colorFore("reset")}""", end="")
+            Main._print(f"""{Main.style("reset")}""", end="")
+            Main.help_with_delete()
+        elif self.get_command_lenght() >= 3 and self.get_command_at_index(2) == "--cache":
+            self.delete_cache()
+        elif self.get_command_lenght() >= 3 and self.get_command_at_index(2) == "--help":
+            Main.help_with_delete()
+        else:
             pass
 
     def handle_developer_commands(self):
@@ -967,21 +1033,23 @@ class Main(object):
                 f"""A (*) next to a name means that the command is disabled.""")
             Main._print(f"""""")
             Main._print(
-                f"""linkedin [send] [suggestions^] --auto^/--guided [--headless]""")
+                f"""linkedin [send] [suggestions^] --auto^/--guided [--headless] [--use-cache]""")
             Main._print(
-                f"""linkedin [send] [search industry=example&&location=india+usa+...] --auto^/--guided [--headless]""")
+                f"""linkedin [send] [search industry=example&&location=india+usa+...] --auto^/--guided [--headless] [--use-cache]""")
             Main._print(
-                f"""linkedin [invitation-manager*] [show*] --sent*^/--recieved* [--headless]""")
+                f"""linkedin [invitation-manager*] [show*] --sent*^/--recieved* [--headless] [--use-cache]""")
             Main._print(
-                f"""linkedin [invitation-manager*] [ignore*/withdraw*] [all*^/over > <days>*] [--headless]""")
+                f"""linkedin [invitation-manager*] [ignore*/withdraw*] [all*^/over > <days>*] [--headless] [--use-cache]""")
             Main._print(
-                f"""linkedin [mynetwork*] [show*] [all*^/page > 1^+2+3+...*] [--headless]""")
+                f"""linkedin [mynetwork*] [show*] [all*^/page > 1^+2+3+...*] [--headless] [--use-cache]""")
             Main._print(
-                f"""linkedin [mynetwork*] [sendmessage*] [all*^] [--greet*^] [--headless]""")
+                f"""linkedin [mynetwork*] [sendmessage*] [all*^] [--greet*^] [--headless] [--use-cache]""")
             Main._print(f"""""")
             Main._print(f"""config""")
             Main._print(f"""""")
             Main._print(f"""show""")
+            Main._print(f"""""")
+            Main._print(f"""delete""")
             Main._print(f"""""")
             Main._print(f"""developer""")
             Main._print(f"""""")
