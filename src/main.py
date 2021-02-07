@@ -19,14 +19,15 @@ import getpass
 import colorama
 # * importing `re` regex
 import re
+# * importing `Fernet`
 from cryptography.fernet import Fernet
 
 
 class Main(object):
-    """Class Main is the main class that gets executed after the user 
-    hits the command `./run.sh` on the terminal screen, this class gives 
-    the `cli` (Command Line Interface) to the user. We don't have `GUI` 
-    (Graphical User Interface) here because I don't have any deign Idea 
+    """Class Main is the main class that gets executed after the user
+    hits the command `./run.sh` on the terminal screen, this class gives
+    the `cli` (Command Line Interface) to the user. We don't have `GUI`
+    (Graphical User Interface) here because I don't have any deign Idea
     in my mind yet.
 
     Class Variable:
@@ -35,22 +36,27 @@ class Main(object):
     THEME = "parrot"
 
     def __init__(self):
-        """Method __init__() initializes the commands and required variables, 
-        it also prints the Logo on the screen.
+        """Method __init__() initializes the commands and required variables,
+        it also prints the Logo on the screen it calls method init_commands()
+        that initializes all the commands that we can have in this program then
+        it calls the init_vars() method to initialize the variables required
+        then it calls method home() to print a sexy logo on the screen.
         """
-        self.init_commands()    # ? initialize commands
+        self.init_commands()
 
-        self.init_vars()        # ? initialize variable
+        self.init_vars()
 
-        self.home()             # ? prints the logo
+        self.home()
 
     def init_commands(self):
-        """Method init_commands() initialize the commands that LinkedIn 
+        """Method init_commands() initialize the commands that LinkedIn
         Automater provides for now we have following commands,
 
         Commands:
+            * config     : shows how you can add fields
             * linkedin   : activates the automation process
             * show       : shows the entered details
+            * delete     : deletes the cache stored
             * developer  : prints the developer details
             * theme      : sets the given theme
             * clear      : clears the screen
@@ -70,11 +76,11 @@ class Main(object):
         }
 
     def init_vars(self):
-        """Method init_vars() intialize the dictionary that holds the 
-        user's details like credentials and jobs search, etc, it also 
-        initializes a dictionary which conatins commands and their 
-        corresponding help functions, there's one more variable that 
-        gets initializes that is the theme variable for our cli 
+        """Method init_vars() intialize the dictionary that holds the
+        user's details like credentials and jobs search, etc, it also
+        initializes a dictionary which conatins commands and their
+        corresponding help functions, there's one more variable that
+        gets initializes that is the theme variable for our cli
         (Command Line Interface).
         """
         self.theme = "parrot"
@@ -106,32 +112,78 @@ class Main(object):
         }
 
     def encrypt_email(self):
+        """Method encrypt_email() encrypts the user email so
+        to store this field as a cache later. We use 'Fernet' 
+        class to encrypt user password.
+
+            Fernet:
+            Fernet guarantees that a message encrypted using it cannot 
+            be manipulated or read without the key. Fernet is an 
+            implementation of symmetric (also known as “secret key”) 
+            authenticated cryptography.
+        """
         fernet = Fernet(self.__key)
+
         self.encrypted_email = fernet.encrypt(
             self.data["user_email"].encode()).decode()
+
         del fernet
 
     def encrypt_password(self):
+        """Method encrypt_password() encrypts the user password so
+        to store this field as a cache later. We use 'Fernet' class
+        to encrypt user password.
+
+        Fernet:
+            Fernet guarantees that a message encrypted using it cannot 
+            be manipulated or read without the key. Fernet is an 
+            implementation of symmetric (also known as “secret key”) 
+            authenticated cryptography.
+        """
         fernet = Fernet(self.__key)
+
         self.encrypted_password = fernet.encrypt(
             self.data["user_password"].encode()).decode()
+
         del fernet
 
+    def decrypt_credentials(self, config):
+        """Method decrypt_credentials() decrypts the encrypted user 
+        credentials that are stored in the Credentials file. We use
+        class 'Fernet' to achive this functionality.
+
+        Fernet:
+            Fernet guarantees that a message encrypted using it cannot 
+            be manipulated or read without the key. Fernet is an 
+            implementation of symmetric (also known as “secret key”) 
+            authenticated cryptography. 
+
+        Args:
+            config: it is a dictionary object that holds user encrypted
+            fields.
+        """
+        fernet = Fernet(self.__key)
+
+        self.data["user_email"] = fernet.decrypt(
+            config["Username"].encode('utf-8')).decode('utf-8')
+
+        self.data["user_password"] = fernet.decrypt(
+            config["Password"].encode('utf-8')).decode('utf-8')
+
     def store_credentials(self):
-        """This function is responsible for encrypting the password 
-        and create key file for storing the key and create a credential 
-        file with user name and password. 
+        """Method store_credentials() stores the user secret fields
+        as cache in a file 'CredentialsFile.ini' so to use these
+        fields later. 
         """
         with open(self.__credentials_file, 'w') as creds_file:
             creds_file.write("Username={}\nPassword={}\n".format(
                 self.encrypted_email, self.encrypted_password))
 
     def get_credentials(self):
-        """Method read_credentials()
+        """Method get_credentials() reads the credentials stored as
+        cache in file 'CredentialsFile.ini' if exists. 
         """
         if os.path.exists(self.__credentials_file):
-            fernet = Fernet(self.__key)
-
             with open(self.__credentials_file, 'r') as creds_file:
                 lines = creds_file.readlines()
 
@@ -145,11 +197,7 @@ class Main(object):
                     if creds[0] in ("Username", "Password"):
                         config[creds[0]] = creds[1]
 
-                self.data["user_email"] = fernet.decrypt(
-                    config["Username"].encode('utf-8')).decode('utf-8')
-
-                self.data["user_password"] = fernet.decrypt(
-                    config["Password"].encode('utf-8')).decode('utf-8')
+                self.decrypt_credentials(config)
         else:
             Main._print(f"""{Main.style("bright")}""", end="")
             Main._print(f"""{Main.colorFore("red")}""", end="")
@@ -162,6 +210,10 @@ class Main(object):
             Main.help_with_configs()
 
     def store_cache(self):
+        """Method store_cache() applies encryption on the fields if both
+        the fields are available and the calls the method 'store_credentials'
+        to store the credentials as cache.
+        """
         if self.data["user_email"] and self.data["user_password"]:
             self.encrypt_email()
             self.encrypt_password()
@@ -191,11 +243,11 @@ class Main(object):
             co-ordinates that sets the Logo nearly to the center.
         """
         if Main.terminal_size()[0] >= 150:
-            return [48, 5]                      # ? return [48, 5] if full size
+            return [48, 5]
         elif Main.terminal_size()[0] >= 80:
-            return [15, 2]                      # ? return [15, 2] if half size
+            return [15, 2]
         else:
-            return [15, 2]      # ? else return [15, 2] (predicted)
+            return [15, 2]
 
     @staticmethod
     def gotoxy(x, y):
@@ -254,10 +306,8 @@ class Main(object):
             "reset": colorama.Fore.RESET
         }
 
-        # ! checking if the theme is set to '--parrot'
         if Main.THEME == "parrot":
             return colors.get(color, colorama.Fore.RESET)
-        # ! return normal style if theme is set to '--normal'
         elif Main.THEME == "normal":
             return colors.get(color, colorama.Fore.RESET) if color == "red" or color == "reset" else " \b"
 
@@ -299,28 +349,32 @@ class Main(object):
     def home(self):
         """Method home() prints the home logo on the screen which makes the 
         application look more sexy.
-        """
-        self.clear()                # ? clears the screen first
 
-        x, y = Main.get_coords()    # ? get the co-ordinates
+        First it clears the screen using the method clear(), then it requests
+        for the co-ordinates that pushes the logo to the center of the screen
+        according to the terminal size, then it applies those co-ordinates and
+        there you got a sexy looking home screen. 
+        """
+        self.clear()
+
+        x, y = Main.get_coords()
 
         Main._print(f"""{Main.style("bright")}""", end="")
         Main._print(f"""{Main.colorFore("green")}""", end="")
 
-        Main.gotoxy(x, y)           # ? apply co-ordinates
+        Main.gotoxy(x, y)
         print(r"\\                      \\  //                  \\  \\             ")
-        Main.gotoxy(x, y+1)         # ? apply co-ordinates
+        Main.gotoxy(x, y+1)
         print(r"\\        ()            \\ //                   \\  \\             ")
-        Main.gotoxy(x, y+2)         # ? apply co-ordinates
+        Main.gotoxy(x, y+2)
         print(r"\\        \\  \\\\\\\\  \\//    \\\\\\\\        \\  \\  \\\\\\\\\  ")
-        Main.gotoxy(x, y+3)         # ? apply co-ordinates
+        Main.gotoxy(x, y+3)
         print(r"\\        \\  \\    \\  \\\\    \\ ===//  \\\\\\\\  \\  \\     \\  ")
-        Main.gotoxy(x, y+4)         # ? apply co-ordinates
+        Main.gotoxy(x, y+4)
         print(r"\\        \\  \\    \\  \\ \\   \\        \\    \\  \\  \\     \\  ")
-        Main.gotoxy(x, y+5)         # ? apply co-ordinates
+        Main.gotoxy(x, y+5)
         print(r"\\\\\\\\  \\  \\    \\  \\  \\  \\\\\\\\  \\\\\\\\  \\  \\     \\  ")
 
-        # ? show a tip to automation
         Main._print(f"""\n Type help for more information!""", end="\n")
 
         Main._print(f"""{Main.colorFore("reset")}""", end="")
@@ -347,7 +401,6 @@ class Main(object):
             Main._print(f"""{Main.style("reset")}""", end="")
 
             return inp
-
         except KeyboardInterrupt:
             Main._print(f"""{Main.style("bright")}""", end="")
             Main._print(f"""{Main.colorFore("green")}""", end="")
@@ -357,7 +410,7 @@ class Main(object):
             Main._print(f"""{Main.colorFore("reset")}""", end="")
             Main._print(f"""{Main.style("reset")}""", end="")
 
-            exit()              # ? exit program silently
+            exit()
 
     @staticmethod
     def _print(string, **kwargs):
@@ -371,8 +424,6 @@ class Main(object):
             string: it is the string that needs to be printed on the terminal.
             **kwargs: are the key-value pair that print method takes besides string.
         """
-        # ! don't add space to the print value if the print value is a colorama
-        # ! generated unicode
         if Main.match_string_with_colorama_objects(string):
             if kwargs:
                 print(f"""{string}""", end="")
@@ -1186,42 +1237,44 @@ class Main(object):
             Main.help_with_configs()
 
     def handle_commands(self):
-        """Method handle_commands() does the actually handling of the 
-        commands entered, we first find pattern for 'configuration' 
-        commands using the re.compile() and re.search() method, which 
-        finds the pattern in the entered command and calls 'handle_configs()' 
-        method if it finds any match if not it calls the functions according 
-        to the commands entered and if still does not find any function call 
-        for the entered command it just hits the self.Error() method.
+        """Method handle_commands() does the actually handling of the commands 
+        entered, we first find pattern for 'configuration' commands using the 
+        re.compile() and re.search() method, which finds the pattern in the 
+        entered command and calls 'handle_configs()' method if it finds any 
+        match if not it calls the functions according to the commands entered 
+        and if still does not find any function call for the entered command it 
+        just hits the self.Error() method.
+
+        If you are really confused about what I'm doing in the else clause 
+        then here's the explaination -> get() method of dictionary data type 
+        returns value of passed argument if it is present in dictionary 
+        otherwise second argument will be assigned as default value of passed 
+        argument. (You remember the switch statement in C, C++, Javascript ...)
         """
         _config_regex_ = re.compile(
             r"(config\.user\.email).?(\w+)?|(config\.user\.password)|(config\.job\.keywords).?(\w+)?|(config\.job\.location).?(\w+)?", re.IGNORECASE)
 
         if _config_regex_.search(self.get_command_at_index(1)):
             self.handle_configs()
-
         else:
-            # ? get() method of dictionary data type returns
-            # ? value of passed argument if it is present
-            # ? in dictionary otherwise second argument will
-            # ? be assigned as default value of passed argument.
             self.commands.get(self.command.split(" ")[1], self.Error)()
 
     def run(self):
         """Method run() runs a infinite loop and starts the `cli` 
         (Command Line Interface) and it actually starts listening 
-        to the commands and then it calls the function 
-        handle_commands() which handles the commands.
+        to the commands and then it calls the function handle_commands() 
+        which handles the commands.
+
+        We first get the command and add 'command ' in it this way we
+        can handle the commands by accessing their position in list.
+        Then we call function handle commands that is going to perform 
+        operations as per command
         """
         while True:
-            # ? get the command and add 'command ' in it this way we
-            # ? can handle the commands situated at list indices.
             self.command = ("command " + self._input()).strip()
-            # ? calling function handle commands that is going to
-            # ? perform operations as per command
             self.handle_commands() if self.get_command_lenght() > 1 else False
 
 
-# ! Execute program
+"""Execute program"""
 if __name__ == "__main__":
     Main().run()
