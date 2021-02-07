@@ -273,9 +273,11 @@ class LinkedIn(object):
 
     @staticmethod
     def inform_user(button, _type):
-        """Function get_aria_label() retrieves the value of attribute 
+        """Function inform_user() retrieves the value of attribute 
         'aria-label' using the webdriver function 'get_attribute()' 
-        which returns the value given to that attribute.
+        which returns the value given to that attribute and then using
+        that attribute we inform user that what is the status for the
+        target.
 
         Args:
             button: button element in which the program has to click

@@ -160,26 +160,20 @@ class LinkedInConnectionsGuided(LinkedInConnections):
         Args:
             lists: it is a list object that contains <li> items in it
         """
-        # ! iterating through the lists
         for _list in lists:
-            # ! targetting lists bottom container
             list_bottom_container = _list.find_element_by_css_selector(
                 ".discover-entity-type-card__bottom-container")
-            # ! targetting lists footer component
             list_footer = list_bottom_container.find_element_by_tag_name(
                 "footer")
-            # ! targetting lists invite button
             invite_button = list_footer.find_element_by_tag_name("button")
             try:
                 LinkedIn.inform_user(invite_button, "sending")
-                # ! performing click on invite button using driver.click() method
                 invite_button.click()
             except ElementNotInteractableException:
                 print("You got Blocked")
-                quit()
+                break
             except ElementClickInterceptedException:
                 LinkedIn.inform_user(invite_button, "failed")
-                # ! continue if Exception
                 continue
 
     def get_list_items(self, suggestion_box):
@@ -274,13 +268,25 @@ class LinkedInConnectionsAuto(LinkedInConnections):
                 continue
 
     def prepare_page(self):
+        """Method prepare_page() prepares the dynamically loading page before
+        starting to send inivitations this functionality we needed because the
+        page we are targetting loads dynamically and if we directly target the
+        buttons on the page then we might end up with sending only 10 to 12 
+        invitations and that's not what we want we want to keep sending 
+        inviations until we get blocked by LinkedIn, so this function executes 
+        javascript (that requires to move to the bottom of the page) for 5000
+        repetitions. 
+        """
         _ = WebDriverWait(self.driver, 10).until(
             expected_conditions.presence_of_all_elements_located(
                 (By.CSS_SELECTOR, "button[aria-label^='Invite']")
             )
         )
+
         _preparing_ = "[........................]"
+
         k = 0
+
         for i in range(5000):
             LinkedIn.execute_javascript(self)
             if i % 200 == 0 and i != 0:
@@ -288,6 +294,8 @@ class LinkedInConnectionsAuto(LinkedInConnections):
                 k += 1
             print(" Preparing page it might take some time. %s" %
                   (_preparing_), end="\r")
+
+        print()
 
     def run(self):
         """Function run() is the main function from where the program 
