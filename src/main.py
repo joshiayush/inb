@@ -89,7 +89,16 @@ class Main(object):
 
         self.encrypted_password = ""
 
-        self.__key = Fernet.generate_key()
+        self.__key_file = "/Python/LinkedIn Automater/Creds/.key.key"
+
+        if not os.path.exists(self.__key_file):
+            self.__key = Fernet.generate_key()
+
+            with open(self.__key_file, 'w') as key_file:
+                key_file.write(self.__key.decode())
+        else:
+            with open(self.__key_file, 'r') as key_file:
+                self.__key = key_file.readline().encode()
 
         self.__credentials_file = "/Python/LinkedIn Automater/Creds/CredentialsFile.ini"
 
@@ -166,7 +175,6 @@ class Main(object):
 
         self.data["user_email"] = fernet.decrypt(
             config["Username"].encode('utf-8')).decode('utf-8')
-
         self.data["user_password"] = fernet.decrypt(
             config["Password"].encode('utf-8')).decode('utf-8')
 
@@ -198,6 +206,7 @@ class Main(object):
                         config[creds[0]] = creds[1]
 
                 self.decrypt_credentials(config)
+                return True
         else:
             Main._print(f"""{Main.style("bright")}""", end="")
             Main._print(f"""{Main.colorFore("red")}""", end="")
@@ -208,6 +217,7 @@ class Main(object):
             Main._print(f"""{Main.style("reset")}""", end="")
 
             Main.help_with_configs()
+            return False
 
     def store_cache(self):
         """Method store_cache() applies encryption on the fields if both
@@ -736,9 +746,9 @@ class Main(object):
         flags.
 
         Usage:
-            -> linkedin [send] [suggestions^] --auto^/--guided [--headless]
+            -> linkedin [send] [suggestions^] --auto^/--guided [--headless] [--use--cache]
 
-            -> linkedin [send] [search industry=example&&location=india+usa+...] --auto^/--guided [--headless]
+            -> linkedin [send] [search industry=example&&location=india+usa+...] --auto^/--guided [--headless] [--use-cache]
         """
         if self.get_command_lenght() >= 5:
             """If user entered command with exact number of flags required 
@@ -756,6 +766,8 @@ class Main(object):
 
                 self.data["headless"] = True if self.get_command_lenght() >= 6 and \
                     self.get_command_at_index(5) == "--headless" else False
+
+                _ = self.get_credentials() if self.get_command_at_index(-1) == "--use-cache" else None
 
                 if self.data["user_email"] and self.data["user_password"]:
                     LinkedInConnections.LinkedInConnectionsAuto(
@@ -795,10 +807,13 @@ class Main(object):
             get after spliting the entire command at " ", and this time their 
             position is different.
             """
-            if True:
+            if self.get_command_at_index(2) == "send":
+                _ = self.get_credentials() if self.get_command_at_index(-1) == "--use-cache" else None
+
                 if self.data["user_email"] and self.data["user_password"]:
                     self.data["headless"] = True if self.get_command_at_index(
                         3) == "--headless" else False
+
                     LinkedInConnections.LinkedInConnectionsAuto(
                         self.data).run()
                 else:
@@ -987,6 +1002,22 @@ class Main(object):
             Main._print(f"""{Main.colorFore("reset")}""", end="")
             Main._print(f"""{Main.style("reset")}""", end="")
 
+    def delete_key(self):
+        """Method delete_key() deletes the stored cipher key if exists, 
+        we use os.path.exists() to check if the file is present or not if 
+        present we remove it.
+        """
+        if os.path.exists(self.__key_file):
+            os.remove(self.__key_file)
+        else:
+            Main._print(f"""{Main.style("bright")}""", end="")
+            Main._print(f"""{Main.colorFore("red")}""", end="")
+
+            Main._print(f"""There's no key file exists to delete.""")
+
+            Main._print(f"""{Main.colorFore("reset")}""", end="")
+            Main._print(f"""{Main.style("reset")}""", end="")
+
     def handle_delete_commands(self):
         """Method handle_delete_commands() gets executed once 
         the user hits the command `delete` this basically deletes
@@ -1001,12 +1032,27 @@ class Main(object):
             Main._print(f"""{Main.colorFore("reset")}""", end="")
             Main._print(f"""{Main.style("reset")}""", end="")
             Main.help_with_delete()
-        elif self.get_command_lenght() >= 3 and self.get_command_at_index(2) == "--cache":
-            self.delete_cache()
-        elif self.get_command_lenght() >= 3 and self.get_command_at_index(2) == "--help":
-            Main.help_with_delete()
+        elif self.get_command_lenght() >= 3:
+            if self.get_command_at_index(2) == "--cache":
+                self.delete_cache()
+            elif self.get_command_at_index(2) == "--key":
+                self.delete_key()
+            elif self.get_command_at_index(2) == "--help":
+                Main.help_with_delete()
+            elif self.get_command_at_index(2) == "--cache&&--key":
+                self.delete_cache()
+                self.delete_key()
+            else:
+                Main._print(f"""{Main.style("bright")}""", end="")
+                Main._print(f"""{Main.colorFore("red")}""", end="")
+
+                Main._print(
+                    f"""flag '{self.get_command_at_index(2)}' is not recognized.""")
+
+                Main._print(f"""{Main.colorFore("reset")}""", end="")
+                Main._print(f"""{Main.style("reset")}""", end="")
         else:
-            pass
+            Main.help_with_delete()
 
     def handle_developer_commands(self):
         """Method developer() gets executed once the user hits 

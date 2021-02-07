@@ -288,7 +288,7 @@ class LinkedIn(object):
             print(f"""{colorama.Fore.BLUE}""", end="")
 
             print(
-                f"""{button.get_attribute("aria-label").strip()} ({ _type.strip()}...)""")
+                f""" {button.get_attribute("aria-label").strip()} ({ _type.strip()}...)""", end="\r")
 
             print(f"""{colorama.Fore.RESET}""", end="")
             print(f"""{colorama.Style.RESET_ALL}""", end="")
@@ -297,7 +297,7 @@ class LinkedIn(object):
             print(f"""{colorama.Fore.GREEN}""", end="")
 
             print(
-                f"""{button.get_attribute("aria-label").strip()} ({_type.strip()} o)""")
+                f""" {button.get_attribute("aria-label").strip()} ({_type.strip()} o)""", end="\r")
 
             print(f"""{colorama.Fore.RESET}""", end="")
             print(f"""{colorama.Style.RESET_ALL}""", end="")
@@ -306,7 +306,7 @@ class LinkedIn(object):
             print(f"""{colorama.Fore.RED}""", end="")
 
             print(
-                f"""{button.get_attribute("aria-label").strip()} ({_type.strip()} X)""")
+                f""" {button.get_attribute("aria-label").strip()} ({_type.strip()} X)""", end="\r")
 
             print(f"""{colorama.Fore.RESET}""", end="")
             print(f"""{colorama.Style.RESET_ALL}""", end="")

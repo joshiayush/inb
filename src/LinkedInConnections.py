@@ -255,17 +255,38 @@ class LinkedInConnectionsAuto(LinkedInConnections):
                 (By.CSS_SELECTOR, "button[aria-label^='Invite']")
             )
         )
+        sent = 0
+        failed = 0
         for button in invite_buttons:
             try:
                 LinkedIn.inform_user(button, "sending")
                 button.click()
                 LinkedIn.inform_user(button, "sent")
+                sent += 1
             except ElementNotInteractableException:
-                print("It seems like you are blocked by LinkedIn!")
+                print(f"""{colorama.Style.BRIGHT}""", end="")
+                print(f"""{colorama.Fore.RED}""", end="")
+
+                print(" \nIt seems like you are blocked by LinkedIn!")
+
+                print(f"""{colorama.Fore.RESET}""", end="")
+                print(f"""{colorama.Style.RESET_ALL}""", end="")
                 break
             except ElementClickInterceptedException:
                 LinkedIn.inform_user(button, "failed")
+                failed += 1
                 continue
+
+        print(f"""{colorama.Style.BRIGHT}""", end="")
+
+        print(f"""{colorama.Fore.GREEN}""", end="")
+        print(f""" Sent        : {sent}""")
+        print(f"""{colorama.Fore.RED}""", end="")
+        print(f""" Failed      : {failed}""")
+        print(f"""{colorama.Fore.BLUE}""", end="")
+        print(f""" Total hits  : {sent+failed}""")
+
+        print(f"""{colorama.Style.RESET_ALL}""", end="")
 
     def prepare_page(self):
         """Method prepare_page() prepares the dynamically loading page before
@@ -292,7 +313,7 @@ class LinkedInConnectionsAuto(LinkedInConnections):
             if i % 200 == 0 and i != 0:
                 _preparing_ = "[" + "#"*(k+1) + _preparing_[k+2:]
                 k += 1
-            print(" Preparing page it might take some time. %s" %
+            print(" Preparing page, it might take some time %s" %
                   (_preparing_), end="\r")
 
         print()
