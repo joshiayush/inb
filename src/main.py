@@ -19,6 +19,7 @@ import getpass
 import colorama
 # * importing `re` regex
 import re
+from cryptography.fernet import Fernet
 
 
 class Main(object):
@@ -75,6 +76,16 @@ class Main(object):
         gets initializes that is the theme variable for our cli 
         (Command Line Interface).
         """
+        self.theme = "parrot"
+
+        self.encrypted_email = ""
+
+        self.encrypted_password = ""
+
+        self.__key = Fernet.generate_key()
+
+        self.__credentials_file = "/Python/LinkedIn Automater/Creds/CredentialsFile.ini"
+
         self.data = {
             "user_email": "",
             "user_password": "",
@@ -93,7 +104,49 @@ class Main(object):
             "exit": Main.help_with_exit
         }
 
-        self.theme = "parrot"
+    def encrypt_email(self):
+        fernet = Fernet(self.__key)
+        self.encrypted_email = fernet.encrypt(
+            self.data["user_email"].encode()).decode()
+        del fernet
+
+    def encrypt_password(self):
+        fernet = Fernet(self.__key)
+        self.encrypted_password = fernet.encrypt(
+            self.data["user_password"].encode()).decode()
+        del fernet
+
+    def apply_encryption(self):
+        pass
+
+    def create_credentials(self):
+        """This function is responsible for encrypting the password 
+        and create key file for storing the key and create a credential 
+        file with user name and password. 
+        """
+        with open(self.__credentials_file, 'w') as creds_file:
+            creds_file.write("Username={}\nPassword={}\n".format(
+                self.encrypted_email, self.encrypted_password))
+
+    def read_credentials(self):
+        fernet = Fernet(self.__key)
+        with open(self.__credentials_file, 'r') as creds_file:
+            lines = creds_file.readlines()
+            config = {
+                "Username": "",
+                "Password": ""
+            }
+            for line in lines:
+                creds = line.rstrip('\n').split('=', 1)
+                if creds[0] in ("Username", "Password"):
+                    config[creds[0]] = creds[1]
+
+            # getting email
+            _ = fernet.decrypt(
+                config["Uername"].encode('utf-8')).decode('utf-8')
+            # getting password
+            _ = fernet.decrypt(
+                config["Password"].encode('utf-8')).decode('utf-8')
 
     @staticmethod
     def terminal_size():
