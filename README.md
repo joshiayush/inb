@@ -32,12 +32,6 @@ It will start sending invitation.
 
 ## Commands
 
-### `linkedin send suggestions --auto --headless`
-
-Starts sending invitations to LinkedIn suggestions `--headless` starts
-
-the automation without opening the browser.
-
 ### `config.user.email=example@email.com --cached`
 
 This command stores the user email as cache so the user does not have
@@ -53,5 +47,13 @@ to enter this field every time it has to automate LinkedIn.
 _Note:_ Program only stores these field as cache if it has both of the
 
 fields available.
+
+### `linkedin send suggestions --auto --headless --use-cache`
+
+Starts sending invitations to LinkedIn suggestions `--headless` starts
+
+the automation without opening the browser and `--use-cache` uses the 
+
+cache stored for authentication.
 
 ### `Happy Hacking`
