@@ -272,7 +272,7 @@ class LinkedIn(object):
         ))
 
     @staticmethod
-    def get_aria_label(button, _type):
+    def inform_user(button, _type):
         """Function get_aria_label() retrieves the value of attribute 
         'aria-label' using the webdriver function 'get_attribute()' 
         which returns the value given to that attribute.
@@ -282,21 +282,29 @@ class LinkedIn(object):
             _type: is the status is it sending or failed
         """
         if (_type == "sending"):
+            print(f"""{colorama.Style.BRIGHT}""", end="")
+            print(f"""{colorama.Fore.BLUE}""", end="")
+
             print(
-                "Sending invitation to Person labelled by >>> '",
-                button.get_attribute("aria-label").strip(),
-                "'",
-                "(status -> ",
-                _type.strip(),
-                ")"
-            )
+                f"""{button.get_attribute("aria-label").strip()} ({ _type.strip()}...)""")
+
+            print(f"""{colorama.Fore.RESET}""", end="")
+            print(f"""{colorama.Style.RESET_ALL}""", end="")
+        elif (_type == "sent"):
+            print(f"""{colorama.Style.BRIGHT}""", end="")
+            print(f"""{colorama.Fore.GREEN}""", end="")
+
+            print(
+                f"""{button.get_attribute("aria-label").strip()} ({_type.strip()} o)""")
+
+            print(f"""{colorama.Fore.RESET}""", end="")
+            print(f"""{colorama.Style.RESET_ALL}""", end="")
         elif (_type == "failed"):
-            print(f"{colorama.Fore.RED}",
-                  "Sending invitation to Person labelled by >>> '",
-                  button.get_attribute("aria-label").strip(),
-                  "'",
-                  "(status -> ",
-                  _type.strip(),
-                  ")",
-                  f"{colorama.Fore.RESET}"
-                  )
+            print(f"""{colorama.Style.BRIGHT}""", end="")
+            print(f"""{colorama.Fore.RED}""", end="")
+
+            print(
+                f"""{button.get_attribute("aria-label").strip()} ({_type.strip()} X)""")
+
+            print(f"""{colorama.Fore.RESET}""", end="")
+            print(f"""{colorama.Style.RESET_ALL}""", end="")

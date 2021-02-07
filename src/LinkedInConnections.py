@@ -27,9 +27,6 @@ class LinkedInConnections(LinkedIn):
     def __init__(self, _type, data):
         super(LinkedInConnections, self).__init__(data)
 
-        if _type == "auto":
-            self.init_vars()        # ? call init_vars to initialize the variables
-
     def init_vars(self):
         """Function init_vars() initializes all the variables
         that are required to implement search functionality.
@@ -64,14 +61,14 @@ class LinkedInConnections(LinkedIn):
         return self.__identifiers__.get(country, None)
 
     def quote_url(self, url, safe=f"~@#$&()*!+=:;,.?/\\"):
-        """URL-encodes a string (either str (i.e. ASCII) or unicode) 
-        uses de-facto UTF-8 encoding to handle Unicode codepoints in 
+        """URL-encodes a string (either str (i.e. ASCII) or unicode)
+        uses de-facto UTF-8 encoding to handle Unicode codepoints in
         given string.
         """
         return urllib.parse.quote(url.encode('utf-8'), safe)
 
     def form_connection_link(self):
-        """Function form_connection_link() forms a linkedin connections 
+        """Function form_connection_link() forms a linkedin connections
         link by encoding.
         """
         self.connections_link = self.quote_url(
@@ -91,7 +88,7 @@ class LinkedInConnections(LinkedIn):
         return Urns[key]
 
     def apply_keyword(self, keyword):
-        """Function apply_keyword() applies keyword to a part of the linkedin 
+        """Function apply_keyword() applies keyword to a part of the linkedin
         connections link.
         """
         self.keywords = self.keywords.replace("__key__", keyword[0])
@@ -103,7 +100,7 @@ class LinkedInConnections(LinkedIn):
             self.location = self.getUrn(keyword[1])
 
     def get_keywords(self):
-        """Function get_keywords() asks the user for the keywords that has to 
+        """Function get_keywords() asks the user for the keywords that has to
         be applied when searching for people.
         """
         keyword = input("Enter Connection Keywords: ")
@@ -121,9 +118,11 @@ class LinkedInConnections(LinkedIn):
         return [keyword, location]
 
     def run(self):
-        """Function run() is our main function from where the LinkedIn 
+        """Function run() is our main function from where the LinkedIn
         automation starts.
         """
+        self.init_vars()        # ? call init_vars to initialize the variables
+
         self.apply_keyword(self.get_keywords())
 
         self.form_connection_link()
@@ -132,19 +131,19 @@ class LinkedInConnections(LinkedIn):
 
 
 class LinkedInConnectionsGuided(LinkedInConnections):
-    """Controls LinkedIn Connections, its name is LinkedInConnectionsGuided 
-    because it runs the program in guided mode i.e., you have to manually 
-    input the 'ID' which you want to target, LinkedInConnections with auto 
+    """Controls LinkedIn Connections, its name is LinkedInConnectionsGuided
+    because it runs the program in guided mode i.e., you have to manually
+    input the 'ID' which you want to target, LinkedInConnections with auto
     mode will be coded once finished coding LinkedInConnectionsGuided.
 
     Parent:
-        LinkedIn: our main LinkedIn class which takes care of enabling of 
+        LinkedIn: our main LinkedIn class which takes care of enabling of
         the webdriver and the login process.
     """
 
     def __init__(self, data):
-        """Function __init__() is the constructor function of class 
-        LinkedInConnectionsGuided() which intializes objects for this 
+        """Function __init__() is the constructor function of class
+        LinkedInConnectionsGuided() which intializes objects for this
         class.
         """
         super(LinkedInConnectionsGuided, self).__init__("guided", data)
@@ -152,10 +151,10 @@ class LinkedInConnectionsGuided(LinkedInConnections):
         super(LinkedInConnectionsGuided, self).run()
 
     def target_individual_list(self, lists):
-        """Function target_individual_list() targets <li> items individually 
-        and then finds the invite button which is nested inside <li> item and 
+        """Function target_individual_list() targets <li> items individually
+        and then finds the invite button which is nested inside <li> item and
         then performs a click() operation on it, if ElementClickIntercepted
-        Exception comes which will come at one point then it handles it 
+        Exception comes which will come at one point then it handles it
         smoothly.
 
         Args:
@@ -172,20 +171,20 @@ class LinkedInConnectionsGuided(LinkedInConnections):
             # ! targetting lists invite button
             invite_button = list_footer.find_element_by_tag_name("button")
             try:
-                LinkedIn.get_aria_label(invite_button, "sending")
+                LinkedIn.inform_user(invite_button, "sending")
                 # ! performing click on invite button using driver.click() method
                 invite_button.click()
             except ElementNotInteractableException:
                 print("You got Blocked")
                 quit()
             except ElementClickInterceptedException:
-                LinkedIn.get_aria_label(invite_button, "failed")
+                LinkedIn.inform_user(invite_button, "failed")
                 # ! continue if Exception
                 continue
 
     def get_list_items(self, suggestion_box):
-        """Function get_list_items() finds the list items available in the 
-        suggestion box and then sends it to function target_individual_list() 
+        """Function get_list_items() finds the list items available in the
+        suggestion box and then sends it to function target_individual_list()
         which targets the list items individually.
 
         Args:
@@ -196,8 +195,8 @@ class LinkedInConnectionsGuided(LinkedInConnections):
         self.target_individual_list(lists)
 
     def get_suggestion_box_by_id(self, _id):
-        """Function get_suggestion_box_by_id() targets the suggestion box 
-        given by the linkedin application (basically it is the box where 
+        """Function get_suggestion_box_by_id() targets the suggestion box
+        given by the linkedin application (basically it is the box where
         linkedin keeps people that matches with my profile).
 
         Args:
@@ -208,14 +207,14 @@ class LinkedInConnectionsGuided(LinkedInConnections):
         self.get_list_items(suggestion_box)
 
     def get_my_network(self):
-        """Function get_my_network() changes the url by executing function 
+        """Function get_my_network() changes the url by executing function
         `get()` from webdriver.
         """
         self.driver.get("https://www.linkedin.com/mynetwork/")
 
     def start_guided_mode(self):
-        """Function start_guided_mode() starts the program in guided mode 
-        in which the user itself has to guide the program finding the 
+        """Function start_guided_mode() starts the program in guided mode
+        in which the user itself has to guide the program finding the
         suggestion box by entering the ID of the suggestion box manually.
         """
         suggestion_box_id = input("Suggestio Box Id : ")
@@ -223,7 +222,7 @@ class LinkedInConnectionsGuided(LinkedInConnections):
         self.get_suggestion_box_by_id(suggestion_box_id)
 
     def run(self):
-        """Function run() is the main function from where the program starts 
+        """Function run() is the main function from where the program starts
         doing its job.
         """
         self.get_my_network()
@@ -232,61 +231,63 @@ class LinkedInConnectionsGuided(LinkedInConnections):
 
 
 class LinkedInConnectionsAuto(LinkedInConnections):
-    """Controls LinkedIn Connections, its name is LinkedInConnectionsAuto 
-    because it runs the program in auto mode i.e., here you don't have to 
-    manually enter the required field for performing automation unlike the 
+    """Controls LinkedIn Connections, its name is LinkedInConnectionsAuto
+    because it runs the program in auto mode i.e., here you don't have to
+    manually enter the required field for performing automation unlike the
     LinkedInConnectionsGuided class.
 
     Parent:
-        LinkedIn: our main LinkedIn class which takes care of enabling 
+        LinkedIn: our main LinkedIn class which takes care of enabling
         of the webdriver and the login process.
     """
 
     def __init__(self, data):
         super(LinkedInConnectionsAuto, self).__init__("auto", data)
 
-        self.clicked = set()
-
     def get_my_network(self):
-        """Function get_my_network() changes the url by executing function 
+        """Function get_my_network() changes the url by executing function
         `get()` from webdriver.
         """
         self.driver.get("https://www.linkedin.com/mynetwork/")
 
     def click_buttons(self):
-        """Function find_buttons() finds the buttons in the network page 
-        using webdriver function `find_elements_by_css_selector()` and 
-        then if they are enabled it executes `click()` function on them 
+        """Function find_buttons() finds the buttons in the network page
+        using webdriver function `find_elements_by_css_selector()` and
+        then if they are enabled it executes `click()` function on them
         if not it handles the exception smoothly.
         """
-        try:
-            invite_buttons = WebDriverWait(self.driver, 10).until(
-                expected_conditions.presence_of_all_elements_located(
-                    (By.CSS_SELECTOR, "button[aria-label^='Invite']")
-                )
+        invite_buttons = WebDriverWait(self.driver, 10).until(
+            expected_conditions.presence_of_all_elements_located(
+                (By.CSS_SELECTOR, "button[aria-label^='Invite']")
             )
-            for button in invite_buttons:
-                # ! accessing each list item
-                try:
-                    if button in self.clicked:
-                        continue
-                    else:
-                        # ! sending button to function get_aria_label()
-                        LinkedIn.get_aria_label(button, "sending")
-                        # ! executing click() operation on the button
-                        button.click()
-                        self.clicked.add(button)
-                except ElementNotInteractableException:
-                    print("You got blocked")
-                    quit()
-                except ElementClickInterceptedException:
-                    # ! handling ElementClickInterceptedException exception
-                    LinkedIn.get_aria_label(button, "failed")
-                    continue
-        except NoSuchElementException:
-            print("Can't find the element")
-        except ElementClickInterceptedException:
-            print("Element click intercepted")
+        )
+        for button in invite_buttons:
+            try:
+                LinkedIn.inform_user(button, "sending")
+                button.click()
+                LinkedIn.inform_user(button, "sent")
+            except ElementNotInteractableException:
+                print("It seems like you are blocked by LinkedIn!")
+                break
+            except ElementClickInterceptedException:
+                LinkedIn.inform_user(button, "failed")
+                continue
+
+    def prepare_page(self):
+        _ = WebDriverWait(self.driver, 10).until(
+            expected_conditions.presence_of_all_elements_located(
+                (By.CSS_SELECTOR, "button[aria-label^='Invite']")
+            )
+        )
+        _preparing_ = "[........................]"
+        k = 0
+        for i in range(5000):
+            LinkedIn.execute_javascript(self)
+            if i % 200 == 0 and i != 0:
+                _preparing_ = "[" + "#"*(k+1) + _preparing_[k+2:]
+                k += 1
+            print(" Preparing page it might take some time. %s" %
+                  (_preparing_), end="\r")
 
     def run(self):
         """Function run() is the main function from where the program 
@@ -294,9 +295,9 @@ class LinkedInConnectionsAuto(LinkedInConnections):
         """
         self.get_my_network()
 
-        while True:
-            LinkedIn.execute_javascript(self)
-            self.click_buttons()
+        self.prepare_page()
+
+        self.click_buttons()
 
 
 class InvitationManager(LinkedIn):
