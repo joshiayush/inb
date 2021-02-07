@@ -117,10 +117,7 @@ class Main(object):
             self.data["user_password"].encode()).decode()
         del fernet
 
-    def apply_encryption(self):
-        pass
-
-    def create_credentials(self):
+    def store_credentials(self):
         """This function is responsible for encrypting the password 
         and create key file for storing the key and create a credential 
         file with user name and password. 
@@ -129,25 +126,46 @@ class Main(object):
             creds_file.write("Username={}\nPassword={}\n".format(
                 self.encrypted_email, self.encrypted_password))
 
-    def read_credentials(self):
-        fernet = Fernet(self.__key)
-        with open(self.__credentials_file, 'r') as creds_file:
-            lines = creds_file.readlines()
-            config = {
-                "Username": "",
-                "Password": ""
-            }
-            for line in lines:
-                creds = line.rstrip('\n').split('=', 1)
-                if creds[0] in ("Username", "Password"):
-                    config[creds[0]] = creds[1]
+    def get_credentials(self):
+        """Method read_credentials()
+        """
+        if os.path.exists(self.__credentials_file):
+            fernet = Fernet(self.__key)
 
-            # getting email
-            _ = fernet.decrypt(
-                config["Uername"].encode('utf-8')).decode('utf-8')
-            # getting password
-            _ = fernet.decrypt(
-                config["Password"].encode('utf-8')).decode('utf-8')
+            with open(self.__credentials_file, 'r') as creds_file:
+                lines = creds_file.readlines()
+
+                config = {
+                    "Username": "",
+                    "Password": ""
+                }
+
+                for line in lines:
+                    creds = line.rstrip('\n').split('=', 1)
+                    if creds[0] in ("Username", "Password"):
+                        config[creds[0]] = creds[1]
+
+                self.data["user_email"] = fernet.decrypt(
+                    config["Username"].encode('utf-8')).decode('utf-8')
+
+                self.data["user_password"] = fernet.decrypt(
+                    config["Password"].encode('utf-8')).decode('utf-8')
+        else:
+            Main._print(f"""{Main.style("bright")}""", end="")
+            Main._print(f"""{Main.colorFore("red")}""", end="")
+
+            Main._print(f"""You don't have any cache stored.""")
+
+            Main._print(f"""{Main.colorFore("reset")}""", end="")
+            Main._print(f"""{Main.style("reset")}""", end="")
+
+            Main.help_with_configs()
+
+    def store_cache(self):
+        if self.data["user_email"] and self.data["user_password"]:
+            self.encrypt_email()
+            self.encrypt_password()
+            self.store_credentials()
 
     @staticmethod
     def terminal_size():
@@ -391,8 +409,8 @@ class Main(object):
         Main._print(f"""{Main.style("bright")}""", end="")
         Main._print(f"""{Main.colorFore("blue")}""", end="")
 
-        Main._print(f"""config.user.email=example@email.com""")
-        Main._print(f"""config.user.password (hit enter)""")
+        Main._print(f"""config.user.email=example@email.com --cached""")
+        Main._print(f"""config.user.password --cached (hit enter)""")
         Main._print(f"""Password: """)
         Main._print(f"""config.job.keywords=Data%Science (use '%' for space)""")
         Main._print(f"""config.job.location=Sanfrancisco%CA""")
@@ -1118,9 +1136,11 @@ class Main(object):
         """
         Method check_email()
         """
-        if re.search(r"^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$", self.command[self.command.find("=")+1:].strip()):
+        if re.search(r"^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$",
+                     self.command.split(" ")[1].split("=")[1].strip()):
             return True
-        elif re.search(r"^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w+$", self.command[self.command.find("=")+1:].strip()):
+        elif re.search(r"^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w+$",
+                       self.command.split(" ")[1].split("=")[1].strip()):
             return True
         else:
             return False
@@ -1135,17 +1155,21 @@ class Main(object):
         """
         if "config.user.password" == self.get_command_at_index(1):
             self.data["user_password"] = getpass.getpass(prompt=" Password: ")
+            if self.get_command_lenght() >= 3 and self.get_command_at_index(2) == "--cached":
+                self.store_cache()
 
-        elif re.compile(r"(config\.user\.email)=\w+", re.IGNORECASE).search(self.command):
+        elif re.compile(r"(config\.user\.email)=", re.IGNORECASE).search(self.command):
             if self.check_email():
-                self.data["user_email"] = self.command[self.command.find(
-                    "=")+1:].strip()
+                self.data["user_email"] = self.command.split(" ")[1].split("=")[
+                    1].strip()
+                if self.get_command_lenght() >= 3 and self.get_command_at_index(2) == "--cached":
+                    self.store_cache()
             else:
                 Main._print(f"""{Main.style("bright")}""", end="")
                 Main._print(f"""{Main.colorFore("red")}""", end="")
 
                 Main._print(
-                    f"""'{self.command[self.command.find("=")+1:].strip()}' is not a valid email address!""")
+                    f"""'{self.command.split(" ")[1].split("=")[1].strip()}' is not a valid email address!""")
 
                 Main._print(f"""{Main.colorFore("rest")}""", end="")
                 Main._print(f"""{Main.style("reset")}""", end="")
