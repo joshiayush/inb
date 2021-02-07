@@ -14,7 +14,7 @@ it can install `python` interpreter `selenium`, `urllib`, `webdriver-manager`
 
 packages on your system.
 
-### `config.user.email=example@gmail.com`
+### `config.user.email=example@email.com`
 
 Adds email to configurations.
 
@@ -37,5 +37,21 @@ It will start sending invitation.
 Starts sending invitations to LinkedIn suggestions `--headless` starts
 
 the automation without opening the browser.
+
+### `config.user.email=example@email.com --cached`
+
+This command stores the user email as cache so the user does not have
+
+to enter this field every time it has to automate LinkedIn.
+
+### `config.user.password --cached`
+
+This command stores the user password as cache so the user does not have
+
+to enter this field every time it has to automate LinkedIn.
+
+_Note:_ Program only stores these field as cache if it has both of the
+
+fields available.
 
 ### `Happy Hacking`
