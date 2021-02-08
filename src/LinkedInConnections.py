@@ -292,34 +292,37 @@ class LinkedInConnectionsAuto(LinkedInConnections):
         """Method prepare_page() prepares the dynamically loading page before
         starting to send inivitations this functionality we needed because the
         page we are targetting loads dynamically and if we directly target the
-        buttons on the page then we might end up with sending only 10 to 12 
-        invitations and that's not what we want we want to keep sending 
-        inviations until we get blocked by LinkedIn, so this function executes 
+        buttons on the page then we might end up with sending only 10 to 12
+        invitations and that's not what we want we want to keep sending
+        inviations until we get blocked by LinkedIn, so this function executes
         javascript (that requires to move to the bottom of the page) for 5000
-        repetitions. 
+        repetitions.
         """
-        _ = WebDriverWait(self.driver, 10).until(
-            expected_conditions.presence_of_all_elements_located(
-                (By.CSS_SELECTOR, "button[aria-label^='Invite']")
+        try:
+            _ = WebDriverWait(self.driver, 10).until(
+                expected_conditions.presence_of_all_elements_located(
+                    (By.CSS_SELECTOR, "button[aria-label^='Invite']")
+                )
             )
-        )
 
-        _preparing_ = "[........................]"
+            _preparing_ = "[.........................]"
 
-        k = 0
+            k = 0
 
-        for i in range(5000):
-            LinkedIn.execute_javascript(self)
-            if i % 200 == 0 and i != 0:
-                _preparing_ = "[" + "#"*(k+1) + _preparing_[k+2:]
-                k += 1
-            print(" Preparing page, it might take some time %s" %
-                  (_preparing_), end="\r")
+            for i in range(5001):
+                LinkedIn.execute_javascript(self)
+                if i % 200 == 0 and i != 0:
+                    _preparing_ = "[" + "#"*(k+1) + _preparing_[k+2:]
+                    k += 1
+                print(" Preparing page, it might take some time %s" %
+                      (_preparing_), end="\r")
 
-        print()
+            print()
+        except NoSuchElementException:
+            pass
 
     def run(self):
-        """Function run() is the main function from where the program 
+        """Function run() is the main function from where the program
         starts doing its job.
         """
         self.get_my_network()
@@ -338,7 +341,7 @@ class InvitationManager(LinkedIn):
         """Constructor __init__() initializes the InvitationManager object.
 
         Args:
-            data: user data field 
+            data: user data field
         """
         super(InvitationManager, self).__init__(data)
 
@@ -359,7 +362,7 @@ class InvitationManager(LinkedIn):
 
         Args:
             _type: is the type of invitation user want to see
-            send or recieved 
+            send or recieved
         """
         pass
 
