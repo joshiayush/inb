@@ -1,26 +1,19 @@
-
-# * importing LinkedIn
-import LinkedIn
-# * importing `LinkedInConnections`
-import LinkedInConnections
-# * importing `LinkedInJobs`
-import LinkedInJobs
-# * importing `OS`
-import os
-# * importing `readline` this we need to import becuase when
-# * we take input from the terminal window and we press arrow
-# * keys then the characters that corresponds to the pressed
-# * key gets printed and we don't need that we need the cursor
-# * moving on pressing arrow keys.
-import readline
-# * importing `getpass` to take user password
-import getpass
-# * importing `colorama`
-import colorama
-# * importing `re` regex
 import re
-# * importing `Fernet`
+import os
+import getpass
+import colorama
 from cryptography.fernet import Fernet
+
+# importing `readline` this we need to import becuase when
+# we take input from the terminal window and we press arrow
+# keys then the characters that corresponds to the pressed
+# key gets printed and we don't need that we need the cursor
+# moving on pressing arrow keys.
+import readline
+
+import LinkedIn
+import LinkedInJobs
+import LinkedInConnections
 
 
 class Main(object):

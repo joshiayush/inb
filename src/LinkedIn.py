@@ -1,65 +1,47 @@
 
-# *
-# *
-# * Selenium is a portable framework for testing web applications.
-# *
-# * Selenium provides a playback tool for authoring functional tests
-# * without the need to learn a test scripting language (Selenium IDE).
-# *
-# * It also provides a test domain-specific language (Selenese) to
-# * write tests in a number of popular programming languages, including
-# * C#, Groovy, Java, Perl, PHP, Python, Ruby and Scala.
-# *
-# * The tests can then run against most modern web browsers. Selenium
-# * runs on Windows, Linux, and macOS.
-# *
-# * It is open-source software released under the Apache License 2.0.
-# *
-# * If you want to get in touch wtih me this is my email address
-# *
-# *                 ayush854032@gmail.com
-# *
-# *                         and
-# *
-# *             joshiayush.joshiayush@gmail.com
-# *
-# * and here is a link to my LinkedIn account you can connect to me here,
-# *
-# * https://www.linkedin.com/in/ayush-joshi-3600a01b7
-# *
-# * one more thing that I want to mention here if you wonder that why
-# * this guy has inserted symbols like (*, ?, @, !, :) in comments then
-# * boy/girl you really need to install 'Better Comments' extension if
-# * you are in VSCode it's really awesome
-# *
-# * installation:
-# * code --install-extension aaron-bond.better-comments
-# *
-# *
+#
+#
+# Selenium is a portable framework for testing web applications.
+#
+# Selenium provides a playback tool for authoring functional tests
+# without the need to learn a test scripting language (Selenium IDE).
+#
+# It also provides a test domain-specific language (Selenese) to
+# write tests in a number of popular programming languages, including
+# C#, Groovy, Java, Perl, PHP, Python, Ruby and Scala.
+#
+# The tests can then run against most modern web browsers. Selenium
+# runs on Windows, Linux, and macOS.
+#
+# It is open-source software released under the Apache License 2.0.
+#
+# If you want to get in touch wtih me this is my email address
+#
+#                 ayush854032@gmail.com
+#
+#                         and
+#
+#             joshiayush.joshiayush@gmail.com
+#
+# and here is a link to my LinkedIn account you can connect to me here,
+#
+# https://www.linkedin.com/in/ayush-joshi-3600a01b7
+#
+#
 
 
-# * importing `webdriver` from `selenium`
-from selenium import webdriver
-# * importing `Keys` from `common.keys`
-from selenium.webdriver.common.keys import Keys
-# * importing `expected_conditions` from `support`
-from selenium.webdriver.support import expected_conditions
-# * importing `WebDriverWait` from `support.ui`
-from selenium.webdriver.support.ui import WebDriverWait
-# * importing `By` from `common.by`
-from selenium.webdriver.common.by import By
-# * importing `NoSuchElementException` and `ElementClickInterceptedException` from `exceptions`
-from selenium.common.exceptions import (
-    NoSuchElementException,
-    ElementClickInterceptedException,
-    TimeoutException,
-    ElementNotInteractableException
-)
-# * importing `ActionChains` from `action_chains`
-from selenium.webdriver.common.action_chains import ActionChains
-# * importing `regex`
 import re
 import colorama
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.support import expected_conditions
+from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.common.exceptions import ElementNotInteractableException
+from selenium.common.exceptions import ElementClickInterceptedException
 
 
 class LinkedIn(object):

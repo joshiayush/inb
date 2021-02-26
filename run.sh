@@ -1,23 +1,5 @@
 #!/bin/bash
 
-# * The line at the head of the script tells the shell that it is a shell
-# * script and it contains commands in it and you need to execute it
-# ? #!/bin/sh
-# * Executes the script using the Bourne shell or a compatible shell, with path /bin/sh
-# ? #!/bin/bash
-# * Executes the script using the Bash shell.
-# ? #!/bin/csh -f
-# * Executes the script using C shell or a compatible shell.
-# ? #!/usr/bin/perl -T
-# * Executes the script using perl with the option of taint checks
-# ? #!/usr/bin/env python
-# * Executes the script using python by looking up the path to the python interpreter automatically
-# * from the environment variables
-
-# * Shell is an interface using which the programmer can execute command
-# * and interact directly to the operating system. Shell scripting is
-# * giving commands that a shell can execute.
-
 # ? here the program start its execution
 # ? `$1` is the first argument of the function
 # ? `runProgram` and its value is the python
@@ -56,15 +38,18 @@ function getSystemInfo() {
 function installDependencies() {
     # ! start installing program dependencies
     echo "Installing dependencies..."
-    echo "Installing Selenium"
     # ! install selenium
+    echo "Installing Selenium"
     pip3 install selenium
-    echo "Installing URL handling python module (urllib)"
     # ! install urllib3
+    echo "Installing URL handling python module (urllib)"
     pip3 install urllib3
-    echo "Installing WebDriver Manager"
     # ! install webdriver-manager
+    echo "Installing WebDriver Manager"
     pip3 install webdriver-manager
+    # ! install cryptography
+    echo "Installing cryptography"
+    pip3 install cryptography
 }
 
 # ! function that install python and selenium on Ubuntu platform

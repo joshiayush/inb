@@ -1,25 +1,21 @@
-from LinkedIn import (
-    LinkedIn,                           # * importing `LinkedIn` class
-    webdriver,                          # * importing `webdriver`
-    Keys,                               # * importing `keys`
-    WebDriverWait,                      # * importing `WebDriverWait`
-    expected_conditions,                # * importing `expected_conditions`
-    By,                                 # * importing `By`
-    NoSuchElementException,             # * importing `NoSuchElementException`
-    ElementClickInterceptedException,   # * importing `ElementClickInterception`
-    ElementNotInteractableException,    # * importing `ElementNotInteractable`
-    TimeoutException,                   # * importing `TimeoutException`
-    ActionChains,                       # * importing `ActionsChains`
-    re,                                 # * importing `regex` module
-)
-# * importing `time` module
 import time
-# * importing `colorama`
-import colorama
-# * importing `urllib.parse`
-import urllib.parse
-import functools
 import operator
+import colorama
+import functools
+import urllib.parse
+
+from LinkedIn import re
+from LinkedIn import By
+from LinkedIn import Keys
+from LinkedIn import LinkedIn
+from LinkedIn import webdriver
+from LinkedIn import ActionChains
+from LinkedIn import WebDriverWait
+from LinkedIn import TimeoutException
+from LinkedIn import expected_conditions
+from LinkedIn import NoSuchElementException
+from LinkedIn import ElementClickInterceptedException
+from LinkedIn import ElementNotInteractableException
 
 
 class LinkedInConnections(LinkedIn):
