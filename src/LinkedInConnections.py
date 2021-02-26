@@ -36,8 +36,8 @@ class LinkedInConnections(LinkedIn):
         self.geoUrn = "geoUrn="
 
         self.__identifiers__ = {
-            "india": '%5B"102713980"%5D&',
             "usa": '%5B"103644278"%5D&',
+            "india": '%5B"102713980"%5D&',
             "california": '%5B"102095887"%5D&',
             "sanfranciscoba": '%5B"90000084"%5D&',
             "sanfranciscoca": '%5B"102277331"%5D&'
@@ -263,7 +263,7 @@ class LinkedInConnectionsAuto(LinkedInConnections):
                 print(f"""{colorama.Style.BRIGHT}""", end="")
                 print(f"""{colorama.Fore.RED}""", end="")
 
-                print(" \nIt seems like you are blocked by LinkedIn!")
+                print("\n It seems like you got blocked by LinkedIn!")
 
                 print(f"""{colorama.Fore.RESET}""", end="")
                 print(f"""{colorama.Style.RESET_ALL}""", end="")
@@ -301,17 +301,26 @@ class LinkedInConnectionsAuto(LinkedInConnections):
                 )
             )
 
+            spinner = "\\"
             _preparing_ = "[.........................]"
 
             k = 0
+            s = 0
 
             for i in range(5001):
                 LinkedIn.execute_javascript(self)
                 if i % 200 == 0 and i != 0:
                     _preparing_ = "[" + "#"*(k+1) + _preparing_[k+2:]
                     k += 1
-                print(" Preparing page, it might take some time %s" %
-                      (_preparing_), end="\r")
+                if i % 50 == 0 and i != 0:
+                    spinner = "-\\|/"[s]
+                    s += 1
+                    if s >= 4:
+                        s = 0
+                print(f"""{colorama.Fore.BLUE}""", end="")
+                print(
+                    f""" Preparing page, it might take some time {spinner} {_preparing_}""", end="\r")
+                print(f"""{colorama.Fore.RESET}""", end="")
 
             print()
         except NoSuchElementException:

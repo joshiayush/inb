@@ -31,7 +31,9 @@
 
 
 import re
+import time
 import colorama
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -271,6 +273,8 @@ class LinkedIn(object):
 
             print(
                 f""" {button.get_attribute("aria-label").strip()} ({ _type.strip()}...)""", end="\r")
+            time.sleep(0.5)
+            print(f""" """*80, end="\r")
 
             print(f"""{colorama.Fore.RESET}""", end="")
             print(f"""{colorama.Style.RESET_ALL}""", end="")
@@ -280,6 +284,8 @@ class LinkedIn(object):
 
             print(
                 f""" {button.get_attribute("aria-label").strip()} ({_type.strip()} o)""", end="\r")
+            time.sleep(0.5)
+            print(f""" """*80, end="\r")
 
             print(f"""{colorama.Fore.RESET}""", end="")
             print(f"""{colorama.Style.RESET_ALL}""", end="")
@@ -288,7 +294,7 @@ class LinkedIn(object):
             print(f"""{colorama.Fore.RED}""", end="")
 
             print(
-                f""" {button.get_attribute("aria-label").strip()} ({_type.strip()} X)""", end="\r")
+                f""" {button.get_attribute("aria-label").strip()} ({_type.strip()} X)""", end="\n")
 
             print(f"""{colorama.Fore.RESET}""", end="")
             print(f"""{colorama.Style.RESET_ALL}""", end="")
