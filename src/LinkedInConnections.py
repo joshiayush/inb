@@ -1,7 +1,5 @@
 import time
-import operator
 import colorama
-import functools
 import urllib.parse
 
 from LinkedIn import re
@@ -228,71 +226,19 @@ class LinkedInConnectionsAuto(LinkedIn):
 
 
 class LinkedInConnectionsAutoSearch(LinkedIn):
-    def __init__(self):
-        self.connections_link = ""
-
-
-class InvitationManager(LinkedIn):
-    """
-
-    """
-
     def __init__(self, data):
-        """Constructor __init__() initializes the InvitationManager object.
-
-        Args:
-            data: user data field
-        """
-        super(InvitationManager, self).__init__(data)
-
-    def show_sent(self):
-        """
-
-        """
-        pass
-
-    def show_recieved(self):
-        """
-
-        """
-        pass
-
-    def show(self, _type):
-        """Method show() shows the invitations send or recieved.
-
-        Args:
-            _type: is the type of invitation user want to see
-            send or recieved
-        """
-        pass
-
-    def withdraw(self, mark):
-        """
-
-        """
-        pass
-
-
-class MyNetwork(LinkedIn):
-
-    def __init__(self, data):
-        super(MyNetwork, self).__init__(data)
+        super(LinkedInConnectionsAutoSearch, self).__init__(data)
         self.init_vars()
 
     def init_vars(self):
-        self.connections_url = "https://www.linkedin.com/mynetwork/invite-connect/connections/"
+        self.connections_link = ""
 
-    def get_connections_page(self):
-        self.driver.get(self.connections_url)
+    def quote_url(self, url, safe=f"~@#$&()*!+=:;,.?/\\"):
+        """URL-encodes a string (either str (i.e. ASCII) or unicode)
+        uses de-facto UTF-8 encoding to handle Unicode codepoints in
+        given string.
+        """
+        return urllib.parse.quote(url.encode('utf-8'), safe)
 
-    def get_profiles_container(self):
-        return self.driver.find_element_by_css_selector(
-            "section[class^=mn-connections]").find_element_by_tag_name("ul")
-
-    def get_profiles(self):
-        for _list in self.get_profiles_container().find_elements_by_tag_name("li"):
-            pass
-
-    def show(self):
-        self.get_connections_page()
-        self.get_profiles()
+    def run(self):
+        pass

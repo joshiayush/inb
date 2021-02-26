@@ -98,6 +98,8 @@ class Main(object):
         self.data = {
             "user_email": "",
             "user_password": "",
+            "search_keywords": "",
+            "search_location": "",
             "job_keywords": "",
             "job_location": "",
             "driver_path": "/Python/LinkedIn Automater/driver/chromedriver",
@@ -727,12 +729,19 @@ class Main(object):
         except IndexError:
             return None
 
-    def check_search_query(self):
+    def get_search_query(self):
         querry = self.get_command_at_index(4)
 
         if len(querry.split("&&")) == 2:
-            if "industry=" in querry.split("&&")[0] and "location=" in querry.split("&&")[1]:
+            if "industry=" in querry.split("&&")[0] and (True or "location=" in querry.split("&&")[1]):
+                self.data["search_keywords"] = querry.split(
+                    "&&")[0][querry.split("&&")[0].find("=")+1::]
+                if "location" in querry.split("&&")[1]:
+                    self.data["search_location"] = querry.split(
+                        "&&")[1][querry.split("&&")[1].find("=")+1::]
+                    return True
                 return True
+
         return False
 
     def handle_send_commands(self):
@@ -779,14 +788,19 @@ class Main(object):
                     Main._print(f"""{Main.colorFore("reset")}""", end="")
                     Main._print(f"""{Main.style("reset")}""", end="")
 
-            elif self.get_command_at_index(3) == "search" and self.check_search_query() and \
+            elif self.get_command_at_index(3) == "search" and self.get_search_query() and \
                     (self.get_command_at_index(5) == "--auto" or self.get_command_at_index(5) == "--guided"):
 
                 self.data["headless"] = True if self.get_command_lenght() >= 7 and \
                     self.get_command_at_index(6) == "--headless" else False
 
                 if self.data["user_email"] and self.data["user_password"]:
-                    pass
+                    if self.data["search_keywords"] or self.data["search_location"]:
+                        print(self.data["search_keywords"], self.data["search_location"])
+                        LinkedInConnections.LinkedInConnectionsAutoSearch(
+                            self.data).run()
+                    else:
+                        pass
                 else:
                     Main._print(f"""{Main.style("bright")}""", end="")
                     Main._print(f"""{Main.colorFore("blue")}""", end="")
@@ -823,7 +837,7 @@ class Main(object):
                     Main._print(f"""{Main.colorFore("reset")}""", end="")
                     Main._print(f"""{Main.style("reset")}""", end="")
 
-            elif self.get_command_at_index(3) == "search" and self.check_search_query():
+            elif self.get_command_at_index(3) == "search" and self.get_search_query():
 
                 self.data["headless"] = True if self.get_command_lenght() >= 6 and \
                     self.get_command_at_index(5) == "--headless" else False
