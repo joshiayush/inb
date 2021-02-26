@@ -32,7 +32,7 @@ It will start sending invitation.
 
 ## Commands
 
-### `config.user.email=example@email.com --cached`
+### `config.user.email "example@email.com" --cached`
 
 This command stores the user email as cache so the user does not have
 

@@ -463,7 +463,7 @@ class Main(object):
         Main._print(f"""{Main.style("bright")}""", end="")
         Main._print(f"""{Main.colorFore("blue")}""", end="")
 
-        Main._print(f"""config.user.email=example@email.com --cached""")
+        Main._print(f"""config.user.email "example@email.com" --cached""")
         Main._print(f"""config.user.password --cached (hit enter)""")
         Main._print(f"""Password: """)
         Main._print(f"""config.job.keywords=Data%Science (use '%' for space)""")
@@ -1222,16 +1222,19 @@ class Main(object):
             Main._print(f"""{Main.colorFore("reset")}""", end="")
             Main._print(f"""{Main.style("reset")}""", end="")
 
-    def check_email(self):
+    def slice_email(self):
+        return self.command.split(" ")[2][self.command.split(" ")[2].find('"')+1:self.command.split(" ")[2].rfind('"')]
+
+    def get_email(self):
         """
         Method check_email()
         """
-        if re.search(r"^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$",
-                     self.command.split(" ")[1].split("=")[1].strip()):
-            return True
-        elif re.search(r"^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w+$",
-                       self.command.split(" ")[1].split("=")[1].strip()):
-            return True
+        email = self.slice_email()
+
+        if re.search(r"^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$", email):
+            return email
+        elif re.search(r"^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w+$", email):
+            return email
         else:
             return False
 
@@ -1248,11 +1251,11 @@ class Main(object):
             if self.get_command_lenght() >= 3 and self.get_command_at_index(2) == "--cached":
                 self.store_cache()
 
-        elif re.compile(r"(config\.user\.email)=", re.IGNORECASE).search(self.command):
-            if self.check_email():
-                self.data["user_email"] = self.command.split(" ")[1].split("=")[
-                    1].strip()
-                if self.get_command_lenght() >= 3 and self.get_command_at_index(2) == "--cached":
+        elif re.compile(r"(config\.user\.email)", re.IGNORECASE).search(self.command):
+            email = self.get_email()
+            if email:
+                self.data["user_email"] = email
+                if self.get_command_lenght() >= 4 and self.get_command_at_index(3) == "--cached":
                     self.store_cache()
             else:
                 Main._print(f"""{Main.style("bright")}""", end="")
@@ -1291,7 +1294,7 @@ class Main(object):
         argument. (You remember the switch statement in C, C++, Javascript ...)
         """
         _config_regex_ = re.compile(
-            r"(config\.user\.email).?(\w+)?|(config\.user\.password)|(config\.job\.keywords).?(\w+)?|(config\.job\.location).?(\w+)?", re.IGNORECASE)
+            r"(config\.user\.email)|(config\.user\.password)|(config\.job\.keywords)|(config\.job\.location)", re.IGNORECASE)
 
         if _config_regex_.search(self.get_command_at_index(1)):
             self.handle_configs()
