@@ -10,11 +10,11 @@ Runs the program.
 
 It will install dependencies if they are not present in your system,
 
-it can install `python` interpreter `selenium`, `urllib`, `webdriver-manager`
+it can install `python` interpreter `selenium`, `urllib`, `webdriver-manager`,
 
-packages on your system.
+`cryptography` packages on your system.
 
-### `config.user.email=example@email.com`
+### `config.user.email "example@email.com"`
 
 Adds email to configurations.
 
@@ -44,7 +44,7 @@ This command stores the user password as cache so the user does not have
 
 to enter this field every time it has to automate LinkedIn.
 
-_Note:_ Program only stores these field as cache if it has both of the
+_Note:_ Program only stores these fields as cache if it has both of the
 
 fields available.
 
@@ -52,7 +52,7 @@ fields available.
 
 Starts sending invitations to LinkedIn suggestions `--headless` starts
 
-the automation without opening the browser and `--use-cache` uses the 
+the automation without opening the browser and `--use-cache` uses the
 
 cache stored for authentication.
 

@@ -1,11 +1,7 @@
 #!/bin/bash
 
-# ? here the program start its execution
-# ? `$1` is the first argument of the function
-# ? `runProgram` and its value is the python
-# ? interpreter i.e., python[2/3], we check the
-# ? system here because Windows uses '\' for navigation
-# ? and Linux '/'
+# here the program start its execution `$1` is the first argument of the function `runProgram` and its value is the python
+# interpreter i.e., python[2/3], we check the system here because Windows uses '\' for navigation and Linux '/'.
 function runProgram() {
     if [ "$2" = "linux" ]; then
         $1 src/main.py
@@ -16,14 +12,13 @@ function runProgram() {
     fi
 }
 
-# ! function to confirm the user decision of Installing
-# ! python if it is not installed
+# function to confirm the user decision of Installing python if it is not installed.
 function confirm() {
     read -p "Install Python [y/n]: " ch
     echo $ch
 }
 
-# ! function that finds the system platform Information
+# function that finds the system platform Information.
 function getSystemInfo() {
     case "$(/usr/bin/lsb_release -si)" in
     Ubuntu) echo "Ubuntu" ;;
@@ -33,8 +28,7 @@ function getSystemInfo() {
     esac
 }
 
-# ! function to install the program dependencies like selenium module,
-# ! webdriver-manager, urllib module
+# function to install the program dependencies like selenium module, webdriver-manager, urllib module, cryptography.
 function installDependencies() {
     # ! start installing program dependencies
     echo "Installing dependencies..."
@@ -52,7 +46,7 @@ function installDependencies() {
     pip3 install cryptography
 }
 
-# ! function that install python and selenium on Ubuntu platform
+# function that install python and selenium on Ubuntu platform.
 function installOnUbuntu() {
     echo "Installing Python on Ubuntu Linux"
     # ! update package list
@@ -63,7 +57,7 @@ function installOnUbuntu() {
     installDependencies
 }
 
-# ! function that install python and selenium on Linux Mint platform
+# function that install python and selenium on Linux Mint platform.
 function installOnMint() {
     echo "Installing Python on Linux Mint"
     # ! add personal package archive deadsnakes/ppa
@@ -76,7 +70,7 @@ function installOnMint() {
     installDependencies
 }
 
-# ! function that install python and selenium on Arch Linux platform
+# function that install python and selenium on Arch Linux platform.
 function installOnArch() {
     echo "Installing Python on Arch Linux"
     # ! install python
@@ -85,8 +79,7 @@ function installOnArch() {
     installDependencies
 }
 
-# ! function that install python and selenium in Windows using Microsoft
-# ! installer
+# function that install python and selenium in Windows using Microsoft installer.
 function installOnWindows() {
     # ! install python
     msiexec /i python-3.8.msi TARGETDIR=C:\Python
@@ -94,13 +87,10 @@ function installOnWindows() {
     installDependencies
 }
 
-# ? function that install python on OSX system
-# ?
-# ! To install python and selenium on OSX we first need to install Apple’s
-# ! Xcode program which is necessary for iOS development as well as most
-# ! programming tasks,
-# ! then we need to install homebrew utility,
-# ! then we can install python
+# function that install python on OSX system.
+#
+# To install python and selenium on OSX we first need to install Apple’s Xcode program which is necessary for iOS development as
+# well as most programming tasks, then we need to install homebrew utility, then we can install python.
 function installOnOSX() {
     # ! install xcode
     xcode-select --install
@@ -112,20 +102,17 @@ function installOnOSX() {
     installDependencies
 }
 
-# ? function that returns the name of the operating system that the
-# ? user is running in its system variable OSTYPE is a predefined
-# ? variable that stores the name of the Operating System that is
-# ? running currently
+# function that returns the name of the operating system that the user is running in its system variable OSTYPE is a predefined
+# variable that stores the name of the Operating System that is running currently.
 function getOsInfo() {
     echo $OSTYPE
 }
 
-# ? function that does the actual installation of the python interpreter
-# ? based on the current running platform
+# function that does the actual installation of the python interpreter based on the current running platform.
 function install() {
     case "$(getOsInfo)" in
     linux*)
-        # * install python based on the running platform
+        # * install python based on the running linux platform
         case "$(getSystemInfo)" in
         Ubuntu) installOnUbuntu ;;
         Mint) installOnMint ;;
@@ -143,8 +130,7 @@ function install() {
     esac
 }
 
-# ? function that install python if it is not already installed
-# ? in the user system
+# function that install python if it is not already installed in the user system.
 function installPython() {
     # ! get confirmation
     ch=$(confirm)
@@ -157,9 +143,8 @@ function installPython() {
     fi
 }
 
-# ? function main is the main function that starts the execution of the
-# ? linkedin automator program it first checks if the requirements are
-# ? present or not then it takes actions accordingly
+# function main is the main function that starts the execution of the linkedin automator program it first checks if the
+# requirements are present or not then it takes actions accordingly.
 function main() {
     # ! check if python3 is present, /dev/null makes the grep output disappear
     if python3 --version | grep "Python*" >/dev/null; then
