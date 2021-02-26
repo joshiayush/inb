@@ -18,7 +18,13 @@ it can install `python` interpreter `selenium`, `urllib`, `webdriver-manager`,
 
 Adds email to configurations.
 
-### `config.user.password`
+### `config.user.password "example@password"`
+
+Adds password to configurations.
+
+**OR**
+
+### `config.user.password` (hit enter)
 
 Adds password to configurations by allowing you to enter the password in password prompt
 
@@ -37,6 +43,10 @@ It will start sending invitation.
 This command stores the user email as cache so the user does not have
 
 to enter this field every time it has to automate LinkedIn.
+
+### `config.user.password "example@password" --cached`
+
+**OR**
 
 ### `config.user.password --cached`
 

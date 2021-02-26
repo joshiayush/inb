@@ -18,115 +18,7 @@ from LinkedIn import ElementClickInterceptedException
 from LinkedIn import ElementNotInteractableException
 
 
-class LinkedInConnections(LinkedIn):
-
-    def __init__(self, _type, data):
-        super(LinkedInConnections, self).__init__(data)
-
-    def init_vars(self):
-        """Function init_vars() initializes all the variables
-        that are required to implement search functionality.
-        """
-        self.linkedin = "https://www.linkedin.com/"
-
-        self.search = "search/results/"
-
-        self.people = "people/?"
-
-        self.geoUrn = "geoUrn="
-
-        self.__identifiers__ = {
-            "usa": '%5B"103644278"%5D&',
-            "india": '%5B"102713980"%5D&',
-            "california": '%5B"102095887"%5D&',
-            "sanfranciscoba": '%5B"90000084"%5D&',
-            "sanfranciscoca": '%5B"102277331"%5D&'
-        }
-
-        self.location = self.geoUrn + \
-            functools.reduce(operator.add, self.__identifiers__.values())
-
-        self.origins = ["SWITCH_SEARCH_VERTICAL", "FACETED_SEARCH"]
-
-        self.keywords = f"""keywords=__key__&origin={self.origins[0]}"""
-
-        self.connections_link = ""
-
-    def get_location_identifier(self, country):
-
-        return self.__identifiers__.get(country, None)
-
-    def quote_url(self, url, safe=f"~@#$&()*!+=:;,.?/\\"):
-        """URL-encodes a string (either str (i.e. ASCII) or unicode)
-        uses de-facto UTF-8 encoding to handle Unicode codepoints in
-        given string.
-        """
-        return urllib.parse.quote(url.encode('utf-8'), safe)
-
-    def form_connection_link(self):
-        """Function form_connection_link() forms a linkedin connections
-        link by encoding.
-        """
-        self.connections_link = self.quote_url(
-            self.linkedin + self.search + self.people + self.location + self.keywords + self.origins[0])
-
-        print(self.connections_link)
-
-    def getUrn(self, key):
-        Urns = {
-            "India": self.get_location_identifier("india"),
-            "United States": self.get_location_identifier("usa"),
-            "California, United States": self.get_location_identifier("california"),
-            "Sanfrancisco Bay Area": self.get_location_identifier("sanfranciscoba"),
-            "Sanfrancisco, CA": self.get_location_identifier("sanfranciscoca")
-        }
-
-        return Urns[key]
-
-    def apply_keyword(self, keyword):
-        """Function apply_keyword() applies keyword to a part of the linkedin
-        connections link.
-        """
-        self.keywords = self.keywords.replace("__key__", keyword[0])
-
-        if (keyword[1] == "All"):
-            self.keywords = f"""keywords=__key__&origin={self.origins[1]}"""
-        else:
-            self.keywords = f"""keywords=__key__&origin={self.origins[1]}"""
-            self.location = self.getUrn(keyword[1])
-
-    def get_keywords(self):
-        """Function get_keywords() asks the user for the keywords that has to
-        be applied when searching for people.
-        """
-        keyword = input("Enter Connection Keywords: ")
-
-        print("Location available:")
-        print("India")
-        print("United States")
-        print("California, United States")
-        print("Sanfrancisco Bay Area")
-        print("Sanfrancisco, CA")
-
-        location = "All"
-        location = input("Enter Location (default -> All): ")
-
-        return [keyword, location]
-
-    def run(self):
-        """Function run() is our main function from where the LinkedIn
-        automation starts.
-        """
-        self.init_vars()        # ? call init_vars to initialize the variables
-
-        self.apply_keyword(self.get_keywords())
-
-        self.form_connection_link()
-
-        self.driver.get(self.connections_link)
-
-
-class LinkedInConnectionsGuided(LinkedInConnections):
+class LinkedInConnectionsGuided(LinkedIn):
     """Controls LinkedIn Connections, its name is LinkedInConnectionsGuided
     because it runs the program in guided mode i.e., you have to manually
     input the 'ID' which you want to target, LinkedInConnections with auto
@@ -142,9 +34,7 @@ class LinkedInConnectionsGuided(LinkedInConnections):
         LinkedInConnectionsGuided() which intializes objects for this
         class.
         """
-        super(LinkedInConnectionsGuided, self).__init__("guided", data)
-
-        super(LinkedInConnectionsGuided, self).run()
+        super(LinkedInConnectionsGuided, self).__init__(data)
 
     def target_individual_list(self, lists):
         """Function target_individual_list() targets <li> items individually
@@ -220,7 +110,7 @@ class LinkedInConnectionsGuided(LinkedInConnections):
         self.start_guided_mode()
 
 
-class LinkedInConnectionsAuto(LinkedInConnections):
+class LinkedInConnectionsAuto(LinkedIn):
     """Controls LinkedIn Connections, its name is LinkedInConnectionsAuto
     because it runs the program in auto mode i.e., here you don't have to
     manually enter the required field for performing automation unlike the
@@ -232,7 +122,7 @@ class LinkedInConnectionsAuto(LinkedInConnections):
     """
 
     def __init__(self, data):
-        super(LinkedInConnectionsAuto, self).__init__("auto", data)
+        super(LinkedInConnectionsAuto, self).__init__(data)
 
     def get_my_network(self):
         """Function get_my_network() changes the url by executing function
@@ -335,6 +225,11 @@ class LinkedInConnectionsAuto(LinkedInConnections):
         self.prepare_page()
 
         self.click_buttons()
+
+
+class LinkedInConnectionsAutoSearch(LinkedIn):
+    def __init__(self):
+        self.connections_link = ""
 
 
 class InvitationManager(LinkedIn):

@@ -1165,7 +1165,7 @@ class Main(object):
             Main._print(f"""""")
             Main._print(f"""developer""")
             Main._print(f"""""")
-            Main._print(f"""theme <--parrot^/--normal>""")
+            Main._print(f"""theme [--parrot^/--normal]""")
             Main._print(f"""""")
             Main._print(f"""clear""")
             Main._print(f"""""")
@@ -1229,6 +1229,9 @@ class Main(object):
     def slice_email(self):
         return self.command.split(" ")[2][self.command.split(" ")[2].find('"')+1:self.command.split(" ")[2].rfind('"')]
 
+    def slice_password(self):
+        return self.command.split(" ")[2][self.command.split(" ")[2].find('"')+1:self.command.split(" ")[2].rfind('"')]
+
     def get_email(self):
         """
         Method check_email()
@@ -1243,9 +1246,8 @@ class Main(object):
             return False
 
     def if_password_given(self):
-        if re.search(r'"(.*?)"', self.command.split(" ")[2].strip()):
+        if re.search(r'"[a-zA-z0-9~`!@#\$%\^&\*\(\)_\+=-\\\|\[\]\{\}\"\'\?<>,\.:;\/]*"', self.command.split(" ")[2].strip()):
             return True
-        print("returning fasle")
         return False
 
     def handle_configs(self):
@@ -1256,20 +1258,14 @@ class Main(object):
         parsing in this function as you can see this is to fetch the right
         commands and flags and if not found raise an error.
         """
-        if self.get_command_lenght() >= 3:
-            if "config.user.password" == self.get_command_at_index(1) and not self.if_password_given():
+        if self.get_command_lenght() <= 2:
+            if "config.user.password" == self.get_command_at_index(1):
                 self.data["user_password"] = getpass.getpass(
                     prompt=" Password: ")
                 if self.get_command_lenght() >= 3 and self.get_command_at_index(2) == "--cached":
                     self.store_cache()
-                    
-        elif "config.user.password" == self.get_command_at_index(1):
-            self.data["user_password"] = getpass.getpass(
-                prompt=" Password: ")
-            if self.get_command_lenght() >= 3 and self.get_command_at_index(2) == "--cached":
-                self.store_cache()
 
-        elif re.compile(r"(config\.user\.email)", re.IGNORECASE).search(self.command):
+        if re.compile(r"(config\.user\.email)", re.IGNORECASE).search(self.command):
             email = self.get_email()
             if email:
                 self.data["user_email"] = email
@@ -1284,6 +1280,11 @@ class Main(object):
 
                 Main._print(f"""{Main.colorFore("rest")}""", end="")
                 Main._print(f"""{Main.style("reset")}""", end="")
+
+        elif "config.user.password" == self.get_command_at_index(1):
+            self.data["user_password"] = self.slice_password()
+            if self.get_command_lenght() >= 4 and self.get_command_at_index(3) == "--cached":
+                self.store_cache()
 
         elif re.compile(r"(config\.job\.keywords)=\w+", re.IGNORECASE).search(self.command):
             self.data["job_keywords"] = self.command[self.command.find(
