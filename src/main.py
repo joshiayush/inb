@@ -11,9 +11,9 @@ from cryptography.fernet import Fernet
 # moving on pressing arrow keys.
 import readline
 
-import LinkedIn
-import LinkedInJobs
-import LinkedInConnections
+from linkedin import LinkedIn
+from linkedin import LinkedInJobs
+from linkedin import LinkedInConnections
 
 
 class Main(object):
@@ -82,7 +82,7 @@ class Main(object):
 
         self.encrypted_password = ""
 
-        self.__key_file = "/Python/LinkedIn Automater/Creds/.key.key"
+        self.__key_file = "/Python/linkedinautomator/creds/.key.key"
 
         if not os.path.exists(self.__key_file):
             self.__key = Fernet.generate_key()
@@ -93,7 +93,7 @@ class Main(object):
             with open(self.__key_file, 'r') as key_file:
                 self.__key = key_file.readline().encode()
 
-        self.__credentials_file = "/Python/LinkedIn Automater/Creds/CredentialsFile.ini"
+        self.__credentials_file = "/Python/linkedinautomator/creds/credentialsFile.ini"
 
         self.data = {
             "user_email": "",
@@ -102,7 +102,7 @@ class Main(object):
             "search_location": "",
             "job_keywords": "",
             "job_location": "",
-            "driver_path": "/Python/LinkedIn Automater/driver/chromedriver",
+            "driver_path": "/Python/linkedinautomator/driver/chromedriver",
             "headless": False
         }
 
@@ -796,7 +796,8 @@ class Main(object):
 
                 if self.data["user_email"] and self.data["user_password"]:
                     if self.data["search_keywords"] or self.data["search_location"]:
-                        print(self.data["search_keywords"], self.data["search_location"])
+                        print(self.data["search_keywords"],
+                              self.data["search_location"])
                         LinkedInConnections.LinkedInConnectionsAutoSearch(
                             self.data).run()
                     else:

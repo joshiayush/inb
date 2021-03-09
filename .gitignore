@@ -1,2 +1,3 @@
+creds/credentialsFile.ini
 src/__pycache__/**
-Creds/**
+src/linkedin/__pycache__/**
