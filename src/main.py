@@ -82,7 +82,7 @@ class Main(object):
 
         self.encrypted_password = ""
 
-        self.__key_file = "/Python/linkedinautomator/creds/.key.key"
+        self.__key_file = "/Python/linkedin-bot/creds/.key.key"
 
         if not os.path.exists(self.__key_file):
             self.__key = Fernet.generate_key()
@@ -93,7 +93,7 @@ class Main(object):
             with open(self.__key_file, 'r') as key_file:
                 self.__key = key_file.readline().encode()
 
-        self.__credentials_file = "/Python/linkedinautomator/creds/credentialsFile.ini"
+        self.__credentials_file = "/Python/linkedin-bot/creds/credentialsFile.ini"
 
         self.data = {
             "user_email": "",
@@ -102,7 +102,7 @@ class Main(object):
             "search_location": "",
             "job_keywords": "",
             "job_location": "",
-            "driver_path": "/Python/linkedinautomator/driver/chromedriver",
+            "driver_path": "/Python/linkedin-bot/driver/chromedriver",
             "headless": False
         }
 
