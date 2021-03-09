@@ -1,3 +1,5 @@
-creds/credentialsFile.ini
 src/__pycache__/**
+creds/credentialsFile.ini
 src/linkedin/__pycache__/**
+src/db/firebaseCreds/serviceAccountKey.json
+
