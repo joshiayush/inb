@@ -12,8 +12,8 @@ from .LinkedIn import WebDriverWait
 from .LinkedIn import TimeoutException
 from .LinkedIn import expected_conditions
 from .LinkedIn import NoSuchElementException
-from .LinkedIn import ElementClickInterceptedException
 from .LinkedIn import ElementNotInteractableException
+from .LinkedIn import ElementClickInterceptedException
 
 
 class LinkedInConnectionsGuided(LinkedIn):

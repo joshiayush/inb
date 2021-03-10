@@ -1279,6 +1279,8 @@ class Main(object):
                     prompt=" Password: ")
                 if self.get_command_lenght() >= 3 and self.get_command_at_index(2) == "--cached":
                     self.store_cache()
+                    return
+                return
 
         if re.compile(r"(config\.user\.email)", re.IGNORECASE).search(self.command):
             email = self.get_email()
@@ -1286,6 +1288,10 @@ class Main(object):
                 self.data["user_email"] = email
                 if self.get_command_lenght() >= 4 and self.get_command_at_index(3) == "--cached":
                     self.store_cache()
+                    self.command = "command config.user.password" + "--cached"
+                self.command = "command config.user.password"
+                self.handle_configs()
+                return
             else:
                 Main._print(f"""{Main.style("bright")}""", end="")
                 Main._print(f"""{Main.colorFore("red")}""", end="")
@@ -1296,21 +1302,27 @@ class Main(object):
                 Main._print(f"""{Main.colorFore("rest")}""", end="")
                 Main._print(f"""{Main.style("reset")}""", end="")
 
+                return
+
         elif "config.user.password" == self.get_command_at_index(1):
             self.data["user_password"] = self.slice_password()
             if self.get_command_lenght() >= 4 and self.get_command_at_index(3) == "--cached":
                 self.store_cache()
+            return
 
         elif re.compile(r"(config\.job\.keywords)=\w+", re.IGNORECASE).search(self.command):
             self.data["job_keywords"] = self.command[self.command.find(
                 "=")+1:].strip()
+            return
 
         elif re.compile(r"(config\.job\.location)=\w+", re.IGNORECASE).search(self.command):
             self.data["job_location"] = self.command[self.command.find(
                 "=")+1:].strip()
+            return
 
         else:
             Main.help_with_configs()
+            return
 
     def handle_commands(self):
         """Method handle_commands() does the actually handling of the commands
