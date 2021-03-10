@@ -145,17 +145,17 @@ function installPython() {
 function checkIfGarbage() {
     case "$(getOsInfo)" in
     linux*)
-        if [[ -d "__pycache__/" || -d "src/__pycache__/" || -d "src/linkedin/__pycache__/" ]]; then
+        if [[ -d "__pycache__/" || -d "src/__pycache__/" || -d "src/linkedin/__pycache__/" || -d "src/db/__pycache__/" || -d "src/chatbot/__pycache__/" ]]; then
             echo "yes"
         fi
         ;;
     msys*)
-        if [[ -d "__pycache__\\" || -d "src\\__pycache__\\" || -d "src\linkedin\__pycache__\\" ]]; then
+        if [[ -d "__pycache__\\" || -d "src\\__pycache__\\" || -d "src\linkedin\__pycache__\\" || -d "src\db\__pycache__\\" || -d "src\chatbot\__pycache__\\" ]]; then
             echo "yes"
         fi
         ;;
     darwin*)
-        if [[ -d "__pycache__/" || -d "src/__pycache__/" || -d "src/linkedin/__pycache__/" ]]; then
+        if [[ -d "__pycache__/" || -d "src/__pycache__/" || -d "src/linkedin/__pycache__/" || -d "src/db/__pycache__/" || -d "src/chatbot/__pycache__/" ]]; then
             echo "yes"
         fi
         ;;
@@ -168,13 +168,13 @@ function deleteCache() {
     # gets the system info then deletes the folder '__pycache__' accordingly
     case "$(getOsInfo)" in
     linux*)
-        sudo rm -rf __pycache__ src/__pycache__ src/linkedin/__pycache__
+        sudo rm -rf __pycache__ src/__pycache__ src/linkedin/__pycache__ src/db/__pycache__ src/chatbot/__pycache__
         ;;
     msys*)
-        rmdir __pycache__ src\__pycache__ src\linkedin\__pycache__
+        rmdir __pycache__ src\__pycache__ src\linkedin\__pycache__ src\db\__pycache__ src\chatbot\__pycache__
         ;;
     darwin*)
-        sudo rm -rf __pycache__ src/__pycache__ src/linkedin/__pycache__
+        sudo rm -rf __pycache__ src/__pycache__ src/linkedin/__pycache__ src/db/__pycache__ src/chatbot/__pycache__
         ;;
     *) echo "System Information not found delete __pycache__ Manually" ;;
     esac
