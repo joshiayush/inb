@@ -14,6 +14,10 @@ it can install `python` interpreter `selenium`, `urllib`, `webdriver-manager`,
 
 `cryptography` packages on your system.
 
+### `./run.sh -d pycache`
+
+Deletes all the cache files that gets created after the program runs.
+
 ### `config.user.email "example@email.com"`
 
 Adds email to configurations.

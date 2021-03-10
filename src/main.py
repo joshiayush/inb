@@ -709,8 +709,8 @@ class Main(object):
     def handle_config(self):
         Main.help_with_configs()
 
-    def get_command_lenght(self):
-        """Method get_command_lenght() returns the lenght of the command
+    def get_command_length(self):
+        """Method get_command_length() returns the lenght of the command
         entered. We first change the entered string to a list object by
         spliting the string on ' ' (whitespaces) then we return the lenght.
 
@@ -756,7 +756,7 @@ class Main(object):
 
             -> linkedin [send] [search industry=example&&location=india+usa+...] --auto^/--guided [--headless] [--use-cache]
         """
-        if self.get_command_lenght() >= 5:
+        if self.get_command_length() >= 5:
             """If user entered command with exact number of flags required
             with that command then we perform the following operations where
             we take actions according to the flags 'suggestions' or 'search'
@@ -770,8 +770,8 @@ class Main(object):
             if self.get_command_at_index(3) == "suggestions" and \
                     (self.get_command_at_index(4) == "--auto" or self.get_command_at_index(4) == "--guided"):
 
-                self.data["headless"] = True if self.get_command_lenght() >= 6 and \
-                    self.get_command_at_index(5) == "--headless" else False
+                self.data["headless"] = True if self.get_command_at_index(
+                    5) == "--headless" else False
 
                 _ = self.get_credentials() if self.get_command_at_index(-1) == "--use-cache" else None
 
@@ -791,13 +791,11 @@ class Main(object):
             elif self.get_command_at_index(3) == "search" and self.get_search_query() and \
                     (self.get_command_at_index(5) == "--auto" or self.get_command_at_index(5) == "--guided"):
 
-                self.data["headless"] = True if self.get_command_lenght() >= 7 and \
-                    self.get_command_at_index(6) == "--headless" else False
+                self.data["headless"] = True if self.get_command_at_index(
+                    6) == "--headless" else False
 
                 if self.data["user_email"] and self.data["user_password"]:
                     if self.data["search_keywords"] or self.data["search_location"]:
-                        print(self.data["search_keywords"],
-                              self.data["search_location"])
                         LinkedInConnections.LinkedInConnectionsAutoSearch(
                             self.data).run()
                     else:
@@ -812,7 +810,7 @@ class Main(object):
                     Main._print(f"""{Main.colorFore("reset")}""", end="")
                     Main._print(f"""{Main.style("reset")}""", end="")
 
-        elif self.get_command_lenght() >= 3:
+        elif self.get_command_length() >= 3:
             """If user omits the default flags with the command then the
             following operations will be executed where again we are parsing
             the arguments according to their position in the list that we
@@ -840,8 +838,8 @@ class Main(object):
 
             elif self.get_command_at_index(3) == "search" and self.get_search_query():
 
-                self.data["headless"] = True if self.get_command_lenght() >= 6 and \
-                    self.get_command_at_index(5) == "--headless" else False
+                self.data["headless"] = True if self.get_command_at_index(
+                    5) == "--headless" else False
 
                 if self.data["user_email"] and self.data["user_password"]:
                     pass
@@ -867,7 +865,7 @@ class Main(object):
         the flags that are applied with the `linkedin` command and calls
         the LinkedIn classes accordingly.
         """
-        if self.get_command_lenght() == 2 and self.get_command_at_index(1) == "linkedin":
+        if self.get_command_length() <= 2 and self.get_command_at_index(1) == "linkedin":
             Main._print(f"""{Main.style("bright")}""", end="")
             Main._print(f"""{Main.colorFore("blue")}""", end="")
 
@@ -879,7 +877,7 @@ class Main(object):
 
             Main.help_with_linkedin()
 
-        elif self.get_command_lenght() >= 3:
+        elif self.get_command_length() >= 3:
 
             if self.get_command_at_index(2) == "send":
                 self.handle_send_commands()
@@ -978,7 +976,7 @@ class Main(object):
         that user had entered like email, password, job
         keys/location.
         """
-        if self.get_command_lenght() == 2:
+        if self.get_command_length() == 2:
             Main._print(f"""{Main.style("bright")}""", end="")
             Main._print(f"""{Main.colorFore("green")}""", end="")
 
@@ -993,7 +991,7 @@ class Main(object):
             Main.show_job_details(self)
 
             Main.ask_to_show_password(self)
-        elif self.get_command_lenght() >= 3 and self.get_command_at_index(2) == "--help":
+        elif self.get_command_at_index(2) == "--help":
             Main.help_with_show()
         else:
             Main.help_with_show()
@@ -1035,7 +1033,7 @@ class Main(object):
         the user hits the command `delete` this basically deletes
         the cache stored (User credentials) if exists.
         """
-        if self.get_command_lenght() == 2 and self.get_command_at_index(1) == "delete":
+        if self.get_command_at_index(1) == "delete":
             Main._print(f"""{Main.style("bright")}""", end="")
             Main._print(f"""{Main.colorFore("red")}""", end="")
 
@@ -1044,7 +1042,7 @@ class Main(object):
             Main._print(f"""{Main.colorFore("reset")}""", end="")
             Main._print(f"""{Main.style("reset")}""", end="")
             Main.help_with_delete()
-        elif self.get_command_lenght() >= 3:
+        elif self.get_command_length() >= 3:
             if self.get_command_at_index(2) == "--cache":
                 self.delete_cache()
             elif self.get_command_at_index(2) == "--key":
@@ -1071,7 +1069,7 @@ class Main(object):
         the command `devdetails` it basically shows the developer's
         network profiles and mail address.
         """
-        if self.get_command_lenght() == 2:
+        if self.get_command_length() == 2:
             Main._print(f"""{Main.style("bright")}""", end="")
             Main._print(f"""{Main.colorFore("green")}""", end="")
 
@@ -1085,7 +1083,7 @@ class Main(object):
 
             Main._print(f"""{Main.colorFore("reset")}""", end="")
             Main._print(f"""{Main.style("reset")}""", end="")
-        elif self.get_command_lenght() >= 3 and self.get_command_at_index(2) == "--help":
+        elif self.get_command_at_index(2) == "--help":
             Main.help_with_developer()
         else:
             pass
@@ -1097,14 +1095,13 @@ class Main(object):
         does a lot of argument parsing in this function as you can see
         this is to fetch the right flag and if not found raise an error.
         """
-        if self.get_command_lenght() >= 3 and self.get_command_at_index(2) == "--help":
+        if self.get_command_at_index(2) == "--help":
             Main.help_with_theme()
-            if self.get_command_lenght() > 3:
+            if self.get_command_length() > 3:
                 self.command = (
                     "command " + self.get_command_at_index(3)).strip()
                 self.Error()
-        elif self.get_command_lenght() >= 3 and (
-                self.get_command_at_index(2) == "--parrot" or self.get_command_at_index(2) == "--normal"):
+        elif self.get_command_at_index(2) == "--parrot" or self.get_command_at_index(2) == "--normal":
             self.set_theme(self.get_command_at_index(2).strip())
         else:
             Main.help_with_theme()
@@ -1117,11 +1114,11 @@ class Main(object):
         We does a lot of argument parsing in this function as you can see
         this is to fetch the right flag and if not found raise an error.
         """
-        if self.get_command_lenght() == 2 and self.get_command_at_index(1) == "clear":
+        if self.get_command_at_index(1) == "clear":
             self.home()
-        elif self.get_command_lenght() >= 3 and self.get_command_at_index(2) == "--help":
+        elif self.get_command_at_index(2) == "--help":
             Main.help_with_clear()
-            if self.get_command_lenght() > 3:
+            if self.get_command_length() > 3:
                 self.command = (
                     "command " + self.get_command_at_index(3)).strip()
                 self.Error()
@@ -1137,7 +1134,7 @@ class Main(object):
         as you can see this is to fetch the right flag and if not found
         raise an error.
         """
-        if self.get_command_lenght() == 2 and self.get_command_at_index(1) == "help":
+        if self.get_command_at_index(1) == "help":
             Main._print(f"""{Main.style("bright")}""", end="")
             Main._print(f"""{Main.colorFore("green")}""", end="")
 
@@ -1188,9 +1185,9 @@ class Main(object):
 
             Main._print(f"""{Main.colorFore("reset")}""", end="")
             Main._print(f"""{Main.style("reset")}""", end="")
-        elif self.get_command_lenght() >= 3 and self.get_command_at_index(2) == "--help":
+        elif self.get_command_at_index(2) == "--help":
             Main.help_with_help()
-            if self.get_command_lenght() > 3:
+            if self.get_command_length() > 3:
                 self.command = (
                     "command " + self.command.split(" ")[3]).strip()
                 self.Error()
@@ -1206,7 +1203,7 @@ class Main(object):
         as you can see this is to fetch the right flag and if not found
         raise an error.
         """
-        if self.get_command_lenght() == 2 and self.get_command_at_index(1) == "exit":
+        if self.get_command_at_index(1) == "exit":
             Main._print(f"""{Main.style("bright")}""", end="")
             Main._print(f"""{Main.colorFore("green")}""", end="")
 
@@ -1215,9 +1212,9 @@ class Main(object):
             Main._print(f"""{Main.colorFore("reset")}""", end="")
             Main._print(f"""{Main.style("reset")}""", end="")
             exit()
-        elif self.get_command_lenght() >= 3 and self.get_command_at_index(2) == "--help":
+        elif self.get_command_at_index(2) == "--help":
             Main.help_with_exit()
-            if self.get_command_lenght() > 3:
+            if self.get_command_length() > 3:
                 self.command = (
                     "command " + self.get_command_at_index(3)).strip()
                 self.Error()
@@ -1242,10 +1239,16 @@ class Main(object):
             Main._print(f"""{Main.style("reset")}""", end="")
 
     def slice_email(self):
-        return self.command.split(" ")[2][self.command.split(" ")[2].find('"')+1:self.command.split(" ")[2].rfind('"')]
+        try:
+            return self.command.split(" ")[2][self.command.split(" ")[2].find('"')+1:self.command.split(" ")[2].rfind('"')]
+        except IndexError:
+            return None
 
     def slice_password(self):
-        return self.command.split(" ")[2][self.command.split(" ")[2].find('"')+1:self.command.split(" ")[2].rfind('"')]
+        try:
+            return self.command.split(" ")[2][self.command.split(" ")[2].find('"')+1:self.command.split(" ")[2].rfind('"')]
+        except IndexError:
+            return None
 
     def get_email(self):
         """
@@ -1273,11 +1276,11 @@ class Main(object):
         parsing in this function as you can see this is to fetch the right
         commands and flags and if not found raise an error.
         """
-        if self.get_command_lenght() <= 2:
+        if self.get_command_length() <= 2:
             if "config.user.password" == self.get_command_at_index(1):
                 self.data["user_password"] = getpass.getpass(
                     prompt=" Password: ")
-                if self.get_command_lenght() >= 3 and self.get_command_at_index(2) == "--cached":
+                if self.get_command_at_index(2) == "--cached":
                     self.store_cache()
                     return
                 return
@@ -1286,7 +1289,7 @@ class Main(object):
             email = self.get_email()
             if email:
                 self.data["user_email"] = email
-                if self.get_command_lenght() >= 4 and self.get_command_at_index(3) == "--cached":
+                if self.get_command_at_index(3) == "--cached":
                     self.store_cache()
                     self.command = "command config.user.password" + "--cached"
                 self.command = "command config.user.password"
@@ -1306,7 +1309,7 @@ class Main(object):
 
         elif "config.user.password" == self.get_command_at_index(1):
             self.data["user_password"] = self.slice_password()
-            if self.get_command_lenght() >= 4 and self.get_command_at_index(3) == "--cached":
+            if self.get_command_at_index(3) == "--cached":
                 self.store_cache()
             return
 
@@ -1360,7 +1363,7 @@ class Main(object):
         """
         while True:
             self.command = ("command " + self._input()).strip()
-            self.handle_commands() if self.get_command_lenght() > 1 else False
+            self.handle_commands() if self.get_command_length() > 1 else False
 
 
 """Execute program"""
