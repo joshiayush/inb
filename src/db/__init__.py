@@ -4,5 +4,3 @@ to train our machine learning model (that I'll be adding soon) to recognize Firs
 Last Name, Female's and Male's name and the dataset for our chatbot.
 """
 
-__COLLECTION_CONFIGS__ = "configs"
-__CONFIGS_DOC_LINKEDIN__ = "F5pKooUFtV27sfDhCWJK"
