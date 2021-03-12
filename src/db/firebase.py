@@ -5,10 +5,11 @@ from firebase_admin import initialize_app
 
 
 def initialize_firebase():
-    """Function initialize_firebase() initializes the firebase app, it also checks if 
-    the app is being initialized more than once if yes then it catches the error returned
-    by the firebase_admin.initialize_app() function and hits another try for the get_app()
-    function if there is already an app then it returns it if not the it just return None.
+    """Function initialize_firebase() initializes the firebase app, it also 
+    checks if the app is being initialized more than once if yes then it catches 
+    the error returned by the firebase_admin.initialize_app() function and hits 
+    another try for the get_app() function if there is already an app then it 
+    returns it if not the it just return None.
 
     Returns:
         Firebase app object if present, otherwise None.
@@ -18,7 +19,7 @@ def initialize_firebase():
             "linkedin-bot/src/db/firebaseCreds/serviceAccountKey.json"))
     except ValueError:
         try:
-            return firebase_admin.get_app()
+            return get_app()
         except ValueError:
             return
 
