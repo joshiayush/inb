@@ -1238,13 +1238,7 @@ class Main(object):
             Main._print(f"""{Main.colorFore("reset")}""", end="")
             Main._print(f"""{Main.style("reset")}""", end="")
 
-    def slice_email(self):
-        try:
-            return self.command.split(" ")[2][self.command.split(" ")[2].find('"')+1:self.command.split(" ")[2].rfind('"')]
-        except IndexError:
-            return None
-
-    def slice_password(self):
+    def slice_keyword(self):
         try:
             return self.command.split(" ")[2][self.command.split(" ")[2].find('"')+1:self.command.split(" ")[2].rfind('"')]
         except IndexError:
@@ -1254,7 +1248,7 @@ class Main(object):
         """
         Method check_email()
         """
-        email = self.slice_email()
+        email = self.slice_keyword()
 
         if re.search(r"^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$", email):
             return email
@@ -1308,7 +1302,7 @@ class Main(object):
                 return
 
         elif "config.user.password" == self.get_command_at_index(1):
-            self.data["user_password"] = self.slice_password()
+            self.data["user_password"] = self.slice_keyword()
             if self.get_command_at_index(3) == "--cached":
                 self.store_cache()
             return
