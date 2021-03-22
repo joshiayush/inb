@@ -26,7 +26,7 @@ class Main(object):
     Class Variable:
         THEME: is the theme for our cli (command line interface).
     """
-    THEME = "parrot"
+    PARROT = True
 
     def __init__(self):
         """Method __init__() initializes the commands and required variables,
@@ -311,13 +311,13 @@ class Main(object):
             "reset": colorama.Fore.RESET
         }
 
-        if Main.THEME == "parrot":
+        if Main.PARROT:
             return colors.get(color, colorama.Fore.RESET)
-        elif Main.THEME == "normal":
+        else:
             return colors.get(color, colorama.Fore.RESET) if color == "red" or color == "reset" else " \b"
 
     @staticmethod
-    def match_string_with_colorama_objects(string):
+    def is_string_with_colorama(string):
         """Function match_string_with_colorama_objects() returns a boolean True
         value if the string matches with a colorama generated unicode otherwise
         it returns False. This functionality is needed to perfectly print strings
@@ -429,7 +429,7 @@ class Main(object):
             string: it is the string that needs to be printed on the terminal.
             **kwargs: are the key-value pair that print method takes besides string.
         """
-        if Main.match_string_with_colorama_objects(string):
+        if Main.is_string_with_colorama(string):
             if kwargs:
                 print(f"""{string}""", end="")
             else:
@@ -449,10 +449,10 @@ class Main(object):
             user has entered it.
         """
         if _theme == "--parrot":
-            Main.THEME = "parrot"
+            Main.PARROT = True
             self.home()
         elif _theme == "--normal":
-            Main.THEME = "normal"
+            Main.PARROT = False
             self.home()
         else:
             Main._print(
