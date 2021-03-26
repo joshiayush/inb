@@ -40,8 +40,6 @@ Once you are done adding configurations you can run the command.
 
 It will start sending invitation.
 
-## Note this version of chromedriver only supports Chrome version 87 if you don't havve this version you will get selenium exception 
-
 ## Commands
 
 ### `config.user.email "example@email.com" --cached`
