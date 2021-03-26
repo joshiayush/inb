@@ -1,4 +1,3 @@
-dataset/**
 src/__pycache__/**
 creds/credentialsFile.ini
 src/linkedin/__pycache__/**

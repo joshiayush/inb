@@ -230,7 +230,7 @@ class Main(object):
         the LinkedIn Automator program executed, this functionality is required
         in order to set the Home Logo according to the terminal size. We declare
         this method static because we don't need to give this function an access
-        to the object its no use giving this function access to the object.
+        to the object it's no use giving this function access to the object.
 
         return:
             terminal size.
@@ -242,7 +242,7 @@ class Main(object):
         """Function get_coords() returns the co-ordinates that are needed to set
         the Home Logo nearly to the center according to the terminal size. We
         declare this function static because we don't need to give this function
-        an access to the object its no use giving this function access to the object.
+        an access to the object it's no use giving this function access to the object.
 
         return:
             co-ordinates that sets the Logo nearly to the center.
@@ -258,7 +258,7 @@ class Main(object):
     def gotoxy(x, y):
         """Function gotoxy() sets the console cursor position. We declare this
         function static because we don't need to give this function an access
-        to the object its no use giving this function access to the object.
+        to the object it's no use giving this function access to the object.
 
         Args:
             x: column number for the cursor.
@@ -271,7 +271,7 @@ class Main(object):
         """Function style() returns the text style that we are printing on the
         terminal, it uses 'colorama' module to generate unicode for the given
         style value. We declare this function static because we don't need to
-        give this function an access to the object its no use giving this
+        give this function an access to the object it's no use giving this
         function access to the object.
 
         Args:
@@ -295,7 +295,7 @@ class Main(object):
         enabled, it returns the text color only if the theme is set to '--parrot'
         otherwise it only returns a unicode for color 'red' or 'reset' command if
         the theme is set to '--normal'. We declare this function static because
-        we don't need to give this function an access to the object its no use
+        we don't need to give this function an access to the object it's no use
         giving this function access to the object.
 
         Args:
@@ -324,7 +324,7 @@ class Main(object):
         on the terminal window because for print functionality I have created a
         class method which adds a space before every string given to it. We declare
         this function static because we don't need to give this function an access
-        to the object its no use giving this function access to the object.
+        to the object it's no use giving this function access to the object.
 
         Args:
             string: it is the string that we need to match with the colorama generated
@@ -390,7 +390,7 @@ class Main(object):
         """Function _input() is a dedicated input method for our LinkedIn `cli`
         (Command Line Interface), it also handles the Keyboard interrupt error.
         We declare this function static because we don't need to give this
-        function an access to the object its no use giving this function access
+        function an access to the object it's no use giving this function access
         to the object.
 
         return:
@@ -423,7 +423,7 @@ class Main(object):
         (Command Line Interface) it basically adds a space to every value
         that needs to be printed on the terminal. We declare this function
         static because we don't need to give this function an access to the
-        object its no use giving this function access to the object.
+        object it's no use giving this function access to the object.
 
         Args:
             string: it is the string that needs to be printed on the terminal.
@@ -484,7 +484,7 @@ class Main(object):
         command in case you missed the flags with the linkedin command or
         mistakenly applied wrong flags with the linkedin command. We declare
         this function static because we don't need to give this function an
-        access to the object its no use giving this function access to the
+        access to the object it's no use giving this function access to the
         object.
         """
         Main._print(f"""{Main.style("bright")}""", end="")
@@ -590,7 +590,7 @@ class Main(object):
         """Function help_with_show() shows you how you can use the
         'show' command in case you entered wrong command. We declare
         this function static because we don't need to give this function
-        an access to the object its no use giving this function access
+        an access to the object it's no use giving this function access
         to the object.
         """
         Main._print(f"""{Main.style("bright")}""", end="")
@@ -627,7 +627,7 @@ class Main(object):
         """Function help_with_developer() shows you how you can use the
         'developer' command in case you entered wrong command. We declare
         this function static because we don't need to give this function
-        an access to the object its no use giving this function access to
+        an access to the object it's no use giving this function access to
         the object.
         """
         Main._print(f"""{Main.style("bright")}""", end="")
@@ -645,7 +645,7 @@ class Main(object):
         'theme' command in case you entered wrong command or entered
         a un-matching flag. We declare this function static because
         we don't need to give this function an access to the object
-        its no use giving this function access to the object.
+        it's no use giving this function access to the object.
         """
         Main._print(f"""{Main.style("bright")}""", end="")
         Main._print(f"""{Main.colorFore("blue")}""", end="")
@@ -661,7 +661,7 @@ class Main(object):
         """Function help_with_clear() shows you how you can use the
         'clear' command in case you entered wrong command. We declare
         this function static because we don't need to give this function
-        an access to the object its no use giving this function access
+        an access to the object it's no use giving this function access
         to the object.
         """
         Main._print(f"""{Main.style("bright")}""", end="")
@@ -677,7 +677,7 @@ class Main(object):
         """Function help_with_exit() shows you how you can use the
         'exit' command in case you entered wrong command. We declare
         this function static because we don't need to give this function
-        an access to the object its no use giving this function access
+        an access to the object it's no use giving this function access
         to the object.
         """
         Main._print(f"""{Main.style("bright")}""", end="")
@@ -694,7 +694,7 @@ class Main(object):
         """Function help_with_help() shows you how you can use the
         'help' command in case you entered wrong command. We declare
         this function static because we don't need to give this function
-        an access to the object its no use giving this function access
+        an access to the object it's no use giving this function access
         to the object.
         """
         Main._print(f"""{Main.style("bright")}""", end="")
@@ -904,7 +904,7 @@ class Main(object):
         user entered we print the information about job keys once we have
         any of these two fields otherwise we don't show it. We declare this
         function static because we don't need to give this function an access
-        to the object for just a print functionality its no use giving this
+        to the object for just a print functionality it's no use giving this
         function access to the object. Although it recieves an argument 'self'
         but it is not a object but it is a parameter object that we need in
         order to access user details.
@@ -930,7 +930,7 @@ class Main(object):
         to see the password if yes show them if not don't show them,
         this is for security purpose. We declare this function static
         because we don't need to give this function an access to the
-        object for just a print functionality its no use giving this
+        object for just a print functionality it's no use giving this
         function access to the object. Although it recieves an argument
         'self' but it is not a object but it is a parameter object that
         we need in order to access user details.
@@ -1353,7 +1353,7 @@ class Main(object):
         We first get the command and add 'command ' in it this way we
         can handle the commands by accessing their position in list.
         Then we call function handle commands that is going to perform
-        operations as per command
+        operations as per command.
         """
         while True:
             self.command = ("command " + self._input()).strip()

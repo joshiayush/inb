@@ -1,3 +1,4 @@
+#
 # file src/Linkedin.py provides the driver access to other python files, here
 # in this file I've added all the basic funcitionality required to login to 
 # linkedin before actually starting to automate the inner Linkedin. 
@@ -13,7 +14,7 @@
 # and here is a link to my LinkedIn account you can connect to me here,
 #
 # https://www.linkedin.com/in/ayush-joshi-3600a01b7
-
+#
 
 import re
 import time
