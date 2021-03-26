@@ -214,18 +214,27 @@ class LinkedInConnectionsAuto(LinkedIn):
         except NoSuchElementException:
             pass
 
-    def clear_overlapping_elements(self):
-        self.driver.execute_script((
-            """document.querySelector("div[class^='msg-overlay-list-bubble']").style = 'display: none';"""
-        ))
+    def clear_msg_overlay(self):
+        try:
+            _ = WebDriverWait(self.driver, 10).until(
+                expected_conditions.presence_of_element_located(
+                    (By.CSS_SELECTOR, "div[class^='msg-overlay-list-bubble']")
+                )
+            )
+            self.driver.execute_script((
+                """document.querySelector("div[class^='msg-overlay-list-bubble']").style = 'display: none';"""
+            ))
+            return True
+        except NoSuchElementException:
+            return False
 
     def run(self):
         """Function run() is the main function from where the program
         starts doing its job.
         """
-        self.clear_overlapping_elements()
-
         self.get_my_network()
+
+        self.clear_msg_overlay()
 
         self.prepare_page()
 
@@ -247,7 +256,8 @@ class LinkedInConnectionsAutoSearch(LinkedIn):
                     (By.CSS_SELECTOR, "button[aria-label^='People']")
                 )
             )
-            self.driver.find_element_by_css_selector("button[aria-label^='People']").click()
+            self.driver.find_element_by_css_selector(
+                "button[aria-label^='People']").click()
         except TimeoutException:
             pass
 
@@ -277,7 +287,8 @@ class LinkedInConnectionsAutoSearch(LinkedIn):
                             (By.CSS_SELECTOR, "button[aria-label^='Send now']")
                         )
                     )
-                    self.driver.find_element_by_css_selector("button[aria-label^='Send now']").click()
+                    self.driver.find_element_by_css_selector(
+                        "button[aria-label^='Send now']").click()
                 except ElementClickInterceptedException:
                     pass
             except ElementNotInteractableException:
