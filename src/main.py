@@ -76,8 +76,6 @@ class Main(object):
         gets initializes that is the theme variable for our cli
         (Command Line Interface).
         """
-        self.theme = "parrot"
-
         self.encrypted_email = ""
 
         self.encrypted_password = ""
@@ -1270,7 +1268,7 @@ class Main(object):
         parsing in this function as you can see this is to fetch the right
         commands and flags and if not found raise an error.
         """
-        if self.get_command_length() <= 2:
+        if self.get_command_length() <= 2 or self.get_command_length() <= 3:
             if "config.user.password" == self.get_command_at_index(1):
                 self.data["user_password"] = getpass.getpass(
                     prompt=" Password: ")
@@ -1285,8 +1283,9 @@ class Main(object):
                 self.data["user_email"] = email
                 if self.get_command_at_index(3) == "--cached":
                     self.store_cache()
-                    self.command = "command config.user.password" + "--cached"
-                self.command = "command config.user.password"
+                    self.command = "command config.user.password --cached"
+                else:
+                    self.command = "command config.user.password"
                 self.handle_configs()
                 return
             else:
@@ -1294,7 +1293,7 @@ class Main(object):
                 Main._print(f"""{Main.colorFore("red")}""", end="")
 
                 Main._print(
-                    f"""'{self.command.split(" ")[1].split("=")[1].strip()}' is not a valid email address!""")
+                    f"""'{self.command.split(" ")[1].strip()}' is not a valid email address!""")
 
                 Main._print(f"""{Main.colorFore("rest")}""", end="")
                 Main._print(f"""{Main.style("reset")}""", end="")
