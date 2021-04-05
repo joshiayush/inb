@@ -17,6 +17,7 @@
 #
 
 import re
+import sys
 import time
 import colorama
 
@@ -33,6 +34,8 @@ from selenium.common.exceptions import ElementClickInterceptedException
 
 
 class LinkedIn(object):
+    SUCCESS_RATE = 0
+    FAILURE_RATE = 0
 
     def __init__(self, data):
         """Initializing the `LinkedIn` class."""
@@ -294,17 +297,30 @@ class LinkedIn(object):
         if len(occupation) >= 50:
             occupation = occupation[0:50] + "..."
 
+        if LinkedIn.SUCCESS_RATE != 0 or LinkedIn.FAILURE_RATE != 0:
+            sys.stdout.write("\033[F\033[F\033[F\033[F\033[F\033[F")
+
         if status == "sent":
             """_stat = ✔"""
             _stat = u"\u2714"
+            _stat = f"""{colorama.Fore.GREEN}""" + \
+                _stat + f"""{colorama.Fore.RESET}"""
+            LinkedIn.SUCCESS_RATE += 1
         elif status == "failed":
             """_stat = ✘"""
             _stat = u"\u2718"
+            _stat = f"""{colorama.Fore.RED}""" + \
+                _stat + f"""{colorama.Fore.RESET}"""
+            LinkedIn.FAILURE_RATE += 1
 
         print()
-        print(f"""\t{_stat} {name}""")
-        print(f"""\t  {occupation}""")
-        print()
         print(
-            f"""\tSuccess: {success}  Failed: {failed}  Elapsed: {elapsed_time}""")
+            f"""\t{_stat} {colorama.Style.BRIGHT}{name}{colorama.Style.RESET_ALL}""")
+        print(
+            f"""\t  {colorama.Style.DIM}{occupation}{colorama.Style.RESET_ALL}""")
         print()
+        print(f"""\tSuccess: {colorama.Fore.GREEN}{LinkedIn.SUCCESS_RATE}{colorama.Fore.RESET}""",
+              f"""  Failed: {colorama.Fore.RED}{LinkedIn.FAILURE_RATE}{colorama.Fore.RESET}""",
+              f"""  Elapsed: {colorama.Fore.BLUE}{elapsed_time}{colorama.Fore.RESET}""")
+        print()
+        time.sleep(0.18)
