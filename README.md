@@ -1,5 +1,7 @@
 # Getting started with LinkedIn Bot
 
+This command line tool is very helpful to increase your connections on *LinkedIn*, you are going to achive *500+* connections very easily. You just need to run it on your terminal, enter your LinkedIn username and password and execute command ```linkedin send```.
+
 ## Available Scripts
 
 In the project directory, you can run:
@@ -69,5 +71,20 @@ Starts sending invitations to LinkedIn suggestions `--headless` starts
 the automation without opening the browser and `--use-cache` uses the
 
 cache stored for authentication.
+
+## Contributing
+
+**Your pull requests and stars are always welcome.**
+
+- Clone the repository
+- Install dependencies
+- Add your features
+- Fix bugs
+
+```
+git clone https://github.com/JoshiAyush/linkedin-bot.git linkedin-bot/
+
+cd linkedin-bot/
+```
 
 ### `Happy Hacking`
