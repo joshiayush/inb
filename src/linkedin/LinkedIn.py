@@ -1,7 +1,7 @@
 #
 # file src/Linkedin.py provides the driver access to other python files, here
-# in this file I've added all the basic funcitionality required to login to 
-# linkedin before actually starting to automate the inner Linkedin. 
+# in this file I've added all the basic funcitionality required to login to
+# linkedin before actually starting to automate the inner Linkedin.
 #
 # If you want to get in touch wtih me this is my email address
 #
@@ -284,3 +284,27 @@ class LinkedIn(object):
 
             print(f"""{colorama.Fore.RESET}""", end="")
             print(f"""{colorama.Style.RESET_ALL}""", end="")
+
+    @staticmethod
+    def print_status(obj=None, status=None, success=0, failed=0, elapsed_time=0):
+        _stat = ''
+        name = obj[0]
+        occupation = obj[1]
+
+        if len(occupation) >= 50:
+            occupation = occupation[0:50] + "..."
+
+        if status == "sent":
+            """_stat = ✔"""
+            _stat = u"\u2714"
+        elif status == "failed":
+            """_stat = ✘"""
+            _stat = u"\u2718"
+
+        print()
+        print(f"""\t{_stat} {name}""")
+        print(f"""\t  {occupation}""")
+        print()
+        print(
+            f"""\tSuccess: {success}  Failed: {failed}  Elapsed: {elapsed_time}""")
+        print()
