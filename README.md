@@ -1,4 +1,4 @@
-# Getting started with LinkedIn Automater
+# Getting started with LinkedIn Bot
 
 ## Available Scripts
 
