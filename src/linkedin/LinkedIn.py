@@ -323,4 +323,5 @@ class LinkedIn(object):
               f"""  Failed: {colorama.Fore.RED}{LinkedIn.FAILURE_RATE}{colorama.Fore.RESET}""",
               f"""  Elapsed: {colorama.Fore.BLUE}{elapsed_time}{colorama.Fore.RESET}""")
         print()
+        
         time.sleep(0.18)
