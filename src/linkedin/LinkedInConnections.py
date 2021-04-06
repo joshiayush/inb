@@ -128,25 +128,63 @@ class LinkedInConnectionsAuto(LinkedIn):
         """
         self.driver.get("https://www.linkedin.com/mynetwork/")
 
-    def click_buttons(self):
+    def get_people(self):
+        people_name = WebDriverWait(self.driver, 10).until(
+            expected_conditions.presence_of_all_elements_located(
+                (By.CSS_SELECTOR, "span[class^='discover-person-card__name']")
+            )
+        )
+
+        _people_name = []
+
+        for span in people_name:
+            _people_name.append(span.text)
+
+        del people_name
+
+        people_occupation = WebDriverWait(self.driver, 10).until(
+            expected_conditions.presence_of_all_elements_located(
+                (By.CSS_SELECTOR,
+                 "span[class^='discover-person-card__occupation']")
+            )
+        )
+
+        _people_occupation = []
+
+        for span in people_occupation:
+            _people_occupation.append(span.text)
+
+        del people_occupation
+
+        people_button = WebDriverWait(self.driver, 10).until(
+            expected_conditions.presence_of_all_elements_located(
+                (By.CSS_SELECTOR, "button[aria-label^='Invite']")
+            )
+        )
+
+        return [_people_name, _people_occupation, people_button]
+
+    def encode(self, obj):
+        return list(zip(obj[0], obj[1], obj[2]))
+
+    def click_buttons(self, obj):
         """Function find_buttons() finds the buttons in the network page
         using webdriver function `find_elements_by_css_selector()` and
         then if they are enabled it executes `click()` function on them
         if not it handles the exception smoothly.
         """
-        invite_buttons = WebDriverWait(self.driver, 10).until(
-            expected_conditions.presence_of_all_elements_located(
-                (By.CSS_SELECTOR, "button[aria-label^='Invite']")
-            )
-        )
-        sent = 0
-        failed = 0
-        for button in invite_buttons:
+        start = time.time()
+
+        for o in obj:
             try:
-                LinkedIn.inform_user(button, "sending")
+                button = o[2]
                 button.click()
-                LinkedIn.inform_user(button, "sent")
-                sent += 1
+                LinkedIn.print_status(
+                    obj=o, status="sent", elapsed_time=(time.time() - start))
+            except ElementClickInterceptedException:
+                LinkedIn.print_status(
+                    obj=o, status="failed", elapsed_time=(time.time() - start))
+                continue
             except ElementNotInteractableException:
                 print(f"""{colorama.Style.BRIGHT}""", end="")
                 print(f"""{colorama.Fore.RED}""", end="")
@@ -156,21 +194,8 @@ class LinkedInConnectionsAuto(LinkedIn):
                 print(f"""{colorama.Fore.RESET}""", end="")
                 print(f"""{colorama.Style.RESET_ALL}""", end="")
                 break
-            except ElementClickInterceptedException:
-                LinkedIn.inform_user(button, "failed")
-                failed += 1
-                continue
 
-        print(f"""{colorama.Style.BRIGHT}""", end="")
-
-        print(f"""{colorama.Fore.GREEN}""", end="")
-        print(f""" Sent        : {sent}""")
-        print(f"""{colorama.Fore.RED}""", end="")
-        print(f""" Failed      : {failed}""")
-        print(f"""{colorama.Fore.BLUE}""", end="")
-        print(f""" Total hits  : {sent+failed}""")
-
-        print(f"""{colorama.Style.RESET_ALL}""", end="")
+        LinkedIn.reset_attributes()
 
     def prepare_page(self):
         """Method prepare_page() prepares the dynamically loading page before
@@ -238,7 +263,7 @@ class LinkedInConnectionsAuto(LinkedIn):
 
         self.prepare_page()
 
-        self.click_buttons()
+        self.click_buttons(self.encode(self.get_people()))
 
 
 class LinkedInConnectionsAutoSearch(LinkedIn):
