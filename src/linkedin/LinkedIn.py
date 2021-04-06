@@ -245,7 +245,7 @@ class LinkedIn(object):
         ))
 
     @staticmethod
-    def inform_user(button, _type):
+    def print_status(obj=None, status=None, elapsed_time=0):
         """Function inform_user() retrieves the value of attribute 
         'aria-label' using the webdriver function 'get_attribute()' 
         which returns the value given to that attribute and then using
@@ -256,43 +256,10 @@ class LinkedIn(object):
             button: button element in which the program has to click
             _type: is the status is it sending or failed
         """
-        if (_type == "sending"):
-            print(f"""{colorama.Style.BRIGHT}""", end="")
-            print(f"""{colorama.Fore.BLUE}""", end="")
-
-            print(
-                f""" {button.get_attribute("aria-label").strip()} ({ _type.strip()}...)""", end="\r")
-            time.sleep(0.5)
-            print(f""" """*80, end="\r")
-
-            print(f"""{colorama.Fore.RESET}""", end="")
-            print(f"""{colorama.Style.RESET_ALL}""", end="")
-        elif (_type == "sent"):
-            print(f"""{colorama.Style.BRIGHT}""", end="")
-            print(f"""{colorama.Fore.GREEN}""", end="")
-
-            print(
-                f""" {button.get_attribute("aria-label").strip()} ({_type.strip()} o)""", end="\r")
-            time.sleep(0.5)
-            print(f""" """*80, end="\r")
-
-            print(f"""{colorama.Fore.RESET}""", end="")
-            print(f"""{colorama.Style.RESET_ALL}""", end="")
-        elif (_type == "failed"):
-            print(f"""{colorama.Style.BRIGHT}""", end="")
-            print(f"""{colorama.Fore.RED}""", end="")
-
-            print(
-                f""" {button.get_attribute("aria-label").strip()} ({_type.strip()} X)""", end="\n")
-
-            print(f"""{colorama.Fore.RESET}""", end="")
-            print(f"""{colorama.Style.RESET_ALL}""", end="")
-
-    @staticmethod
-    def print_status(obj=None, status=None, success=0, failed=0, elapsed_time=0):
         _stat = ''
         name = obj[0]
         occupation = obj[1]
+        elapsed_time = str(elapsed_time)[0:5] + "s"
 
         if len(occupation) >= 50:
             occupation = occupation[0:50] + "..."
@@ -314,14 +281,22 @@ class LinkedIn(object):
             LinkedIn.FAILURE_RATE += 1
 
         print()
+        print(""*80, end="\r")
         print(
             f"""\t{_stat} {colorama.Style.BRIGHT}{name}{colorama.Style.RESET_ALL}""")
+        print(""*80, end="\r")
         print(
             f"""\t  {colorama.Style.DIM}{occupation}{colorama.Style.RESET_ALL}""")
         print()
+        print(""*80, end="\r")
         print(f"""\tSuccess: {colorama.Fore.GREEN}{LinkedIn.SUCCESS_RATE}{colorama.Fore.RESET}""",
               f"""  Failed: {colorama.Fore.RED}{LinkedIn.FAILURE_RATE}{colorama.Fore.RESET}""",
               f"""  Elapsed: {colorama.Fore.BLUE}{elapsed_time}{colorama.Fore.RESET}""")
         print()
-        
+
         time.sleep(0.18)
+
+    @staticmethod
+    def reset_attributes():
+        LinkedIn.SUCCESS_RATE = 0
+        LinkedIn.FAILURE_RATE = 0
