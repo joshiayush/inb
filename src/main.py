@@ -754,7 +754,7 @@ class Main(object):
 
             -> linkedin [send] [search industry=example&&location=india+usa+...] --auto^/--guided [--headless] [--use-cache]
         """
-        if self.get_command_length() >= 5:
+        if self.get_command_length() >= 6:
             """If user entered command with exact number of flags required
             with that command then we perform the following operations where
             we take actions according to the flags 'suggestions' or 'search'
@@ -818,10 +818,10 @@ class Main(object):
             if self.get_command_at_index(2) == "send":
                 _ = self.get_credentials() if self.get_command_at_index(-1) == "--use-cache" else None
 
-                if self.data["user_email"] and self.data["user_password"]:
-                    self.data["headless"] = True if self.get_command_at_index(
-                        3) == "--headless" else False
+                self.data["headless"] = True if self.get_command_at_index(
+                    3) == "--headless" else False
 
+                if self.data["user_email"] and self.data["user_password"]:
                     LinkedInConnections.LinkedInConnectionsAuto(
                         self.data).run()
                 else:

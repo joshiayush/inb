@@ -126,6 +126,9 @@ class LinkedInConnectionsAuto(LinkedIn):
         """Function get_my_network() changes the url by executing function
         `get()` from webdriver.
         """
+        print(
+            f"""\t    {colorama.Fore.BLUE}{colorama.Style.DIM}Moving to 'mynetwork' page...{colorama.Style.RESET_ALL}\n""")
+
         self.driver.get("https://www.linkedin.com/mynetwork/")
 
     def get_people(self):
@@ -135,7 +138,7 @@ class LinkedInConnectionsAuto(LinkedIn):
             )
         )
 
-        _people_name = []
+        _people_name = []*len(people_name)
 
         for span in people_name:
             _people_name.append(span.text)
@@ -149,7 +152,7 @@ class LinkedInConnectionsAuto(LinkedIn):
             )
         )
 
-        _people_occupation = []
+        _people_occupation = []*len(people_occupation)
 
         for span in people_occupation:
             _people_occupation.append(span.text)

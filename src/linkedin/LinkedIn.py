@@ -196,9 +196,16 @@ class LinkedIn(object):
             self: object used to execute various functions in our 
             LinkedIn class.
         """
+        print(
+            f"""\t    {colorama.Fore.BLUE}{colorama.Style.DIM}Connecting...{colorama.Style.RESET_ALL}""", end="\r")
+
         self.get_login_page()
 
         self.fill_credentials()
+
+        print(" "*80, end="\r")
+        print(
+            f"""\t    {colorama.Fore.GREEN}{colorama.Style.BRIGHT}Connected ✔{colorama.Fore.RESET}""")
 
     def get_job_keywords(self):
         """Function `get_job_keywords()` returns the job keywords."""
@@ -281,14 +288,14 @@ class LinkedIn(object):
             LinkedIn.FAILURE_RATE += 1
 
         print()
-        print(""*80, end="\r")
+        print(" "*80, end="\r")
         print(
             f"""\t{_stat} {colorama.Style.BRIGHT}{name}{colorama.Style.RESET_ALL}""")
-        print(""*80, end="\r")
+        print(" "*80, end="\r")
         print(
             f"""\t  {colorama.Style.DIM}{occupation}{colorama.Style.RESET_ALL}""")
         print()
-        print(""*80, end="\r")
+        print(" "*80, end="\r")
         print(f"""\tSuccess: {colorama.Fore.GREEN}{LinkedIn.SUCCESS_RATE}{colorama.Fore.RESET}""",
               f"""  Failed: {colorama.Fore.RED}{LinkedIn.FAILURE_RATE}{colorama.Fore.RESET}""",
               f"""  Elapsed: {colorama.Fore.BLUE}{elapsed_time}{colorama.Fore.RESET}""")
