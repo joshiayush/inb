@@ -199,6 +199,9 @@ class LinkedInConnectionsAuto(LinkedIn):
 
                 print(f"""{colorama.Fore.RESET}""", end="")
                 print(f"""{colorama.Style.RESET_ALL}""", end="")
+
+                LinkedInConnectionsAuto.ENTITY_TO_BE_CLICKED = 0
+
                 return
 
             LinkedInConnectionsAuto.ENTITY_TO_BE_CLICKED += 1
