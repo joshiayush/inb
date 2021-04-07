@@ -190,7 +190,6 @@ class LinkedInConnectionsAuto(LinkedIn):
             except ElementClickInterceptedException:
                 LinkedIn.print_status(
                     obj=obj[LinkedInConnectionsAuto.ENTITY_TO_BE_CLICKED], status="failed", elapsed_time=(time.time() - start))
-                continue
             except ElementNotInteractableException:
                 print(f"""{colorama.Style.BRIGHT}""", end="")
                 print(f"""{colorama.Fore.RED}""", end="")
