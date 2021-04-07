@@ -118,6 +118,7 @@ class LinkedInConnectionsAuto(LinkedIn):
         LinkedIn: our main LinkedIn class which takes care of enabling
         of the webdriver and the login process.
     """
+    ENTITY_TO_BE_CLICKED = 0
 
     def __init__(self, data):
         super(LinkedInConnectionsAuto, self).__init__(data)
@@ -176,17 +177,19 @@ class LinkedInConnectionsAuto(LinkedIn):
         then if they are enabled it executes `click()` function on them
         if not it handles the exception smoothly.
         """
+        old_entity_length = len(obj)
+        new_entity_length = len(obj)
+
         start = time.time()
 
-        for o in obj:
+        while True:
             try:
-                button = o[2]
-                button.click()
+                obj[LinkedInConnectionsAuto.ENTITY_TO_BE_CLICKED][2].click()
                 LinkedIn.print_status(
-                    obj=o, status="sent", elapsed_time=(time.time() - start))
+                    obj=obj[LinkedInConnectionsAuto.ENTITY_TO_BE_CLICKED], status="sent", elapsed_time=(time.time() - start))
             except ElementClickInterceptedException:
                 LinkedIn.print_status(
-                    obj=o, status="failed", elapsed_time=(time.time() - start))
+                    obj=obj[LinkedInConnectionsAuto.ENTITY_TO_BE_CLICKED], status="failed", elapsed_time=(time.time() - start))
                 continue
             except ElementNotInteractableException:
                 print(f"""{colorama.Style.BRIGHT}""", end="")
@@ -196,7 +199,15 @@ class LinkedInConnectionsAuto(LinkedIn):
 
                 print(f"""{colorama.Fore.RESET}""", end="")
                 print(f"""{colorama.Style.RESET_ALL}""", end="")
-                break
+                return
+
+            LinkedInConnectionsAuto.ENTITY_TO_BE_CLICKED += 1
+
+            if LinkedInConnectionsAuto.ENTITY_TO_BE_CLICKED == new_entity_length:
+                while old_entity_length == new_entity_length:
+                    obj = self.encode(self.get_people())
+                    old_entity_length = new_entity_length
+                    new_entity_length = len(obj)
 
         LinkedIn.reset_attributes()
 
@@ -264,7 +275,7 @@ class LinkedInConnectionsAuto(LinkedIn):
 
         self.clear_msg_overlay()
 
-        self.prepare_page()
+        """Don't need anymore -> self.prepare_page() ] click_buttons() moves the page for us."""
 
         self.click_buttons(self.encode(self.get_people()))
 
