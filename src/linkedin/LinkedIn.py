@@ -34,8 +34,14 @@ from selenium.common.exceptions import ElementClickInterceptedException
 
 
 class LinkedIn(object):
+    """LinkedIn"""
+    OLD_EMAIL = ""
+    OLD_PASSWORD = ""
+
     SUCCESS_RATE = 0
     FAILURE_RATE = 0
+
+    SESSION_ALREADY_EXISTS = False
 
     def __init__(self, data):
         """Initializing the `LinkedIn` class."""
@@ -43,14 +49,22 @@ class LinkedIn(object):
         self.email = self.data["user_email"]
         self.password = self.data["user_password"]
 
-        """Making an option object for our chromedriver."""
-        self.options = webdriver.ChromeOptions()
+        if not LinkedIn.SESSION_ALREADY_EXISTS:
+            """Making an option object for our chromedriver."""
+            self.options = webdriver.ChromeOptions()
 
-        """Turning webdriver on."""
-        self.enable_webdriver_chrome()
+            """Turning webdriver on."""
+            self.enable_webdriver_chrome()
 
-        """Calling `login()` function which will login for us."""
-        self.login()
+            LinkedIn.SESSION_ALREADY_EXISTS = True
+
+        if LinkedIn.OLD_EMAIL != self.email and LinkedIn.OLD_PASSWORD != self.password:
+            """Save email and password."""
+            LinkedIn.OLD_EMAIL = self.email
+            LinkedIn.OLD_PASSWORD = self.password
+
+            """Calling `login()` function which will login for us."""
+            self.login()
 
     def set_browser_incognito_mode(self):
         """Setting the browser to incognito using a command line flag 
@@ -123,7 +137,16 @@ class LinkedIn(object):
         Args:
             url: page's url
         """
-        self.driver.get("https://www.linkedin.com/login")
+        try:
+            self.driver.get("https://www.linkedin.com/login")
+        except TimeoutException:
+            print(f"""{colorama.Style.BRIGHT}{colorama.Fore.RED}""", end="")
+
+            print(f""" linkedin.com's DNS could not be resolved.""")
+            print(
+                f""" ERR_COULD_NOT_RESOLVE_DNS: Check your internet connection and try again.""")
+
+            print(f"""{colorama.Style.RESET_ALL}""", end="")
 
     def enter_email(self):
         """Function `enter_email()` enters the email in the email input 
@@ -307,3 +330,20 @@ class LinkedIn(object):
     def reset_attributes():
         LinkedIn.SUCCESS_RATE = 0
         LinkedIn.FAILURE_RATE = 0
+
+    @staticmethod
+    def err_loading_resource():
+        print(f"""{colorama.Style.BRIGHT}{colorama.Fore.RED}""", end="")
+        print(
+            f""" net::ERR_LOADING_RESOURCE check your internet connection and try again.""")
+        print(f"""{colorama.Style.RESET_ALL}""", end="")
+
+    @staticmethod
+    def blocked():
+        print(f"""{colorama.Style.BRIGHT}""", end="")
+        print(f"""{colorama.Fore.RED}""", end="")
+
+        print("\n It seems like you got blocked by LinkedIn!")
+
+        print(f"""{colorama.Fore.RESET}""", end="")
+        print(f"""{colorama.Style.RESET_ALL}""", end="")
