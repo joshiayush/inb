@@ -742,6 +742,17 @@ class Main(object):
 
         return False
 
+    @staticmethod
+    def no_credentials():
+        Main._print(f"""{Main.style("bright")}""", end="")
+        Main._print(f"""{Main.colorFore("blue")}""", end="")
+
+        Main._print(
+            f"""Need credentials first use config.user.email/password to add them.""")
+
+        Main._print(f"""{Main.colorFore("reset")}""", end="")
+        Main._print(f"""{Main.style("reset")}""", end="")
+
     def handle_send_commands(self):
         """Method handle_send_commands() handles the operations when you
         apply flag 'send' with 'linkedin' command. We handle operation in
@@ -754,102 +765,136 @@ class Main(object):
 
             -> linkedin [send] [search industry=example&&location=india+usa+...] --auto^/--guided [--headless] [--use-cache]
         """
-        if self.get_command_length() >= 6:
-            """If user entered command with exact number of flags required
-            with that command then we perform the following operations where
-            we take actions according to the flags 'suggestions' or 'search'
-            in this case the parsing of arguments is done by targetting their
-            positions, remember flag 'suggestions' is default means even if
-            the user ommits it linkedin must go to the suggestion box to send
-            invitations to people and the flag '--auto' is also a default flag
-            in case user omits it linkedin should start the process in auto
-            mode.
-            """
-            if self.get_command_at_index(3) == "suggestions" and \
-                    (self.get_command_at_index(4) == "--auto" or self.get_command_at_index(4) == "--guided"):
+        if self.get_command_at_index(2) == "send":
+            if self.get_command_at_index(-1) == "--use-cache":
+                self.get_credentials()
 
-                self.data["headless"] = True if self.get_command_at_index(
-                    5) == "--headless" else False
+            if self.get_command_at_index(-2) == "--headless":
+                self.data["headless"] = True
 
-                _ = self.get_credentials() if self.get_command_at_index(-1) == "--use-cache" else None
-
-                if self.data["user_email"] and self.data["user_password"]:
-                    LinkedInConnections.LinkedInConnectionsAuto(
-                        self.data).run()
-                else:
-                    Main._print(f"""{Main.style("bright")}""", end="")
-                    Main._print(f"""{Main.colorFore("blue")}""", end="")
-
-                    Main._print(
-                        f"""Need credentials first use config.user.email/password to add them.""")
-
-                    Main._print(f"""{Main.colorFore("reset")}""", end="")
-                    Main._print(f"""{Main.style("reset")}""", end="")
-
-            elif self.get_command_at_index(3) == "search" and self.get_search_query() and \
-                    (self.get_command_at_index(5) == "--auto" or self.get_command_at_index(5) == "--guided"):
-
-                self.data["headless"] = True if self.get_command_at_index(
-                    6) == "--headless" else False
-
-                if self.data["user_email"] and self.data["user_password"]:
-                    if self.data["search_keywords"] or self.data["search_location"]:
-                        LinkedInConnections.LinkedInConnectionsAutoSearch(
+            if self.get_command_at_index(3) == "suggestions":
+                if self.get_command_at_index(4) == "--guided":
+                    if self.data["user_email"] and self.data["user_password"]:
+                        LinkedInConnections.LinkedInConnectionsGuided(
                             self.data).run()
                     else:
-                        pass
+                        Main.no_credentials()
+                    return
                 else:
-                    Main._print(f"""{Main.style("bright")}""", end="")
-                    Main._print(f"""{Main.colorFore("blue")}""", end="")
-
-                    Main._print(
-                        f"""Need credentials first use config.user.email/password to add them.""")
-
-                    Main._print(f"""{Main.colorFore("reset")}""", end="")
-                    Main._print(f"""{Main.style("reset")}""", end="")
-
-        elif self.get_command_length() >= 3:
-            """If user omits the default flags with the command then the
-            following operations will be executed where again we are parsing
-            the arguments according to their position in the list that we
-            get after spliting the entire command at " ", and this time their
-            position is different.
-            """
-            if self.get_command_at_index(2) == "send":
-                _ = self.get_credentials() if self.get_command_at_index(-1) == "--use-cache" else None
-
-                self.data["headless"] = True if self.get_command_at_index(
-                    3) == "--headless" else False
-
+                    if self.data["user_email"] and self.data["user_password"]:
+                        LinkedInConnections.LinkedInConnectionsAuto(
+                            self.data).run()
+                    else:
+                        Main.no_credentials()
+                    return
+            elif self.get_command_at_index(3) == "--headless" or self.get_command_at_index(3) == "--use-cache":
                 if self.data["user_email"] and self.data["user_password"]:
                     LinkedInConnections.LinkedInConnectionsAuto(
                         self.data).run()
                 else:
-                    Main._print(f"""{Main.style("bright")}""", end="")
-                    Main._print(f"""{Main.colorFore("blue")}""", end="")
+                    Main.no_credentials()
+                return
+            else:
+                self.command = self.command[3:]
+                self.handle_commands()
+                return
 
-                    Main._print(
-                        f"""Need credentials first use config.user.email/password to add them.""")
+        # if self.get_command_length() >= 5:
+        #     """If user entered command with exact number of flags required
+        #     with that command then we perform the following operations where
+        #     we take actions according to the flags 'suggestions' or 'search'
+        #     in this case the parsing of arguments is done by targetting their
+        #     positions, remember flag 'suggestions' is default means even if
+        #     the user ommits it linkedin must go to the suggestion box to send
+        #     invitations to people and the flag '--auto' is also a default flag
+        #     in case user omits it linkedin should start the process in auto
+        #     mode.
+        #     """
+        #     if self.get_command_at_index(3) == "suggestions" and \
+        #             (self.get_command_at_index(4) == "--auto" or self.get_command_at_index(4) == "--guided"):
 
-                    Main._print(f"""{Main.colorFore("reset")}""", end="")
-                    Main._print(f"""{Main.style("reset")}""", end="")
+        #         self.data["headless"] = True if self.get_command_at_index(
+        #             5) == "--headless" else False
 
-            elif self.get_command_at_index(3) == "search" and self.get_search_query():
+        #         _ = self.get_credentials() if self.get_command_at_index(-1) == "--use-cache" else None
 
-                self.data["headless"] = True if self.get_command_at_index(
-                    5) == "--headless" else False
+        #         if self.data["user_email"] and self.data["user_password"]:
+        #             LinkedInConnections.LinkedInConnectionsAuto(
+        #                 self.data).run()
+        #         else:
+        #             Main._print(f"""{Main.style("bright")}""", end="")
+        #             Main._print(f"""{Main.colorFore("blue")}""", end="")
 
-                if self.data["user_email"] and self.data["user_password"]:
-                    pass
-                else:
-                    Main._print(f"""{Main.style("bright")}""", end="")
-                    Main._print(f"""{Main.colorFore("blue")}""", end="")
+        #             Main._print(
+        #                 f"""Need credentials first use config.user.email/password to add them.""")
 
-                    Main._print(
-                        f"""Need credentials first use config.user.email/password to add them.""")
+        #             Main._print(f"""{Main.colorFore("reset")}""", end="")
+        #             Main._print(f"""{Main.style("reset")}""", end="")
 
-                    Main._print(f"""{Main.colorFore("reset")}""", end="")
-                    Main._print(f"""{Main.style("reset")}""", end="")
+        #     elif self.get_command_at_index(3) == "search" and self.get_search_query() and \
+        #             (self.get_command_at_index(5) == "--auto" or self.get_command_at_index(5) == "--guided"):
+
+        #         self.data["headless"] = True if self.get_command_at_index(
+        #             6) == "--headless" else False
+
+        #         if self.data["user_email"] and self.data["user_password"]:
+        #             if self.data["search_keywords"] or self.data["search_location"]:
+        #                 LinkedInConnections.LinkedInConnectionsAutoSearch(
+        #                     self.data).run()
+        #             else:
+        #                 pass
+        #         else:
+        #             Main._print(f"""{Main.style("bright")}""", end="")
+        #             Main._print(f"""{Main.colorFore("blue")}""", end="")
+
+        #             Main._print(
+        #                 f"""Need credentials first use config.user.email/password to add them.""")
+
+        #             Main._print(f"""{Main.colorFore("reset")}""", end="")
+        #             Main._print(f"""{Main.style("reset")}""", end="")
+
+        # elif self.get_command_length() >= 3:
+        #     """If user omits the default flags with the command then the
+        #     following operations will be executed where again we are parsing
+        #     the arguments according to their position in the list that we
+        #     get after spliting the entire command at " ", and this time their
+        #     position is different.
+        #     """
+        #     if self.get_command_at_index(2) == "send":
+        #         _ = self.get_credentials() if self.get_command_at_index(-1) == "--use-cache" else None
+
+        #         self.data["headless"] = True if self.get_command_at_index(
+        #             3) == "--headless" else False
+
+        #         if self.data["user_email"] and self.data["user_password"]:
+        #             LinkedInConnections.LinkedInConnectionsAuto(
+        #                 self.data).run()
+        #         else:
+        #             Main._print(f"""{Main.style("bright")}""", end="")
+        #             Main._print(f"""{Main.colorFore("blue")}""", end="")
+
+        #             Main._print(
+        #                 f"""Need credentials first use config.user.email/password to add them.""")
+
+        #             Main._print(f"""{Main.colorFore("reset")}""", end="")
+        #             Main._print(f"""{Main.style("reset")}""", end="")
+
+        #     elif self.get_command_at_index(3) == "search" and self.get_search_query():
+
+        #         self.data["headless"] = True if self.get_command_at_index(
+        #             5) == "--headless" else False
+
+        #         if self.data["user_email"] and self.data["user_password"]:
+        #             pass
+        #         else:
+        #             Main._print(f"""{Main.style("bright")}""", end="")
+        #             Main._print(f"""{Main.colorFore("blue")}""", end="")
+
+        #             Main._print(
+        #                 f"""Need credentials first use config.user.email/password to add them.""")
+
+        #             Main._print(f"""{Main.colorFore("reset")}""", end="")
+        #             Main._print(f"""{Main.style("reset")}""", end="")
 
     def handle_invitation_manager_commands(self):
         pass
