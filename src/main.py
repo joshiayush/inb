@@ -794,6 +794,13 @@ class Main(object):
                 else:
                     Main.no_credentials()
                 return
+            elif self.get_command_length() == 3:
+                if self.data["user_email"] and self.data["user_password"]:
+                    LinkedInConnections.LinkedInConnectionsAuto(
+                        self.data).run()
+                else:
+                    Main.no_credentials()
+                return
             else:
                 self.command = self.command[3:]
                 self.handle_commands()
