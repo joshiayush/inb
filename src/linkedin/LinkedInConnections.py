@@ -51,10 +51,10 @@ class LinkedInConnectionsGuided(LinkedIn):
                 "footer")
             invite_button = list_footer.find_element_by_tag_name("button")
             try:
-                LinkedIn.inform_user(invite_button, "sending")
+                LinkedIn.print_status(invite_button, "sending")
                 invite_button.click()
             except ElementNotInteractableException:
-                print("You got Blocked")
+                LinkedIn.blocked()
                 break
             except ElementClickInterceptedException:
                 LinkedIn.inform_user(invite_button, "failed")
@@ -88,7 +88,10 @@ class LinkedInConnectionsGuided(LinkedIn):
         """Function get_my_network() changes the url by executing function
         `get()` from webdriver.
         """
-        self.driver.get("https://www.linkedin.com/mynetwork/")
+        try:
+            self.driver.get("https://www.linkedin.com/mynetwork/")
+        except TimeoutException:
+            LinkedIn.err_loading_resource()
 
     def start_guided_mode(self):
         """Function start_guided_mode() starts the program in guided mode
@@ -130,41 +133,58 @@ class LinkedInConnectionsAuto(LinkedIn):
         print(
             f"""\t    {colorama.Fore.BLUE}{colorama.Style.DIM}Moving to 'mynetwork' page...{colorama.Style.RESET_ALL}\n""")
 
-        self.driver.get("https://www.linkedin.com/mynetwork/")
+        try:
+            self.driver.get("https://www.linkedin.com/mynetwork/")
+        except TimeoutException:
+            LinkedIn.err_loading_resource()
+            return
 
     def get_people(self):
-        people_name = WebDriverWait(self.driver, 10).until(
-            expected_conditions.presence_of_all_elements_located(
-                (By.CSS_SELECTOR, "span[class^='discover-person-card__name']")
+        try:
+            people_name = WebDriverWait(self.driver, 10).until(
+                expected_conditions.presence_of_all_elements_located(
+                    (By.CSS_SELECTOR,
+                     "span[class^='discover-person-card__name']")
+                )
             )
-        )
 
-        _people_name = []*len(people_name)
+            _people_name = []*len(people_name)
 
-        for span in people_name:
-            _people_name.append(span.text)
+            for span in people_name:
+                _people_name.append(span.text)
 
-        del people_name
+            del people_name
+        except TimeoutException:
+            LinkedIn.err_loading_resource()
+            return
 
-        people_occupation = WebDriverWait(self.driver, 10).until(
-            expected_conditions.presence_of_all_elements_located(
-                (By.CSS_SELECTOR,
-                 "span[class^='discover-person-card__occupation']")
+        try:
+            people_occupation = WebDriverWait(self.driver, 10).until(
+                expected_conditions.presence_of_all_elements_located(
+                    (By.CSS_SELECTOR,
+                     "span[class^='discover-person-card__occupation']")
+                )
             )
-        )
 
-        _people_occupation = []*len(people_occupation)
+            _people_occupation = []*len(people_occupation)
 
-        for span in people_occupation:
-            _people_occupation.append(span.text)
+            for span in people_occupation:
+                _people_occupation.append(span.text)
 
-        del people_occupation
+            del people_occupation
+        except TimeoutException:
+            LinkedIn.err_loading_resource()
+            return
 
-        people_button = WebDriverWait(self.driver, 10).until(
-            expected_conditions.presence_of_all_elements_located(
-                (By.CSS_SELECTOR, "button[aria-label^='Invite']")
+        try:
+            people_button = WebDriverWait(self.driver, 10).until(
+                expected_conditions.presence_of_all_elements_located(
+                    (By.CSS_SELECTOR, "button[aria-label^='Invite']")
+                )
             )
-        )
+        except TimeoutException:
+            LinkedIn.err_loading_resource()
+            return
 
         return [_people_name, _people_occupation, people_button]
 
@@ -180,6 +200,8 @@ class LinkedInConnectionsAuto(LinkedIn):
         old_entity_length = len(obj)
         new_entity_length = len(obj)
 
+        red = 1
+
         start = time.time()
 
         while True:
@@ -191,25 +213,23 @@ class LinkedInConnectionsAuto(LinkedIn):
                 LinkedIn.print_status(
                     obj=obj[LinkedInConnectionsAuto.ENTITY_TO_BE_CLICKED], status="failed", elapsed_time=(time.time() - start))
             except ElementNotInteractableException:
-                print(f"""{colorama.Style.BRIGHT}""", end="")
-                print(f"""{colorama.Fore.RED}""", end="")
-
-                print("\n It seems like you got blocked by LinkedIn!")
-
-                print(f"""{colorama.Fore.RESET}""", end="")
-                print(f"""{colorama.Style.RESET_ALL}""", end="")
+                LinkedIn.blocked()
 
                 LinkedInConnectionsAuto.ENTITY_TO_BE_CLICKED = 0
 
                 return
 
-            LinkedInConnectionsAuto.ENTITY_TO_BE_CLICKED += 1
-
-            if LinkedInConnectionsAuto.ENTITY_TO_BE_CLICKED == new_entity_length:
+            if LinkedInConnectionsAuto.ENTITY_TO_BE_CLICKED + 1 == new_entity_length:
                 while old_entity_length == new_entity_length:
-                    obj = self.encode(self.get_people())
-                    old_entity_length = new_entity_length
-                    new_entity_length = len(obj)
+                    LinkedIn.execute_javascript(self)
+                    _obj = self.encode(self.get_people())
+                    if len(_obj) > len(obj):
+                        old_entity_length = new_entity_length
+                        new_entity_length = len(_obj)
+                        obj = _obj
+                        break
+
+            LinkedInConnectionsAuto.ENTITY_TO_BE_CLICKED += 1
 
         LinkedIn.reset_attributes()
 
@@ -268,6 +288,8 @@ class LinkedInConnectionsAuto(LinkedIn):
             return True
         except NoSuchElementException:
             return False
+        except TimeoutException:
+            LinkedIn.err_loading_resource()
 
     def run(self):
         """Function run() is the main function from where the program
