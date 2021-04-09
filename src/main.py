@@ -350,33 +350,14 @@ class Main(object):
             os.system('clear')
 
     def home(self):
-        """Method home() prints the home logo on the screen which makes the
-        application look more sexy.
+        """Method home() prints the home screen.
 
-        First it clears the screen using the method clear(), then it requests
-        for the co-ordinates that pushes the logo to the center of the screen
-        according to the terminal size, then it applies those co-ordinates and
-        there you got a sexy looking home screen.
+        First it clears the screen using the method clear().
         """
         self.clear()
 
-        x, y = Main.get_coords()
-
         Main._print(f"""{Main.style("bright")}""", end="")
         Main._print(f"""{Main.colorFore("green")}""", end="")
-
-        Main.gotoxy(x, y)
-        print(r"\\                      \\  //                  \\  \\             ")
-        Main.gotoxy(x, y+1)
-        print(r"\\        ()            \\ //                   \\  \\             ")
-        Main.gotoxy(x, y+2)
-        print(r"\\        \\  \\\\\\\\  \\//    \\\\\\\\        \\  \\  \\\\\\\\\  ")
-        Main.gotoxy(x, y+3)
-        print(r"\\        \\  \\    \\  \\\\    \\ ===//  \\\\\\\\  \\  \\     \\  ")
-        Main.gotoxy(x, y+4)
-        print(r"\\        \\  \\    \\  \\ \\   \\        \\    \\  \\  \\     \\  ")
-        Main.gotoxy(x, y+5)
-        print(r"\\\\\\\\  \\  \\    \\  \\  \\  \\\\\\\\  \\\\\\\\  \\  \\     \\  ")
 
         Main._print(f"""\n Type help for more information!""", end="\n")
 
