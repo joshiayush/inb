@@ -13,7 +13,9 @@ import readline
 
 from linkedin import LinkedIn
 from linkedin import LinkedInJobs
-from linkedin import LinkedInConnections
+from linkedin import LinkedInConnectionsAuto
+from linkedin import LinkedInConnectionsGuided
+from linkedin import LinkedInConnectionsAutoSearch
 
 
 class Main(object):
@@ -766,7 +768,7 @@ class Main(object):
             if self.get_command_at_index(3) == "suggestions":
                 if self.get_command_at_index(4) == "--guided":
                     if self.data["user_email"] and self.data["user_password"]:
-                        LinkedInConnections.LinkedInConnectionsGuided(
+                        LinkedInConnectionsGuided.LinkedInConnectionsGuided(
                             self.data).run()
                     else:
                         Main.no_credentials()
@@ -780,14 +782,14 @@ class Main(object):
                     return
             elif self.get_command_at_index(3) == "--headless" or self.get_command_at_index(3) == "--use-cache":
                 if self.data["user_email"] and self.data["user_password"]:
-                    LinkedInConnections.LinkedInConnectionsAuto(
+                    LinkedInConnectionsAuto.LinkedInConnectionsAuto(
                         self.data).run()
                 else:
                     Main.no_credentials()
                 return
             elif self.get_command_length() == 3:
                 if self.data["user_email"] and self.data["user_password"]:
-                    LinkedInConnections.LinkedInConnectionsAuto(
+                    LinkedInConnectionsAuto.LinkedInConnectionsAuto(
                         self.data).run()
                 else:
                     Main.no_credentials()
