@@ -1,6 +1,8 @@
 # Getting started with LinkedIn Bot
 
-This command line tool is very helpful to increase your connections on **LinkedIn**, you are going to achive **500+** connections very easily. You just need to run it on your terminal, enter your LinkedIn username and password and execute command ```linkedin send```.
+![](https://content.linkedin.com/content/dam/me/business/en-us/amp/brand-site/v2/bg/LI-Logo.svg.original.svg)
+
+This command line tool is very helpful to increase your connections on **LinkedIn**, you are going to achive **500+** connections very easily. You just need to run it on your terminal, enter your LinkedIn username and password and execute command `linkedin send`.
 
 ## Available Scripts
 
