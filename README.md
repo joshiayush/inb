@@ -4,6 +4,18 @@
 
 This command line tool is very helpful to increase your connections on **LinkedIn**, you are going to achive **500+** connections very easily. You just need to run it on your terminal, enter your LinkedIn username and password and execute command `linkedin send`.
 
+## Dependencies
+
+Use the package manager [pip](https://pip.pypa.io/en/stable/) to install them.
+
+```
+pip/pip3 install selenium
+pip/pip3 install urllib3
+pip/pip3 install webdriver-manager
+```
+
+**Google Chrome Version 89.0.4389.114 (Official Build) (64-bit)** to run chromedriver.
+
 ## Available Scripts
 
 In the project directory, you can run:
