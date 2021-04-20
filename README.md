@@ -34,21 +34,21 @@ it can install `python` interpreter `selenium`, `urllib`, `webdriver-manager`,
 
 ### `./run.sh -d pycache`
 
-Deletes all the cache files that gets created after the program runs.
+Deletes all the cache files that gets created after the program run.
 
 ### `config.user.email "example@email.com"`
 
-Adds email to configurations.
+Add email to configurations.
 
 ### `config.user.password "example@password"`
 
-Adds password to configurations.
+Add password to configurations.
 
 **OR**
 
 ### `config.user.password` (hit enter)
 
-Adds password to configurations by allowing you to enter the password in password prompt
+Add password to configurations by allowing you to enter the password in password prompt
 
 I used `getpass.getpass()` method for this functionality.
 
