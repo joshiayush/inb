@@ -6,6 +6,8 @@ This command line tool is very helpful to increase your connections on **LinkedI
 
 ## Dependencies
 
+These dependencies will be installed automatically if not present in your system if you run `./run.sh` script but if in case it doesn't work then you can follow the methods.
+
 Use the package manager [pip](https://pip.pypa.io/en/stable/) to install them.
 
 ```
