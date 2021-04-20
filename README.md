@@ -103,8 +103,4 @@ git clone https://github.com/JoshiAyush/linkedin-bot.git linkedin-bot/
 cd linkedin-bot/
 ```
 
-------
-
-### [Say hi on LinkedIn](https://www.linkedin.com/in/ayush-joshi-3600a01b7/)
-
 ### Happy Hacking
