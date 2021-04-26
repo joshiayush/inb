@@ -1,9 +1,8 @@
 #!/bin/bash
 
 function runProgram() {
-    # here the program start its execution `$1` is the first argument of the function `runProgram` and its value is the python
-    # interpreter i.e., python[2/3], we check the system here because Windows uses '\' for navigation and Linux '/'
-
+    # Here the program start its execution `$1` is the first argument of the function `runProgram` and its value is the python
+    # interpreter i.e., python[2/3], we check the system here because Windows uses '\' for navigation and Linux '/'.
     if [ "$2" = "linux" ]; then
         $1 src/main.py
     elif [ "$2" = "windows" ]; then
@@ -14,13 +13,13 @@ function runProgram() {
 }
 
 function confirm() {
-    # function to confirm the user decision of Installing python if it is not installed
+    # Function to confirm the user decision of Installing python if it is not installed.
     read -p "Install Python [y/n]: " ch
     echo $ch
 }
 
 function getSystemInfo() {
-    # function that finds the system platform Information
+    # Function that finds the system platform Information.
     case "$(/usr/bin/lsb_release -si)" in
     Ubuntu) echo "Ubuntu" ;;
     Mint) echo "Mint" ;;
@@ -30,87 +29,69 @@ function getSystemInfo() {
 }
 
 function installDependencies() {
-    # function to install the program dependencies like selenium module, webdriver-manager, urllib module
+    # Function to install the program dependencies like selenium module, webdriver-manager, urllib module.
     echo "Installing dependencies..."
-    # install selenium
     echo "Installing Selenium"
     pip3 install selenium
-    # install urllib3
     echo "Installing URL handling python module (urllib)"
     pip3 install urllib3
-    # install webdriver-manager
     echo "Installing WebDriver Manager"
     pip3 install webdriver-manager
 }
 
 function installOnUbuntu() {
-    # function that install python and selenium on Ubuntu platform
+    # Function that install python and selenium on Ubuntu platform.
     echo "Installing Python on Ubuntu Linux"
-    # update package list
     sudo apt-get update
-    # install python3 and pip3
     sudo apt-get install python3.8 python3-pip
-    # installing program dependencies
     installDependencies
 }
 
 function installOnMint() {
-    # function that install python and selenium on Linux Mint platform
+    # Function that install python and selenium on Linux Mint platform. On Linux Mint we first need to add a personal package
+    # archive i/e., 'ppa:deadsnakes/ppa' to install python.
     echo "Installing Python on Linux Mint"
-    # add personal package archive deadsnakes/ppa
     sudo add-apt-repository ppa:deadsnakes/ppa
-    # update package list
     sudo apt-get update
-    # install python3 and pip3
     sudo apt-get install python3.8 python3-pip
-    # installing program dependencies
     installDependencies
 }
 
 function installOnArch() {
-    # function that install python and selenium on Arch Linux platform
+    # Function that install python and selenium on Arch Linux platform using `packman`.
     echo "Installing Python on Arch Linux"
-    # install python
     packman -S python
-    # installing program dependencies
     installDependencies
 }
 
 function installOnWindows() {
-    # function that install python and selenium in Windows using Microsoft installer
-
-    # install python
+    # Function that install python and selenium in Windows using Microsoft installer. We first install python using microsoft
+    # installer then we move the installed file to `C:\` partition.
     msiexec /i python-3.8.msi TARGETDIR=C:\Python
-    # installing program dependencies
     installDependencies
 }
 
 function installOnOSX() {
-    # function that install python on OSX system. To install python and selenium on OSX we first need to install Apple’s Xcode
-    # program which is necessary for iOS development as well as most programming tasks, then we need to install homebrew utility,
-    # then we can install python
-
-    # install xcode
+    # Function that install python on OSX system. To install python and selenium on OSX we first need to install Apple’s Xcode
+    # program which is necessary for iOS development as well as most programming tasks, then we need to install homebrew utility
+    # using `ruby`, then we can install python.
     xcode-select --install
-    # install homebrew utility
     ruby -e "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/master/install)"
-    # install python3
     brew install python3
-    # installing program dependencies
     installDependencies
 }
 
 function getOsInfo() {
-    # function that returns the name of the operating system that the user is running in its system variable OSTYPE is a predefined
-    # variable that stores the name of the Operating System that is running currently
+    # Function that returns the name of the operating system that the user is running in its system, variable OSTYPE is a predefined
+    # variable that stores the name of the Operating System that is running currently.
     echo $OSTYPE
 }
 
 function install() {
-    # function that does the actual installation of the python interpreter based on the current running platform
+    # Function that does the actual installation of the python interpreter based on the current running platform. In case of Linux
+    # system we then further try to install python based on the platform.
     case "$(getOsInfo)" in
     linux*)
-        # install python based on the running platform
         case "$(getSystemInfo)" in
         Ubuntu) installOnUbuntu ;;
         Mint) installOnMint ;;
@@ -129,9 +110,8 @@ function install() {
 }
 
 function installPython() {
-    # function that install python if it is not already installed in the user system
-
-    # get confirmation
+    # Function that install python if it is not already installed in the user system. This function first asks the user if (s)he
+    # actually want to install python on his/her system then proceed accordingly.
     ch=$(confirm)
 
     if [ "$ch" = "y" ]; then
@@ -143,79 +123,90 @@ function installPython() {
 }
 
 function checkIfGarbage() {
+    # Function checkIfGarbage() checks if the __pycache__ garbage is present, if yes then it returns a string 'yes' otherwise does
+    # not return anything.
+    declare -a ugarbages=("__pycache__/"
+        "src/__pycache__/"
+        "src/db/__pycache__/"
+        "src/linkedin/__pycache__/")
+    declare -a wgarbages=("__pycache__\\"
+        "src\__pycache__\\"
+        "src\db\__pycache__\\"
+        "src\linkedin\__pycache__\\")
+
     case "$(getOsInfo)" in
     linux*)
-        if [[ -d "__pycache__/" || -d "src/__pycache__/" || -d "src/linkedin/__pycache__/" || -d "src/db/__pycache__/" || -d "src/chatbot/__pycache__/" ]]; then
-            echo "yes"
-        fi
+        for garbage in "${ugarbages[@]}"; do
+            if [ -d "$garbage" ]; then
+                echo "yes"
+            fi
+        done
         ;;
     msys*)
-        if [[ -d "__pycache__\\" || -d "src\\__pycache__\\" || -d "src\linkedin\__pycache__\\" || -d "src\db\__pycache__\\" || -d "src\chatbot\__pycache__\\" ]]; then
-            echo "yes"
-        fi
+        for garbage in "${wgarbages[@]}"; do
+            if [ -d "$garbage" ]; then
+                echo "yes"
+            fi
+        done
         ;;
     darwin*)
-        if [[ -d "__pycache__/" || -d "src/__pycache__/" || -d "src/linkedin/__pycache__/" || -d "src/db/__pycache__/" || -d "src/chatbot/__pycache__/" ]]; then
-            echo "yes"
-        fi
+        for garbage in "${garbages[@]}"; do
+            if [ -d "$garbage" ]; then
+                echo "yes"
+            fi
+        done
         ;;
     *) echo "System info not found check garbage manually!" ;;
     esac
 }
 
 function deleteCache() {
-    # function deleteCache() deletes the cache produced by the program after each run of selenium webdriver. This function first
-    # gets the system info then deletes the folder '__pycache__' accordingly
+    # Function deleteCache() deletes the cache produced by the program after each run of selenium webdriver. This function first
+    # gets the system info then deletes the folder '__pycache__' accordingly.
     case "$(getOsInfo)" in
     linux*)
-        sudo rm -rf __pycache__ src/__pycache__ src/linkedin/__pycache__ src/db/__pycache__ src/chatbot/__pycache__
+        sudo find ./ -type d -name "__pycache__" -exec rm -rf \;
         ;;
     msys*)
-        rmdir __pycache__ src\__pycache__ src\linkedin\__pycache__ src\db\__pycache__ src\chatbot\__pycache__
+        rm -r __pycache__
         ;;
     darwin*)
-        sudo rm -rf __pycache__ src/__pycache__ src/linkedin/__pycache__ src/db/__pycache__ src/chatbot/__pycache__
+        sudo find ./ -type d -name "__pycache__" -exec rm -rf \;
         ;;
     *) echo "System Information not found delete __pycache__ Manually" ;;
     esac
 }
 
 function main() {
-    # function main is the main function that starts the execution of the linkedin automator program it first checks if the
-    # requirements are present or not then it takes actions accordingly
-
-    # check if python3 is present, /dev/null makes the grep output disappear
+    # Function main is the main function that starts the execution of the linkedin automator program it first checks if the
+    # requirements are present or not then it takes actions accordingly.
     if python3 --version | grep "Python*" >/dev/null; then
         echo "Python is installed"
         runProgram python3 "linux"
-    # check if python2 is present, /dev/null makes the grep output disappear
     elif python2 --version | grep "Python*" >/dev/null; then
         echo "Python is installed"
         runProgram python2 "linux"
-    # check if python is present, /dev/null makes the grep output disappear
     elif python --version | grep "Python*" >/dev/null; then
         echo "Python is installed"
         runProgram python "linux"
-    # check if python is present command 'py' is for windows, /dev/null makes the grep output disappear
     elif py --version | grep "Python*" >/dev/null; then
         echo "Python is installed"
         runProgram py "windows"
-    # install python if python is not present
     else
         echo "Python is not installed"
         installPython
     fi
 }
 
-# starting the amazon automation program if no command line arguments are passed otherwise handles the command line arguments
+# Starting the LinkedIn automation program if no command line arguments are passed otherwise handles the command line arguments.
 if [ $# -eq 0 ]; then
-    # start if no arguments are passed in the command line and also delete the pycache if present
+    # Start if no arguments are passed in the command line and also delete the pycache if present.
     main
     if [ "$(checkIfGarbage)" = "yes" ]; then
         deleteCache
     fi
 else
-    # getting the command line argument passed by the user
+    # Getting the command line argument passed by the user
     while getopts ":d:" opt; do
         case $opt in
         d)
