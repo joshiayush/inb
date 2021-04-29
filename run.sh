@@ -125,33 +125,32 @@ function installPython() {
 function checkIfGarbage() {
     # Function checkIfGarbage() checks if the __pycache__ garbage is present, if yes then it returns a string 'yes' otherwise does
     # not return anything.
-    declare -a ugarbages=("__pycache__/"
-        "src/__pycache__/"
-        "src/db/__pycache__/"
-        "src/linkedin/__pycache__/")
-    declare -a wgarbages=("__pycache__\\"
-        "src\__pycache__\\"
-        "src\db\__pycache__\\"
-        "src\linkedin\__pycache__\\")
+    declare -a garbages=("__pycache__+++"
+        "src+++__pycache__+++"
+        "src+++db+++__pycache__+++"
+        "src+++linkedin+++__pycache__+++")
+
+    l_path="/"
+    w_path="\\"
 
     case "$(getOsInfo)" in
     linux*)
-        for garbage in "${ugarbages[@]}"; do
-            if [ -d "$garbage" ]; then
+        for garbage in "${garbages[@]}"; do
+            if [ -d "${garbage//+++/$l_path}" ]; then
                 echo "yes"
             fi
         done
         ;;
     msys*)
-        for garbage in "${wgarbages[@]}"; do
-            if [ -d "$garbage" ]; then
+        for garbage in "${garbages[@]}"; do
+            if [ -d "${garbage//+++/$w_path}" ]; then
                 echo "yes"
             fi
         done
         ;;
     darwin*)
         for garbage in "${garbages[@]}"; do
-            if [ -d "$garbage" ]; then
+            if [ -d "${garbage//+++/$l_path}" ]; then
                 echo "yes"
             fi
         done
@@ -163,15 +162,35 @@ function checkIfGarbage() {
 function deleteCache() {
     # Function deleteCache() deletes the cache produced by the program after each run of selenium webdriver. This function first
     # gets the system info then deletes the folder '__pycache__' accordingly.
+    declare -a garbages=("__pycache__+++"
+        "src+++__pycache__+++"
+        "src+++db+++__pycache__+++"
+        "src+++linkedin+++__pycache__+++")
+
+    l_path="/"
+    w_path="\\"
+
     case "$(getOsInfo)" in
     linux*)
-        sudo find ./ -type d -name "__pycache__" -exec rm -rf \;
+        for garbage in "${garbages[@]}"; do
+            if [ -d "${garbage//+++/$l_path}" ]; then
+                sudo rm -rf "${garbage//+++/$l_path}"
+            fi
+        done
         ;;
     msys*)
-        rm -r __pycache__
+        for garbage in "${garbages[@]}"; do
+            if [ -d "${garbage//+++/$l_path}" ]; then
+                rm -r "${garbage//+++/$l_path}"
+            fi
+        done
         ;;
     darwin*)
-        sudo find ./ -type d -name "__pycache__" -exec rm -rf \;
+        for garbage in "${garbages[@]}"; do
+            if [ -d "${garbage//+++/$l_path}" ]; then
+                sudo rm -rf "${garbage//+++/$l_path}"
+            fi
+        done
         ;;
     *) echo "System Information not found delete __pycache__ Manually" ;;
     esac
