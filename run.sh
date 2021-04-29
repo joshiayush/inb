@@ -132,31 +132,34 @@ function checkIfGarbage() {
 
     l_path="/"
     w_path="\\"
+    present="no"
 
     case "$(getOsInfo)" in
     linux*)
         for garbage in "${garbages[@]}"; do
             if [ -d "${garbage//+++/$l_path}" ]; then
-                echo "yes"
+                present="yes"
             fi
         done
         ;;
     msys*)
         for garbage in "${garbages[@]}"; do
             if [ -d "${garbage//+++/$w_path}" ]; then
-                echo "yes"
+                present="yes"
             fi
         done
         ;;
     darwin*)
         for garbage in "${garbages[@]}"; do
             if [ -d "${garbage//+++/$l_path}" ]; then
-                echo "yes"
+                present="yes"
             fi
         done
         ;;
     *) echo "System info not found check garbage manually!" ;;
     esac
+
+    echo "$present"
 }
 
 function deleteCache() {
