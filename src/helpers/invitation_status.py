@@ -69,7 +69,7 @@ class InvitationStatus(object):
             pass
 
         if len(occupation) >= 50:
-            self.occupation = occupation[0:50] + "."*3
+            occupation = occupation[0:50] + "."*3
 
         _stat = InvitationStatus.calculate_status(status=status)
 
