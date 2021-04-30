@@ -128,7 +128,8 @@ function checkIfGarbage() {
     declare -a garbages=("__pycache__+++"
         "src+++__pycache__+++"
         "src+++db+++__pycache__+++"
-        "src+++linkedin+++__pycache__+++")
+        "src+++linkedin+++__pycache__+++"
+        "src+++helpers+++__pycache__+++")
 
     l_path="/"
     w_path="\\"
@@ -168,7 +169,8 @@ function deleteCache() {
     declare -a garbages=("__pycache__+++"
         "src+++__pycache__+++"
         "src+++db+++__pycache__+++"
-        "src+++linkedin+++__pycache__+++")
+        "src+++linkedin+++__pycache__+++"
+        "src+++helpers+++__pycache__+++")
 
     l_path="/"
     w_path="\\"
