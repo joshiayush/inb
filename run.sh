@@ -4,7 +4,8 @@ function runProgram() {
     # Here the program start its execution `$1` is the first argument of the function `runProgram` and its value is the python
     # interpreter i.e., python[2/3], we check the system here because Windows uses '\' for navigation and Linux '/'.
     if [ "$2" = "linux" ]; then
-        $1 src/main.py
+        echo "You must be root ..."
+        sudo $1 src/main.py
     elif [ "$2" = "windows" ]; then
         $1 src\main.py
     else
@@ -87,9 +88,15 @@ function getOsInfo() {
     echo $OSTYPE
 }
 
+function _echoInstallingPython() {
+    echo "Installing Python ..."
+    echo "Getting system info ..."
+}
+
 function install() {
     # Function that does the actual installation of the python interpreter based on the current running platform. In case of Linux
     # system we then further try to install python based on the platform.
+    _echoInstallingPython
     case "$(getOsInfo)" in
     linux*)
         case "$(getSystemInfo)" in
@@ -128,6 +135,8 @@ function checkIfGarbage() {
     declare -a garbages=("__pycache__+++"
         "src+++__pycache__+++"
         "src+++db+++__pycache__+++"
+        "src+++creds+++__pycache__+++"
+        "src+++errors+++__pycache__+++"
         "src+++linkedin+++__pycache__+++"
         "src+++helpers+++__pycache__+++")
 
@@ -169,6 +178,8 @@ function deleteCache() {
     declare -a garbages=("__pycache__+++"
         "src+++__pycache__+++"
         "src+++db+++__pycache__+++"
+        "src+++creds+++__pycache__+++"
+        "src+++errors+++__pycache__+++"
         "src+++linkedin+++__pycache__+++"
         "src+++helpers+++__pycache__+++")
 
@@ -238,7 +249,7 @@ else
                 if [ "$(checkIfGarbage)" = "yes" ]; then
                     deleteCache
                 else
-                    echo "'__pycache__' does not exists"
+                    echo "'__pycache__' does not exist!"
                 fi
             fi
             ;;
