@@ -18,6 +18,9 @@ def printk(_str, **kwargs):
         print(f"""{_str}""", **kwargs)
         return
 
+    if "start" in kwargs:
+        print(end=kwargs["start"])
+
     print(" "*int(kwargs["pad"]), end="")
     del kwargs["pad"]
     print(f"""{_str}""", **kwargs)
