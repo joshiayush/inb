@@ -1,6 +1,11 @@
 import time
 import colorama
-import urllib.parse
+
+from helpers.print import printRed
+from helpers.print import printBlue
+
+from errors.error import EmptyResponseException
+from errors.error import FailedLoadingResourceException
 
 from .LinkedIn import re
 from .LinkedIn import By
@@ -35,14 +40,13 @@ class LinkedInConnectionsAuto(LinkedIn):
         """Function get_my_network() changes the url by executing function
         `get()` from webdriver.
         """
-        print(
-            f"""\t    {colorama.Fore.BLUE}{colorama.Style.DIM}Moving to 'mynetwork' page...{colorama.Style.RESET_ALL}\n""")
+        printBlue(f"""Moving to 'mynetwork' page...""",
+                  style="b", pad="8", end="\n\n")
 
         try:
             self.driver.get("https://www.linkedin.com/mynetwork/")
         except TimeoutException:
-            LinkedIn.err_loading_resource()
-            return
+            raise EmptyResponseException("ERR_EMPTY_RESPONSE")
 
     def get_people(self):
         while True:
@@ -127,7 +131,6 @@ class LinkedInConnectionsAuto(LinkedIn):
                 LinkedIn.blocked()
 
                 LinkedInConnectionsAuto.ENTITY_TO_BE_CLICKED = 0
-
                 return
 
             if LinkedInConnectionsAuto.ENTITY_TO_BE_CLICKED + 1 == new_entity_length:
@@ -177,10 +180,8 @@ class LinkedInConnectionsAuto(LinkedIn):
                     s += 1
                     if s >= 4:
                         s = 0
-                print(f"""{colorama.Fore.BLUE}""", end="")
-                print(
-                    f""" Preparing page, it might take some time {spinner} {_preparing_}""", end="\r")
-                print(f"""{colorama.Fore.RESET}""", end="")
+                printBlue(
+                    f"""Preparing page, it might take some time {spinner} {_preparing_}""", style="b", pad="1", end="\r")
 
             print()
         except NoSuchElementException:
@@ -196,19 +197,24 @@ class LinkedInConnectionsAuto(LinkedIn):
             self.driver.execute_script((
                 """document.querySelector("div[class^='msg-overlay-list-bubble']").style = 'display: none';"""
             ))
-            return True
         except NoSuchElementException:
-            return False
+            pass
         except TimeoutException:
-            LinkedIn.err_loading_resource()
+            raise FailedLoadingResourceException("ERR_LOADING_RESOURCE")
 
     def run(self):
         """Function run() is the main function from where the program
         starts doing its job.
         """
-        self.get_my_network()
+        try:
+            self.get_my_network()
+        except EmptyResponseException:
+            printRed("ERR_EMPTY_RESPONSE", style="b", pad="8")
 
-        self.clear_msg_overlay()
+        try:
+            self.clear_msg_overlay()
+        except FailedLoadingResourceException:
+            printRed("ERR_LOADING_RESOURCE", style="b", pad="8")
 
         """Don't need anymore -> self.prepare_page() ] click_buttons() moves the page for us."""
 

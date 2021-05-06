@@ -1,5 +1,6 @@
 import re
 import os
+import sys
 import getpass
 import colorama
 from cryptography.fernet import Fernet
@@ -11,11 +12,13 @@ from cryptography.fernet import Fernet
 # moving on pressing arrow keys.
 import readline
 
-from linkedin import LinkedIn
-from linkedin import LinkedInJobs
-from linkedin import LinkedInConnectionsAuto
-from linkedin import LinkedInConnectionsGuided
-from linkedin import LinkedInConnectionsAutoSearch
+from helpers.print import printk
+from helpers.print import printRed
+from helpers.print import printBlue
+from helpers.print import printGreen
+
+from linkedin.LinkedInConnectionsAuto import LinkedInConnectionsAuto
+from linkedin.LinkedInConnectionsGuided import LinkedInConnectionsGuided
 
 
 class Main(object):
@@ -187,32 +190,30 @@ class Main(object):
         cache in file 'CredentialsFile.ini' if exists.
         """
         if os.path.exists(self.__credentials_file):
-            with open(self.__credentials_file, 'r') as creds_file:
-                lines = creds_file.readlines()
+            try:
+                with open(self.__credentials_file, 'r') as creds_file:
+                    lines = creds_file.readlines()
 
-                config = {
-                    "Username": "",
-                    "Password": ""
-                }
+                    config = {
+                        "Username": "",
+                        "Password": ""
+                    }
 
-                for line in lines:
-                    creds = line.rstrip('\n').split('=', 1)
-                    if creds[0] in ("Username", "Password"):
-                        config[creds[0]] = creds[1]
+                    for line in lines:
+                        creds = line.rstrip('\n').split('=', 1)
+                        if creds[0] in ("Username", "Password"):
+                            config[creds[0]] = creds[1]
 
-                self.decrypt_credentials(config)
-                return True
-        else:
-            Main._print(f"""{Main.style("bright")}""", end="")
-            Main._print(f"""{Main.colorFore("red")}""", end="")
+                    self.decrypt_credentials(config)
+                    return True
+            except FileNotFoundError:
+                return False
 
-            Main._print(f"""You don't have any cache stored.""")
+        printRed(f"""You don't have any cache stored.""", style='b', pad='1')
 
-            Main._print(f"""{Main.colorFore("reset")}""", end="")
-            Main._print(f"""{Main.style("reset")}""", end="")
+        Main.help_with_configs()
 
-            Main.help_with_configs()
-            return False
+        return False
 
     def store_cache(self):
         """Method store_cache() applies encryption on the fields if both
@@ -316,32 +317,6 @@ class Main(object):
         else:
             return colors.get(color, colorama.Fore.RESET) if color == "red" or color == "reset" else " \b"
 
-    @staticmethod
-    def is_string_with_colorama(string):
-        """Function match_string_with_colorama_objects() returns a boolean True
-        value if the string matches with a colorama generated unicode otherwise
-        it returns False. This functionality is needed to perfectly print strings
-        on the terminal window because for print functionality I have created a
-        class method which adds a space before every string given to it. We declare
-        this function static because we don't need to give this function an access
-        to the object it's no use giving this function access to the object.
-
-        Args:
-            string: it is the string that we need to match with the colorama generated
-            unicode
-
-        return:
-            return a boolean value
-        """
-        if string == Main.style("bright") or string == Main.style("dim") or string == Main.style("normal") \
-                or string == Main.style("reset"):
-            return True
-        elif string == Main.colorFore("red") or string == Main.colorFore("green") or string == Main.colorFore("blue") \
-                or string == Main.colorFore("reset"):
-            return True
-        else:
-            return False
-
     def clear(self):
         """Method clear() clears the terminal screen for windows we use command
         `cls` and for linux based system we use command `clear`.
@@ -358,68 +333,8 @@ class Main(object):
         """
         self.clear()
 
-        Main._print(f"""{Main.style("bright")}""", end="")
-        Main._print(f"""{Main.colorFore("green")}""", end="")
-
-        Main._print(f"""\n Type help for more information!""", end="\n")
-
-        Main._print(f"""{Main.colorFore("reset")}""", end="")
-        Main._print(f"""{Main.style("reset")}""", end="")
-
-    @staticmethod
-    def _input():
-        """Function _input() is a dedicated input method for our LinkedIn `cli`
-        (Command Line Interface), it also handles the Keyboard interrupt error.
-        We declare this function static because we don't need to give this
-        function an access to the object it's no use giving this function access
-        to the object.
-
-        return:
-            returns the entered value
-        """
-        try:
-            Main._print(f"""{Main.style("bright")}""", end="")
-            Main._print(f"""{Main.colorFore("green")}""", end="")
-
-            inp = input(f"""\n LinkedIn/> """)
-
-            Main._print(f"""{Main.colorFore("reset")}""", end="")
-            Main._print(f"""{Main.style("reset")}""", end="")
-
-            return inp
-        except KeyboardInterrupt:
-            Main._print(f"""{Main.style("bright")}""", end="")
-            Main._print(f"""{Main.colorFore("green")}""", end="")
-
-            Main._print(f"""\n Piece""")
-
-            Main._print(f"""{Main.colorFore("reset")}""", end="")
-            Main._print(f"""{Main.style("reset")}""", end="")
-
-            exit()
-
-    @staticmethod
-    def _print(string, **kwargs):
-        """Function _print() is a dedicated print() function for our cli
-        (Command Line Interface) it basically adds a space to every value
-        that needs to be printed on the terminal. We declare this function
-        static because we don't need to give this function an access to the
-        object it's no use giving this function access to the object.
-
-        Args:
-            string: it is the string that needs to be printed on the terminal.
-            **kwargs: are the key-value pair that print method takes besides string.
-        """
-        if Main.is_string_with_colorama(string):
-            if kwargs:
-                print(f"""{string}""", end="")
-            else:
-                print(f"""{string}""")
-        else:
-            if kwargs:
-                print(f""" {string}""", **kwargs)
-            else:
-                print(f""" {string}""")
+        printGreen(f"""Type help for more information!""",
+                   style='b', start='\n', pad='1')
 
     def set_theme(self, _theme):
         """Function set_theme() sets the cli (Command Line Interface) theme
@@ -443,21 +358,20 @@ class Main(object):
     def help_with_configs():
         """Function help_with_configs()
         """
-        Main._print(f"""{Main.style("bright")}""", end="")
-        Main._print(f"""{Main.colorFore("blue")}""", end="")
-
-        Main._print(f"""config.user.email "example@email.com" --cached""")
-        Main._print(f"""config.user.password "example@password" --cached""")
-        Main._print(
-            f"""Or you can use the following command if you don't want to show the password on the screen""")
-        Main._print(f"""config.user.password --cached (hit enter)""")
-        Main._print(f"""Password: """)
-        Main._print(
-            f"""config.job.keywords "Data%Science" (use '%' for space)""")
-        Main._print(f"""config.job.location "Sanfrancisco%CA" """)
-
-        Main._print(f"""{Main.colorFore("reset")}""", end="")
-        Main._print(f"""{Main.style("reset")}""", end="")
+        printBlue(f"""config.user.email "example@email.com" --cached""",
+                  style='b', pad='1')
+        printBlue(
+            f"""config.user.password "example@password" --cached""", style='b', pad='1')
+        printBlue(
+            f"""Or you can use the following command if you don't want to show the password on the screen""",
+            style='b', pad='1')
+        printBlue(f"""config.user.password --cached (hit enter)""",
+                  style='b', pad='1')
+        printBlue(f"""Password: """, style='b', pad='1')
+        printBlue(
+            f"""config.job.keywords "Data%Science" (use '%' for space)""", style='b', pad='1')
+        printBlue(f"""config.job.location "Sanfrancisco%CA" """,
+                  style='b', pad='1')
 
     @staticmethod
     def help_with_linkedin():
@@ -468,103 +382,104 @@ class Main(object):
         access to the object it's no use giving this function access to the
         object.
         """
-        Main._print(f"""{Main.style("bright")}""", end="")
-        Main._print(f"""{Main.colorFore("blue")}""", end="")
-
-        Main._print(
-            f"""linkedin [send] [suggestions^] --auto/--guided [--headless] [--use-cache]""")
-        Main._print(f"""'linkedin' command handles the linkedin process.""")
-        Main._print(
-            f"""'send' flag sends invitations according to the path given to it.""")
-        Main._print(
-            f"""'suggestions' flag lets linkedin know that it must use""")
-        Main._print(f"""'MyNetwork' tab as a target.""")
-        Main._print(
-            f"""'--auto/--guided' flag tells the linkedin to start process in auto(recommended) or guided mode.""")
-        Main._print(
-            f"""'--headless' flag tells the program to start automation without opening the browser.""")
-        Main._print(
-            f"""'--use-cache' uses cache (if stored) for authentication.""")
-        Main._print(f"""""")
-        Main._print(
-            f"""linkedin [send] [search industry=example&&location=india+usa+...] --auto^/--guided [--headless]""")
-        Main._print(f"""'linkedin' command handles the linkedin process.""")
-        Main._print(
-            f"""'send' flag sends invitations according to the path given to it.""")
-        Main._print(
-            f"""'search industry=example&&location=india+usa+...' flag lets linkedin know that it must""")
-        Main._print(
-            f"""go and search for people associated to the given industry (use (%) for space between words in industry)""")
-        Main._print(
-            f"""and living in the given location. You can always add location.""")
-        Main._print(
-            f"""'--auto/--guided' flag tells the linkedin to start process in auto(recommended) or guided mode.""")
-        Main._print(
-            f"""'--headless' flag tells the program to start automation without opening the browser.""")
-        Main._print(
-            f"""'--use-cache' uses cache (if stored) for authentication.""")
-        Main._print(f"""""")
-        Main._print(
-            f"""linkedin [invitation-manager*] [show*] --sent*/--recieved* [--headless]""")
-        Main._print(f"""'linkedin' command handles the linkedin process.""")
-        Main._print(
-            f"""'invitation-manager' flag tells the linkedin to start performing operations on""")
-        Main._print(f"""invitation manager tab.""")
-        Main._print(
-            f"""'show' flag show tells the linkedin to show the people my account want to connect with.""")
-        Main._print(
-            f"""'--sent/--recieved' flag tells the linkedin to fetch either sent invitations or recieved ones.""")
-        Main._print(
-            f"""'--headless' flag tells the program to start automation without opening the browser.""")
-        Main._print(
-            f"""'--use-cache' uses cache (if stored) for authentication.""")
-        Main._print(f"""""")
-        Main._print(
-            f"""linkedin [invitation-manager*] [ignore*/withdraw*] [all*^/over > <days>*] [--headless]""")
-        Main._print(f"""'linkedin' command handles the linkedin process.""")
-        Main._print(
-            f"""'invitation-manager' flag tells the linkedin to start performing operations on""")
-        Main._print(
-            f"""'ignore/withdraw' flag tells the linkedin that you want to activate invitation ignoring or withdrawing process.""")
-        Main._print(
-            f"""'all/over > <days>' flag tell to either withdraw all the sent invitations or""")
-        Main._print(
-            f"""use the amount of days given to withdraw sent invitations accordingly.""")
-        Main._print(
-            f"""'--headless' flag tells the program to start automation without opening the browser.""")
-        Main._print(
-            f"""'--use-cache' uses cache (if stored) for authentication.""")
-        Main._print(f"""""")
-        Main._print(
-            f"""linkedin [mynetwork*] [show*] [all*/page > 1^+2+3+...*] [--headless]""")
-        Main._print(f"""'linkedin' command handles the linkedin process.""")
-        Main._print(
-            f"""'mynetwork' flag tell the linkedin to start operating on MyNetworks.""")
-        Main._print(
-            f"""'all/page > 1+2+3+...' flag tells either show all connections or use the pages given.""")
-        Main._print(
-            f"""'--headless' flag tells the program to start automation without opening the browser.""")
-        Main._print(
-            f"""'--use-cache' uses cache (if stored) for authentication.""")
-        Main._print(f"""""")
-        Main._print(
-            f"""linkedin [mynetwork*] [sendmessage*] [all*] [--greet*^] [--headless]""")
-        Main._print(f"""'linkedin' command handles the linkedin process.""")
-        Main._print(
-            f"""'mynetwork' flag tell the linkedin to start operating on MyNetworks.""")
-        Main._print(
-            f"""'sendmessage' flag tells the linkedin to send messages to connections.""")
-        Main._print(
-            f"""'all' flag tells the linkedin to use all connections.""")
-        Main._print(
-            f"""'--greet' flag tells the linkedin to send greet message.""")
-        Main._print(
-            f"""'--headless' flag tells the program to start automation without opening the browser.""")
-        Main._print(
-            f"""'--use-cache' uses cache (if stored) for authentication.""")
-
-        Main._print(f"""{Main.colorFore("reset")}""", end="")
-        Main._print(f"""{Main.style("reset")}""", end="")
+        printBlue(
+            f"""linkedin [send] [suggestions^] --auto/--guided [--headless] [--use-cache]""", style='b', pad='1')
+        printBlue(
+            f"""'linkedin' command handles the linkedin process.""", style='b', pad='1')
+        printBlue(
+            f"""'send' flag sends invitations according to the path given to it.""", style='b', pad='1')
+        printBlue(
+            f"""'suggestions' flag lets linkedin know that it must use""", style='b', pad='1')
+        printBlue(f"""'MyNetwork' tab as a target.""", style='b', pad='1')
+        printBlue(
+            f"""'--auto/--guided' flag tells the linkedin to start process in auto(recommended) or guided mode.""",
+            style='b', pad='1')
+        printBlue(
+            f"""'--headless' flag tells the program to start automation without opening the browser.""", style='b', pad='1')
+        printBlue(
+            f"""'--use-cache' uses cache (if stored) for authentication.""", style='b', pad='1')
+        printBlue(
+            f"""linkedin [send] [search industry=example&&location=india+usa+...] --auto^/--guided [--headless]""", start='\n', style='b', pad='1')
+        printBlue(
+            f"""'linkedin' command handles the linkedin process.""", style='b', pad='1')
+        printBlue(
+            f"""'send' flag sends invitations according to the path given to it.""", style='b', pad='1')
+        printBlue(
+            f"""'search industry=example&&location=india+usa+...' flag lets linkedin know that it must""", style='b', pad='1')
+        printBlue(
+            f"""go and search for people associated to the given industry (use (%) for space between words in industry)""",
+            style='b', pad='1')
+        printBlue(
+            f"""and living in the given location. You can always add location.""", style='b', pad='1')
+        printBlue(
+            f"""'--auto/--guided' flag tells the linkedin to start process in auto(recommended) or guided mode.""",
+            style='b', pad='1')
+        printBlue(
+            f"""'--headless' flag tells the program to start automation without opening the browser.""", style='b', pad='1')
+        printBlue(
+            f"""'--use-cache' uses cache (if stored) for authentication.""", style='b', pad='1')
+        printBlue(
+            f"""linkedin [invitation-manager*] [show*] --sent*/--recieved* [--headless]""", start='\n', style='b', pad='1')
+        printBlue(
+            f"""'linkedin' command handles the linkedin process.""", style='b', pad='1')
+        printBlue(
+            f"""'invitation-manager' flag tells the linkedin to start performing operations on""", style='b', pad='1')
+        printBlue(f"""invitation manager tab.""", style='b', pad='1')
+        printBlue(
+            f"""'show' flag show tells the linkedin to show the people my account want to connect with.""", style='b', pad='1')
+        printBlue(
+            f"""'--sent/--recieved' flag tells the linkedin to fetch either sent invitations or recieved ones.""",
+            style='b', pad='1')
+        printBlue(
+            f"""'--headless' flag tells the program to start automation without opening the browser.""", style='b', pad='1')
+        printBlue(
+            f"""'--use-cache' uses cache (if stored) for authentication.""", style='b', pad='1')
+        printBlue(
+            f"""linkedin [invitation-manager*] [ignore*/withdraw*] [all*^/over > <days>*] [--headless]""",
+            start='\n', style='b', pad='1')
+        printBlue(
+            f"""'linkedin' command handles the linkedin process.""", style='b', pad='1')
+        printBlue(
+            f"""'invitation-manager' flag tells the linkedin to start performing operations on""", style='b', pad='1')
+        printBlue(
+            f"""'ignore/withdraw' flag tells the linkedin that you want to activate invitation ignoring or withdrawing process.""",
+            style='b', pad='1')
+        printBlue(
+            f"""'all/over > <days>' flag tell to either withdraw all the sent invitations or""", style='b', pad='1')
+        printBlue(
+            f"""use the amount of days given to withdraw sent invitations accordingly.""", style='b', pad='1')
+        printBlue(
+            f"""'--headless' flag tells the program to start automation without opening the browser.""", style='b', pad='1')
+        printBlue(
+            f"""'--use-cache' uses cache (if stored) for authentication.""", style='b', pad='1')
+        printBlue(
+            f"""linkedin [mynetwork*] [show*] [all*/page > 1^+2+3+...*] [--headless]""", start='\n', style='b', pad='1')
+        printBlue(
+            f"""'linkedin' command handles the linkedin process.""", style='b', pad='1')
+        printBlue(
+            f"""'mynetwork' flag tell the linkedin to start operating on MyNetworks.""", style='b', pad='1')
+        printBlue(
+            f"""'all/page > 1+2+3+...' flag tells either show all connections or use the pages given.""", style='b', pad='1')
+        printBlue(
+            f"""'--headless' flag tells the program to start automation without opening the browser.""", style='b', pad='1')
+        printBlue(
+            f"""'--use-cache' uses cache (if stored) for authentication.""", style='b', pad='1')
+        printBlue(
+            f"""linkedin [mynetwork*] [sendmessage*] [all*] [--greet*^] [--headless]""", start='\n', style='b', pad='1')
+        printBlue(
+            f"""'linkedin' command handles the linkedin process.""", style='b', pad='1')
+        printBlue(
+            f"""'mynetwork' flag tell the linkedin to start operating on MyNetworks.""", style='b', pad='1')
+        printBlue(
+            f"""'sendmessage' flag tells the linkedin to send messages to connections.""", style='b', pad='1')
+        printBlue(
+            f"""'all' flag tells the linkedin to use all connections.""", style='b', pad='1')
+        printBlue(
+            f"""'--greet' flag tells the linkedin to send greet message.""", style='b', pad='1')
+        printBlue(
+            f"""'--headless' flag tells the program to start automation without opening the browser.""", style='b', pad='1')
+        printBlue(
+            f"""'--use-cache' uses cache (if stored) for authentication.""", style='b', pad='1')
 
     @staticmethod
     def help_with_show():
@@ -574,34 +489,19 @@ class Main(object):
         an access to the object it's no use giving this function access
         to the object.
         """
-        Main._print(f"""{Main.style("bright")}""", end="")
-        Main._print(f"""{Main.colorFore("blue")}""", end="")
-
-        Main._print(f"""'show' shows all the details you have entered like:""")
-        Main._print(f"""user.email,""")
-        Main._print(
-            f"""user.password (asks first if you want to see it really or not),""")
-        Main._print(f"""job.keywords,""")
-        Main._print(f"""job.location""")
-
-        Main._print(f"""{Main.colorFore("reset")}""", end="")
-        Main._print(f"""{Main.style("reset")}""", end="")
+        printBlue(
+            f"""'show' shows all the details you have entered like:""", style='b', pad='1')
+        printBlue(f"""user.email,""", style='b', pad='1')
+        printBlue(
+            f"""user.password (asks first if you want to see it really or not),""", style='b', pad='1')
+        printBlue(f"""job.keywords,""", style='b', pad='1')
+        printBlue(f"""job.location""", style='b', pad='1')
 
     @staticmethod
     def help_with_delete():
-        Main._print(f"""{Main.style("bright")}""", end="")
-        Main._print(f"""{Main.colorFore("blue")}""", end="")
-
-        Main._print(f"""'delete' command deletes the cache stored.""")
-
-        Main._print(f"""{Main.colorFore("blue")}""", end="")
-
-        Main._print(f"""Usage: delete --cache""")
-
-        Main._print(f"""{Main.colorFore("reset")}""", end="")
-
-        Main._print(f"""{Main.colorFore("reset")}""", end="")
-        Main._print(f"""{Main.style("reset")}""", end="")
+        printBlue(f"""'delete' command deletes the cache stored.""",
+                  style='b', pad='1')
+        printBlue(f"""Usage: delete --cache""", style='b', pad='1')
 
     @staticmethod
     def help_with_developer():
@@ -611,14 +511,9 @@ class Main(object):
         an access to the object it's no use giving this function access to
         the object.
         """
-        Main._print(f"""{Main.style("bright")}""", end="")
-        Main._print(f"""{Main.colorFore("blue")}""", end="")
-
-        Main._print(f"""'developer' shows the developer details like:""")
-        Main._print(f"""his number, email, profiles ...""")
-
-        Main._print(f"""{Main.colorFore("reset")}""", end="")
-        Main._print(f"""{Main.style("reset")}""", end="")
+        printBlue(f"""'developer' shows the developer details like:""",
+                  style='b', pad='1')
+        printBlue(f"""his number, email, profiles ...""", style='b', pad='1')
 
     @staticmethod
     def help_with_theme():
@@ -628,14 +523,9 @@ class Main(object):
         we don't need to give this function an access to the object
         it's no use giving this function access to the object.
         """
-        Main._print(f"""{Main.style("bright")}""", end="")
-        Main._print(f"""{Main.colorFore("blue")}""", end="")
-
-        Main._print(
-            f"""'theme --parrot/--normal' changes the cli (command line theme) according to the given theme value.""")
-
-        Main._print(f"""{Main.colorFore("reset")}""", end="")
-        Main._print(f"""{Main.style("reset")}""", end="")
+        printBlue(
+            f"""'theme --parrot/--normal' changes the cli (command line theme) according to the given theme value.""",
+            style='b', pad='1')
 
     @staticmethod
     def help_with_clear():
@@ -645,13 +535,7 @@ class Main(object):
         an access to the object it's no use giving this function access
         to the object.
         """
-        Main._print(f"""{Main.style("bright")}""", end="")
-        Main._print(f"""{Main.colorFore("blue")}""", end="")
-
-        Main._print(f"""'clear' clears the screen""")
-
-        Main._print(f"""{Main.colorFore("reset")}""", end="")
-        Main._print(f"""{Main.style("reset")}""", end="")
+        printBlue(f"""'clear' clears the screen""", style='b', pad='1')
 
     @staticmethod
     def help_with_exit():
@@ -661,14 +545,8 @@ class Main(object):
         an access to the object it's no use giving this function access
         to the object.
         """
-        Main._print(f"""{Main.style("bright")}""", end="")
-        Main._print(f"""{Main.colorFore("blue")}""", end="")
-
-        Main._print(
-            f"""'exit' exits the program and also does flushing jobs.""")
-
-        Main._print(f"""{Main.colorFore("reset")}""", end="")
-        Main._print(f"""{Main.style("reset")}""", end="")
+        printBlue(
+            f"""'exit' exits the program and also does flushing jobs.""", style='b', pad='1')
 
     @staticmethod
     def help_with_help():
@@ -678,14 +556,9 @@ class Main(object):
         an access to the object it's no use giving this function access
         to the object.
         """
-        Main._print(f"""{Main.style("bright")}""", end="")
-        Main._print(f"""{Main.colorFore("blue")}""", end="")
-
-        Main._print(
-            f"""'help' prints a list of commands that the Linkedin Automater have.""")
-
-        Main._print(f"""{Main.colorFore("reset")}""", end="")
-        Main._print(f"""{Main.style("reset")}""", end="")
+        printBlue(
+            f"""'help' prints a list of commands that the Linkedin Automater have.""",
+            style='b', pad='1')
 
     def handle_config(self):
         Main.help_with_configs()
@@ -727,14 +600,9 @@ class Main(object):
 
     @staticmethod
     def no_credentials():
-        Main._print(f"""{Main.style("bright")}""", end="")
-        Main._print(f"""{Main.colorFore("blue")}""", end="")
-
-        Main._print(
-            f"""Need credentials first use config.user.email/password to add them.""")
-
-        Main._print(f"""{Main.colorFore("reset")}""", end="")
-        Main._print(f"""{Main.style("reset")}""", end="")
+        printBlue(
+            f"""Need credentials first use config.user.email/password to add them.""",
+            style='b', pad='1')
 
     def handle_send_commands(self):
         """Method handle_send_commands() handles the operations when you
@@ -768,29 +636,25 @@ class Main(object):
             if self.get_command_at_index(3) == "suggestions":
                 if self.get_command_at_index(4) == "--guided":
                     if self.data["user_email"] and self.data["user_password"]:
-                        LinkedInConnectionsGuided.LinkedInConnectionsGuided(
-                            self.data).run()
+                        LinkedInConnectionsGuided(self.data).run()
                     else:
                         Main.no_credentials()
                     return
                 else:
                     if self.data["user_email"] and self.data["user_password"]:
-                        LinkedInConnections.LinkedInConnectionsAuto(
-                            self.data).run()
+                        LinkedInConnectionsAuto(self.data).run()
                     else:
                         Main.no_credentials()
                     return
             elif self.get_command_at_index(3) == "--headless" or self.get_command_at_index(3) == "--use-cache":
                 if self.data["user_email"] and self.data["user_password"]:
-                    LinkedInConnectionsAuto.LinkedInConnectionsAuto(
-                        self.data).run()
+                    LinkedInConnectionsAuto(self.data).run()
                 else:
                     Main.no_credentials()
                 return
             elif self.get_command_length() == 3:
                 if self.data["user_email"] and self.data["user_password"]:
-                    LinkedInConnectionsAuto.LinkedInConnectionsAuto(
-                        self.data).run()
+                    LinkedInConnectionsAuto(self.data).run()
                 else:
                     Main.no_credentials()
                 return
@@ -812,14 +676,8 @@ class Main(object):
         the LinkedIn classes accordingly.
         """
         if self.get_command_length() <= 2 and self.get_command_at_index(1) == "linkedin":
-            Main._print(f"""{Main.style("bright")}""", end="")
-            Main._print(f"""{Main.colorFore("blue")}""", end="")
-
-            Main._print(
-                f"""\n Command 'linkedin' cannot be referenced without a flag\n""")
-
-            Main._print(f"""{Main.colorFore("reset")}""", end="")
-            Main._print(f"""{Main.style("reset")}""", end="")
+            printBlue(f"""Command 'linkedin' cannot be referenced without a flag\n""",
+                      style='b', start='\n', end='\n', pad='1')
 
             Main.help_with_linkedin()
 
@@ -838,8 +696,8 @@ class Main(object):
                 Main.help_with_linkedin()
 
             else:
-                Main._print(
-                    f"""'{self.get_command_at_index(2)}' is not a 'linkedin' command""")
+                printRed(
+                    f"""'{self.get_command_at_index(2)}' is not a 'linkedin' command""", style='b', pad='1')
 
         else:
             Main.help_with_linkedin()
@@ -859,16 +717,14 @@ class Main(object):
             self: it is the parameter object that has the user details in it.
         """
         if self.data["job_keywords"] or self.data["job_location"]:
-            Main._print(f"""{Main.style("bright")}""", end="")
-            Main._print(f"""{Main.colorFore("green")}""", end="")
-
-            Main._print(f"""Job Keywords -> %s""" %
-                        (self.data["job_keywords"] if self.data["job_keywords"] else None))
-            Main._print(f"""Job Location -> %s""" %
-                        (self.data["job_location"] if self.data["job_location"] else None))
-
-            Main._print(f"""{Main.colorFore("reset")}""", end="")
-            Main._print(f"""{Main.style("reset")}""", end="")
+            printGreen(f"""Job Keywords -> %s""" %
+                       (self.data["job_keywords"]
+                        if self.data["job_keywords"] else None),
+                       style='b', pad='1')
+            printGreen(f"""Job Location -> %s""" %
+                       (self.data["job_location"]
+                        if self.data["job_location"] else None),
+                       style='b', pad='1')
 
     @staticmethod
     def ask_to_show_password(self):
@@ -885,36 +741,26 @@ class Main(object):
             self: it is a parameter object that has user details in it.
         """
         try:
-            Main._print(f"""{Main.style("bright")}""", end="")
-            Main._print(f"""{Main.colorFore("blue")}""", end="")
+            printk(f"""{Main.style("bright")}""", end="")
+            printk(f"""{Main.colorFore("blue")}""", end="")
 
             ch = input(
                 f""" Show password anyway? [y/N]: """) if self.data["user_password"] else "n"
 
-            Main._print(f"""{Main.colorFore("reset")}""", end="")
-            Main._print(f"""{Main.style("reset")}""", end="")
+            printk(f"""{Main.colorFore("reset")}""", end="")
+            printk(f"""{Main.style("reset")}""", end="")
 
             if ch.lower() == "y":
-                Main._print(f"""{Main.style("bright")}""", end="")
-                Main._print(f"""{Main.colorFore("green")}""", end="")
-
-                Main._print(f"""%s""" % (
-                    self.data["user_email"] if self.data["user_email"] else "use config.user.email to add user email"))
-                Main._print(f"""%s""" % (
-                    self.data["user_password"] if self.data["user_password"] else "use config.user.password to add user password"))
-
-                Main._print(f"""{Main.colorFore("reset")}""", end="")
-                Main._print(f"""{Main.style("reset")}""", end="")
+                printGreen(f"""%s""" % (
+                    self.data["user_email"] if self.data["user_email"] else "use config.user.email to add user email"),
+                    style='b', pad='1')
+                printGreen(f"""%s""" % (
+                    self.data["user_password"] if self.data["user_password"] else "use config.user.password to add user password"),
+                    style='b', pad='1')
         except KeyboardInterrupt:
-            Main._print(f"""{Main.style("bright")}""", end="")
-            Main._print(f"""{Main.colorFore("green")}""", end="")
+            printGreen(f"""Piece""", start='\n', pad='1')
 
-            Main._print(f"""\n Piece""")
-
-            Main._print(f"""Main.colorFore("reset")""", end="")
-            Main._print(f"""Main.style("reset")""", end="")
-
-            quit()
+            sys.exit()
 
     def handle_show_commands(self):
         """Method show() gets executed once the user hit the
@@ -923,19 +769,14 @@ class Main(object):
         keys/location.
         """
         if self.get_command_length() == 2:
-            Main._print(f"""{Main.style("bright")}""", end="")
-            Main._print(f"""{Main.colorFore("green")}""", end="")
-
-            Main._print(f"""%s""" % (
-                self.data["user_email"] if self.data["user_email"] else "use config.user.email to add user email"))
-            Main._print(f"""%s""" % (
-                "*"*len(self.data["user_password"]) if self.data["user_password"] else "use config.user.password to add user password"))
-
-            Main._print(f"""{Main.colorFore("reset")}""", end="")
-            Main._print(f"""{Main.style("reset")}""", end="")
+            printGreen(f"""%s""" % (
+                self.data["user_email"] if self.data["user_email"] else "use config.user.email to add user email"),
+                style='b', pad='1')
+            printGreen(f"""%s""" % (
+                "*"*len(self.data["user_password"]) if self.data["user_password"] else "use config.user.password to add user password"),
+                style='b', pad='1')
 
             Main.show_job_details(self)
-
             Main.ask_to_show_password(self)
         elif self.get_command_at_index(2) == "--help":
             Main.help_with_show()
@@ -950,13 +791,8 @@ class Main(object):
         if os.path.exists(self.__credentials_file):
             os.remove(self.__credentials_file)
         else:
-            Main._print(f"""{Main.style("bright")}""", end="")
-            Main._print(f"""{Main.colorFore("red")}""", end="")
-
-            Main._print(f"""There's no credential file exists to delete.""")
-
-            Main._print(f"""{Main.colorFore("reset")}""", end="")
-            Main._print(f"""{Main.style("reset")}""", end="")
+            printRed(f"""There's no credential file exists to delete.""",
+                     style='b', pad='1')
 
     def delete_key(self):
         """Method delete_key() deletes the stored cipher key if exists,
@@ -966,13 +802,8 @@ class Main(object):
         if os.path.exists(self.__key_file):
             os.remove(self.__key_file)
         else:
-            Main._print(f"""{Main.style("bright")}""", end="")
-            Main._print(f"""{Main.colorFore("red")}""", end="")
-
-            Main._print(f"""There's no key file exists to delete.""")
-
-            Main._print(f"""{Main.colorFore("reset")}""", end="")
-            Main._print(f"""{Main.style("reset")}""", end="")
+            printRed(f"""There's no key file exists to delete.""",
+                     style='b', pad='1')
 
     def handle_delete_commands(self):
         """Method handle_delete_commands() gets executed once
@@ -980,13 +811,8 @@ class Main(object):
         the cache stored (User credentials) if exists.
         """
         if self.get_command_at_index(1) == "delete":
-            Main._print(f"""{Main.style("bright")}""", end="")
-            Main._print(f"""{Main.colorFore("red")}""", end="")
-
-            Main._print(f"""command 'delete' cannot be reference alone.""")
-
-            Main._print(f"""{Main.colorFore("reset")}""", end="")
-            Main._print(f"""{Main.style("reset")}""", end="")
+            printRed(f"""command 'delete' cannot be reference alone.""",
+                     style='b', pad='1')
             Main.help_with_delete()
         elif self.get_command_length() >= 3:
             if self.get_command_at_index(2) == "--cache":
@@ -999,14 +825,8 @@ class Main(object):
                 self.delete_cache()
                 self.delete_key()
             else:
-                Main._print(f"""{Main.style("bright")}""", end="")
-                Main._print(f"""{Main.colorFore("red")}""", end="")
-
-                Main._print(
-                    f"""flag '{self.get_command_at_index(2)}' is not recognized.""")
-
-                Main._print(f"""{Main.colorFore("reset")}""", end="")
-                Main._print(f"""{Main.style("reset")}""", end="")
+                printRed(
+                    f"""flag '{self.get_command_at_index(2)}' is not recognized.""", style='b', pad='1')
         else:
             Main.help_with_delete()
 
@@ -1019,16 +839,18 @@ class Main(object):
             Main._print(f"""{Main.style("bright")}""", end="")
             Main._print(f"""{Main.colorFore("green")}""", end="")
 
-            Main._print(f"""Name     :  Ayush Joshi""")
-            Main._print(f"""Email    :  ayush854032@gmail.com (primary)""")
-            Main._print(f"""Email    :  joshiayush.joshiayush@gmail.com""")
-            Main._print(f"""Mobile   :  +91 8941854032 (Only WhatsApp)""")
-            Main._print(f"""GitHub   :  https://github.com/JoshiAyush""")
-            Main._print(
-                f"""LinkedIn :  https://www.linkedin.com/in/ayush-joshi-3600a01b7/{Main.colorFore("reset")}""")
-
-            Main._print(f"""{Main.colorFore("reset")}""", end="")
-            Main._print(f"""{Main.style("reset")}""", end="")
+            printGreen(f"""Name     :  Ayush Joshi""", style='b', pad='1')
+            printGreen(
+                f"""Email    :  ayush854032@gmail.com (primary)""", style='b', pad='1')
+            printGreen(
+                f"""Email    :  joshiayush.joshiayush@gmail.com""", style='b', pad='1')
+            printGreen(
+                f"""Mobile   :  +91 8941854032 (Only WhatsApp)""", style='b', pad='1')
+            printGreen(
+                f"""GitHub   :  https://github.com/JoshiAyush""", style='b', pad='1')
+            printGreen(
+                f"""LinkedIn :  https://www.linkedin.com/in/ayush-joshi-3600a01b7/{Main.colorFore("reset")}""",
+                style='b', pad='1')
         elif self.get_command_at_index(2) == "--help":
             Main.help_with_developer()
         else:
@@ -1081,56 +903,51 @@ class Main(object):
         raise an error.
         """
         if self.get_command_at_index(1) == "help":
-            Main._print(f"""{Main.style("bright")}""", end="")
-            Main._print(f"""{Main.colorFore("green")}""", end="")
-
-            Main._print(
-                f"""LinkedIn Bash, version 1.2.0(1)-release (xrh-cclnk)""")
-            Main._print(
-                f"""These commands are defined internally. Type 'help' to see this list.""")
-            Main._print(
-                f"""Type 'command' --help to know more about that command.""")
-            Main._print(f"""""")
-            Main._print(
-                f"""A ([]) around a command means that the command is optional.""")
-            Main._print(
-                f"""A (^) next to command means that the command is the default command.""")
-            Main._print(
-                f"""A (<>) around a name means that the field is required.""")
-            Main._print(
-                f"""A (/) between commands means that you can write either of these but not all.""")
-            Main._print(
-                f"""A (*) next to a name means that the command is disabled.""")
-            Main._print(f"""""")
-            Main._print(
-                f"""linkedin [send] [suggestions^] --auto^/--guided [--headless] [--use-cache]""")
-            Main._print(
-                f"""linkedin [send] [search industry=example&&location=india+usa+...] --auto^/--guided [--headless] [--use-cache]""")
-            Main._print(
-                f"""linkedin [invitation-manager*] [show*] --sent*^/--recieved* [--headless] [--use-cache]""")
-            Main._print(
-                f"""linkedin [invitation-manager*] [ignore*/withdraw*] [all*^/over > <days>*] [--headless] [--use-cache]""")
-            Main._print(
-                f"""linkedin [mynetwork*] [show*] [all*^/page > 1^+2+3+...*] [--headless] [--use-cache]""")
-            Main._print(
-                f"""linkedin [mynetwork*] [sendmessage*] [all*^] [--greet*^] [--headless] [--use-cache]""")
-            Main._print(f"""""")
-            Main._print(f"""config""")
-            Main._print(f"""""")
-            Main._print(f"""show""")
-            Main._print(f"""""")
-            Main._print(f"""delete""")
-            Main._print(f"""""")
-            Main._print(f"""developer""")
-            Main._print(f"""""")
-            Main._print(f"""theme [--parrot^/--normal]""")
-            Main._print(f"""""")
-            Main._print(f"""clear""")
-            Main._print(f"""""")
-            Main._print(f"""exit""")
-
-            Main._print(f"""{Main.colorFore("reset")}""", end="")
-            Main._print(f"""{Main.style("reset")}""", end="")
+            printGreen(
+                f"""LinkedIn Bash, version 1.0.0(1)-release (lnkdbt-1.0.0)""", style='b', pad='1')
+            printGreen(
+                f"""These commands are defined internally. Type 'help' to see this list.""", style='b', pad='1')
+            printGreen(
+                f"""Type 'command' --help to know more about that command.""", style='b', pad='1')
+            printGreen(
+                f"""A ([]) around a command means that the command is optional.""", start='\n', style='b', pad='1')
+            printGreen(
+                f"""A (^) next to command means that the command is the default command.""", style='b', pad='1')
+            printGreen(
+                f"""A (<>) around a name means that the field is required.""", style='b', pad='1')
+            printGreen(
+                f"""A (/) between commands means that you can write either of these but not all.""", style='b', pad='1')
+            printGreen(
+                f"""A (*) next to a name means that the command is disabled.""", style='b', pad='1')
+            printGreen(
+                f"""linkedin [send] [suggestions^] --auto^/--guided [--headless] [--use-cache]""",
+                start='\n', style='b', pad='1')
+            printGreen(
+                f"""linkedin [send] [search industry=example&&location=india+usa+...] --auto^/--guided [--headless] [--use-cache]""",
+                style='b', pad='1')
+            printGreen(
+                f"""linkedin [invitation-manager*] [show*] --sent*^/--recieved* [--headless] [--use-cache]""", style='b', pad='1')
+            printGreen(
+                f"""linkedin [invitation-manager*] [ignore*/withdraw*] [all*^/over > <days>*] [--headless] [--use-cache]""",
+                style='b', pad='1')
+            printGreen(
+                f"""linkedin [mynetwork*] [show*] [all*^/page > 1^+2+3+...*] [--headless] [--use-cache]""", style='b', pad='1')
+            printGreen(
+                f"""linkedin [mynetwork*] [sendmessage*] [all*^] [--greet*^] [--headless] [--use-cache]""", style='b', pad='1')
+            printGreen(f"""config""",
+                       style='b', pad='1', start='\n')
+            printGreen(f"""show""",
+                       style='b', pad='1', start='\n')
+            printGreen(f"""delete""",
+                       style='b', pad='1', start='\n')
+            printGreen(f"""developer""",
+                       style='b', pad='1', start='\n')
+            printGreen(f"""theme [--parrot^/--normal]""",
+                       style='b', pad='1', start='\n')
+            printGreen(f"""clear""",
+                       style='b', pad='1', start='\n')
+            printGreen(f"""exit""",
+                       style='b', pad='1', start='\n')
         elif self.get_command_at_index(2) == "--help":
             Main.help_with_help()
             if self.get_command_length() > 3:
@@ -1150,14 +967,8 @@ class Main(object):
         raise an error.
         """
         if self.get_command_at_index(1) == "exit":
-            Main._print(f"""{Main.style("bright")}""", end="")
-            Main._print(f"""{Main.colorFore("green")}""", end="")
-
-            Main._print(f"""Piece""")
-
-            Main._print(f"""{Main.colorFore("reset")}""", end="")
-            Main._print(f"""{Main.style("reset")}""", end="")
-            exit()
+            printGreen(f"""Piece""", style='b', pad='1')
+            sys.exit()
         elif self.get_command_at_index(2) == "--help":
             Main.help_with_exit()
             if self.get_command_length() > 3:
@@ -1175,14 +986,8 @@ class Main(object):
         what is going in the background.
         """
         if self.command:
-            Main._print(f"""{Main.style("bright")}""", end="")
-            Main._print(f"""{Main.colorFore("red")}""", end="")
-
-            Main._print(
-                f"""`{self.command[8:]}` is not recognized as an internal command.""")
-
-            Main._print(f"""{Main.colorFore("reset")}""", end="")
-            Main._print(f"""{Main.style("reset")}""", end="")
+            printRed(
+                f"""`{self.command[8:]}` is not recognized as an internal command.""", style='b', pad='1')
 
     def slice_keyword(self):
         try:
@@ -1237,15 +1042,9 @@ class Main(object):
                 self.handle_configs()
                 return
             else:
-                Main._print(f"""{Main.style("bright")}""", end="")
-                Main._print(f"""{Main.colorFore("red")}""", end="")
-
-                Main._print(
-                    f"""'{self.command.split(" ")[1].strip()}' is not a valid email address!""")
-
-                Main._print(f"""{Main.colorFore("rest")}""", end="")
-                Main._print(f"""{Main.style("reset")}""", end="")
-
+                printRed(
+                    f"""'{self.command.split(" ")[1].strip()}' is not a valid email address!""",
+                    style='b', pad='1')
                 return
 
         elif "config.user.password" == self.get_command_at_index(1):

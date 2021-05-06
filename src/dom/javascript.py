@@ -12,7 +12,7 @@ def get_page_y_offset(self):
     return:
         window.pageYOffset
     """
-    if not hasattr(self, "driver"):
+    if not "driver" in self:
         return
 
     return self.driver.execute_script((
@@ -31,7 +31,7 @@ def execute_javascript(self):
         self: it is a parameter object that has a property 'driver' 
         in it and we need that to access the webpage.
     """
-    if not hasattr(self, "driver"):
+    if not "driver" in self:
         return
 
     self.driver.execute_script((

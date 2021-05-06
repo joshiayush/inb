@@ -21,6 +21,13 @@ import sys
 import time
 import colorama
 
+from helpers.print import printk
+from helpers.print import printRed
+from helpers.print import printBlue
+from helpers.print import printGreen
+
+from errors.error import DomainNameSystemNotResolveException
+
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -37,9 +44,6 @@ class LinkedIn(object):
     """LinkedIn"""
     OLD_EMAIL = ""
     OLD_PASSWORD = ""
-
-    SUCCESS_RATE = 0
-    FAILURE_RATE = 0
 
     SESSION_ALREADY_EXISTS = False
 
@@ -140,13 +144,7 @@ class LinkedIn(object):
         try:
             self.driver.get("https://www.linkedin.com/login")
         except TimeoutException:
-            print(f"""{colorama.Style.BRIGHT}{colorama.Fore.RED}""", end="")
-
-            print(f""" linkedin.com's DNS could not be resolved.""")
-            print(
-                f""" ERR_COULD_NOT_RESOLVE_DNS: Check your internet connection and try again.""")
-
-            print(f"""{colorama.Style.RESET_ALL}""", end="")
+            raise DomainNameSystemNotResolveException("ERR_DNS_PROBE_STARTED")
 
     def enter_email(self):
         """Function `enter_email()` enters the email in the email input 
@@ -219,131 +217,24 @@ class LinkedIn(object):
             self: object used to execute various functions in our 
             LinkedIn class.
         """
-        print(
-            f"""\t    {colorama.Fore.BLUE}{colorama.Style.DIM}Connecting...{colorama.Style.RESET_ALL}""", end="\r")
+        printBlue(f"""Connecting...""", pad="8", end="\r")
 
-        self.get_login_page()
+        try:
+            self.get_login_page()
+        except DomainNameSystemNotResolveException:
+            printRed(f"""ERR_DNS_PROBE_STARTED""", style="b", pad="1")
 
         self.fill_credentials()
 
-        print(" "*80, end="\r")
-        print(
-            f"""\t    {colorama.Fore.GREEN}{colorama.Style.BRIGHT}Connected ✔{colorama.Fore.RESET}""")
+        printk(" ", pad="80", end="\r")
+        printGreen(f"""Connected ✔""", style="b", pad="8")
 
+    @property
     def get_job_keywords(self):
         """Function `get_job_keywords()` returns the job keywords."""
         return self.data["job_keywords"]
 
+    @property
     def get_job_location(self):
         """Function `get_job_location()` returns the job location."""
         return self.data["job_location"]
-
-    @staticmethod
-    def get_page_y_offset(self):
-        """Function get_page_y_offset() returns the window.pageYOffset 
-        of the webpage, we need that so we can keep on scrolling untill 
-        the page offset becomes constant. Declaration of this method is 
-        static because we want to use this function across multiple 
-        classes.
-
-        Args:
-            self: is not a object here but it is a parameter object 
-            that has a property 'driver' and we need that
-
-        return:
-            window.pageYOffset
-        """
-        return self.driver.execute_script((
-            "return (window.pageYOffset !== undefined)"
-            "       ? window.pageYOffset"
-            "       : (document.documentElement || document.body.parentNode || document.body);"
-        ))
-
-    @staticmethod
-    def execute_javascript(self):
-        """Function execute_javascript() scrolls the web page to the 
-        very bottom of it using the 'document.scrollingElement.scrollTop' 
-        property.
-
-        Args:
-            self: it is a parameter object that has a property 'driver' 
-            in it and we need that to access the webpage.
-        """
-        self.driver.execute_script((
-            "var scrollingElement = (document.scrollingElement || document.body);"
-            "scrollingElement.scrollTop = scrollingElement.scrollHeight;"
-        ))
-
-    @staticmethod
-    def print_status(obj=None, status=None, elapsed_time=0):
-        """Function inform_user() retrieves the value of attribute 
-        'aria-label' using the webdriver function 'get_attribute()' 
-        which returns the value given to that attribute and then using
-        that attribute we inform user that what is the status for the
-        target.
-
-        Args:
-            button: button element in which the program has to click
-            _type: is the status is it sending or failed
-        """
-        _stat = ''
-        name = obj[0]
-        occupation = obj[1]
-        elapsed_time = str(elapsed_time)[0:5] + "s"
-
-        if len(occupation) >= 50:
-            occupation = occupation[0:50] + "..."
-
-        if LinkedIn.SUCCESS_RATE != 0 or LinkedIn.FAILURE_RATE != 0:
-            sys.stdout.write("\033[F\033[F\033[F\033[F\033[F\033[F")
-
-        if status == "sent":
-            """_stat = ✔"""
-            _stat = u"\u2714"
-            _stat = f"""{colorama.Fore.GREEN}""" + \
-                _stat + f"""{colorama.Fore.RESET}"""
-            LinkedIn.SUCCESS_RATE += 1
-        elif status == "failed":
-            """_stat = ✘"""
-            _stat = u"\u2718"
-            _stat = f"""{colorama.Fore.RED}""" + \
-                _stat + f"""{colorama.Fore.RESET}"""
-            LinkedIn.FAILURE_RATE += 1
-
-        print()
-        print(" "*80, end="\r")
-        print(
-            f"""\t{_stat} {colorama.Style.BRIGHT}{name}{colorama.Style.RESET_ALL}""")
-        print(" "*80, end="\r")
-        print(
-            f"""\t  {colorama.Style.DIM}{occupation}{colorama.Style.RESET_ALL}""")
-        print()
-        print(" "*80, end="\r")
-        print(f"""\tSuccess: {colorama.Fore.GREEN}{LinkedIn.SUCCESS_RATE}{colorama.Fore.RESET}""",
-              f"""  Failed: {colorama.Fore.RED}{LinkedIn.FAILURE_RATE}{colorama.Fore.RESET}""",
-              f"""  Elapsed: {colorama.Fore.BLUE}{elapsed_time}{colorama.Fore.RESET}""")
-        print()
-
-        time.sleep(0.18)
-
-    @staticmethod
-    def reset_attributes():
-        LinkedIn.SUCCESS_RATE = 0
-        LinkedIn.FAILURE_RATE = 0
-
-    @staticmethod
-    def err_loading_resource():
-        print(f"""{colorama.Style.BRIGHT}{colorama.Fore.RED}""", end="")
-        print(
-            f""" net::ERR_LOADING_RESOURCE check your internet connection and try again.""")
-        print(f"""{colorama.Style.RESET_ALL}""", end="")
-
-    @staticmethod
-    def blocked():
-        print(f"""{colorama.Style.BRIGHT}""", end="")
-        print(f"""{colorama.Fore.RED}""", end="")
-
-        print("\n It seems like you got blocked by LinkedIn!")
-
-        print(f"""{colorama.Fore.RESET}""", end="")
-        print(f"""{colorama.Style.RESET_ALL}""", end="")
