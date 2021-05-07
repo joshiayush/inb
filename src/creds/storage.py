@@ -1,4 +1,10 @@
+import os
+
+from . import __key_file
+from . import __credentials_file
+
 from helpers.print import printRed
+from creds.crypto import decrypt_credentials
 from errors.error import PropertyNotExistException
 from errors.error import UserCacheNotFoundException
 
@@ -8,15 +14,11 @@ def store_credentials(self):
     as cache in a file 'CredentialsFile.ini' so to use these
     fields later.
     """
-    if not "__credentials_file" in self:
-        raise PropertyNotExistException(
-            "Object 'self' must have a property '__credentials_file' with credentials file location in it!")
-
     if not "encrypted_email" in self or not "encrypted_password" in self:
         raise PropertyNotExistException(
             "Object 'self' must have properties 'encrypted_email'|'encrypted_password' with credentials value in it!")
 
-    with open(self.__credentials_file, 'w') as creds_file:
+    with open(__credentials_file, 'w') as creds_file:
         creds_file.write("Username={}\nPassword={}\n".format(
             self.encrypted_email, self.encrypted_password))
 
@@ -25,13 +27,9 @@ def get_credentials(self):
     """Method get_credentials() reads the credentials stored as
     cache in file 'CredentialsFile.ini' if exists.
     """
-    if not "__credentials_file" in self:
-        raise PropertyNotExistException(
-            "Object 'self' must have a property '__credentials_file' with credentials file location in it!")
-
-    if os.path.exists(self.__credentials_file):
+    if os.path.exists(__credentials_file):
         try:
-            with open(self.__credentials_file, 'r') as creds_file:
+            with open(__credentials_file, 'r') as creds_file:
                 lines = creds_file.readlines()
 
                 config = {
@@ -44,8 +42,29 @@ def get_credentials(self):
                     if creds[0] in ("Username", "Password"):
                         config[creds[0]] = creds[1]
 
-                self.decrypt_credentials(config)
-                return True
+                decrypt_credentials(self, config)
         except FileNotFoundError:
             raise UserCacheNotFoundException(
                 "You don't have any cache stored!")
+
+
+def delete_cache():
+    """Method delete_cache() deletes the stored cache (User credentials)
+    if exists, we use os.path.exists() to check if the file is present or
+    not if present we remove it.
+    """
+    if os.path.exists(__credentials_file):
+        os.remove(__credentials_file)
+    else:
+        raise FileNotFoundError("There's no credential file exists to delete.")
+
+
+def delete_key():
+    """Method delete_key() deletes the stored cipher key if exists,
+    we use os.path.exists() to check if the file is present or not if
+    present we remove it.
+    """
+    if os.path.exists(__key_file):
+        os.remove(__key_file)
+    else:
+        raise FileNotFoundError("There's no key file exists to delete.")
