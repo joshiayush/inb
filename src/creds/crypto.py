@@ -1,6 +1,7 @@
 from . import __key
 from . import Fernet
 
+from errors.error import PropertyNotExistException
 
 def encrypt_email(self):
     """Method encrypt_email() encrypts the user email so
