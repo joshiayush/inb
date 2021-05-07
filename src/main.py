@@ -32,6 +32,7 @@ from errors.error import ZeroFlagException
 from errors.error import PropertyNotExistException
 from errors.error import CommandFlagNotFoundException
 from errors.error import CredentialsNotFoundException
+from errors.error import NoSuchConfigurationFoundException
 
 from linkedin.LinkedInConnectionsAuto import LinkedInConnectionsAuto
 from linkedin.LinkedInConnectionsGuided import LinkedInConnectionsGuided
@@ -803,17 +804,15 @@ class Main(object):
         as you can see this is to fetch the right flag and if not found
         raise an error.
         """
-        if self.get_command_at_index(1) == "exit":
+        if self.get_command_length() < 3 and self.get_command_at_index(1) == "exit":
             printGreen(f"""Piece""", style='b', pad='1')
             sys.exit()
-        elif self.get_command_at_index(2) == "--help":
+
+        if self.get_command_at_index(2) == "--help":
             Main.help_with_exit()
-            if self.get_command_length() > 3:
-                self.command = (
-                    "command " + self.get_command_at_index(3)).strip()
-                self.Error()
-        else:
-            Main.help_with_exit()
+
+        raise CommandFlagNotFoundException(
+            f"""'{self.get_command_at_index(2)}' is not recognized as a 'exit' flag!""")
 
     def Error(self):
         """Method Error() gets called when the entered command
@@ -822,9 +821,11 @@ class Main(object):
         because we don't want to confuse the user by showing him/her
         what is going in the background.
         """
-        if self.command:
-            printRed(
-                f"""`{self.command[8:]}` is not recognized as an internal command.""", style='b', pad='1')
+        if not self.command:
+            return
+
+        printRed(
+            f"""`{self.command[8:]}` is not recognized as an internal command.""", style='b', pad='1')
 
     def slice_keyword(self):
         try:
@@ -840,14 +841,16 @@ class Main(object):
 
         if re.search(r"^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$", email):
             return email
-        elif re.search(r"^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w+$", email):
+
+        if re.search(r"^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w+$", email):
             return email
-        else:
-            return False
+
+        return False
 
     def if_password_given(self):
         if re.search(r'"[a-zA-z0-9~`!@#\$%\^&\*\(\)_\+=-\\\|\[\]\{\}\"\'\?<>,\.:;\/]*"', self.command.split(" ")[2].strip()):
             return True
+
         return False
 
     def handle_configs(self):
@@ -858,51 +861,61 @@ class Main(object):
         parsing in this function as you can see this is to fetch the right
         commands and flags and if not found raise an error.
         """
-        if self.get_command_length() <= 2 or self.get_command_length() <= 3:
-            if "config.user.password" == self.get_command_at_index(1):
-                self.data["user_password"] = getpass.getpass(
-                    prompt=" Password: ")
-                if self.get_command_at_index(2) == "--cached":
-                    self.store_cache()
-                    return
+        if self.get_command_length() <= 2:
+            if self.get_command_at_index(1) != "config.user.password":
                 return
+
+            self.data["user_password"] = getpass.getpass(
+                prompt=" Password: ")
+
+            if self.get_command_at_index(2) != "--cached":
+                return
+
+            self.store_cache()
+            return
 
         if re.compile(r"(config\.user\.email)", re.IGNORECASE).search(self.command):
             email = self.get_email()
-            if email:
-                self.data["user_email"] = email
-                if self.get_command_at_index(3) == "--cached":
-                    self.store_cache()
-                    self.command = "command config.user.password --cached"
-                else:
-                    self.command = "command config.user.password"
-                self.handle_configs()
-                return
-            else:
-                printRed(
-                    f"""'{self.command.split(" ")[1].strip()}' is not a valid email address!""",
-                    style='b', pad='1')
+
+            if not email:
+                printRed(f"""'{self.command.split(" ")[1].strip()}' is not a valid email address!""",
+                         style='b', pad='1')
                 return
 
-        elif "config.user.password" == self.get_command_at_index(1):
-            self.data["user_password"] = self.slice_keyword()
+            self.data["user_email"] = email
+
             if self.get_command_at_index(3) == "--cached":
                 self.store_cache()
+                self.command = "command config.user.password --cached"
+            else:
+                self.command = "command config.user.password"
+
+            try:
+                self.handle_configs()
+            except NoSuchConfigurationFoundException as error:
+                printRed(f"""{error}""", style='b', pad='1')
+
             return
 
-        elif re.compile(r"(config\.job\.keywords)=\w+", re.IGNORECASE).search(self.command):
+        if "config.user.password" == self.get_command_at_index(1):
+            self.data["user_password"] = self.slice_keyword()
+
+            if self.get_command_at_index(3) != "--cached":
+                self.store_cache()
+
+            return
+
+        if re.compile(r"(config\.job\.keywords)=\w+", re.IGNORECASE).search(self.command):
             self.data["job_keywords"] = self.command[self.command.find(
                 "=")+1:].strip()
             return
 
-        elif re.compile(r"(config\.job\.location)=\w+", re.IGNORECASE).search(self.command):
+        if re.compile(r"(config\.job\.location)=\w+", re.IGNORECASE).search(self.command):
             self.data["job_location"] = self.command[self.command.find(
                 "=")+1:].strip()
             return
 
-        else:
-            Main.help_with_configs()
-            return
+        raise NoSuchConfigurationFoundException("No such configuration found!")
 
     def handle_commands(self):
         """Method handle_commands() does the actually handling of the commands
@@ -919,11 +932,13 @@ class Main(object):
         otherwise second argument will be assigned as default value of passed
         argument. (You remember the switch statement in C, C++, Javascript ...)
         """
-        _config_regex_ = re.compile(
-            r"(config\.user\.email)|(config\.user\.password)|(config\.job\.keywords)|(config\.job\.location)", re.IGNORECASE)
-
-        if _config_regex_.search(self.get_command_at_index(1)):
-            self.handle_configs()
+        if re.compile(
+            r"(config\.user\.email)|(config\.user\.password)|(config\.job\.keywords)|(config\.job\.location)",
+                re.IGNORECASE).search(self.get_command_at_index(1)):
+            try:
+                self.handle_configs()
+            except NoSuchConfigurationFoundException as error:
+                printRed(f"""{error}""", style='b', pad='1')
         else:
             self.commands.get(self.command.split(" ")[1], self.Error)()
 
