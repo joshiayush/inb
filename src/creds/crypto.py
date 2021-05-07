@@ -3,6 +3,7 @@ from . import Fernet
 
 from errors.error import PropertyNotExistException
 
+
 def encrypt_email(self):
     """Method encrypt_email() encrypts the user email so
     to store this field as a cache later. We use 'Fernet'
@@ -14,11 +15,11 @@ def encrypt_email(self):
         implementation of symmetric (also known as “secret key”)
         authenticated cryptography.
     """
-    if not "encrypted_email" in self:
+    if not hasattr(self, "encrypted_email"):
         raise PropertyNotExistException(
             "Object 'self' must have a property 'encrypted_email' with credentials value in it!")
 
-    if not "data" in self:
+    if not hasattr(self, "data"):
         raise PropertyNotExistException(
             "Object 'self' must have a property 'data' with user's decoded credentials field in it!")
 
@@ -41,11 +42,11 @@ def encrypt_password(self):
         implementation of symmetric (also known as “secret key”)
         authenticated cryptography.
     """
-    if not "encrypted_password" in self:
+    if not hasattr(self, "encrypted_password"):
         raise PropertyNotExistException(
             "Object 'self' must have a property 'encrypted_password' with credentials value in it!")
 
-    if not "data" in self:
+    if not hasattr(self, "data"):
         raise PropertyNotExistException(
             "Object 'self' must have a property 'data' with user's decoded credentials field in it!")
 
@@ -72,7 +73,7 @@ def decrypt_credentials(self, config):
         config: it is a dictionary object that holds user encrypted
         fields.
     """
-    if not "data" in self:
+    if not hasattr(self, "data"):
         raise PropertyNotExistException(
             "Object 'self' must have a property 'data' with user's encoded credentials field in it!")
 

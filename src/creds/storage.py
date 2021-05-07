@@ -14,7 +14,7 @@ def store_credentials(self):
     as cache in a file 'CredentialsFile.ini' so to use these
     fields later.
     """
-    if not "encrypted_email" in self or not "encrypted_password" in self:
+    if not hasattr(self, "encrypted_email") or not hasattr(self, "encrypted_password"):
         raise PropertyNotExistException(
             "Object 'self' must have properties 'encrypted_email'|'encrypted_password' with credentials value in it!")
 
