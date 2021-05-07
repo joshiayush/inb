@@ -20,6 +20,16 @@ from helpers.print import printGreen
 
 from helpers.input import _input
 
+from helpers.command_help import help_with_exit
+from helpers.command_help import help_with_show
+from helpers.command_help import help_with_help
+from helpers.command_help import help_with_clear
+from helpers.command_help import help_with_theme
+from helpers.command_help import help_with_delete
+from helpers.command_help import help_with_configs
+from helpers.command_help import help_with_linkedin
+from helpers.command_help import help_with_developer
+
 from creds.crypto import encrypt_email
 from creds.crypto import encrypt_password
 
@@ -110,14 +120,6 @@ class Main(object):
             "driver_path": "/Python/linkedin-bot/driver/chromedriver",
             "headless": False
         }
-        self.help_with = {
-            "linkedin": Main.help_with_linkedin,
-            "show": Main.help_with_show,
-            "developer": Main.help_with_developer,
-            "theme": Main.help_with_theme,
-            "clear": Main.help_with_clear,
-            "exit": Main.help_with_exit
-        }
 
     def store_cache(self):
         """Method store_cache() applies encryption on the fields if both
@@ -174,214 +176,8 @@ class Main(object):
             f"""'{_theme}' can't be recognized as a 'theme' command""", style='b', pad='1')
         return
 
-    @staticmethod
-    def help_with_configs():
-        """Function help_with_configs()
-        """
-        printBlue(f"""config.user.email "example@email.com" --cached""",
-                  style='b', pad='1')
-        printBlue(
-            f"""config.user.password "example@password" --cached""", style='b', pad='1')
-        printBlue(
-            f"""Or you can use the following command if you don't want to show the password on the screen""",
-            style='b', pad='1')
-        printBlue(f"""config.user.password --cached (hit enter)""",
-                  style='b', pad='1')
-        printBlue(f"""Password: """, style='b', pad='1')
-        printBlue(
-            f"""config.job.keywords "Data%Science" (use '%' for space)""", style='b', pad='1')
-        printBlue(f"""config.job.location "Sanfrancisco%CA" """,
-                  style='b', pad='1')
-
-    @staticmethod
-    def help_with_linkedin():
-        """Method help_with_linkedin() shows how you can use the linkedin
-        command in case you missed the flags with the linkedin command or
-        mistakenly applied wrong flags with the linkedin command. We declare
-        this function static because we don't need to give this function an
-        access to the object it's no use giving this function access to the
-        object.
-        """
-        printBlue(
-            f"""linkedin [send] [suggestions^] --auto/--guided [--headless] [--use-cache]""", style='b', pad='1')
-        printBlue(
-            f"""'linkedin' command handles the linkedin process.""", style='b', pad='1')
-        printBlue(
-            f"""'send' flag sends invitations according to the path given to it.""", style='b', pad='1')
-        printBlue(
-            f"""'suggestions' flag lets linkedin know that it must use""", style='b', pad='1')
-        printBlue(f"""'MyNetwork' tab as a target.""", style='b', pad='1')
-        printBlue(
-            f"""'--auto/--guided' flag tells the linkedin to start process in auto(recommended) or guided mode.""",
-            style='b', pad='1')
-        printBlue(
-            f"""'--headless' flag tells the program to start automation without opening the browser.""", style='b', pad='1')
-        printBlue(
-            f"""'--use-cache' uses cache (if stored) for authentication.""", style='b', pad='1')
-        printBlue(
-            f"""linkedin [send] [search industry=example&&location=india+usa+...] --auto^/--guided [--headless]""", start='\n', style='b', pad='1')
-        printBlue(
-            f"""'linkedin' command handles the linkedin process.""", style='b', pad='1')
-        printBlue(
-            f"""'send' flag sends invitations according to the path given to it.""", style='b', pad='1')
-        printBlue(
-            f"""'search industry=example&&location=india+usa+...' flag lets linkedin know that it must""", style='b', pad='1')
-        printBlue(
-            f"""go and search for people associated to the given industry (use (%) for space between words in industry)""",
-            style='b', pad='1')
-        printBlue(
-            f"""and living in the given location. You can always add location.""", style='b', pad='1')
-        printBlue(
-            f"""'--auto/--guided' flag tells the linkedin to start process in auto(recommended) or guided mode.""",
-            style='b', pad='1')
-        printBlue(
-            f"""'--headless' flag tells the program to start automation without opening the browser.""", style='b', pad='1')
-        printBlue(
-            f"""'--use-cache' uses cache (if stored) for authentication.""", style='b', pad='1')
-        printBlue(
-            f"""linkedin [invitation-manager*] [show*] --sent*/--recieved* [--headless]""", start='\n', style='b', pad='1')
-        printBlue(
-            f"""'linkedin' command handles the linkedin process.""", style='b', pad='1')
-        printBlue(
-            f"""'invitation-manager' flag tells the linkedin to start performing operations on""", style='b', pad='1')
-        printBlue(f"""invitation manager tab.""", style='b', pad='1')
-        printBlue(
-            f"""'show' flag show tells the linkedin to show the people my account want to connect with.""", style='b', pad='1')
-        printBlue(
-            f"""'--sent/--recieved' flag tells the linkedin to fetch either sent invitations or recieved ones.""",
-            style='b', pad='1')
-        printBlue(
-            f"""'--headless' flag tells the program to start automation without opening the browser.""", style='b', pad='1')
-        printBlue(
-            f"""'--use-cache' uses cache (if stored) for authentication.""", style='b', pad='1')
-        printBlue(
-            f"""linkedin [invitation-manager*] [ignore*/withdraw*] [all*^/over > <days>*] [--headless]""",
-            start='\n', style='b', pad='1')
-        printBlue(
-            f"""'linkedin' command handles the linkedin process.""", style='b', pad='1')
-        printBlue(
-            f"""'invitation-manager' flag tells the linkedin to start performing operations on""", style='b', pad='1')
-        printBlue(
-            f"""'ignore/withdraw' flag tells the linkedin that you want to activate invitation ignoring or withdrawing process.""",
-            style='b', pad='1')
-        printBlue(
-            f"""'all/over > <days>' flag tell to either withdraw all the sent invitations or""", style='b', pad='1')
-        printBlue(
-            f"""use the amount of days given to withdraw sent invitations accordingly.""", style='b', pad='1')
-        printBlue(
-            f"""'--headless' flag tells the program to start automation without opening the browser.""", style='b', pad='1')
-        printBlue(
-            f"""'--use-cache' uses cache (if stored) for authentication.""", style='b', pad='1')
-        printBlue(
-            f"""linkedin [mynetwork*] [show*] [all*/page > 1^+2+3+...*] [--headless]""", start='\n', style='b', pad='1')
-        printBlue(
-            f"""'linkedin' command handles the linkedin process.""", style='b', pad='1')
-        printBlue(
-            f"""'mynetwork' flag tell the linkedin to start operating on MyNetworks.""", style='b', pad='1')
-        printBlue(
-            f"""'all/page > 1+2+3+...' flag tells either show all connections or use the pages given.""", style='b', pad='1')
-        printBlue(
-            f"""'--headless' flag tells the program to start automation without opening the browser.""", style='b', pad='1')
-        printBlue(
-            f"""'--use-cache' uses cache (if stored) for authentication.""", style='b', pad='1')
-        printBlue(
-            f"""linkedin [mynetwork*] [sendmessage*] [all*] [--greet*^] [--headless]""", start='\n', style='b', pad='1')
-        printBlue(
-            f"""'linkedin' command handles the linkedin process.""", style='b', pad='1')
-        printBlue(
-            f"""'mynetwork' flag tell the linkedin to start operating on MyNetworks.""", style='b', pad='1')
-        printBlue(
-            f"""'sendmessage' flag tells the linkedin to send messages to connections.""", style='b', pad='1')
-        printBlue(
-            f"""'all' flag tells the linkedin to use all connections.""", style='b', pad='1')
-        printBlue(
-            f"""'--greet' flag tells the linkedin to send greet message.""", style='b', pad='1')
-        printBlue(
-            f"""'--headless' flag tells the program to start automation without opening the browser.""", style='b', pad='1')
-        printBlue(
-            f"""'--use-cache' uses cache (if stored) for authentication.""", style='b', pad='1')
-
-    @staticmethod
-    def help_with_show():
-        """Function help_with_show() shows you how you can use the
-        'show' command in case you entered wrong command. We declare
-        this function static because we don't need to give this function
-        an access to the object it's no use giving this function access
-        to the object.
-        """
-        printBlue(
-            f"""'show' shows all the details you have entered like:""", style='b', pad='1')
-        printBlue(f"""user.email,""", style='b', pad='1')
-        printBlue(
-            f"""user.password (asks first if you want to see it really or not),""", style='b', pad='1')
-        printBlue(f"""job.keywords,""", style='b', pad='1')
-        printBlue(f"""job.location""", style='b', pad='1')
-
-    @staticmethod
-    def help_with_delete():
-        printBlue(f"""'delete' command deletes the cache stored.""",
-                  style='b', pad='1')
-        printBlue(f"""Usage: delete --cache""", style='b', pad='1')
-
-    @staticmethod
-    def help_with_developer():
-        """Function help_with_developer() shows you how you can use the
-        'developer' command in case you entered wrong command. We declare
-        this function static because we don't need to give this function
-        an access to the object it's no use giving this function access to
-        the object.
-        """
-        printBlue(f"""'developer' shows the developer details like:""",
-                  style='b', pad='1')
-        printBlue(f"""his number, email, profiles ...""", style='b', pad='1')
-
-    @staticmethod
-    def help_with_theme():
-        """Function help_with_theme() shows you how you can use the
-        'theme' command in case you entered wrong command or entered
-        a un-matching flag. We declare this function static because
-        we don't need to give this function an access to the object
-        it's no use giving this function access to the object.
-        """
-        printBlue(
-            f"""'theme --parrot/--normal' changes the cli (command line theme) according to the given theme value.""",
-            style='b', pad='1')
-
-    @staticmethod
-    def help_with_clear():
-        """Function help_with_clear() shows you how you can use the
-        'clear' command in case you entered wrong command. We declare
-        this function static because we don't need to give this function
-        an access to the object it's no use giving this function access
-        to the object.
-        """
-        printBlue(f"""'clear' clears the screen""", style='b', pad='1')
-
-    @staticmethod
-    def help_with_exit():
-        """Function help_with_exit() shows you how you can use the
-        'exit' command in case you entered wrong command. We declare
-        this function static because we don't need to give this function
-        an access to the object it's no use giving this function access
-        to the object.
-        """
-        printBlue(
-            f"""'exit' exits the program and also does flushing jobs.""", style='b', pad='1')
-
-    @staticmethod
-    def help_with_help():
-        """Function help_with_help() shows you how you can use the
-        'help' command in case you entered wrong command. We declare
-        this function static because we don't need to give this function
-        an access to the object it's no use giving this function access
-        to the object.
-        """
-        printBlue(
-            f"""'help' prints a list of commands that the Linkedin Automater have.""",
-            style='b', pad='1')
-
     def handle_config(self):
-        Main.help_with_configs()
+        help_with_configs()
 
     def get_command_length(self):
         """Method get_command_length() returns the lenght of the command
@@ -505,13 +301,9 @@ class Main(object):
         the flags that are applied with the `linkedin` command and calls
         the LinkedIn classes accordingly.
         """
-        if self.get_command_length() <= 2 and self.get_command_at_index(1) == "linkedin":
+        if self.get_command_length() <= 2:
             raise ZeroFlagException(
                 "Command 'linkedin' cannot be referenced without a flag!")
-
-        if self.get_command_length() < 3:
-            Main.help_with_linkedin()
-            return
 
         if self.get_command_at_index(2) == "send":
             try:
@@ -529,7 +321,7 @@ class Main(object):
             return
 
         if self.get_command_at_index(2) == "--help":
-            Main.help_with_linkedin()
+            help_with_linkedin()
             return
 
         raise CommandFlagNotFoundException(
@@ -601,7 +393,7 @@ class Main(object):
         keys/location.
         """
         if self.get_command_length() > 2 and self.get_command_at_index(2) == "--help":
-            Main.help_with_show()
+            help_with_show()
             return
 
         printGreen(f"""%s""" % (
@@ -625,16 +417,12 @@ class Main(object):
         the user hits the command `delete` this basically deletes
         the cache stored (User credentials) if exists.
         """
-        if self.get_command_at_index(1) == "delete" and self.get_command_length() <= 2:
+        if self.get_command_length() <= 2:
             raise ZeroFlagException(
                 "command 'delete' cannot be referenced alone!")
 
-        if self.get_command_length() < 3:
-            Main.help_with_delete()
-            return
-
         if self.get_command_at_index(2) == "--help":
-            Main.help_with_delete()
+            help_with_delete()
             return
 
         if self.get_command_at_index(2) == "--cache":
@@ -676,7 +464,7 @@ class Main(object):
                     f"""{self.get_command_at_index(2)} is not a 'developer' command!""")
 
             if self.get_command_at_index(2) == "--help":
-                Main.help_with_developer()
+                help_with_developer()
                 return
 
             return
@@ -710,7 +498,7 @@ class Main(object):
             return
 
         if self.get_command_at_index(2) == "--help":
-            Main.help_with_theme()
+            help_with_theme()
             return
 
         raise CommandFlagNotFoundException(
@@ -724,12 +512,12 @@ class Main(object):
         We does a lot of argument parsing in this function as you can see
         this is to fetch the right flag and if not found raise an error.
         """
-        if self.get_command_length() == 2 and self.get_command_at_index(1) == "clear":
+        if self.get_command_length() == 2:
             self.home()
             return
 
         if self.get_command_at_index(2) == "--help":
-            Main.help_with_clear()
+            help_with_clear()
             return
 
         raise CommandFlagNotFoundException(
@@ -746,13 +534,13 @@ class Main(object):
         """
         if self.get_command_length() > 2:
             if self.get_command_at_index(2) == "--help":
-                Main.help_with_help()
+                help_with_help()
                 return
 
             raise CommandFlagNotFoundException(
                 f"""'{self.get_command_at_index(2)}' is not recognized as a 'help' command!""")
 
-        printGreen(f"""LinkedIn Bash, version 1.15.0(1)-release (lnkdbt-1.15.0)""",
+        printGreen(f"""LinkedIn Bash, version 1.17.6(1)-release (lnkdbt-1.17.6)""",
                    style='b', pad='1')
         printGreen(f"""These commands are defined internally. Type 'help' to see this list.""",
                    style='b', pad='1')
@@ -804,12 +592,13 @@ class Main(object):
         as you can see this is to fetch the right flag and if not found
         raise an error.
         """
-        if self.get_command_length() < 3 and self.get_command_at_index(1) == "exit":
+        if self.get_command_length() < 3:
             printGreen(f"""Piece""", style='b', pad='1')
             sys.exit()
 
         if self.get_command_at_index(2) == "--help":
-            Main.help_with_exit()
+            help_with_exit()
+            return
 
         raise CommandFlagNotFoundException(
             f"""'{self.get_command_at_index(2)}' is not recognized as a 'exit' flag!""")
