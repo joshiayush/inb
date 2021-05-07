@@ -3,7 +3,6 @@ import os
 import sys
 import getpass
 import colorama
-from cryptography.fernet import Fernet
 
 # importing `readline` this we need to import becuase when
 # we take input from the terminal window and we press arrow
@@ -12,10 +11,27 @@ from cryptography.fernet import Fernet
 # moving on pressing arrow keys.
 import readline
 
+from helpers.window import clear
+
 from helpers.print import printk
 from helpers.print import printRed
 from helpers.print import printBlue
 from helpers.print import printGreen
+
+from helpers.input import _input
+
+from creds.crypto import encrypt_email
+from creds.crypto import encrypt_password
+
+from creds.storage import delete_key
+from creds.storage import delete_cache
+from creds.storage import get_credentials
+from creds.storage import store_credentials
+
+from errors.error import ZeroFlagException
+from errors.error import PropertyNotExistException
+from errors.error import CommandFlagNotFoundException
+from errors.error import CredentialsNotFoundException
 
 from linkedin.LinkedInConnectionsAuto import LinkedInConnectionsAuto
 from linkedin.LinkedInConnectionsGuided import LinkedInConnectionsGuided
@@ -82,22 +98,7 @@ class Main(object):
         (Command Line Interface).
         """
         self.encrypted_email = ""
-
         self.encrypted_password = ""
-
-        self.__key_file = "/Python/linkedin-bot/creds/.key.key"
-
-        if not os.path.exists(self.__key_file):
-            self.__key = Fernet.generate_key()
-
-            with open(self.__key_file, 'w') as key_file:
-                key_file.write(self.__key.decode())
-        else:
-            with open(self.__key_file, 'r') as key_file:
-                self.__key = key_file.readline().encode()
-
-        self.__credentials_file = "/Python/linkedin-bot/creds/credentialsFile.ini"
-
         self.data = {
             "user_email": "",
             "user_password": "",
@@ -108,7 +109,6 @@ class Main(object):
             "driver_path": "/Python/linkedin-bot/driver/chromedriver",
             "headless": False
         }
-
         self.help_with = {
             "linkedin": Main.help_with_linkedin,
             "show": Main.help_with_show,
@@ -118,220 +118,35 @@ class Main(object):
             "exit": Main.help_with_exit
         }
 
-    def encrypt_email(self):
-        """Method encrypt_email() encrypts the user email so
-        to store this field as a cache later. We use 'Fernet'
-        class to encrypt user password.
-
-            Fernet:
-            Fernet guarantees that a message encrypted using it cannot
-            be manipulated or read without the key. Fernet is an
-            implementation of symmetric (also known as “secret key”)
-            authenticated cryptography.
-        """
-        fernet = Fernet(self.__key)
-
-        self.encrypted_email = fernet.encrypt(
-            self.data["user_email"].encode()).decode()
-
-        del fernet
-
-    def encrypt_password(self):
-        """Method encrypt_password() encrypts the user password so
-        to store this field as a cache later. We use 'Fernet' class
-        to encrypt user password.
-
-        Fernet:
-            Fernet guarantees that a message encrypted using it cannot
-            be manipulated or read without the key. Fernet is an
-            implementation of symmetric (also known as “secret key”)
-            authenticated cryptography.
-        """
-        fernet = Fernet(self.__key)
-
-        self.encrypted_password = fernet.encrypt(
-            self.data["user_password"].encode()).decode()
-
-        del fernet
-
-    def decrypt_credentials(self, config):
-        """Method decrypt_credentials() decrypts the encrypted user
-        credentials that are stored in the Credentials file. We use
-        class 'Fernet' to achive this functionality.
-
-        Fernet:
-            Fernet guarantees that a message encrypted using it cannot
-            be manipulated or read without the key. Fernet is an
-            implementation of symmetric (also known as “secret key”)
-            authenticated cryptography.
-
-        Args:
-            config: it is a dictionary object that holds user encrypted
-            fields.
-        """
-        fernet = Fernet(self.__key)
-
-        self.data["user_email"] = fernet.decrypt(
-            config["Username"].encode('utf-8')).decode('utf-8')
-        self.data["user_password"] = fernet.decrypt(
-            config["Password"].encode('utf-8')).decode('utf-8')
-
-    def store_credentials(self):
-        """Method store_credentials() stores the user secret fields
-        as cache in a file 'CredentialsFile.ini' so to use these
-        fields later.
-        """
-        with open(self.__credentials_file, 'w') as creds_file:
-            creds_file.write("Username={}\nPassword={}\n".format(
-                self.encrypted_email, self.encrypted_password))
-
-    def get_credentials(self):
-        """Method get_credentials() reads the credentials stored as
-        cache in file 'CredentialsFile.ini' if exists.
-        """
-        if os.path.exists(self.__credentials_file):
-            try:
-                with open(self.__credentials_file, 'r') as creds_file:
-                    lines = creds_file.readlines()
-
-                    config = {
-                        "Username": "",
-                        "Password": ""
-                    }
-
-                    for line in lines:
-                        creds = line.rstrip('\n').split('=', 1)
-                        if creds[0] in ("Username", "Password"):
-                            config[creds[0]] = creds[1]
-
-                    self.decrypt_credentials(config)
-                    return True
-            except FileNotFoundError:
-                return False
-
-        printRed(f"""You don't have any cache stored.""", style='b', pad='1')
-
-        Main.help_with_configs()
-
-        return False
-
     def store_cache(self):
         """Method store_cache() applies encryption on the fields if both
         the fields are available and the calls the method 'store_credentials'
         to store the credentials as cache.
         """
-        if self.data["user_email"] and self.data["user_password"]:
-            self.encrypt_email()
-            self.encrypt_password()
-            self.store_credentials()
+        if not self.data["user_email"] or not self.data["user_password"]:
+            return
 
-    @staticmethod
-    def terminal_size():
-        """Function terminal_size() returns the size of the terminal when
-        the LinkedIn Automator program executed, this functionality is required
-        in order to set the Home Logo according to the terminal size. We declare
-        this method static because we don't need to give this function an access
-        to the object it's no use giving this function access to the object.
+        try:
+            encrypt_email(self)
+        except PropertyNotExistException as error:
+            printRed(f"""{error}""", style='b', pad='1')
 
-        return:
-            terminal size.
-        """
-        return os.get_terminal_size()
+        try:
+            encrypt_password(self)
+        except PropertyNotExistException as error:
+            printRed(f"""{error}""", style='b', pad='1')
 
-    @staticmethod
-    def get_coords():
-        """Function get_coords() returns the co-ordinates that are needed to set
-        the Home Logo nearly to the center according to the terminal size. We
-        declare this function static because we don't need to give this function
-        an access to the object it's no use giving this function access to the object.
-
-        return:
-            co-ordinates that sets the Logo nearly to the center.
-        """
-        if Main.terminal_size()[0] >= 150:
-            return [48, 5]
-        elif Main.terminal_size()[0] >= 80:
-            return [15, 2]
-        else:
-            return [15, 2]
-
-    @staticmethod
-    def gotoxy(x, y):
-        """Function gotoxy() sets the console cursor position. We declare this
-        function static because we don't need to give this function an access
-        to the object it's no use giving this function access to the object.
-
-        Args:
-            x: column number for the cursor.
-            y: row number for the cursor.
-        """
-        print("%c[%d;%df" % (0x1B, y, x), end='')
-
-    @staticmethod
-    def style(style):
-        """Function style() returns the text style that we are printing on the
-        terminal, it uses 'colorama' module to generate unicode for the given
-        style value. We declare this function static because we don't need to
-        give this function an access to the object it's no use giving this
-        function access to the object.
-
-        Args:
-            style: it is the style to be given to the text on the screen.
-
-        return:
-            text style.
-        """
-        styles = {
-            "bright": colorama.Style.BRIGHT,
-            "dim": colorama.Style.DIM,
-            "normal": colorama.Style.NORMAL,
-            "reset": colorama.Style.RESET_ALL
-        }
-
-        return styles.get(style, colorama.Style.RESET_ALL)
-
-    @staticmethod
-    def colorFore(color):
-        """Function colorFore() returns the text color according to the theme
-        enabled, it returns the text color only if the theme is set to '--parrot'
-        otherwise it only returns a unicode for color 'red' or 'reset' command if
-        the theme is set to '--normal'. We declare this function static because
-        we don't need to give this function an access to the object it's no use
-        giving this function access to the object.
-
-        Args:
-            color: it is the color that we need to return the unicode for.
-
-        return:
-            unicode for color.
-        """
-        colors = {
-            "red": colorama.Fore.RED,
-            "green": colorama.Fore.GREEN,
-            "blue": colorama.Fore.BLUE,
-            "reset": colorama.Fore.RESET
-        }
-
-        if Main.PARROT:
-            return colors.get(color, colorama.Fore.RESET)
-        else:
-            return colors.get(color, colorama.Fore.RESET) if color == "red" or color == "reset" else " \b"
-
-    def clear(self):
-        """Method clear() clears the terminal screen for windows we use command
-        `cls` and for linux based system we use command `clear`.
-        """
-        if os.name == 'nt':
-            os.system('cls')
-        elif os.name == 'posix':
-            os.system('clear')
+        try:
+            store_credentials(self)
+        except PropertyNotExistException as error:
+            printRed(f"""{error}""", style='b', pad='1')
 
     def home(self):
         """Method home() prints the home screen.
 
         First it clears the screen using the method clear().
         """
-        self.clear()
+        clear()
 
         printGreen(f"""Type help for more information!""",
                    style='b', start='\n', pad='1')
@@ -347,12 +162,16 @@ class Main(object):
         if _theme == "--parrot":
             Main.PARROT = True
             self.home()
-        elif _theme == "--normal":
+            return
+
+        if _theme == "--normal":
             Main.PARROT = False
             self.home()
-        else:
-            Main._print(
-                f"""'{_theme}' can't be recognized as a 'theme' command""")
+            return
+
+        printRed(
+            f"""'{_theme}' can't be recognized as a 'theme' command""", style='b', pad='1')
+        return
 
     @staticmethod
     def help_with_configs():
@@ -586,23 +405,22 @@ class Main(object):
     def get_search_query(self):
         querry = self.get_command_at_index(4)
 
-        if len(querry.split("&&")) == 2:
-            if "industry=" in querry.split("&&")[0] and (True or "location=" in querry.split("&&")[1]):
-                self.data["search_keywords"] = querry.split(
-                    "&&")[0][querry.split("&&")[0].find("=")+1::]
-                if "location" in querry.split("&&")[1]:
-                    self.data["search_location"] = querry.split(
-                        "&&")[1][querry.split("&&")[1].find("=")+1::]
-                    return True
-                return True
+        if len(querry.split("&&")) != 2:
+            return False
 
-        return False
+        if not "industry=" in querry.split("&&")[0] or not ("location=" in querry.split("&&")[1] or True):
+            return False
 
-    @staticmethod
-    def no_credentials():
-        printBlue(
-            f"""Need credentials first use config.user.email/password to add them.""",
-            style='b', pad='1')
+        self.data["search_keywords"] = querry.split(
+            "&&")[0][querry.split("&&")[0].find("=")+1::]
+
+        if not "location" in querry.split("&&")[1]:
+            return True
+
+        self.data["search_location"] = querry.split(
+            "&&")[1][querry.split("&&")[1].find("=")+1::]
+
+        return True
 
     def handle_send_commands(self):
         """Method handle_send_commands() handles the operations when you
@@ -616,52 +434,63 @@ class Main(object):
 
             -> linkedin [send] [search industry=example&&location=india+usa+...] --auto^/--guided [--headless] [--use-cache]
         """
-        if self.get_command_at_index(2) == "send":
-            """If user entered command with exact number of flags required
-            with that command then we perform the following operations where
-            we take actions according to the flags 'suggestions' or 'search'
-            in this case the parsing of arguments is done by targetting their
-            positions, remember flag 'suggestions' is default means even if
-            the user ommits it linkedin must go to the suggestion box to send
-            invitations to people and the flag '--auto' is also a default flag
-            in case user omits it linkedin should start the process in auto
-            mode.
-            """
-            if self.get_command_at_index(-1) == "--use-cache":
-                self.get_credentials()
+        if self.get_command_at_index(2) != "send":
+            return
 
-            if self.get_command_at_index(-2) == "--headless":
-                self.data["headless"] = True
+        # If user entered command with exact number of flags required
+        # with that command then we perform the following operations where
+        # we take actions according to the flags 'suggestions' or 'search'
+        # in this case the parsing of arguments is done by targetting their
+        # positions, remember flag 'suggestions' is default means even if
+        # the user ommits it linkedin must go to the suggestion box to send
+        # invitations to people and the flag '--auto' is also a default flag
+        # in case user omits it linkedin should start the process in auto
+        # mode.
+        if self.get_command_at_index(-1) == "--use-cache":
+            get_credentials(self)
 
-            if self.get_command_at_index(3) == "suggestions":
-                if self.get_command_at_index(4) == "--guided":
-                    if self.data["user_email"] and self.data["user_password"]:
-                        LinkedInConnectionsGuided(self.data).run()
-                    else:
-                        Main.no_credentials()
-                    return
-                else:
-                    if self.data["user_email"] and self.data["user_password"]:
-                        LinkedInConnectionsAuto(self.data).run()
-                    else:
-                        Main.no_credentials()
-                    return
-            elif self.get_command_at_index(3) == "--headless" or self.get_command_at_index(3) == "--use-cache":
-                if self.data["user_email"] and self.data["user_password"]:
-                    LinkedInConnectionsAuto(self.data).run()
-                else:
-                    Main.no_credentials()
+        if self.get_command_at_index(-2) == "--headless":
+            self.data["headless"] = True
+
+        if self.get_command_at_index(3) == "suggestions":
+            if self.get_command_at_index(4) == "--guided":
+                if not self.data["user_email"] or not self.data["user_password"]:
+                    raise CredentialsNotFoundException(
+                        "Credentials not found! Need credentials first use config.user.email/password to add them!")
+
+                LinkedInConnectionsGuided(self.data).run()
                 return
-            elif self.get_command_length() == 3:
-                if self.data["user_email"] and self.data["user_password"]:
-                    LinkedInConnectionsAuto(self.data).run()
-                else:
-                    Main.no_credentials()
+
+            if self.get_command_at_index(4) == "--auto" or True:
+                if not self.data["user_email"] or not self.data["user_password"]:
+                    raise CredentialsNotFoundException(
+                        "Credentials not found! Need credentials first use config.user.email/password to add them!")
+
+                LinkedInConnectionsAuto(self.data).run()
                 return
-            else:
-                self.command = self.command[3:]
-                self.handle_commands()
-                return
+
+            return
+
+        if self.get_command_at_index(3) == "--headless" or self.get_command_at_index(3) == "--use-cache":
+            if not self.data["user_email"] or not self.data["user_password"]:
+                raise CredentialsNotFoundException(
+                    "Credentials not found! Need credentials first use config.user.email/password to add them!")
+
+            LinkedInConnectionsAuto(self.data).run()
+            return
+
+        if self.get_command_length() == 3:
+            if not self.data["user_email"] or not self.data["user_password"]:
+                raise CredentialsNotFoundException(
+                    "Credentials not found! Need credentials first use config.user.email/password to add them!")
+
+            LinkedInConnectionsAuto(self.data).run()
+            return
+
+        self.command = self.command[3:]
+        self.handle_commands()
+
+        return
 
     def handle_invitation_manager_commands(self):
         pass
@@ -676,31 +505,34 @@ class Main(object):
         the LinkedIn classes accordingly.
         """
         if self.get_command_length() <= 2 and self.get_command_at_index(1) == "linkedin":
-            printBlue(f"""Command 'linkedin' cannot be referenced without a flag\n""",
-                      style='b', start='\n', end='\n', pad='1')
+            raise ZeroFlagException(
+                "Command 'linkedin' cannot be referenced without a flag!")
 
+        if self.get_command_length() < 3:
             Main.help_with_linkedin()
+            return
 
-        elif self.get_command_length() >= 3:
-
-            if self.get_command_at_index(2) == "send":
+        if self.get_command_at_index(2) == "send":
+            try:
                 self.handle_send_commands()
+            except CredentialsNotFoundException as error:
+                printRed(f"""{error}""", style='b', pad='1')
+            return
 
-            elif self.get_command_at_index(2) == "invitation-manager":
-                self.handle_invitation_manager_commands()
+        if self.get_command_at_index(2) == "invitation-manager":
+            self.handle_invitation_manager_commands()
+            return
 
-            elif self.get_command_at_index(2) == "mynetwork":
-                self.handle_mynetwork_commands()
+        if self.get_command_at_index(2) == "mynetwork":
+            self.handle_mynetwork_commands()
+            return
 
-            elif self.get_command_at_index(2 == "--help"):
-                Main.help_with_linkedin()
-
-            else:
-                printRed(
-                    f"""'{self.get_command_at_index(2)}' is not a 'linkedin' command""", style='b', pad='1')
-
-        else:
+        if self.get_command_at_index(2) == "--help":
             Main.help_with_linkedin()
+            return
+
+        raise CommandFlagNotFoundException(
+            f"""'{self.get_command_at_index(2)}' is not a 'linkedin' command!""")
 
     @staticmethod
     def show_job_details(self):
@@ -716,15 +548,13 @@ class Main(object):
         Args:
             self: it is the parameter object that has the user details in it.
         """
-        if self.data["job_keywords"] or self.data["job_location"]:
-            printGreen(f"""Job Keywords -> %s""" %
-                       (self.data["job_keywords"]
-                        if self.data["job_keywords"] else None),
-                       style='b', pad='1')
-            printGreen(f"""Job Location -> %s""" %
-                       (self.data["job_location"]
-                        if self.data["job_location"] else None),
-                       style='b', pad='1')
+        if not self.data["job_keywords"] and not self.data["job_location"]:
+            return
+
+        printGreen(f"""Job Keywords -> %s""" % (self.data["job_keywords"] if self.data["job_keywords"] else None),
+                   style='b', pad='1')
+        printGreen(f"""Job Location -> %s""" % (self.data["job_location"] if self.data["job_location"] else None),
+                   style='b', pad='1')
 
     @staticmethod
     def ask_to_show_password(self):
@@ -741,25 +571,26 @@ class Main(object):
             self: it is a parameter object that has user details in it.
         """
         try:
-            printk(f"""{Main.style("bright")}""", end="")
-            printk(f"""{Main.colorFore("blue")}""", end="")
+            printk(f"""{colorama.Style.BRIGHT}""", end="")
+            printk(f"""{colorama.Fore.BLUE}""", end="")
 
             ch = input(
                 f""" Show password anyway? [y/N]: """) if self.data["user_password"] else "n"
 
-            printk(f"""{Main.colorFore("reset")}""", end="")
-            printk(f"""{Main.style("reset")}""", end="")
+            printk(f"""{colorama.Fore.RESET}""", end="")
+            printk(f"""{colorama.Style.RESET_ALL}""", end="")
 
-            if ch.lower() == "y":
-                printGreen(f"""%s""" % (
-                    self.data["user_email"] if self.data["user_email"] else "use config.user.email to add user email"),
-                    style='b', pad='1')
-                printGreen(f"""%s""" % (
-                    self.data["user_password"] if self.data["user_password"] else "use config.user.password to add user password"),
-                    style='b', pad='1')
+            if ch.lower() != "y":
+                return
+
+            printGreen(f"""%s""" % (
+                self.data["user_email"] if self.data["user_email"] else "use config.user.email to add user email"),
+                style='b', pad='1')
+            printGreen(f"""%s""" % (
+                self.data["user_password"] if self.data["user_password"] else "use config.user.password to add user password"),
+                style='b', pad='1')
         except KeyboardInterrupt:
             printGreen(f"""Piece""", start='\n', pad='1')
-
             sys.exit()
 
     def handle_show_commands(self):
@@ -768,93 +599,99 @@ class Main(object):
         that user had entered like email, password, job
         keys/location.
         """
-        if self.get_command_length() == 2:
-            printGreen(f"""%s""" % (
-                self.data["user_email"] if self.data["user_email"] else "use config.user.email to add user email"),
-                style='b', pad='1')
-            printGreen(f"""%s""" % (
-                "*"*len(self.data["user_password"]) if self.data["user_password"] else "use config.user.password to add user password"),
-                style='b', pad='1')
-
-            Main.show_job_details(self)
-            Main.ask_to_show_password(self)
-        elif self.get_command_at_index(2) == "--help":
+        if self.get_command_length() > 2 and self.get_command_at_index(2) == "--help":
             Main.help_with_show()
-        else:
-            Main.help_with_show()
+            return
 
-    def delete_cache(self):
-        """Method delete_cache() deletes the stored cache (User credentials)
-        if exists, we use os.path.exists() to check if the file is present or
-        not if present we remove it.
-        """
-        if os.path.exists(self.__credentials_file):
-            os.remove(self.__credentials_file)
-        else:
-            printRed(f"""There's no credential file exists to delete.""",
-                     style='b', pad='1')
+        printGreen(f"""%s""" % (
+            self.data["user_email"] if self.data["user_email"] else "use config.user.email to add user email"),
+            style='b', pad='1')
+        printGreen(f"""%s""" % (
+            "*"*len(self.data["user_password"]) if self.data["user_password"] else "use config.user.password to add user password"),
+            style='b', pad='1')
 
-    def delete_key(self):
-        """Method delete_key() deletes the stored cipher key if exists,
-        we use os.path.exists() to check if the file is present or not if
-        present we remove it.
-        """
-        if os.path.exists(self.__key_file):
-            os.remove(self.__key_file)
-        else:
-            printRed(f"""There's no key file exists to delete.""",
-                     style='b', pad='1')
+        Main.show_job_details(self)
+        Main.ask_to_show_password(self)
+
+        if self.get_command_length() > 2 and self.get_command_at_index(2) != "--help":
+            raise CommandFlagNotFoundException(
+                f"""'{self.get_command_at_index(2)}' is not a 'show' command!""")
+
+        return
 
     def handle_delete_commands(self):
         """Method handle_delete_commands() gets executed once
         the user hits the command `delete` this basically deletes
         the cache stored (User credentials) if exists.
         """
-        if self.get_command_at_index(1) == "delete":
-            printRed(f"""command 'delete' cannot be reference alone.""",
-                     style='b', pad='1')
+        if self.get_command_at_index(1) == "delete" and self.get_command_length() <= 2:
+            raise ZeroFlagException(
+                "command 'delete' cannot be referenced alone!")
+
+        if self.get_command_length() < 3:
             Main.help_with_delete()
-        elif self.get_command_length() >= 3:
-            if self.get_command_at_index(2) == "--cache":
-                self.delete_cache()
-            elif self.get_command_at_index(2) == "--key":
-                self.delete_key()
-            elif self.get_command_at_index(2) == "--help":
-                Main.help_with_delete()
-            elif self.get_command_at_index(2) == "--cache&&--key":
-                self.delete_cache()
-                self.delete_key()
-            else:
-                printRed(
-                    f"""flag '{self.get_command_at_index(2)}' is not recognized.""", style='b', pad='1')
-        else:
+            return
+
+        if self.get_command_at_index(2) == "--help":
             Main.help_with_delete()
+            return
+
+        if self.get_command_at_index(2) == "--cache":
+            try:
+                delete_cache()
+            except FileNotFoundError as error:
+                printRed(f"""{error}""", style='b', pad='1')
+            return
+
+        if self.get_command_at_index(2) == "--key":
+            try:
+                delete_key()
+            except FileNotFoundError as error:
+                printRed(f"""{error}""", style='b', pad='1')
+            return
+
+        if self.get_command_at_index(2) == "--cache&&--key":
+            try:
+                delete_cache()
+            except FileNotFoundError as error:
+                printRed(f"""{error}""", style='b', pad='1')
+            try:
+                delete_key()
+            except FileNotFoundError as error:
+                printRed(f"""{error}""", style='b', pad='1')
+            return
+
+        raise CommandFlagNotFoundException(
+            f"""{self.get_command_at_index(2)} is not recognized as a 'delete' command!""")
 
     def handle_developer_commands(self):
         """Method developer() gets executed once the user hits
         the command `devdetails` it basically shows the developer's
         network profiles and mail address.
         """
-        if self.get_command_length() == 2:
-            Main._print(f"""{Main.style("bright")}""", end="")
-            Main._print(f"""{Main.colorFore("green")}""", end="")
+        if self.get_command_length() > 2:
+            if self.get_command_at_index(2) != "--help":
+                raise CommandFlagNotFoundException(
+                    f"""{self.get_command_at_index(2)} is not a 'developer' command!""")
 
-            printGreen(f"""Name     :  Ayush Joshi""", style='b', pad='1')
-            printGreen(
-                f"""Email    :  ayush854032@gmail.com (primary)""", style='b', pad='1')
-            printGreen(
-                f"""Email    :  joshiayush.joshiayush@gmail.com""", style='b', pad='1')
-            printGreen(
-                f"""Mobile   :  +91 8941854032 (Only WhatsApp)""", style='b', pad='1')
-            printGreen(
-                f"""GitHub   :  https://github.com/JoshiAyush""", style='b', pad='1')
-            printGreen(
-                f"""LinkedIn :  https://www.linkedin.com/in/ayush-joshi-3600a01b7/{Main.colorFore("reset")}""",
-                style='b', pad='1')
-        elif self.get_command_at_index(2) == "--help":
-            Main.help_with_developer()
-        else:
-            pass
+            if self.get_command_at_index(2) == "--help":
+                Main.help_with_developer()
+                return
+
+            return
+
+        printGreen(f"""Name     :  Ayush Joshi""",
+                   style='b', pad='1')
+        printGreen(f"""Email    :  ayush854032@gmail.com (primary)""",
+                   style='b', pad='1')
+        printGreen(f"""Email    :  joshiayush.joshiayush@gmail.com""",
+                   style='b', pad='1')
+        printGreen(f"""Mobile   :  +91 8941854032 (Only WhatsApp)""",
+                   style='b', pad='1')
+        printGreen(f"""GitHub   :  https://github.com/JoshiAyush""",
+                   style='b', pad='1')
+        printGreen(f"""LinkedIn :  https://www.linkedin.com/in/ayush-joshi-3600a01b7/""",
+                   style='b', pad='1')
 
     def handle_theme_commands(self):
         """Method handle_theme_commands() handles the 'theme' commands
@@ -863,16 +700,20 @@ class Main(object):
         does a lot of argument parsing in this function as you can see
         this is to fetch the right flag and if not found raise an error.
         """
+        if self.get_command_length() < 3:
+            raise ZeroFlagException(
+                "command 'theme' can not be referenced alone!")
+
+        if self.get_command_at_index(2) == "--parrot" or self.get_command_at_index(2) == "--normal":
+            self.set_theme(self.get_command_at_index(2).strip())
+            return
+
         if self.get_command_at_index(2) == "--help":
             Main.help_with_theme()
-            if self.get_command_length() > 3:
-                self.command = (
-                    "command " + self.get_command_at_index(3)).strip()
-                self.Error()
-        elif self.get_command_at_index(2) == "--parrot" or self.get_command_at_index(2) == "--normal":
-            self.set_theme(self.get_command_at_index(2).strip())
-        else:
-            Main.help_with_theme()
+            return
+
+        raise CommandFlagNotFoundException(
+            f"""'{self.get_command_at_index(2)}' is not a 'theme' command!""")
 
     def handle_clear_commands(self):
         """Method handle_clear_commands() handles the 'clear' commands
@@ -882,16 +723,16 @@ class Main(object):
         We does a lot of argument parsing in this function as you can see
         this is to fetch the right flag and if not found raise an error.
         """
-        if self.get_command_at_index(1) == "clear":
+        if self.get_command_length() == 2 and self.get_command_at_index(1) == "clear":
             self.home()
-        elif self.get_command_at_index(2) == "--help":
+            return
+
+        if self.get_command_at_index(2) == "--help":
             Main.help_with_clear()
-            if self.get_command_length() > 3:
-                self.command = (
-                    "command " + self.get_command_at_index(3)).strip()
-                self.Error()
-        else:
-            Main.help_with_clear()
+            return
+
+        raise CommandFlagNotFoundException(
+            f"""'{self.get_command_at_index(2)}' is not a clear command""")
 
     def handle_help_commands(self):
         """Method hanlde_help_commands() handles the 'help' command
@@ -902,60 +743,56 @@ class Main(object):
         as you can see this is to fetch the right flag and if not found
         raise an error.
         """
-        if self.get_command_at_index(1) == "help":
-            printGreen(
-                f"""LinkedIn Bash, version 1.0.0(1)-release (lnkdbt-1.0.0)""", style='b', pad='1')
-            printGreen(
-                f"""These commands are defined internally. Type 'help' to see this list.""", style='b', pad='1')
-            printGreen(
-                f"""Type 'command' --help to know more about that command.""", style='b', pad='1')
-            printGreen(
-                f"""A ([]) around a command means that the command is optional.""", start='\n', style='b', pad='1')
-            printGreen(
-                f"""A (^) next to command means that the command is the default command.""", style='b', pad='1')
-            printGreen(
-                f"""A (<>) around a name means that the field is required.""", style='b', pad='1')
-            printGreen(
-                f"""A (/) between commands means that you can write either of these but not all.""", style='b', pad='1')
-            printGreen(
-                f"""A (*) next to a name means that the command is disabled.""", style='b', pad='1')
-            printGreen(
-                f"""linkedin [send] [suggestions^] --auto^/--guided [--headless] [--use-cache]""",
-                start='\n', style='b', pad='1')
-            printGreen(
-                f"""linkedin [send] [search industry=example&&location=india+usa+...] --auto^/--guided [--headless] [--use-cache]""",
-                style='b', pad='1')
-            printGreen(
-                f"""linkedin [invitation-manager*] [show*] --sent*^/--recieved* [--headless] [--use-cache]""", style='b', pad='1')
-            printGreen(
-                f"""linkedin [invitation-manager*] [ignore*/withdraw*] [all*^/over > <days>*] [--headless] [--use-cache]""",
-                style='b', pad='1')
-            printGreen(
-                f"""linkedin [mynetwork*] [show*] [all*^/page > 1^+2+3+...*] [--headless] [--use-cache]""", style='b', pad='1')
-            printGreen(
-                f"""linkedin [mynetwork*] [sendmessage*] [all*^] [--greet*^] [--headless] [--use-cache]""", style='b', pad='1')
-            printGreen(f"""config""",
-                       style='b', pad='1', start='\n')
-            printGreen(f"""show""",
-                       style='b', pad='1', start='\n')
-            printGreen(f"""delete""",
-                       style='b', pad='1', start='\n')
-            printGreen(f"""developer""",
-                       style='b', pad='1', start='\n')
-            printGreen(f"""theme [--parrot^/--normal]""",
-                       style='b', pad='1', start='\n')
-            printGreen(f"""clear""",
-                       style='b', pad='1', start='\n')
-            printGreen(f"""exit""",
-                       style='b', pad='1', start='\n')
-        elif self.get_command_at_index(2) == "--help":
-            Main.help_with_help()
-            if self.get_command_length() > 3:
-                self.command = (
-                    "command " + self.command.split(" ")[3]).strip()
-                self.Error()
-        else:
-            Main.help_with_help()
+        if self.get_command_length() > 2:
+            if self.get_command_at_index(2) == "--help":
+                Main.help_with_help()
+                return
+
+            raise CommandFlagNotFoundException(
+                f"""'{self.get_command_at_index(2)}' is not recognized as a 'help' command!""")
+
+        printGreen(f"""LinkedIn Bash, version 1.15.0(1)-release (lnkdbt-1.15.0)""",
+                   style='b', pad='1')
+        printGreen(f"""These commands are defined internally. Type 'help' to see this list.""",
+                   style='b', pad='1')
+        printGreen(f"""Type 'command' --help to know more about that command.""",
+                   style='b', pad='1')
+        printGreen(f"""A ([]) around a command means that the command is optional.""",
+                   start='\n', style='b', pad='1')
+        printGreen(f"""A (^) next to command means that the command is the default command.""",
+                   style='b', pad='1')
+        printGreen(f"""A (<>) around a name means that the field is required.""",
+                   style='b', pad='1')
+        printGreen(f"""A (/) between commands means that you can write either of these but not all.""",
+                   style='b', pad='1')
+        printGreen(f"""A (*) next to a name means that the command is disabled.""",
+                   style='b', pad='1')
+        printGreen(f"""linkedin [send] [suggestions^] --auto^/--guided [--headless] [--use-cache]""",
+                   start='\n', style='b', pad='1')
+        printGreen(f"""linkedin [send] [search industry=example&&location=india+usa+...] --auto^/--guided [--headless] [--use-cache]""",
+                   style='b', pad='1')
+        printGreen(f"""linkedin [invitation-manager*] [show*] --sent*^/--recieved* [--headless] [--use-cache]""",
+                   style='b', pad='1')
+        printGreen(f"""linkedin [invitation-manager*] [ignore*/withdraw*] [all*^/over > <days>*] [--headless] [--use-cache]""",
+                   style='b', pad='1')
+        printGreen(f"""linkedin [mynetwork*] [show*] [all*^/page > 1^+2+3+...*] [--headless] [--use-cache]""",
+                   style='b', pad='1')
+        printGreen(f"""linkedin [mynetwork*] [sendmessage*] [all*^] [--greet*^] [--headless] [--use-cache]""",
+                   style='b', pad='1')
+        printGreen(f"""config""",
+                   style='b', pad='1', start='\n')
+        printGreen(f"""show""",
+                   style='b', pad='1', start='\n')
+        printGreen(f"""delete""",
+                   style='b', pad='1', start='\n')
+        printGreen(f"""developer""",
+                   style='b', pad='1', start='\n')
+        printGreen(f"""theme [--parrot^/--normal]""",
+                   style='b', pad='1', start='\n')
+        printGreen(f"""clear""",
+                   style='b', pad='1', start='\n')
+        printGreen(f"""exit""",
+                   style='b', pad='1', start='\n')
 
     def handle_exit_commands(self):
         """Method handle_exit_commands() handles the 'exit' commands
@@ -1102,7 +939,7 @@ class Main(object):
         operations as per command.
         """
         while True:
-            self.command = ("command " + self._input()).strip()
+            self.command = ("command " + _input()).strip()
             self.handle_commands() if self.get_command_length() > 1 else False
 
 
