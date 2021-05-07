@@ -4,13 +4,6 @@ import sys
 import getpass
 import colorama
 
-# importing `readline` this we need to import becuase when
-# we take input from the terminal window and we press arrow
-# keys then the characters that corresponds to the pressed
-# key gets printed and we don't need that we need the cursor
-# moving on pressing arrow keys.
-import readline
-
 from helpers.window import clear
 
 from helpers.print import printk
@@ -18,7 +11,8 @@ from helpers.print import printRed
 from helpers.print import printBlue
 from helpers.print import printGreen
 
-from helpers.input import _input
+from helpers.scan import scanBlue
+from helpers.scan import scanGreen
 
 from helpers.command_help import help_with_exit
 from helpers.command_help import help_with_show
@@ -364,16 +358,10 @@ class Main(object):
             self: it is a parameter object that has user details in it.
         """
         try:
-            printk(f"""{colorama.Style.BRIGHT}""", end="")
-            printk(f"""{colorama.Fore.BLUE}""", end="")
+            ch = scanBlue(f"""Show password anyway? [y/N]:""", style='b',
+                          pad='1', end=' ') if self.data["user_password"] else 'n'
 
-            ch = input(
-                f""" Show password anyway? [y/N]: """) if self.data["user_password"] else "n"
-
-            printk(f"""{colorama.Fore.RESET}""", end="")
-            printk(f"""{colorama.Style.RESET_ALL}""", end="")
-
-            if ch.lower() != "y":
+            if ch.lower() != 'y':
                 return
 
             printGreen(f"""%s""" % (
@@ -426,28 +414,16 @@ class Main(object):
             return
 
         if self.get_command_at_index(2) == "--cache":
-            try:
-                delete_cache()
-            except FileNotFoundError as error:
-                printRed(f"""{error}""", style='b', pad='1')
+            delete_cache()
             return
 
         if self.get_command_at_index(2) == "--key":
-            try:
-                delete_key()
-            except FileNotFoundError as error:
-                printRed(f"""{error}""", style='b', pad='1')
+            delete_key()
             return
 
         if self.get_command_at_index(2) == "--cache&&--key":
-            try:
-                delete_cache()
-            except FileNotFoundError as error:
-                printRed(f"""{error}""", style='b', pad='1')
-            try:
-                delete_key()
-            except FileNotFoundError as error:
-                printRed(f"""{error}""", style='b', pad='1')
+            delete_cache()
+            delete_key()
             return
 
         raise CommandFlagNotFoundException(
@@ -667,7 +643,7 @@ class Main(object):
             email = self.get_email()
 
             if not email:
-                printRed(f"""'{self.command.split(" ")[1].strip()}' is not a valid email address!""",
+                printRed(f"""'{self.command.split(" ")[2].strip()}' is not a valid email address!""",
                          style='b', pad='1')
                 return
 
@@ -729,7 +705,16 @@ class Main(object):
             except NoSuchConfigurationFoundException as error:
                 printRed(f"""{error}""", style='b', pad='1')
         else:
-            self.commands.get(self.command.split(" ")[1], self.Error)()
+            try:
+                self.commands.get(self.command.split(" ")[1], self.Error)()
+            except CredentialsNotFoundException as error:
+                printRed(f"""{error}""", style='b', pad='1')
+            except CommandFlagNotFoundException as error:
+                printRed(f"""{error}""", style='b', pad='1')
+            except ZeroFlagException as error:
+                printRed(f"""{error}""", style='b', pad='1')
+            except FileNotFoundError as error:
+                printRed(f"""{error}""", style='b', pad='1')
 
     def run(self):
         """Method run() runs a infinite loop and starts the `cli`
@@ -743,7 +728,8 @@ class Main(object):
         operations as per command.
         """
         while True:
-            self.command = ("command " + _input()).strip()
+            self.command = ("command " + scanGreen("LinkedIn/>",
+                                                   style='b', pad='1', start='\n', end=' ')).strip()
             self.handle_commands() if self.get_command_length() > 1 else False
 
 
