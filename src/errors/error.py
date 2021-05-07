@@ -26,15 +26,43 @@ class DomainNameSystemNotResolveException(Exception):
         super(DomainNameSystemNotResolveException, self).__init__(message)
 
 
-class PropertyNotExistException(object):
+class PropertyNotExistException(Exception):
     """Thrown when a binding does not have a property name."""
 
     def __init__(self, message=""):
         super(PropertyNotExistException, self).__init__(message)
 
 
-class UserCacheNotFoundException(object):
+class UserCacheNotFoundException(Exception):
     """Thrown when user doesn't have any cache stored."""
 
     def __init__(self, message=""):
         super(UserCacheNotFoundException, self).__init__(message)
+
+
+class CredentialsNotFoundException(Exception):
+    """Thrown when user's credentials are not found."""
+
+    def __init__(self, message=""):
+        super(CredentialsNotFoundException, self).__init__(message)
+
+
+class CommandNotFoundError(Exception):
+    """Thrown when user enters a command that is not recognized."""
+
+    def __init__(self, message=""):
+        super(CommandNotFoundError, self).__init__(message)
+
+
+class CommandFlagNotFoundException(Exception):
+    """Thrown when user enters a command flag that is not recognized."""
+
+    def __init__(self, message=""):
+        super(CommandFlagNotFoundException, self).__init__(message)
+
+
+class ZeroFlagException(Exception):
+    """Thrown when a command is referenced without a flag."""
+
+    def __init__(self, message=""):
+        super(ZeroFlagException, self).__init__(message)
