@@ -66,3 +66,10 @@ class ZeroFlagException(Exception):
 
     def __init__(self, message=""):
         super(ZeroFlagException, self).__init__(message)
+
+
+class NoSuchConfigurationFoundException(Exception):
+    """Thrown when user enters a configuration command that is not recognized."""
+
+    def __init__(self, message=""):
+        super(NoSuchConfigurationFoundException, self).__init__(message)
