@@ -22,7 +22,7 @@ def printk(_str, **kwargs):
         print(end=kwargs["start"])
         del kwargs["start"]
 
-    print(" "*int(kwargs["pad"]), end="")
+    print(' '*int(kwargs["pad"]), end='')
     del kwargs["pad"]
     print(f"""{_str}""", **kwargs)
 
@@ -31,7 +31,7 @@ def printWhite(_str, **kwargs):
     """Function printWhite() takes a string and displays that string in WHITEcolor.
 
     Args:
-        string: it is the string that needs to be printed on the terminal.
+        _str: it is the string that needs to be printed on the terminal.
         **kwargs: are the key-value pair that print method takes besides string.
     """
     if not kwargs:
@@ -42,25 +42,25 @@ def printWhite(_str, **kwargs):
         printk(f"""{colorama.Fore.WHITE}{_str}{colorama.Fore.RESET}""", **kwargs)
         return
 
-    if kwargs["style"].lower() == "b" or kwargs["style"].lower() == "bright":
+    if kwargs["style"].lower() == 'b' or kwargs["style"].lower() == "bright":
         del kwargs["style"]
-        print(f"""{colorama.Style.BRIGHT}""", end="")
+        print(f"""{colorama.Style.BRIGHT}""", end='')
         printWhite(_str, **kwargs)
-        print(f"""{colorama.Style.RESET_ALL}""", end="")
+        print(f"""{colorama.Style.RESET_ALL}""", end='')
         return
 
-    if kwargs["style"].lower() == "n" or kwargs["style"].lower() == "normal":
+    if kwargs["style"].lower() == 'n' or kwargs["style"].lower() == "normal":
         del kwargs["style"]
-        print(f"""{colorama.Style.NORMAL}""", end="")
+        print(f"""{colorama.Style.NORMAL}""", end='')
         printWhite(_str, **kwargs)
-        print(f"""{colorama.Style.RESET_ALL}""", end="")
+        print(f"""{colorama.Style.RESET_ALL}""", end='')
         return
 
-    if kwargs["style"].lower() == "d" or kwargs["style"].lower() == "dim":
+    if kwargs["style"].lower() == 'd' or kwargs["style"].lower() == "dim":
         del kwargs["style"]
-        print(f"""{colorama.Style.DIM}""", end="")
+        print(f"""{colorama.Style.DIM}""", end='')
         printWhite(_str, **kwargs)
-        print(f"""{colorama.Style.RESET_ALL}""", end="")
+        print(f"""{colorama.Style.RESET_ALL}""", end='')
         return
 
 
@@ -68,7 +68,7 @@ def printRed(_str, **kwargs):
     """Function printRed() takes a string and displays that string in red color.
 
     Args:
-        string: it is the string that needs to be printed on the terminal.
+        _str: it is the string that needs to be printed on the terminal.
         **kwargs: are the key-value pair that print method takes besides string.
     """
     if not kwargs:
@@ -79,33 +79,33 @@ def printRed(_str, **kwargs):
         printk(f"""{colorama.Fore.RED}{_str}{colorama.Fore.RESET}""", **kwargs)
         return
 
-    if kwargs["style"].lower() == "b" or kwargs["style"].lower() == "bright":
+    if kwargs["style"].lower() == 'b' or kwargs["style"].lower() == "bright":
         del kwargs["style"]
-        print(f"""{colorama.Style.BRIGHT}""", end="")
+        print(f"""{colorama.Style.BRIGHT}""", end='')
         printRed(_str, **kwargs)
-        print(f"""{colorama.Style.RESET_ALL}""", end="")
+        print(f"""{colorama.Style.RESET_ALL}""", end='')
         return
 
-    if kwargs["style"].lower() == "n" or kwargs["style"].lower() == "normal":
+    if kwargs["style"].lower() == 'n' or kwargs["style"].lower() == "normal":
         del kwargs["style"]
-        print(f"""{colorama.Style.NORMAL}""", end="")
+        print(f"""{colorama.Style.NORMAL}""", end='')
         printRed(_str, **kwargs)
-        print(f"""{colorama.Style.RESET_ALL}""", end="")
+        print(f"""{colorama.Style.RESET_ALL}""", end='')
         return
 
-    if kwargs["style"].lower() == "d" or kwargs["style"].lower() == "dim":
+    if kwargs["style"].lower() == 'd' or kwargs["style"].lower() == "dim":
         del kwargs["style"]
-        print(f"""{colorama.Style.DIM}""", end="")
+        print(f"""{colorama.Style.DIM}""", end='')
         printRed(_str, **kwargs)
-        print(f"""{colorama.Style.RESET_ALL}""", end="")
+        print(f"""{colorama.Style.RESET_ALL}""", end='')
         return
 
 
 def printGreen(_str, **kwargs):
-    """Function printGreen() takes a string and displays that string in red green.
+    """Function printGreen() takes a string and displays that string in green color.
 
     Args:
-        string: it is the string that needs to be printed on the terminal.
+        _str: it is the string that needs to be printed on the terminal.
         **kwargs: are the key-value pair that print method takes besides string.
     """
     if not kwargs:
@@ -116,25 +116,25 @@ def printGreen(_str, **kwargs):
         printk(f"""{colorama.Fore.GREEN}{_str}{colorama.Fore.RESET}""", **kwargs)
         return
 
-    if kwargs["style"].lower() == "b" or kwargs["style"].lower() == "bright":
+    if kwargs["style"].lower() == 'b' or kwargs["style"].lower() == "bright":
         del kwargs["style"]
-        print(f"""{colorama.Style.BRIGHT}""", end="")
+        print(f"""{colorama.Style.BRIGHT}""", end='')
         printGreen(_str, **kwargs)
-        print(f"""{colorama.Style.RESET_ALL}""", end="")
+        print(f"""{colorama.Style.RESET_ALL}""", end='')
         return
 
-    if kwargs["style"].lower() == "n" or kwargs["style"].lower() == "normal":
+    if kwargs["style"].lower() == 'n' or kwargs["style"].lower() == "normal":
         del kwargs["style"]
-        print(f"""{colorama.Style.NORMAL}""", end="")
+        print(f"""{colorama.Style.NORMAL}""", end='')
         printGreen(_str, **kwargs)
-        print(f"""{colorama.Style.RESET_ALL}""", end="")
+        print(f"""{colorama.Style.RESET_ALL}""", end='')
         return
 
-    if kwargs["style"].lower() == "d" or kwargs["style"].lower() == "dim":
+    if kwargs["style"].lower() == 'd' or kwargs["style"].lower() == "dim":
         del kwargs["style"]
-        print(f"""{colorama.Style.DIM}""", end="")
+        print(f"""{colorama.Style.DIM}""", end='')
         printGreen(_str, **kwargs)
-        print(f"""{colorama.Style.RESET_ALL}""", end="")
+        print(f"""{colorama.Style.RESET_ALL}""", end='')
         return
 
 
@@ -142,7 +142,7 @@ def printBlue(_str, **kwargs):
     """Function printBlue() takes a string and displays that string in blue color.
 
     Args:
-        string: it is the string that needs to be printed on the terminal.
+        _str: it is the string that needs to be printed on the terminal.
         **kwargs: are the key-value pair that print method takes besides string.
     """
     if not kwargs:
@@ -153,25 +153,25 @@ def printBlue(_str, **kwargs):
         printk(f"""{colorama.Fore.BLUE}{_str}{colorama.Fore.RESET}""", **kwargs)
         return
 
-    if kwargs["style"].lower() == "b" or kwargs["style"].lower() == "bright":
+    if kwargs["style"].lower() == 'b' or kwargs["style"].lower() == "bright":
         del kwargs["style"]
-        print(f"""{colorama.Style.BRIGHT}""", end="")
+        print(f"""{colorama.Style.BRIGHT}""", end='')
         printBlue(_str, **kwargs)
-        print(f"""{colorama.Style.RESET_ALL}""", end="")
+        print(f"""{colorama.Style.RESET_ALL}""", end='')
         return
 
-    if kwargs["style"].lower() == "n" or kwargs["style"].lower() == "normal":
+    if kwargs["style"].lower() == 'n' or kwargs["style"].lower() == "normal":
         del kwargs["style"]
-        print(f"""{colorama.Style.NORMAL}""", end="")
+        print(f"""{colorama.Style.NORMAL}""", end='')
         printBlue(_str, **kwargs)
-        print(f"""{colorama.Style.RESET_ALL}""", end="")
+        print(f"""{colorama.Style.RESET_ALL}""", end='')
         return
 
-    if kwargs["style"].lower() == "d" or kwargs["style"].lower() == "dim":
+    if kwargs["style"].lower() == 'd' or kwargs["style"].lower() == "dim":
         del kwargs["style"]
-        print(f"""{colorama.Style.DIM}""", end="")
+        print(f"""{colorama.Style.DIM}""", end='')
         printBlue(_str, **kwargs)
-        print(f"""{colorama.Style.RESET_ALL}""", end="")
+        print(f"""{colorama.Style.RESET_ALL}""", end='')
         return
 
 
@@ -179,7 +179,7 @@ def printYellow(_str, **kwargs):
     """Function printYellow() takes a string and displays that string in yellow color.
 
     Args:
-        string: it is the string that needs to be printed on the terminal.
+        _str: it is the string that needs to be printed on the terminal.
         **kwargs: are the key-value pair that print method takes besides string.
     """
     if not kwargs:
@@ -190,23 +190,23 @@ def printYellow(_str, **kwargs):
         printk(f"""{colorama.Fore.YELLOW}{_str}{colorama.Fore.RESET}""", **kwargs)
         return
 
-    if kwargs["style"].lower() == "b" or kwargs["style"].lower() == "bright":
+    if kwargs["style"].lower() == 'b' or kwargs["style"].lower() == "bright":
         del kwargs["style"]
-        print(f"""{colorama.Style.BRIGHT}""", end="")
+        print(f"""{colorama.Style.BRIGHT}""", end='')
         printYellow(_str, **kwargs)
-        print(f"""{colorama.Style.RESET_ALL}""", end="")
+        print(f"""{colorama.Style.RESET_ALL}""", end='')
         return
 
-    if kwargs["style"].lower() == "n" or kwargs["style"].lower() == "normal":
+    if kwargs["style"].lower() == 'n' or kwargs["style"].lower() == "normal":
         del kwargs["style"]
-        print(f"""{colorama.Style.NORMAL}""", end="")
+        print(f"""{colorama.Style.NORMAL}""", end='')
         printYellow(_str, **kwargs)
-        print(f"""{colorama.Style.RESET_ALL}""", end="")
+        print(f"""{colorama.Style.RESET_ALL}""", end='')
         return
 
-    if kwargs["style"].lower() == "d" or kwargs["style"].lower() == "dim":
+    if kwargs["style"].lower() == 'd' or kwargs["style"].lower() == "dim":
         del kwargs["style"]
-        print(f"""{colorama.Style.DIM}""", end="")
+        print(f"""{colorama.Style.DIM}""", end='')
         printYellow(_str, **kwargs)
-        print(f"""{colorama.Style.RESET_ALL}""", end="")
+        print(f"""{colorama.Style.RESET_ALL}""", end='')
         return
