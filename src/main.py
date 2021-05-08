@@ -1,3 +1,6 @@
+"""from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!"""
+from __future__ import annotations
+
 import re
 import os
 import sys
@@ -54,7 +57,7 @@ class Main(object):
     """
     PARROT = True
 
-    def __init__(self: object) -> None:
+    def __init__(self: Main) -> None:
         """Method __init__() initializes the commands and required variables,
         it also prints the Logo on the screen it calls method init_commands()
         that initializes all the commands that we can have in this program then
@@ -67,7 +70,7 @@ class Main(object):
 
         Main.home()
 
-    def init_commands(self: object) -> None:
+    def init_commands(self: Main) -> None:
         """Method init_commands() initialize the commands that LinkedIn
         Automater provides for now we have following commands,
 
@@ -94,7 +97,7 @@ class Main(object):
             "exit": self.handle_exit_commands,
         }
 
-    def init_vars(self: object) -> None:
+    def init_vars(self: Main) -> None:
         """Method init_vars() intialize the dictionary that holds the
         user's details like credentials and jobs search, etc, it also
         initializes a dictionary which conatins commands and their
@@ -116,70 +119,70 @@ class Main(object):
         }
 
     @property
-    def user_email(self: object) -> str:
+    def user_email(self: Main) -> str:
         return self.data["user_email"]
 
     @user_email.setter
-    def user_email(self: object, email: str) -> None:
+    def user_email(self: Main, email: str) -> None:
         self.data["user_email"] = email
 
     @property
-    def user_password(self: object) -> str:
+    def user_password(self: Main) -> str:
         return self.data["user_password"]
 
     @user_password.setter
-    def user_password(self: object, password: str) -> None:
+    def user_password(self: Main, password: str) -> None:
         self.data["user_password"] = password
 
     @property
-    def search_keywords(self: object) -> str:
+    def search_keywords(self: Main) -> str:
         return self.data["search_keywords"]
 
     @search_keywords.setter
-    def search_keywords(self: object, search_keywords: str) -> None:
+    def search_keywords(self: Main, search_keywords: str) -> None:
         self.data["search_keywords"] = search_keywords
 
     @property
-    def search_location(self: object) -> str:
+    def search_location(self: Main) -> str:
         return self.data["search_location"]
 
     @search_location.setter
-    def search_location(self: object, search_location: str) -> None:
+    def search_location(self: Main, search_location: str) -> None:
         self.data["search_location"] = search_location
 
     @property
-    def job_keywords(self: object) -> str:
+    def job_keywords(self: Main) -> str:
         return self.data["job_keywords"]
 
     @job_keywords.setter
-    def job_keywords(self: object, job_keywords: str) -> None:
+    def job_keywords(self: Main, job_keywords: str) -> None:
         self.data["job_keywords"] = job_keywords
 
     @property
-    def job_location(self: object) -> str:
+    def job_location(self: Main) -> str:
         return self.data["job_location"]
 
     @job_location.setter
-    def job_location(self: object, job_location: str) -> None:
+    def job_location(self: Main, job_location: str) -> None:
         self.data["job_location"] = job_location
 
     @property
-    def driver_path(self: object) -> str:
+    def driver_path(self: Main) -> str:
         return self.data["driver_path"]
 
     @driver_path.setter
-    def driver_path(self: object, driver_path: str) -> None:
+    def driver_path(self: Main, driver_path: str) -> None:
         self.data["driver_path"] = driver_path
 
     @property
-    def headless(self: object) -> bool:
+    def headless(self: Main) -> bool:
         return self.data["headless"]
 
     @headless.setter
-    def headless(self: object, headless: bool) -> None:
+    def headless(self: Main, headless: bool) -> None:
         self.data["headless"] = headless
 
-    def store_cache(self: object) -> None:
+    def store_cache(self: Main) -> None:
         """Method store_cache() applies encryption on the fields if both
         the fields are available and the calls the method 'store_credentials'
         to store the credentials as cache.
@@ -236,7 +239,7 @@ class Main(object):
             f"""'{_theme}' can't be recognized as a 'theme' command""", style='b', pad='1')
         return
 
-    def get_command_length(self: object) -> int:
+    def get_command_length(self: Main) -> int:
         """Method get_command_length() returns the lenght of the command
         entered. We first change the entered string to a list object by
         spliting the string on ' ' (whitespaces) then we return the lenght.
@@ -246,7 +249,7 @@ class Main(object):
         """
         return len(self.command.split(" "))
 
-    def get_command_at_index(self: object, index: int) -> str:
+    def get_command_at_index(self: Main, index: int) -> str:
         """Method get_command_at_index() returns a value at a given index
         of the command after changing the string to a list object. We also
         use strip() function to cut all the leading and trailing whitespaces.
@@ -256,7 +259,7 @@ class Main(object):
         except IndexError:
             return None
 
-    def get_search_query(self: object) -> None:
+    def get_search_query(self: Main) -> None:
         querry = self.get_command_at_index(4)
 
         if len(querry.split("&&")) != 2:
@@ -274,7 +277,7 @@ class Main(object):
         self.search_location = querry.split(
             "&&")[1][querry.split("&&")[1].find("=")+1::]
 
-    def handle_send_commands(self: object) -> None:
+    def handle_send_commands(self: Main) -> None:
         """Method handle_send_commands() handles the operations when you
         apply flag 'send' with 'linkedin' command. We handle operation in
         two ways where one is when the user enters exact number of flags
@@ -289,15 +292,6 @@ class Main(object):
         if self.get_command_at_index(2) != "send":
             return
 
-        # If user entered command with exact number of flags required
-        # with that command then we perform the following operations where
-        # we take actions according to the flags 'suggestions' or 'search'
-        # in this case the parsing of arguments is done by targetting their
-        # positions, remember flag 'suggestions' is default means even if
-        # the user ommits it linkedin must go to the suggestion box to send
-        # invitations to people and the flag '--auto' is also a default flag
-        # in case user omits it linkedin should start the process in auto
-        # mode.
         if self.get_command_at_index(-1) == "--use-cache":
             get_credentials(self)
 
@@ -344,13 +338,13 @@ class Main(object):
 
         return
 
-    def handle_invitation_manager_commands(self: object) -> None:
+    def handle_invitation_manager_commands(self: Main) -> None:
         pass
 
-    def handle_mynetwork_commands(self: object) -> None:
+    def handle_mynetwork_commands(self: Main) -> None:
         pass
 
-    def handle_linkedin_commands(self: object) -> None:
+    def handle_linkedin_commands(self: Main) -> None:
         """Method handle_linkedin_commands() calls the main LinkedIn
         classes according to the commands given by the user, it checks
         the flags that are applied with the `linkedin` command and calls
@@ -382,7 +376,7 @@ class Main(object):
         raise CommandFlagNotFoundException(
             f"""'{self.get_command_at_index(2)}' is not a 'linkedin' command!""")
 
-    def show_job_details(self: object) -> None:
+    def show_job_details(self: Main) -> None:
         """Function show_job_details() prints the job details that the
         user entered we print the information about job keys once we have
         any of these two fields otherwise we don't show it. We declare this
@@ -403,7 +397,7 @@ class Main(object):
         printGreen(f"""Job Location -> %s""" % (self.job_keywords if self.job_keywords else None),
                    style='b', pad='1')
 
-    def ask_to_show_password(self: object) -> None:
+    def ask_to_show_password(self: Main) -> None:
         """Function ask_to_show_password() asks the user if (s)he want
         to see the password if yes show them if not don't show them,
         this is for security purpose. We declare this function static
@@ -433,7 +427,7 @@ class Main(object):
             printGreen(f"""Piece""", start='\n', pad='1')
             sys.exit()
 
-    def handle_show_commands(self: object) -> None:
+    def handle_show_commands(self: Main) -> None:
         """Method show() gets executed once the user hit the
         command `show` this basically prints the information
         that user had entered like email, password, job
@@ -459,7 +453,7 @@ class Main(object):
 
         return
 
-    def handle_delete_commands(self: object) -> None:
+    def handle_delete_commands(self: Main) -> None:
         """Method handle_delete_commands() gets executed once
         the user hits the command `delete` this basically deletes
         the cache stored (User credentials) if exists.
@@ -488,7 +482,7 @@ class Main(object):
         raise CommandFlagNotFoundException(
             f"""{self.get_command_at_index(2)} is not recognized as a 'delete' command!""")
 
-    def handle_developer_commands(self: object) -> None:
+    def handle_developer_commands(self: Main) -> None:
         """Method developer() gets executed once the user hits
         the command `devdetails` it basically shows the developer's
         network profiles and mail address.
@@ -517,7 +511,7 @@ class Main(object):
         printGreen(f"""LinkedIn :  https://www.linkedin.com/in/ayush-joshi-3600a01b7/""",
                    style='b', pad='1')
 
-    def handle_theme_commands(self: object) -> None:
+    def handle_theme_commands(self: Main) -> None:
         """Method handle_theme_commands() handles the 'theme' commands
         it calls the set_theme() function once it confirms that the flag
         that is given with the theme command is an actual theme flag. We
@@ -539,7 +533,7 @@ class Main(object):
         raise CommandFlagNotFoundException(
             f"""'{self.get_command_at_index(2)}' is not a 'theme' command!""")
 
-    def handle_clear_commands(self: object) -> None:
+    def handle_clear_commands(self: Main) -> None:
         """Method handle_clear_commands() handles the 'clear' commands
         it calls the home() function once it confirms that the given
         command is exactly a 'clear' command, it also checks for the flag
@@ -558,7 +552,7 @@ class Main(object):
         raise CommandFlagNotFoundException(
             f"""'{self.get_command_at_index(2)}' is not a clear command""")
 
-    def handle_help_commands(self: object) -> None:
+    def handle_help_commands(self: Main) -> None:
         """Method hanlde_help_commands() handles the 'help' command
         it provides a manual to the user if it identifies that the
         given command is an actual help command, this guide contains
@@ -618,7 +612,7 @@ class Main(object):
         printGreen(f"""exit""",
                    style='b', pad='1', start='\n')
 
-    def handle_exit_commands(self: object) -> None:
+    def handle_exit_commands(self: Main) -> None:
         """Method handle_exit_commands() handles the 'exit' commands
         it calls the python's exit() function once it confirms that
         the given command is exactly a 'exit' command, it also checks
@@ -638,7 +632,7 @@ class Main(object):
         raise CommandFlagNotFoundException(
             f"""'{self.get_command_at_index(2)}' is not recognized as a 'exit' flag!""")
 
-    def Error(self: object) -> None:
+    def Error(self: Main) -> None:
         """Method Error() gets called when the entered command
         is not recognized. We say 'self.command[8:]' because this
         way we are triming the 'command ' from the entered command
@@ -651,13 +645,13 @@ class Main(object):
         printRed(
             f"""`{self.command[8:]}` is not recognized as an internal command.""", style='b', pad='1')
 
-    def slice_keyword(self: object) -> str:
+    def slice_keyword(self: Main) -> str:
         try:
             return self.command.split(" ")[2][self.command.split(" ")[2].find('"')+1:self.command.split(" ")[2].rfind('"')]
         except IndexError:
             return None
 
-    def get_email(self: object) -> str:
+    def get_email(self: Main) -> str:
         """
         Method check_email()
         """
@@ -671,13 +665,13 @@ class Main(object):
 
         return False
 
-    def if_password_given(self: object) -> bool:
+    def if_password_given(self: Main) -> bool:
         if re.search(r'"[a-zA-z0-9~`!@#\$%\^&\*\(\)_\+=-\\\|\[\]\{\}\"\'\?<>,\.:;\/]*"', self.command.split(" ")[2].strip()):
             return True
 
         return False
 
-    def handle_configs(self: object) -> None:
+    def handle_configs(self: Main) -> None:
         """Method handle_configs() basically saves the user's configurations
         that are passed by hitting the command `config.user.email/password`
         or `config.job/keywords/location`. We use re.compile() and re.search()
@@ -741,7 +735,7 @@ class Main(object):
 
         raise NoSuchConfigurationFoundException("No such configuration found!")
 
-    def handle_commands(self: object) -> None:
+    def handle_commands(self: Main) -> None:
         """Method handle_commands() does the actually handling of the commands
         entered, we first find pattern for 'configuration' commands using the
         re.compile() and re.search() method, which finds the pattern in the
@@ -775,7 +769,7 @@ class Main(object):
             except FileNotFoundError as error:
                 printRed(f"""{error}""", style='b', pad='1')
 
-    def run(self: object) -> None:
+    def run(self: Main) -> None:
         """Method run() runs a infinite loop and starts the `cli`
         (Command Line Interface) and it actually starts listening
         to the commands and then it calls the function handle_commands()
