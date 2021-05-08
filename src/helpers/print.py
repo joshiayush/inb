@@ -1,7 +1,7 @@
 import colorama
 
 
-def printk(_str, **kwargs):
+def printk(_str: str, **kwargs: dict) -> None:
     """Function printk() takes a string and displays that string on the terminal.
     This function also adds left 'whitespace' padding to the given string if there is a
     'pad' property present in the 'kwargs' otherwise it simply displays that string.
@@ -26,8 +26,10 @@ def printk(_str, **kwargs):
     del kwargs["pad"]
     print(f"""{_str}""", **kwargs)
 
+    return
 
-def printWhite(_str, **kwargs):
+
+def printWhite(_str: str, **kwargs: dict) -> None:
     """Function printWhite() takes a string and displays that string in WHITEcolor.
 
     Args:
@@ -64,7 +66,7 @@ def printWhite(_str, **kwargs):
         return
 
 
-def printRed(_str, **kwargs):
+def printRed(_str: str, **kwargs: dict) -> None:
     """Function printRed() takes a string and displays that string in red color.
 
     Args:
@@ -101,7 +103,7 @@ def printRed(_str, **kwargs):
         return
 
 
-def printGreen(_str, **kwargs):
+def printGreen(_str: str, **kwargs: dict) -> None:
     """Function printGreen() takes a string and displays that string in green color.
 
     Args:
@@ -138,7 +140,7 @@ def printGreen(_str, **kwargs):
         return
 
 
-def printBlue(_str, **kwargs):
+def printBlue(_str: str, **kwargs: dict) -> None:
     """Function printBlue() takes a string and displays that string in blue color.
 
     Args:
@@ -175,7 +177,7 @@ def printBlue(_str, **kwargs):
         return
 
 
-def printYellow(_str, **kwargs):
+def printYellow(_str: str, **kwargs: dict) -> None:
     """Function printYellow() takes a string and displays that string in yellow color.
 
     Args:

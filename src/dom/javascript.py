@@ -1,4 +1,4 @@
-def get_page_y_offset(self):
+def get_page_y_offset(self: object) -> int:
     """Function get_page_y_offset() returns the window.pageYOffset
     of the webpage, we need that so we can keep on scrolling untill
     the page offset becomes constant. Declaration of this method is
@@ -22,7 +22,7 @@ def get_page_y_offset(self):
     ))
 
 
-def execute_javascript(self):
+def execute_javascript(self: object) -> None:
     """Function execute_javascript() scrolls the web page to the 
     very bottom of it using the 'document.scrollingElement.scrollTop' 
     property.

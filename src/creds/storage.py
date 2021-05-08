@@ -9,7 +9,7 @@ from errors.error import PropertyNotExistException
 from errors.error import UserCacheNotFoundException
 
 
-def store_credentials(self):
+def store_credentials(self: object) -> None:
     """Method store_credentials() stores the user secret fields
     as cache in a file 'CredentialsFile.ini' so to use these
     fields later.
@@ -23,7 +23,7 @@ def store_credentials(self):
             self.encrypted_email, self.encrypted_password))
 
 
-def get_credentials(self):
+def get_credentials(self: object) -> None:
     """Method get_credentials() reads the credentials stored as
     cache in file 'CredentialsFile.ini' if exists.
     """
@@ -48,7 +48,7 @@ def get_credentials(self):
                 "You don't have any cache stored!")
 
 
-def delete_cache():
+def delete_cache() -> None:
     """Method delete_cache() deletes the stored cache (User credentials)
     if exists, we use os.path.exists() to check if the file is present or
     not if present we remove it.
@@ -59,7 +59,7 @@ def delete_cache():
         raise FileNotFoundError("There's no credential file exists to delete.")
 
 
-def delete_key():
+def delete_key() -> None:
     """Method delete_key() deletes the stored cipher key if exists,
     we use os.path.exists() to check if the file is present or not if
     present we remove it.

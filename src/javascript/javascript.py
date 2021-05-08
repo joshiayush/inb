@@ -1,7 +1,7 @@
 import os
 
 
-def get_javascript(file_path=""):
+def get_javascript(file_path: str = '') -> str:
     """Function get_javascript() returns the javascript of a file specified.
 
     This function takes the file path as a parameter and checks if it's a absolute path

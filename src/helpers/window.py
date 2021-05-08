@@ -3,7 +3,7 @@ import os
 from helpers.print import printk
 
 
-def terminal_size():
+def terminal_size() -> list:
     """Function terminal_size() returns the size of the terminal when
     the LinkedIn Automator program executed, this functionality is required
     in order to set the Home Logo according to the terminal size. We declare
@@ -16,7 +16,7 @@ def terminal_size():
     return os.get_terminal_size()
 
 
-def get_coords():
+def get_coords() -> list:
     """Function get_coords() returns the co-ordinates that are needed to set
     the Home Logo nearly to the center according to the terminal size. We
     declare this function static because we don't need to give this function
@@ -34,7 +34,7 @@ def get_coords():
     return [15, 2]
 
 
-def gotoxy(x, y):
+def gotoxy(x: int, y: int) -> None:
     """Function gotoxy() sets the console cursor position. We declare this
     function static because we don't need to give this function an access
     to the object it's no use giving this function access to the object.
@@ -46,7 +46,7 @@ def gotoxy(x, y):
     printk("%c[%d;%df" % (0x1B, y, x), end='')
 
 
-def clear():
+def clear() -> None:
     """Method clear() clears the terminal screen for windows we use command
     `cls` and for linux based system we use command `clear`.
     """

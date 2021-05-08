@@ -11,7 +11,7 @@ import readline
 from .print import printGreen
 
 
-def scanf(_str, **kwargs):
+def scanf(_str: str, **kwargs: dict) -> str:
     """Function scanf() is a dedicated input method for our LinkedIn `cli`
     (Command Line Interface), it also handles the Keyboard interrupt error.
 
@@ -22,29 +22,23 @@ def scanf(_str, **kwargs):
     return:
         returns the entered value.
     """
+    _pad = 0
+
     if "start" in kwargs:
         print(end=kwargs["start"])
         del kwargs["start"]
 
     if "pad" in kwargs:
-        print(' '*int(kwargs["pad"]), end='')
+        _pad = kwargs["pad"]
         del kwargs["pad"]
 
     if not "end" in kwargs:
-        try:
-            return input(f"""{_str}""")
-        except KeyboardInterrupt:
-            printGreen(f"""Piece""", style='b', start='\n', pad='1')
-            sys.exit()
+        return input(f"""{' '*int(_pad)}{_str}""")
 
-    try:
-        return input(f"""{_str}{kwargs["end"]}""")
-    except KeyboardInterrupt:
-        printGreen(f"""Piece""", style='b', start='\n', pad='1')
-        sys.exit()
+    return input(f"""{' '*int(_pad)}{_str}{kwargs["end"]}""")
 
 
-def scanWhite(_str, **kwargs):
+def scanWhite(_str: str, **kwargs: dict) -> str:
     """Function scanWhite() takes user input in white color.
 
     Args:
@@ -89,7 +83,7 @@ def scanWhite(_str, **kwargs):
         return _inp
 
 
-def scanRed(_str, **kwargs):
+def scanRed(_str: str, **kwargs: dict) -> str:
     """Function scanRed() takes user input in red color.
 
     Args:
@@ -134,7 +128,7 @@ def scanRed(_str, **kwargs):
         return _inp
 
 
-def scanGreen(_str, **kwargs):
+def scanGreen(_str: str, **kwargs: dict) -> str:
     """Function scanGreen() takes user input in green color.
 
     Args:
@@ -179,7 +173,7 @@ def scanGreen(_str, **kwargs):
         return _inp
 
 
-def scanBlue(_str, **kwargs):
+def scanBlue(_str: str, **kwargs: dict) -> str:
     """Function scanBlue() takes user input in blue color.
 
     Args:
@@ -224,7 +218,7 @@ def scanBlue(_str, **kwargs):
         return _inp
 
 
-def scanYellow(_str, **kwargs):
+def scanYellow(_str: str, **kwargs: dict) -> str:
     """Function scanYellow() takes user input in yellow color.
 
     Args:

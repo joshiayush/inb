@@ -4,7 +4,7 @@ from . import Fernet
 from errors.error import PropertyNotExistException
 
 
-def encrypt_email(self):
+def encrypt_email(self: object) -> None:
     """Method encrypt_email() encrypts the user email so
     to store this field as a cache later. We use 'Fernet'
     class to encrypt user password.
@@ -31,7 +31,7 @@ def encrypt_email(self):
     del fernet
 
 
-def encrypt_password(self):
+def encrypt_password(self: object) -> None:
     """Method encrypt_password() encrypts the user password so
     to store this field as a cache later. We use 'Fernet' class
     to encrypt user password.
@@ -58,7 +58,7 @@ def encrypt_password(self):
     del fernet
 
 
-def decrypt_credentials(self, config):
+def decrypt_credentials(self: object, config: dict) -> None:
     """Method decrypt_credentials() decrypts the encrypted user
     credentials that are stored in the Credentials file. We use
     class 'Fernet' to achive this functionality.

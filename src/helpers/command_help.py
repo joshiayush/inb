@@ -1,7 +1,7 @@
 from .print import printBlue
 
 
-def help_with_configs():
+def help_with_configs() -> None:
     """Function help_with_configs()
     """
     printBlue(f"""config.user.email "example@email.com" --cached""",
@@ -20,7 +20,7 @@ def help_with_configs():
               style='b', pad='1')
 
 
-def help_with_linkedin():
+def help_with_linkedin() -> None:
     """Method help_with_linkedin() shows how you can use the linkedin
     command in case you missed the flags with the linkedin command or
     mistakenly applied wrong flags with the linkedin command. We declare
@@ -128,7 +128,7 @@ def help_with_linkedin():
         f"""'--use-cache' uses cache (if stored) for authentication.""", style='b', pad='1')
 
 
-def help_with_show():
+def help_with_show() -> None:
     """Function help_with_show() shows you how you can use the
     'show' command in case you entered wrong command. We declare
     this function static because we don't need to give this function
@@ -144,13 +144,13 @@ def help_with_show():
     printBlue(f"""job.location""", style='b', pad='1')
 
 
-def help_with_delete():
+def help_with_delete() -> None:
     printBlue(f"""'delete' command deletes the cache stored.""",
               style='b', pad='1')
     printBlue(f"""Usage: delete --cache""", style='b', pad='1')
 
 
-def help_with_developer():
+def help_with_developer() -> None:
     """Function help_with_developer() shows you how you can use the
     'developer' command in case you entered wrong command. We declare
     this function static because we don't need to give this function
@@ -163,7 +163,7 @@ def help_with_developer():
               style='b', pad='1')
 
 
-def help_with_theme():
+def help_with_theme() -> None:
     """Function help_with_theme() shows you how you can use the
     'theme' command in case you entered wrong command or entered
     a un-matching flag. We declare this function static because
@@ -175,7 +175,7 @@ def help_with_theme():
         style='b', pad='1')
 
 
-def help_with_clear():
+def help_with_clear() -> None:
     """Function help_with_clear() shows you how you can use the
     'clear' command in case you entered wrong command. We declare
     this function static because we don't need to give this function
@@ -185,7 +185,7 @@ def help_with_clear():
     printBlue(f"""'clear' clears the screen""", style='b', pad='1')
 
 
-def help_with_exit():
+def help_with_exit() -> None:
     """Function help_with_exit() shows you how you can use the
     'exit' command in case you entered wrong command. We declare
     this function static because we don't need to give this function
@@ -196,7 +196,7 @@ def help_with_exit():
         f"""'exit' exits the program and also does flushing jobs.""", style='b', pad='1')
 
 
-def help_with_help():
+def help_with_help() -> None:
     """Function help_with_help() shows you how you can use the
     'help' command in case you entered wrong command. We declare
     this function static because we don't need to give this function
