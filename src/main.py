@@ -561,7 +561,7 @@ class Main(object):
             raise CommandFlagNotFoundException(
                 f"""'{self.get_command_at_index(2)}' is not recognized as a 'help' command!""")
 
-        printGreen(f"""LinkedIn Bash, version 1.17.7(1)-release (lnkdbt-1.17.7)""",
+        printGreen(f"""LinkedIn Bash, version 1.22.7(1)-release (lnkdbt-1.22.7)""",
                    style='b', pad='1')
         printGreen(f"""These commands are defined internally. Type 'help' to see this list.""",
                    style='b', pad='1')
