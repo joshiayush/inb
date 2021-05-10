@@ -138,9 +138,11 @@ function checkIfGarbage() {
         "src+++creds+++__pycache__+++"
         "src+++errors+++__pycache__+++"
         "src+++helpers+++__pycache__+++"
+        "src+++console+++__pycache__+++"
         "src+++linkedin+++__pycache__+++"
         "src+++invitation+++__pycache__+++"
-        "src+++javascript+++__pycache__+++")
+        "src+++javascript+++__pycache__+++"
+        "src+++python_goto+++__pycache__+++")
 
     l_path="/"
     w_path="\\"
@@ -183,9 +185,11 @@ function deleteCache() {
         "src+++creds+++__pycache__+++"
         "src+++errors+++__pycache__+++"
         "src+++helpers+++__pycache__+++"
+        "src+++console+++__pycache__+++"
         "src+++linkedin+++__pycache__+++"
         "src+++invitation+++__pycache__+++"
-        "src+++javascript+++__pycache__+++")
+        "src+++javascript+++__pycache__+++"
+        "src+++python_goto+++__pycache__+++")
 
     l_path="/"
     w_path="\\"
