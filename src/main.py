@@ -9,13 +9,15 @@ import colorama
 
 from helpers.window import clear
 
-from helpers.print import printk
-from helpers.print import printRed
-from helpers.print import printBlue
-from helpers.print import printGreen
+from console import Theme
 
-from helpers.scan import scanBlue
-from helpers.scan import scanGreen
+from console.print import printk
+from console.print import printRed
+from console.print import printBlue
+from console.print import printGreen
+
+from console.scan import scanBlue
+from console.scan import scanGreen
 
 from helpers.command_help import help_with_exit
 from helpers.command_help import help_with_show
@@ -42,7 +44,6 @@ from errors.error import CredentialsNotFoundException
 from errors.error import NoSuchConfigurationFoundException
 
 from linkedin.LinkedInConnectionsAuto import LinkedInConnectionsAuto
-from linkedin.LinkedInConnectionsGuided import LinkedInConnectionsGuided
 
 
 class Main(object):
@@ -55,7 +56,6 @@ class Main(object):
     Class Variable:
         THEME: is the theme for our cli (command line interface).
     """
-    PARROT = True
 
     def __init__(self: Main) -> None:
         """Method __init__() initializes the commands and required variables,
@@ -226,12 +226,12 @@ class Main(object):
             user has entered it.
         """
         if _theme == "--parrot":
-            Main.PARROT = True
+            Theme.enable_theme_parrot()
             Main.home()
             return
 
         if _theme == "--normal":
-            Main.PARROT = False
+            Theme.disable_theme_parrot()
             Main.home()
             return
 
@@ -287,7 +287,7 @@ class Main(object):
         Usage:
             -> linkedin [send] [suggestions^] --auto^ [--headless] [--use--cache]
 
-            -> linkedin [send] [search industry=example&&location=india+usa+...] --auto^ [--headless] [--use-cache]
+            -> linkedin [send] [search* industry=example&&location=india+usa+...] --auto^ [--headless] [--use-cache]
         """
         if self.get_command_at_index(2) != "send":
             return
