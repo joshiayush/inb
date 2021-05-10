@@ -1,8 +1,8 @@
 import time
 import colorama
 
-from helpers.print import printRed
-from helpers.print import printBlue
+from console.print import printRed
+from console.print import printBlue
 
 from errors.error import EmptyResponseException
 from errors.error import FailedLoadingResourceException

@@ -1,6 +1,6 @@
 import os
 
-from helpers.print import printk
+from console.print import printk
 
 
 def terminal_size() -> list:

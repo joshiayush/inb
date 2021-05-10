@@ -5,11 +5,11 @@ import colorama
 from . import SUCCESS_RATE
 from . import FAILURE_RATE
 
-from helpers.print import printk
-from helpers.print import printRed
-from helpers.print import printBlue
-from helpers.print import printGreen
-from helpers.print import printWhite
+from console.print import printk
+from console.print import printRed
+from console.print import printBlue
+from console.print import printGreen
+from console.print import printWhite
 
 
 def calculate_status(status: str = '') -> str:

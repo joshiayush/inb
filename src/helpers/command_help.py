@@ -1,4 +1,4 @@
-from .print import printBlue
+from console.print import printBlue
 
 
 def help_with_configs() -> None:

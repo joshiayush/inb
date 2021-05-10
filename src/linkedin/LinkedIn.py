@@ -21,10 +21,10 @@ import sys
 import time
 import colorama
 
-from helpers.print import printk
-from helpers.print import printRed
-from helpers.print import printBlue
-from helpers.print import printGreen
+from console.print import printk
+from console.print import printRed
+from console.print import printBlue
+from console.print import printGreen
 
 from selenium import webdriver
 

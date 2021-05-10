@@ -3,8 +3,8 @@ import os
 from . import __key_file
 from . import __credentials_file
 
-from helpers.print import printRed
 from creds.crypto import decrypt_credentials
+
 from errors.error import PropertyNotExistException
 from errors.error import UserCacheNotFoundException
 
