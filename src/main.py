@@ -285,9 +285,9 @@ class Main(object):
         flags.
 
         Usage:
-            -> linkedin [send] [suggestions^] --auto^/--guided [--headless] [--use--cache]
+            -> linkedin [send] [suggestions^] --auto^ [--headless] [--use--cache]
 
-            -> linkedin [send] [search industry=example&&location=india+usa+...] --auto^/--guided [--headless] [--use-cache]
+            -> linkedin [send] [search industry=example&&location=india+usa+...] --auto^ [--headless] [--use-cache]
         """
         if self.get_command_at_index(2) != "send":
             return
@@ -299,14 +299,6 @@ class Main(object):
             self.headless = True
 
         if self.get_command_at_index(3) == "suggestions":
-            if self.get_command_at_index(4) == "--guided":
-                if not self.user_email or not self.user_password:
-                    raise CredentialsNotFoundException(
-                        "Credentials not found! Need credentials first use config.user.email/password to add them!")
-
-                LinkedInConnectionsGuided(self.data).run()
-                return
-
             if self.get_command_at_index(4) == "--auto" or True:
                 if not self.user_email or not self.user_password:
                     raise CredentialsNotFoundException(
@@ -585,9 +577,9 @@ class Main(object):
                    style='b', pad='1')
         printGreen(f"""A (*) next to a name means that the command is disabled.""",
                    style='b', pad='1')
-        printGreen(f"""linkedin [send] [suggestions^] --auto^/--guided [--headless] [--use-cache]""",
+        printGreen(f"""linkedin [send] [suggestions^] --auto^ [--headless] [--use-cache]""",
                    start='\n', style='b', pad='1')
-        printGreen(f"""linkedin [send] [search industry=example&&location=india+usa+...] --auto^/--guided [--headless] [--use-cache]""",
+        printGreen(f"""linkedin [send] [search* industry=example&&location=india+usa+...] --auto^ [--headless] [--use-cache]""",
                    style='b', pad='1')
         printGreen(f"""linkedin [invitation-manager*] [show*] --sent*^/--recieved* [--headless] [--use-cache]""",
                    style='b', pad='1')
@@ -783,7 +775,7 @@ class Main(object):
         while True:
             try:
                 self.command = ("command " + scanGreen("LinkedIn/>",
-                                                       style='b', pad='1', start='\n', end=' ')).strip()
+                                style='b', pad='1', start='\n', end=' ')).strip()
             except KeyboardInterrupt:
                 printGreen(f"""Piece""", style='b', start='\n', pad='1')
                 sys.exit()

@@ -33,10 +33,10 @@ class LinkedInConnectionsAuto(LinkedIn):
     """
     ENTITY_TO_BE_CLICKED = 0
 
-    def __init__(self, data):
+    def __init__(self: object, data: dict) -> None:
         super(LinkedInConnectionsAuto, self).__init__(data)
 
-    def get_my_network(self):
+    def get_my_network(self: object) -> None:
         """Function get_my_network() changes the url by executing function
         `get()` from webdriver.
         """
@@ -48,7 +48,7 @@ class LinkedInConnectionsAuto(LinkedIn):
         except TimeoutException:
             raise EmptyResponseException("ERR_EMPTY_RESPONSE")
 
-    def get_people(self):
+    def get_people(self: object) -> list:
         while True:
             try:
                 people_name = WebDriverWait(self.driver, 10).until(
@@ -66,7 +66,7 @@ class LinkedInConnectionsAuto(LinkedIn):
                 del people_name
                 break
             except TimeoutException:
-                LinkedIn.err_loading_resource()
+                # LinkedIn.err_loading_resource()
                 continue
 
         while True:
@@ -86,7 +86,7 @@ class LinkedInConnectionsAuto(LinkedIn):
                 del people_occupation
                 break
             except TimeoutException:
-                LinkedIn.err_loading_resource()
+                # LinkedIn.err_loading_resource()
                 continue
 
         while True:
@@ -98,15 +98,15 @@ class LinkedInConnectionsAuto(LinkedIn):
                 )
                 break
             except TimeoutException:
-                LinkedIn.err_loading_resource()
+                # LinkedIn.err_loading_resource()
                 continue
 
         return [_people_name, _people_occupation, people_button]
 
-    def encode(self, obj):
+    def encode(self: object, obj: list) -> list:
         return list(zip(obj[0], obj[1], obj[2]))
 
-    def click_buttons(self, obj):
+    def click_buttons(self: object, obj: list) -> None:
         """Function find_buttons() finds the buttons in the network page
         using webdriver function `find_elements_by_css_selector()` and
         then if they are enabled it executes `click()` function on them
@@ -122,20 +122,20 @@ class LinkedInConnectionsAuto(LinkedIn):
         while True:
             try:
                 obj[LinkedInConnectionsAuto.ENTITY_TO_BE_CLICKED][2].click()
-                LinkedIn.print_status(
-                    obj=obj[LinkedInConnectionsAuto.ENTITY_TO_BE_CLICKED], status="sent", elapsed_time=(time.time() - start))
+                # LinkedIn.print_status(
+                # obj=obj[LinkedInConnectionsAuto.ENTITY_TO_BE_CLICKED], status="sent", elapsed_time=(time.time() - start))
             except ElementClickInterceptedException:
-                LinkedIn.print_status(
-                    obj=obj[LinkedInConnectionsAuto.ENTITY_TO_BE_CLICKED], status="failed", elapsed_time=(time.time() - start))
+                # LinkedIn.print_status(
+                # obj=obj[LinkedInConnectionsAuto.ENTITY_TO_BE_CLICKED], status="failed", elapsed_time=(time.time() - start))
+                pass
             except ElementNotInteractableException:
-                LinkedIn.blocked()
-
+                # LinkedIn.blocked()
                 LinkedInConnectionsAuto.ENTITY_TO_BE_CLICKED = 0
                 return
 
             if LinkedInConnectionsAuto.ENTITY_TO_BE_CLICKED + 1 == new_entity_length:
                 while old_entity_length == new_entity_length:
-                    LinkedIn.execute_javascript(self)
+                    # LinkedIn.execute_javascript(self)
                     _obj = self.encode(self.get_people())
                     if len(_obj) > len(obj):
                         old_entity_length = new_entity_length
@@ -145,9 +145,9 @@ class LinkedInConnectionsAuto(LinkedIn):
 
             LinkedInConnectionsAuto.ENTITY_TO_BE_CLICKED += 1
 
-        LinkedIn.reset_attributes()
+        # LinkedIn.reset_attributes()
 
-    def prepare_page(self):
+    def prepare_page(self: object) -> None:
         """Method prepare_page() prepares the dynamically loading page before
         starting to send inivitations this functionality we needed because the
         page we are targetting loads dynamically and if we directly target the
@@ -171,7 +171,7 @@ class LinkedInConnectionsAuto(LinkedIn):
             s = 0
 
             for i in range(5001):
-                LinkedIn.execute_javascript(self)
+                # LinkedIn.execute_javascript(self)
                 if i % 200 == 0 and i != 0:
                     _preparing_ = "[" + "#"*(k+1) + _preparing_[k+2:]
                     k += 1
@@ -187,7 +187,7 @@ class LinkedInConnectionsAuto(LinkedIn):
         except NoSuchElementException:
             pass
 
-    def clear_msg_overlay(self):
+    def clear_msg_overlay(self: object) -> None:
         try:
             _ = WebDriverWait(self.driver, 10).until(
                 expected_conditions.presence_of_element_located(
@@ -202,7 +202,7 @@ class LinkedInConnectionsAuto(LinkedIn):
         except TimeoutException:
             raise FailedLoadingResourceException("ERR_LOADING_RESOURCE")
 
-    def run(self):
+    def run(self: object) -> None:
         """Function run() is the main function from where the program
         starts doing its job.
         """

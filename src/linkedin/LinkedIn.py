@@ -26,18 +26,20 @@ from helpers.print import printRed
 from helpers.print import printBlue
 from helpers.print import printGreen
 
-from errors.error import DomainNameSystemNotResolveException
-
 from selenium import webdriver
+
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support.ui import WebDriverWait
-from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.support import expected_conditions
-from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.action_chains import ActionChains
+
+from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import ElementNotInteractableException
 from selenium.common.exceptions import ElementClickInterceptedException
+
+from errors.error import DomainNameSystemNotResolveException
 
 
 class LinkedIn(object):
@@ -47,7 +49,7 @@ class LinkedIn(object):
 
     SESSION_ALREADY_EXISTS = False
 
-    def __init__(self, data):
+    def __init__(self: object, data: dict) -> None:
         """Initializing the `LinkedIn` class."""
         self.data = data
         self.email = self.data["user_email"]
@@ -70,7 +72,7 @@ class LinkedIn(object):
             """Calling `login()` function which will login for us."""
             self.login()
 
-    def set_browser_incognito_mode(self):
+    def set_browser_incognito_mode(self: object) -> None:
         """Setting the browser to incognito using a command line flag 
         `--incognito`. This is because using a incognito window makes 
         it possible to log in as a 'test' user, with none of your admin 
@@ -81,7 +83,7 @@ class LinkedIn(object):
         """
         self.options.add_argument("--incognito")
 
-    def set_ignore_certificate_error(self):
+    def set_ignore_certificate_error(self: object) -> None:
         """To disable the error windows related with certificate errors 
         we are using a command line flag `--ignore-certificate-errors`. 
         If you are willing to know more about chrome options,
@@ -92,10 +94,10 @@ class LinkedIn(object):
         """
         self.options.add_argument("--ignore-certificate-errors")
 
-    def set_headless(self):
+    def set_headless(self: object) -> None:
         self.options.add_argument("headless")
 
-    def get_chrome_driver_options(self):
+    def get_chrome_driver_options(self: object) -> "Webdriver Options":
         """Function get_chrome_driver_options() returns a set of chrome 
         options to be added during the execution of chromedriver. These 
         options help in driver testing and automation.
@@ -104,14 +106,13 @@ class LinkedIn(object):
             self: is the object from which the options are to be updated
         """
         self.set_browser_incognito_mode()
-
         self.set_ignore_certificate_error()
 
         self.set_headless() if self.data["headless"] else False
 
         return self.options
 
-    def enable_webdriver_chrome(self):
+    def enable_webdriver_chrome(self: object) -> None:
         """Function enable_web_driver() makes a webdriver object called 
         `self.driver` by executing the `webdriver.Chrome()` constructor 
         which takes following arguments.
@@ -128,13 +129,13 @@ class LinkedIn(object):
         self.driver = webdriver.Chrome(
             self.data["driver_path"], options=self.get_chrome_driver_options())
 
-    def disable_webdriver_chrome(self):
+    def disable_webdriver_chrome(self: object) -> None:
         """Function `disable_webdriver_chrome()` close the webdriver session 
         by executing a function called `close()`.
         """
         self.driver.close()
 
-    def get_login_page(self):
+    def get_login_page(self: object) -> None:
         """Redirecting to the LinkedIn login page using `get()` function of 
         our `webdriver` class.
 
@@ -146,7 +147,7 @@ class LinkedIn(object):
         except TimeoutException:
             raise DomainNameSystemNotResolveException("ERR_DNS_PROBE_STARTED")
 
-    def enter_email(self):
+    def enter_email(self: object) -> None:
         """Function `enter_email()` enters the email in the email input 
         field using function `find_element_by_name()` which first finds 
         the email element by name `session_key` and then clears the field 
@@ -165,10 +166,9 @@ class LinkedIn(object):
         login_email = self.driver.find_element_by_name("session_key")
 
         login_email.clear()
-
         login_email.send_keys(self.email)
 
-    def enter_password(self):
+    def enter_password(self: object) -> None:
         """Function `enter_password()` enters the password in the 
         password input field using function `find_element_by_name()` 
         which first finds the password element by name 
@@ -191,12 +191,10 @@ class LinkedIn(object):
         login_password = self.driver.find_element_by_name("session_password")
 
         login_password.clear()
-
         login_password.send_keys(self.password)
-
         login_password.send_keys(Keys.RETURN)
 
-    def fill_credentials(self):
+    def fill_credentials(self: object) -> None:
         """Function `fill_credentials()` fills the user credentials in 
         the desired fields by invoking function, `enter_email()` which 
         enters the email in the desired field and function `enter_password()` 
@@ -207,10 +205,9 @@ class LinkedIn(object):
             `enter_password()`.
         """
         self.enter_email()
-
         self.enter_password()
 
-    def login(self):
+    def login(self: object) -> None:
         """Function `login()` logs into your personal LinkedIn profile.
 
         Args:
@@ -221,20 +218,28 @@ class LinkedIn(object):
 
         try:
             self.get_login_page()
-        except DomainNameSystemNotResolveException:
-            printRed(f"""ERR_DNS_PROBE_STARTED""", style="b", pad="1")
+        except DomainNameSystemNotResolveException as error:
+            printRed(f"""{error}""", style="b", pad="1")
 
         self.fill_credentials()
 
-        printk(" ", pad="80", end="\r")
+        printk(' ', pad="80", end="\r")
         printGreen(f"""Connected ✔""", style="b", pad="8")
 
     @property
-    def get_job_keywords(self):
+    def get_job_keywords(self: object) -> str:
         """Function `get_job_keywords()` returns the job keywords."""
         return self.data["job_keywords"]
 
+    @get_job_keywords.setter
+    def set_job_keywords(self: object, _keyword: str):
+        self.data["job_keywords"] = _keyword
+
     @property
-    def get_job_location(self):
+    def get_job_location(self: object) -> str:
         """Function `get_job_location()` returns the job location."""
         return self.data["job_location"]
+
+    @get_job_location.setter
+    def set_job_location(self: object, _location: str):
+        self.data["job_location"] = _location

@@ -1,6 +1,5 @@
 import time
 import colorama
-import urllib.parse
 
 from .LinkedIn import re
 from .LinkedIn import By

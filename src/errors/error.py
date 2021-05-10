@@ -1,3 +1,4 @@
+"""from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!"""
 from __future__ import annotations
 
 
