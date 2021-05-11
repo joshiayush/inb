@@ -244,4 +244,5 @@ def with_goto(func_or_code):
             func_or_code.__defaults__,
             func_or_code.__closure__,
         ),
-        func_or_code)
+        func_or_code
+    )
