@@ -1,6 +1,7 @@
 engineering_project: true
 english_name: LinkedIn Bot
-version: 1.17.7
+version: 1.31.9
+python_version: v3.7
 technologies: Python, Selenium, Webdriver Chrome, Shell Script
 featured: false
 slack: ""
