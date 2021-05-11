@@ -20,7 +20,7 @@ def store_credentials(self: object) -> None:
 
     with open(__credentials_file, 'w') as creds_file:
         creds_file.write("Username={}\nPassword={}\n".format(
-            self.encrypted_email, self.encrypted_password))
+            getattr(self, "encrypted_email"), getattr(self, "encrypted_password")))
 
 
 def get_credentials(self: object) -> None:
