@@ -1,5 +1,5 @@
 __name__ = "Invitation"
 __package__ = "Invitation"
 
-SUCCESS_RATE = 0
-FAILURE_RATE = 0
+__success_rate = 0
+__failure_rate = 0
