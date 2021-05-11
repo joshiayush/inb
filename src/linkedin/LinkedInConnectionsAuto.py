@@ -1,5 +1,11 @@
+"""from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!"""
+from __future__ import annotations
+
 import time
-import colorama
+
+from dom.cleaners import clear_msg_overlay
+from dom.javascript import get_page_y_offset
+from dom.javascript import execute_javascript
 
 from console.print import printRed
 from console.print import printBlue
@@ -7,12 +13,13 @@ from console.print import printBlue
 from errors.error import EmptyResponseException
 from errors.error import FailedLoadingResourceException
 
-from .LinkedIn import re
+from invitation.status import show
+from invitation.status import reset
+
+from python_goto.goto import with_goto
+
 from .LinkedIn import By
-from .LinkedIn import Keys
 from .LinkedIn import LinkedIn
-from .LinkedIn import webdriver
-from .LinkedIn import ActionChains
 from .LinkedIn import WebDriverWait
 from .LinkedIn import TimeoutException
 from .LinkedIn import expected_conditions
@@ -40,16 +47,25 @@ class LinkedInConnectionsAuto(LinkedIn):
         """Function get_my_network() changes the url by executing function
         `get()` from webdriver.
         """
-        printBlue(f"""Moving to 'mynetwork' page...""",
-                  style="b", pad="8", end="\n\n")
-
         try:
             self.driver.get("https://www.linkedin.com/mynetwork/")
         except TimeoutException:
             raise EmptyResponseException("ERR_EMPTY_RESPONSE")
 
-    def get_people(self: object) -> list:
-        while True:
+    @with_goto
+    def get_entities(self: object) -> list:
+        label .begin
+
+        _old_page_offset = _new_page_offset = get_page_y_offset(self)
+        execute_javascript(self)
+
+        while _old_page_offset == _new_page_offset:
+            execute_javascript(self)
+            _new_page_offset = get_page_y_offset(self)
+
+        _old_page_offset = _new_page_offset
+
+        while 1:
             try:
                 people_name = WebDriverWait(self.driver, 10).until(
                     expected_conditions.presence_of_all_elements_located(
@@ -58,18 +74,14 @@ class LinkedInConnectionsAuto(LinkedIn):
                     )
                 )
 
-                _people_name = []*len(people_name)
-
-                for span in people_name:
-                    _people_name.append(span.text)
+                _people_name = [span.text for span in people_name]
 
                 del people_name
                 break
             except TimeoutException:
-                # LinkedIn.err_loading_resource()
                 continue
 
-        while True:
+        while 1:
             try:
                 people_occupation = WebDriverWait(self.driver, 10).until(
                     expected_conditions.presence_of_all_elements_located(
@@ -78,18 +90,14 @@ class LinkedInConnectionsAuto(LinkedIn):
                     )
                 )
 
-                _people_occupation = []*len(people_occupation)
-
-                for span in people_occupation:
-                    _people_occupation.append(span.text)
+                _people_occupation = [span.text for span in people_occupation]
 
                 del people_occupation
                 break
             except TimeoutException:
-                # LinkedIn.err_loading_resource()
                 continue
 
-        while True:
+        while 1:
             try:
                 people_button = WebDriverWait(self.driver, 10).until(
                     expected_conditions.presence_of_all_elements_located(
@@ -98,109 +106,49 @@ class LinkedInConnectionsAuto(LinkedIn):
                 )
                 break
             except TimeoutException:
-                # LinkedIn.err_loading_resource()
                 continue
 
-        return [_people_name, _people_occupation, people_button]
+        if not len(_people_name) < 100 and not len(_people_occupation) < 100 and not len(people_button) < 100:
+            return [_people_name, _people_occupation, people_button]
+
+        while _old_page_offset == _new_page_offset:
+            execute_javascript(self)
+            _new_page_offset = get_page_y_offset(self)
+
+        _old_page_offset = _new_page_offset
+        goto .begin
 
     def encode(self: object, obj: list) -> list:
-        return list(zip(obj[0], obj[1], obj[2]))
+        return [{"person_name": name, "person_occupation": occupation, "invite_button": button} for name, occupation, button in zip(obj[0], obj[1], obj[2])]
 
-    def click_buttons(self: object, obj: list) -> None:
+    def get_person(self: LinkedInConnectionsAuto) -> dict:
+        _person_list = self.encode(self.get_entities())
+
+        for _person in _person_list:
+            yield _person
+
+    def click_buttons(self: object) -> None:
         """Function find_buttons() finds the buttons in the network page
         using webdriver function `find_elements_by_css_selector()` and
         then if they are enabled it executes `click()` function on them
         if not it handles the exception smoothly.
         """
-        old_entity_length = len(obj)
-        new_entity_length = len(obj)
+        _start = time.time()
 
-        red = 1
-
-        start = time.time()
-
-        while True:
+        for _person in self.get_person():
             try:
-                obj[LinkedInConnectionsAuto.ENTITY_TO_BE_CLICKED][2].click()
-                # LinkedIn.print_status(
-                # obj=obj[LinkedInConnectionsAuto.ENTITY_TO_BE_CLICKED], status="sent", elapsed_time=(time.time() - start))
-            except ElementClickInterceptedException:
-                # LinkedIn.print_status(
-                # obj=obj[LinkedInConnectionsAuto.ENTITY_TO_BE_CLICKED], status="failed", elapsed_time=(time.time() - start))
-                pass
+                _person["invite_button"].click()
+                show(name=_person["person_name"], occupation=_person["person_occupation"],
+                     status="sent", elapsed_time=time.time() - _start)
+                continue
             except ElementNotInteractableException:
-                # LinkedIn.blocked()
-                LinkedInConnectionsAuto.ENTITY_TO_BE_CLICKED = 0
-                return
+                show(name=_person["person_name"], occupation=_person["person_occupation"],
+                     status="failed", elapsed_time=time.time() - _start)
+                continue
+            except ElementClickInterceptedException:
+                reset()
 
-            if LinkedInConnectionsAuto.ENTITY_TO_BE_CLICKED + 1 == new_entity_length:
-                while old_entity_length == new_entity_length:
-                    # LinkedIn.execute_javascript(self)
-                    _obj = self.encode(self.get_people())
-                    if len(_obj) > len(obj):
-                        old_entity_length = new_entity_length
-                        new_entity_length = len(_obj)
-                        obj = _obj
-                        break
-
-            LinkedInConnectionsAuto.ENTITY_TO_BE_CLICKED += 1
-
-        # LinkedIn.reset_attributes()
-
-    def prepare_page(self: object) -> None:
-        """Method prepare_page() prepares the dynamically loading page before
-        starting to send inivitations this functionality we needed because the
-        page we are targetting loads dynamically and if we directly target the
-        buttons on the page then we might end up with sending only 10 to 12
-        invitations and that's not what we want we want to keep sending
-        inviations until we get blocked by LinkedIn, so this function executes
-        javascript (that requires to move to the bottom of the page) for 5000
-        repetitions.
-        """
-        try:
-            _ = WebDriverWait(self.driver, 10).until(
-                expected_conditions.presence_of_all_elements_located(
-                    (By.CSS_SELECTOR, "button[aria-label^='Invite']")
-                )
-            )
-
-            spinner = "\\"
-            _preparing_ = "[.........................]"
-
-            k = 0
-            s = 0
-
-            for i in range(5001):
-                # LinkedIn.execute_javascript(self)
-                if i % 200 == 0 and i != 0:
-                    _preparing_ = "[" + "#"*(k+1) + _preparing_[k+2:]
-                    k += 1
-                if i % 50 == 0 and i != 0:
-                    spinner = "-\\|/"[s]
-                    s += 1
-                    if s >= 4:
-                        s = 0
-                printBlue(
-                    f"""Preparing page, it might take some time {spinner} {_preparing_}""", style="b", pad="1", end="\r")
-
-            print()
-        except NoSuchElementException:
-            pass
-
-    def clear_msg_overlay(self: object) -> None:
-        try:
-            _ = WebDriverWait(self.driver, 10).until(
-                expected_conditions.presence_of_element_located(
-                    (By.CSS_SELECTOR, "div[class^='msg-overlay-list-bubble']")
-                )
-            )
-            self.driver.execute_script((
-                """document.querySelector("div[class^='msg-overlay-list-bubble']").style = 'display: none';"""
-            ))
-        except NoSuchElementException:
-            pass
-        except TimeoutException:
-            raise FailedLoadingResourceException("ERR_LOADING_RESOURCE")
+        reset()
 
     def run(self: object) -> None:
         """Function run() is the main function from where the program
@@ -212,10 +160,8 @@ class LinkedInConnectionsAuto(LinkedIn):
             printRed("ERR_EMPTY_RESPONSE", style="b", pad="8")
 
         try:
-            self.clear_msg_overlay()
+            clear_msg_overlay(self)
         except FailedLoadingResourceException:
             printRed("ERR_LOADING_RESOURCE", style="b", pad="8")
 
-        """Don't need anymore -> self.prepare_page() ] click_buttons() moves the page for us."""
-
-        self.click_buttons(self.encode(self.get_people()))
+        self.click_buttons()
