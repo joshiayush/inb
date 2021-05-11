@@ -2,18 +2,14 @@
 from __future__ import annotations
 
 import re
-import os
 import sys
 import getpass
-import colorama
 
 from helpers.window import clear
 
 from console import Theme
 
-from console.print import printk
 from console.print import printRed
-from console.print import printBlue
 from console.print import printGreen
 
 from console.scan import scanBlue
@@ -327,7 +323,6 @@ class Main(object):
 
         self.command = self.command[3:]
         self.handle_commands()
-
         return
 
     def handle_invitation_manager_commands(self: Main) -> None:
@@ -561,7 +556,7 @@ class Main(object):
             raise CommandFlagNotFoundException(
                 f"""'{self.get_command_at_index(2)}' is not recognized as a 'help' command!""")
 
-        printGreen(f"""LinkedIn Bash, version 1.22.7(1)-release (lnkdbt-1.22.7)""",
+        printGreen(f"""LinkedIn Bash, version 1.31.9(1)-release (lnkdbt-1.31.9)""",
                    style='b', pad='1')
         printGreen(f"""These commands are defined internally. Type 'help' to see this list.""",
                    style='b', pad='1')
@@ -772,7 +767,9 @@ class Main(object):
         Then we call function handle commands that is going to perform
         operations as per command.
         """
-        while True:
+
+        """Use `while 1` instead of `while True` for performace reason. DO NOT CHANGE!"""
+        while 1:
             try:
                 self.command = ("command " + scanGreen("LinkedIn/>",
                                 style='b', pad='1', start='\n', end=' ')).strip()
