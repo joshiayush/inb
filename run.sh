@@ -4,8 +4,7 @@ function runProgram() {
     # Here the program start its execution `$1` is the first argument of the function `runProgram` and its value is the python
     # interpreter i.e., python[2/3], we check the system here because Windows uses '\' for navigation and Linux '/'.
     if [ "$2" = "linux" ]; then
-        echo "You must be root ..."
-        sudo $1 src/main.py
+        $1 src/main.py
     elif [ "$2" = "windows" ]; then
         $1 src\main.py
     else
@@ -135,6 +134,7 @@ function checkIfGarbage() {
     declare -a garbages=("__pycache__+++"
         "src+++__pycache__+++"
         "src+++db+++__pycache__+++"
+        "src+++dom+++__pycache__+++"
         "src+++creds+++__pycache__+++"
         "src+++errors+++__pycache__+++"
         "src+++helpers+++__pycache__+++"
@@ -182,6 +182,7 @@ function deleteCache() {
     declare -a garbages=("__pycache__+++"
         "src+++__pycache__+++"
         "src+++db+++__pycache__+++"
+        "src+++dom+++__pycache__+++"
         "src+++creds+++__pycache__+++"
         "src+++errors+++__pycache__+++"
         "src+++helpers+++__pycache__+++"
@@ -225,7 +226,7 @@ function main() {
     # requirements are present or not then it takes actions accordingly.
     if python3 --version | grep "Python*" >/dev/null; then
         echo "Python is installed"
-        runProgram python3 "linux"
+        runProgram python3.7 "linux"
     elif python2 --version | grep "Python*" >/dev/null; then
         echo "Python is installed"
         runProgram python2 "linux"
