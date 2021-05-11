@@ -52,6 +52,7 @@ def printWhite(_str: str, **kwargs: dict) -> None:
             del kwargs["style"]
 
         printk(f"""{_str}""", **kwargs)
+        return
 
     label .begin
 
@@ -104,6 +105,7 @@ def printRed(_str: str, **kwargs: dict) -> None:
             del kwargs["style"]
 
         printk(f"""{_str}""", **kwargs)
+        return
 
     label .begin
 
@@ -156,6 +158,7 @@ def printGreen(_str: str, **kwargs: dict) -> None:
             del kwargs["style"]
 
         printk(f"""{_str}""", **kwargs)
+        return
 
     label .begin
 
@@ -208,6 +211,7 @@ def printBlue(_str: str, **kwargs: dict) -> None:
             del kwargs["style"]
 
         printk(f"""{_str}""", **kwargs)
+        return
 
     label .begin
 
@@ -260,6 +264,7 @@ def printYellow(_str: str, **kwargs: dict) -> None:
             del kwargs["style"]
 
         printk(f"""{_str}""", **kwargs)
+        return
 
     label .begin
 
