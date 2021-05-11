@@ -2,8 +2,8 @@ import sys
 import time
 import colorama
 
-from . import SUCCESS_RATE
-from . import FAILURE_RATE
+from . import __success_rate
+from . import __failure_rate
 
 from console.print import printk
 from console.print import printRed
@@ -22,6 +22,9 @@ def calculate_status(status: str = '') -> str:
     return:
         - {String} invitation status.
     """
+    global __success_rate
+    global __failure_rate
+
     _stat = ''
 
     if status == "sent":
@@ -30,7 +33,7 @@ def calculate_status(status: str = '') -> str:
         _stat = f"""{colorama.Fore.GREEN}""" + \
             _stat + f"""{colorama.Fore.RESET}"""
 
-        SUCCESS_RATE += 1
+        __success_rate += 1
         return _stat
 
     if status == "failed":
@@ -39,7 +42,7 @@ def calculate_status(status: str = '') -> str:
         _stat = f"""{colorama.Fore.RED}""" + \
             _stat + f"""{colorama.Fore.RESET}"""
 
-        FAILURE_RATE += 1
+        __failure_rate += 1
         return _stat
 
 
@@ -59,6 +62,9 @@ def show(name: str, occupation: str, status: str = '', elapsed_time: int = 0) ->
         - elapsed_time: how much time did it take to calculate and print the invitation status
             for every person.
     """
+    global __success_rate
+    global __failure_rate
+
     try:
         elapsed_time = str(elapsed_time)[0:5] + "s"
     except IndexError:
@@ -67,10 +73,10 @@ def show(name: str, occupation: str, status: str = '', elapsed_time: int = 0) ->
     if len(occupation) >= 50:
         occupation = occupation[0:50] + "."*3
 
-    _stat = calculate_status(status=status)
-
-    if SUCCESS_RATE != 0 or FAILURE_RATE != 0:
+    if __success_rate != 0 or __failure_rate != 0:
         sys.stdout.write("\033[F\033[F\033[F\033[F\033[F\033[F")
+
+    _stat = calculate_status(status=status)
 
     printk(' ', start='\n', pad='80', end='\r')
 
@@ -84,11 +90,11 @@ def show(name: str, occupation: str, status: str = '', elapsed_time: int = 0) ->
     printk(' ', start='\n', pad='80', end='\r')
 
     printGreen(
-        f"""Success: {SUCCESS_RATE}""", style='b', pad='4', end='')
-    printRed(f"""Failed: {FAILURE_RATE}""",
+        f"""Success: {__success_rate}""", style='b', pad='4', end='')
+    printRed(f"""Failed: {__failure_rate}""",
              style='b', pad='2', end='')
     printBlue(
-        f"""Elapsed: {colorama.Fore.BLUE}{elapsed_time}{colorama.Fore.RESET}""", style='b', pad='2')
+        f"""Elapsed: {elapsed_time}""", style='b', pad='2')
 
     printk("")
 
@@ -99,5 +105,8 @@ def reset() -> None:
     """Function reset() resets the class static variables to their original values once the 
     user is done sending the invitations to LinkedIn users.
     """
-    SUCCESS_RATE = 0
-    FAILURE_RATE = 0
+    global __success_rate
+    global __failure_rate
+
+    __success_rate = 0
+    __failure_rate = 0
