@@ -16,6 +16,8 @@
 # https://www.linkedin.com/in/ayush-joshi-3600a01b7
 #
 
+from __future__ import annotations
+
 from selenium import webdriver
 
 from errors.error import DomainNameSystemNotResolveException
@@ -76,7 +78,7 @@ class LinkedIn(object):
     def set_headless(self: object) -> None:
         self.options.add_argument("headless")
 
-    def get_chrome_driver_options(self: object) -> "Webdriver Options":
+    def get_chrome_driver_options(self: object) -> object:
         """Function get_chrome_driver_options() returns a set of chrome 
         options to be added during the execution of chromedriver. These 
         options help in driver testing and automation.
