@@ -26,7 +26,7 @@ def encrypt_email(self: object) -> None:
     fernet = Fernet(__key)
 
     setattr(self, "encrypted_email", fernet.encrypt(
-        getattr(getattr(self, "data"), "user_email").encode()).decode())
+        getattr(self, "data")["user_email"].encode()).decode())
 
     del fernet
 
@@ -53,7 +53,7 @@ def encrypt_password(self: object) -> None:
     fernet = Fernet(__key)
 
     setattr(self, "encrypted_password", fernet.encrypt(
-        getattr(getattr(self, "data"), "user_password").encode()).decode())
+        getattr(self, "data")["user_password"].encode()).decode())
 
     del fernet
 
@@ -79,9 +79,9 @@ def decrypt_credentials(self: object, config: dict) -> None:
 
     fernet = Fernet(__key)
 
-    setattr(getattr(self, "data"), "user_email", fernet.decrypt(
-        config["Username"].encode("utf-8")).decode("utf-8"))
-    setattr(getattr(self, "data"), "user_password", fernet.decrypt(
-        config["Password"].encode("utf-8")).decode("utf-8"))
+    getattr(self, "data")["user_email"] = fernet.decrypt(
+        config["Username"].encode("utf-8")).decode("utf-8")
+    getattr(self, "data")["user_password"] = fernet.decrypt(
+        config["Password"].encode("utf-8")).decode("utf-8")
 
     del fernet
