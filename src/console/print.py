@@ -1,8 +1,15 @@
-import colorama
+import colorama  # type: ignore for Pylance you can remove it if you are not using Pylance
 
 from . import Theme
 
 from python_goto.goto import with_goto
+
+
+"""No error squiggles when using Pylance. DO NOT REMOVE! if you are using Pylance."""
+from typing import Any
+
+goto: Any = ...
+label: Any = ...
 
 
 def printk(_str: str, **kwargs: dict) -> None:

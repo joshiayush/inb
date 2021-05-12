@@ -1,5 +1,4 @@
-import sys
-import colorama
+import colorama  # type: ignore for Pylance you can remove it if you are not using Pylance
 
 # importing `readline` this we need to import becuase when
 # we take input from the terminal window and we press arrow
@@ -9,9 +8,14 @@ import colorama
 import readline
 
 from . import Theme
-from .print import printGreen
 
 from python_goto.goto import with_goto
+
+"""No error squiggles when using Pylance. DO NOT REMOVE! if you are using Pylance."""
+from typing import Any
+
+goto: Any = ...
+label: Any = ...
 
 
 def scank(_str: str, **kwargs: dict) -> str:

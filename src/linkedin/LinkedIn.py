@@ -1,7 +1,7 @@
 #
-# file src/Linkedin.py provides the driver access to other python files, here
-# in this file I've added all the basic funcitionality required to login to
-# linkedin before actually starting to automate the inner Linkedin.
+# file src/Linkedin.py provides the driver access to other python files, here in 
+# this file I've added all the basic funcitionality required to login to linkedin 
+# before actually starting to automate the inner Linkedin.
 #
 # If you want to get in touch wtih me this is my email address
 #
@@ -15,7 +15,7 @@
 #
 # https://www.linkedin.com/in/ayush-joshi-3600a01b7
 #
-
+"""from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!"""
 from __future__ import annotations
 
 from selenium import webdriver
@@ -89,7 +89,8 @@ class LinkedIn(object):
         self.set_browser_incognito_mode()
         self.set_ignore_certificate_error()
 
-        self.set_headless() if self.data["headless"] else False
+        if self.data["headless"]:
+            self.set_headless()
 
         return self.options
 

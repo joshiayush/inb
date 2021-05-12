@@ -97,6 +97,7 @@ def _parse_instructions(code: function) -> tuple:
 
         extended_arg = 0
         extended_arg_offset = None
+
         yield (dis.opname[opcode], oparg, offset)
 
 
@@ -225,12 +226,11 @@ def _patch_code(code: function) -> object:
         ops.append(("JUMP_ABSOLUTE", target // _BYTECODE.jump_unit))
 
         if pos + _get_instructions_size(ops) > end:
-            # not enough space, add code at buffer end and jump there
+            """Not enough space, add code at buffer end and jump there."""
             buf_end = len(buf)
             go_to_end_ops = [("JUMP_ABSOLUTE", buf_end // _BYTECODE.jump_unit)]
 
             if pos + _get_instructions_size(go_to_end_ops) > end:
-                # not sure if reachable
                 raise SyntaxError("Goto in an incredibly huge function")
 
             pos = _write_instructions(buf, pos, go_to_end_ops)
