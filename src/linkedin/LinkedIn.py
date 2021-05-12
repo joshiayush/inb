@@ -21,10 +21,7 @@ import sys
 import time
 import colorama
 
-from console.print import printk
-from console.print import printRed
-from console.print import printBlue
-from console.print import printGreen
+from messages.console_messages import send_to_console
 
 from selenium import webdriver
 
@@ -214,17 +211,17 @@ class LinkedIn(object):
             self: object used to execute various functions in our 
             LinkedIn class.
         """
-        printBlue(f"""Connecting...""", pad="8", end="\r")
+        send_to_console(f"""Connecting...""", color='b', pad='8', end='\r')
 
         try:
             self.get_login_page()
         except DomainNameSystemNotResolveException as error:
-            printRed(f"""{error}""", style="b", pad="1")
+            send_to_console(f"""{error}""", color='r', style='b', pad='1')
 
         self.fill_credentials()
 
-        printk(' ', pad="80", end="\r")
-        printGreen(f"""Connected ✔""", style="b", pad="8")
+        send_to_console(' ', pad='80', end='\r')
+        send_to_console(f"""Connected ✔""", color='g', style='b', pad='8')
 
     @property
     def get_job_keywords(self: object) -> str:
