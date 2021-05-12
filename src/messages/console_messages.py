@@ -21,21 +21,26 @@ def send_to_console(_str: str = '', **kwargs: dict) -> None:
         return
 
     if kwargs["color"] == 'w' or kwargs["color"] == "white":
+        del kwargs["color"]
         printWhite(_str, **kwargs)
         return
 
     if kwargs["color"] == 'r' or kwargs["color"] == "red":
+        del kwargs["color"]
         printRed(_str, **kwargs)
         return
 
     if kwargs["color"] == 'g' or kwargs["color"] == "green":
+        del kwargs["color"]
         printGreen(_str, **kwargs)
         return
 
     if kwargs["color"] == 'b' or kwargs["color"] == "blue":
+        del kwargs["color"]
         printBlue(_str, **kwargs)
         return
 
     if kwargs["color"] == 'y' or kwargs["color"] == "yellow":
+        del kwargs["color"]
         printYellow(_str, **kwargs)
         return
