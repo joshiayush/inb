@@ -15,15 +15,16 @@ from errors.error import FailedLoadingResourceException
 from invitation.status import show
 from invitation.status import reset
 
-
-from .LinkedIn import By
 from .LinkedIn import LinkedIn
-from .LinkedIn import WebDriverWait
-from .LinkedIn import TimeoutException
-from .LinkedIn import expected_conditions
-from .LinkedIn import NoSuchElementException
-from .LinkedIn import ElementNotInteractableException
-from .LinkedIn import ElementClickInterceptedException
+
+from selenium.webdriver.common.by import By
+
+from selenium.webdriver.support import expected_conditions
+from selenium.webdriver.support.ui import WebDriverWait
+
+from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import ElementNotInteractableException
+from selenium.common.exceptions import ElementClickInterceptedException
 
 
 class LinkedInConnectionsAuto(LinkedIn):

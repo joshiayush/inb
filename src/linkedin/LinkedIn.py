@@ -16,25 +16,11 @@
 # https://www.linkedin.com/in/ayush-joshi-3600a01b7
 #
 
-import re
-import sys
-import time
-import colorama
+from selenium import webdriver
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.common.keys import Keys
 
 from messages.console_messages import send_to_console
-
-from selenium import webdriver
-
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.support.ui import WebDriverWait
-from selenium.webdriver.support import expected_conditions
-from selenium.webdriver.common.action_chains import ActionChains
-
-from selenium.common.exceptions import TimeoutException
-from selenium.common.exceptions import NoSuchElementException
-from selenium.common.exceptions import ElementNotInteractableException
-from selenium.common.exceptions import ElementClickInterceptedException
 
 from errors.error import DomainNameSystemNotResolveException
 
