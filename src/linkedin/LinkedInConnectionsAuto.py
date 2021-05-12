@@ -3,28 +3,11 @@ from __future__ import annotations
 
 import time
 
-from dom.cleaners import clear_msg_overlay
-from dom.javascript import scroll_bottom
-from dom.javascript import get_page_y_offset
-
-from messages.console_messages import send_to_console
-
-from errors.error import EmptyResponseException
-from errors.error import FailedLoadingResourceException
-
-from invitation.status import show
-from invitation.status import reset
-
 from .LinkedIn import LinkedIn
 
-from selenium.webdriver.common.by import By
-
-from selenium.webdriver.support import expected_conditions
-from selenium.webdriver.support.ui import WebDriverWait
+from errors.error import EmptyResponseException
 
 from selenium.common.exceptions import TimeoutException
-from selenium.common.exceptions import ElementNotInteractableException
-from selenium.common.exceptions import ElementClickInterceptedException
 
 
 class LinkedInConnectionsAuto(LinkedIn):
@@ -52,6 +35,11 @@ class LinkedInConnectionsAuto(LinkedIn):
             raise EmptyResponseException("ERR_EMPTY_RESPONSE")
 
     def get_entities(self: object) -> list:
+        from selenium.webdriver.common.by import By
+
+        from selenium.webdriver.support import expected_conditions
+        from selenium.webdriver.support.ui import WebDriverWait
+
         while 1:
             try:
                 people_name = WebDriverWait(self.driver, 10).until(
@@ -101,6 +89,9 @@ class LinkedInConnectionsAuto(LinkedIn):
         return [{"person_name": name, "person_occupation": occupation, "invite_button": button} for name, occupation, button in zip(obj[0], obj[1], obj[2])]
 
     def load_entities(self) -> None:
+        from dom.javascript import scroll_bottom
+        from dom.javascript import get_page_y_offset
+
         _old_page_offset = get_page_y_offset(self)
         _new_page_offset = get_page_y_offset(self)
 
@@ -126,6 +117,12 @@ class LinkedInConnectionsAuto(LinkedIn):
         then if they are enabled it executes `click()` function on them
         if not it handles the exception smoothly.
         """
+        from invitation.status import show
+        from invitation.status import reset
+
+        from selenium.common.exceptions import ElementNotInteractableException
+        from selenium.common.exceptions import ElementClickInterceptedException
+
         _start = time.time()
 
         for _person in self.get_person():
@@ -149,13 +146,18 @@ class LinkedInConnectionsAuto(LinkedIn):
         """Function run() is the main function from where the program
         starts doing its job.
         """
+        from messages.console_messages import send_to_console
+
         try:
             self.get_my_network()
         except EmptyResponseException:
             send_to_console("ERR_EMPTY_RESPONSE",
                             color='r', style='b', pad='8')
 
+        from errors.error import FailedLoadingResourceException
+
         try:
+            from dom.cleaners import clear_msg_overlay
             clear_msg_overlay(self)
         except FailedLoadingResourceException:
             send_to_console("ERR_LOADING_RESOURCE",

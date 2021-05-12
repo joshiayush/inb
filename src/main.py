@@ -3,43 +3,14 @@ from __future__ import annotations
 
 import re
 import sys
-import getpass
-
-from helpers.window import clear
-
-from console import Theme
 
 from console.print import printRed
 from console.print import printGreen
 
-from console.scan import scanBlue
-from console.scan import scanGreen
-
-from helpers.command_help import help_with_exit
-from helpers.command_help import help_with_show
-from helpers.command_help import help_with_help
-from helpers.command_help import help_with_clear
-from helpers.command_help import help_with_theme
-from helpers.command_help import help_with_delete
-from helpers.command_help import help_with_configs
-from helpers.command_help import help_with_linkedin
-from helpers.command_help import help_with_developer
-
-from creds.crypto import encrypt_email
-from creds.crypto import encrypt_password
-
-from creds.storage import delete_key
-from creds.storage import delete_cache
-from creds.storage import get_credentials
-from creds.storage import store_credentials
-
 from errors.error import ZeroFlagException
-from errors.error import PropertyNotExistException
 from errors.error import CommandFlagNotFoundException
 from errors.error import CredentialsNotFoundException
 from errors.error import NoSuchConfigurationFoundException
-
-from linkedin.LinkedInConnectionsAuto import LinkedInConnectionsAuto
 
 
 class Main(object):
@@ -81,6 +52,8 @@ class Main(object):
             * help       : prints the commands and their usage
             * exit       : exit from the program
         """
+        from helpers.command_help import help_with_configs
+
         self.commands = {
             "config": help_with_configs,
             "linkedin": self.handle_linkedin_commands,
@@ -186,15 +159,23 @@ class Main(object):
         if not self.user_email or not self.user_password:
             return
 
+        from creds.crypto import encrypt_email
+
+        from errors.error import PropertyNotExistException
+
         try:
             encrypt_email(self)
         except PropertyNotExistException as error:
             printRed(f"""{error}""", style='b', pad='1')
 
+        from creds.crypto import encrypt_password
+
         try:
             encrypt_password(self)
         except PropertyNotExistException as error:
             printRed(f"""{error}""", style='b', pad='1')
+
+        from creds.storage import store_credentials
 
         try:
             store_credentials(self)
@@ -207,6 +188,8 @@ class Main(object):
 
         First it clears the screen using the method clear().
         """
+        from helpers.window import clear
+
         clear()
 
         printGreen(f"""Type help for more information!""",
@@ -221,6 +204,8 @@ class Main(object):
             _theme: it is the theme that the we need to give to our cli after
             user has entered it.
         """
+        from console import Theme
+
         if _theme == "--parrot":
             Theme.enable_theme_parrot()
             Main.home()
@@ -288,7 +273,10 @@ class Main(object):
         if self.get_command_at_index(2) != "send":
             return
 
+        from linkedin.LinkedInConnectionsAuto import LinkedInConnectionsAuto
+
         if self.get_command_at_index(-1) == "--use-cache":
+            from creds.storage import get_credentials
             get_credentials(self)
 
         if self.get_command_at_index(-2) == "--headless":
@@ -302,8 +290,6 @@ class Main(object):
 
                 LinkedInConnectionsAuto(self.data).run()
                 return
-
-            return
 
         if self.get_command_at_index(3) == "--headless" or self.get_command_at_index(3) == "--use-cache":
             if not self.user_email or not self.user_password:
@@ -357,6 +343,7 @@ class Main(object):
             return
 
         if self.get_command_at_index(2) == "--help":
+            from helpers.command_help import help_with_linkedin
             help_with_linkedin()
             return
 
@@ -398,6 +385,8 @@ class Main(object):
             self: it is a parameter object that has user details in it.
         """
         try:
+            from console.scan import scanBlue
+
             ch = scanBlue(f"""Show password anyway? [y/N]:""", style='b',
                           pad='1', end=' ') if self.user_password else 'n'
 
@@ -421,6 +410,7 @@ class Main(object):
         keys/location.
         """
         if self.get_command_length() > 2 and self.get_command_at_index(2) == "--help":
+            from helpers.command_help import help_with_show
             help_with_show()
             return
 
@@ -445,11 +435,15 @@ class Main(object):
         the user hits the command `delete` this basically deletes
         the cache stored (User credentials) if exists.
         """
+        from creds.storage import delete_key
+        from creds.storage import delete_cache
+
         if self.get_command_length() <= 2:
             raise ZeroFlagException(
                 "command 'delete' cannot be referenced alone!")
 
         if self.get_command_at_index(2) == "--help":
+            from helpers.command_help import help_with_delete
             help_with_delete()
             return
 
@@ -480,6 +474,7 @@ class Main(object):
                     f"""{self.get_command_at_index(2)} is not a 'developer' command!""")
 
             if self.get_command_at_index(2) == "--help":
+                from helpers.command_help import help_with_developer
                 help_with_developer()
                 return
 
@@ -514,6 +509,7 @@ class Main(object):
             return
 
         if self.get_command_at_index(2) == "--help":
+            from helpers.command_help import help_with_theme
             help_with_theme()
             return
 
@@ -533,6 +529,7 @@ class Main(object):
             return
 
         if self.get_command_at_index(2) == "--help":
+            from helpers.command_help import help_with_clear
             help_with_clear()
             return
 
@@ -550,6 +547,7 @@ class Main(object):
         """
         if self.get_command_length() > 2:
             if self.get_command_at_index(2) == "--help":
+                from helpers.command_help import help_with_help
                 help_with_help()
                 return
 
@@ -613,6 +611,7 @@ class Main(object):
             sys.exit()
 
         if self.get_command_at_index(2) == "--help":
+            from helpers.command_help import help_with_exit
             help_with_exit()
             return
 
@@ -669,6 +668,8 @@ class Main(object):
         if self.get_command_length() <= 2:
             if self.get_command_at_index(1) != "config.user.password":
                 return
+
+            import getpass
 
             self.user_password = getpass.getpass(
                 prompt=" Password: ")
@@ -769,6 +770,8 @@ class Main(object):
         """
 
         """Use `while 1` instead of `while True` for performace reason. DO NOT CHANGE!"""
+        from console.scan import scanGreen
+
         while 1:
             try:
                 self.command = ("command " + scanGreen("LinkedIn/>",

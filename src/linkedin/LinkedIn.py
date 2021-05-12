@@ -17,10 +17,6 @@
 #
 
 from selenium import webdriver
-from selenium.common.exceptions import TimeoutException
-from selenium.webdriver.common.keys import Keys
-
-from messages.console_messages import send_to_console
 
 from errors.error import DomainNameSystemNotResolveException
 
@@ -125,6 +121,8 @@ class LinkedIn(object):
         Args:
             url: page's url
         """
+        from selenium.common.exceptions import TimeoutException
+
         try:
             self.driver.get("https://www.linkedin.com/login")
         except TimeoutException:
@@ -175,6 +173,9 @@ class LinkedIn(object):
 
         login_password.clear()
         login_password.send_keys(self.password)
+
+        from selenium.webdriver.common.keys import Keys
+
         login_password.send_keys(Keys.RETURN)
 
     def fill_credentials(self: object) -> None:
@@ -197,6 +198,8 @@ class LinkedIn(object):
             self: object used to execute various functions in our 
             LinkedIn class.
         """
+        from messages.console_messages import send_to_console
+
         send_to_console(f"""Connecting...""", color='b', pad='8', end='\r')
 
         try:
