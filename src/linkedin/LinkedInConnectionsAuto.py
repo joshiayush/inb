@@ -4,11 +4,10 @@ from __future__ import annotations
 import time
 
 from dom.cleaners import clear_msg_overlay
+from dom.javascript import scroll_bottom
 from dom.javascript import get_page_y_offset
-from dom.javascript import execute_javascript
 
-from console.print import printRed
-from console.print import printBlue
+from messages.console_messages import send_to_console
 
 from errors.error import EmptyResponseException
 from errors.error import FailedLoadingResourceException
@@ -16,7 +15,6 @@ from errors.error import FailedLoadingResourceException
 from invitation.status import show
 from invitation.status import reset
 
-from python_goto.goto import with_goto
 
 from .LinkedIn import By
 from .LinkedIn import LinkedIn
@@ -52,19 +50,7 @@ class LinkedInConnectionsAuto(LinkedIn):
         except TimeoutException:
             raise EmptyResponseException("ERR_EMPTY_RESPONSE")
 
-    @with_goto
     def get_entities(self: object) -> list:
-        label .begin
-
-        _old_page_offset = _new_page_offset = get_page_y_offset(self)
-        execute_javascript(self)
-
-        while _old_page_offset == _new_page_offset:
-            execute_javascript(self)
-            _new_page_offset = get_page_y_offset(self)
-
-        _old_page_offset = _new_page_offset
-
         while 1:
             try:
                 people_name = WebDriverWait(self.driver, 10).until(
@@ -108,24 +94,30 @@ class LinkedInConnectionsAuto(LinkedIn):
             except TimeoutException:
                 continue
 
-        if not len(_people_name) < 100 and not len(_people_occupation) < 100 and not len(people_button) < 100:
-            return [_people_name, _people_occupation, people_button]
-
-        while _old_page_offset == _new_page_offset:
-            execute_javascript(self)
-            _new_page_offset = get_page_y_offset(self)
-
-        _old_page_offset = _new_page_offset
-        goto .begin
+        return [_people_name, _people_occupation, people_button]
 
     def encode(self: object, obj: list) -> list:
         return [{"person_name": name, "person_occupation": occupation, "invite_button": button} for name, occupation, button in zip(obj[0], obj[1], obj[2])]
 
+    def load_entities(self) -> None:
+        _old_page_offset = get_page_y_offset(self)
+        _new_page_offset = get_page_y_offset(self)
+
+        while _old_page_offset == _new_page_offset:
+            scroll_bottom(self)
+            time.sleep(1)
+            _new_page_offset = get_page_y_offset(self)
+
+        return
+
     def get_person(self: LinkedInConnectionsAuto) -> dict:
         _person_list = self.encode(self.get_entities())
 
-        for _person in _person_list:
-            yield _person
+        while 1:
+            for _person in _person_list:
+                yield _person
+            self.load_entities()
+            _person_list = self.encode(self.get_entities())
 
     def click_buttons(self: object) -> None:
         """Function find_buttons() finds the buttons in the network page
@@ -137,6 +129,8 @@ class LinkedInConnectionsAuto(LinkedIn):
 
         for _person in self.get_person():
             try:
+                if not _person["invite_button"].find_element_by_tag_name("span").text == "Connect":
+                    continue
                 _person["invite_button"].click()
                 show(name=_person["person_name"], occupation=_person["person_occupation"],
                      status="sent", elapsed_time=time.time() - _start)
@@ -157,11 +151,13 @@ class LinkedInConnectionsAuto(LinkedIn):
         try:
             self.get_my_network()
         except EmptyResponseException:
-            printRed("ERR_EMPTY_RESPONSE", style="b", pad="8")
+            send_to_console("ERR_EMPTY_RESPONSE",
+                            color='r', style='b', pad='8')
 
         try:
             clear_msg_overlay(self)
         except FailedLoadingResourceException:
-            printRed("ERR_LOADING_RESOURCE", style="b", pad="8")
+            send_to_console("ERR_LOADING_RESOURCE",
+                            color='r', style='b', pad='8')
 
         self.click_buttons()
