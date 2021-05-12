@@ -22,8 +22,8 @@ def get_page_y_offset(self: object) -> int:
     ))
 
 
-def execute_javascript(self: object) -> None:
-    """Function execute_javascript() scrolls the web page to the 
+def scroll_bottom(self: object) -> None:
+    """Function scroll_bottom() scrolls the web page to the 
     very bottom of it using the 'document.scrollingElement.scrollTop' 
     property.
 
