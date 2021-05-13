@@ -44,6 +44,20 @@ class UserCacheNotFoundException(Exception):
         super(UserCacheNotFoundException, self).__init__(message)
 
 
+class WebDriverPathNotGivenException(Exception):
+    """Thrown when chrome driver's path is not given."""
+
+    def __init__(self, message: str = '') -> None:
+        super(WebDriverPathNotGivenException, self).__init__(message)
+
+
+class CredentialsNotGivenException(Exception):
+    """Thrown when user's credentials are not given to the LinkedIn class."""
+
+    def __init__(self, message: str = '') -> None:
+        super(CredentialsNotGivenException, self).__init__(message)
+
+
 class CredentialsNotFoundException(Exception):
     """Thrown when user's credentials are not found."""
 
