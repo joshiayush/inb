@@ -1,40 +1,44 @@
-#
-# file src/Linkedin.py provides the driver access to other python files, here in 
-# this file I've added all the basic funcitionality required to login to linkedin 
-# before actually starting to automate the inner Linkedin.
-#
-# If you want to get in touch wtih me this is my email address
-#
-#                 ayush854032@gmail.com
-#
-#                         and
-#
-#             joshiayush.joshiayush@gmail.com
-#
-# and here is a link to my LinkedIn account you can connect to me here,
-#
-# https://www.linkedin.com/in/ayush-joshi-3600a01b7
-#
 """from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!"""
 from __future__ import annotations
 
 from selenium import webdriver
-
 from errors.error import DomainNameSystemNotResolveException
 
 
 class LinkedIn(object):
     """LinkedIn"""
-    OLD_EMAIL = ""
-    OLD_PASSWORD = ""
-
+    OLD_EMAIL = ''
+    OLD_PASSWORD = ''
     SESSION_ALREADY_EXISTS = False
 
-    def __init__(self: object, data: dict) -> None:
+    def __init__(self: object, credentials: dict = ..., driver_path: str = '') -> None:
         """Initializing the `LinkedIn` class."""
-        self.data = data
-        self.email = self.data["user_email"]
-        self.password = self.data["user_password"]
+        self._credentials = {
+            "user_email": '',
+            "user_password": ''
+        }
+
+        from errors.error import WebDriverPathNotGivenException
+
+        if not driver_path:
+            raise WebDriverPathNotGivenException(
+                "User did not provide chromedriver's path!")
+
+        self.driver_path = driver_path
+
+        if credentials:
+            if not "user_email" in credentials:
+                raise KeyError(
+                    "Key 'user_email' doesn't exists in dictionary 'credentials'!")
+
+            if not "user_password" in credentials:
+                raise KeyError(
+                    "Key 'user_password' doesn't exists in dictionary 'credentials'!")
+
+            self._credentials = {
+                "user_email": credentials["user_email"],
+                "user_password": credentials["user_password"]
+            }
 
         if not LinkedIn.SESSION_ALREADY_EXISTS:
             """Making an option object for our chromedriver."""
@@ -45,13 +49,29 @@ class LinkedIn(object):
 
             LinkedIn.SESSION_ALREADY_EXISTS = True
 
-        if LinkedIn.OLD_EMAIL != self.email and LinkedIn.OLD_PASSWORD != self.password:
+        if not LinkedIn.OLD_EMAIL == self.user_email and not LinkedIn.OLD_PASSWORD == self.user_password:
             """Save email and password."""
-            LinkedIn.OLD_EMAIL = self.email
-            LinkedIn.OLD_PASSWORD = self.password
+            LinkedIn.OLD_EMAIL = self.user_email
+            LinkedIn.OLD_PASSWORD = self.user_password
 
             """Calling `login()` function which will login for us."""
             self.login()
+
+    @property
+    def user_email(self):
+        return self._credentials["user_email"]
+
+    @user_email.setter
+    def user_email(self, user_email):
+        self._credentials["user_email"] = user_email
+
+    @property
+    def user_password(self):
+        return self._credentials["user_password"]
+
+    @user_password.setter
+    def user_password(self, user_password):
+        self._credentials["user_password"] = user_password
 
     def set_browser_incognito_mode(self: object) -> None:
         """Setting the browser to incognito using a command line flag 
@@ -86,15 +106,9 @@ class LinkedIn(object):
         Args:
             self: is the object from which the options are to be updated
         """
-        self.set_browser_incognito_mode()
-        self.set_ignore_certificate_error()
-
-        if self.data["headless"]:
-            self.set_headless()
-
         return self.options
 
-    def enable_webdriver_chrome(self: object) -> None:
+    def enable_webdriver_chrome(self: object, _options: object) -> None:
         """Function enable_web_driver() makes a webdriver object called 
         `self.driver` by executing the `webdriver.Chrome()` constructor 
         which takes following arguments.
@@ -109,7 +123,7 @@ class LinkedIn(object):
         http://peter.sh/experiments/chromium-command-line-switches/
         """
         self.driver = webdriver.Chrome(
-            self.data["driver_path"], options=self.get_chrome_driver_options())
+            self.data["driver_path"], options=_options)
 
     def disable_webdriver_chrome(self: object) -> None:
         """Function `disable_webdriver_chrome()` close the webdriver session 
@@ -117,7 +131,7 @@ class LinkedIn(object):
         """
         self.driver.close()
 
-    def get_login_page(self: object) -> None:
+    def get_login_page(self: object, _url: str = "https://www.linkedin.com/login") -> None:
         """Redirecting to the LinkedIn login page using `get()` function of 
         our `webdriver` class.
 
@@ -127,11 +141,14 @@ class LinkedIn(object):
         from selenium.common.exceptions import TimeoutException
 
         try:
-            self.driver.get("https://www.linkedin.com/login")
+            self.driver.get(_url)
         except TimeoutException:
             raise DomainNameSystemNotResolveException("ERR_DNS_PROBE_STARTED")
 
-    def enter_email(self: object) -> None:
+    def get_email_box(self):
+        return self.driver.find_element_by_name("session_key")
+
+    def enter_email(self: object, hit_return: bool = False) -> None:
         """Function `enter_email()` enters the email in the email input 
         field using function `find_element_by_name()` which first finds 
         the email element by name `session_key` and then clears the field 
@@ -147,12 +164,21 @@ class LinkedIn(object):
                 *value: A string for typing, or setting form fields. 
                 For setting file input, this could be a local file path.
         """
-        login_email = self.driver.find_element_by_name("session_key")
+        email_box = self.get_email_box()
+        email_box.clear()
+        email_box.send_keys(self.user_email)
 
-        login_email.clear()
-        login_email.send_keys(self.email)
+        if not hit_return:
+            return
 
-    def enter_password(self: object) -> None:
+        from selenium.webdriver.common.keys import Keys
+
+        email_box.send_keys(Keys.RETURN)
+
+    def get_password_box(self):
+        return self.driver.find_element_by_name("session_password")
+
+    def enter_password(self: object, hit_return: bool = True) -> None:
         """Function `enter_password()` enters the password in the 
         password input field using function `find_element_by_name()` 
         which first finds the password element by name 
@@ -172,14 +198,16 @@ class LinkedIn(object):
         This function unlike the `enter_email()` also sends the field
         object a `ENTER` event so to start the login process.
         """
-        login_password = self.driver.find_element_by_name("session_password")
+        password_box = self.get_password_box()
+        password_box.clear()
+        password_box.send_keys(self.user_password)
 
-        login_password.clear()
-        login_password.send_keys(self.password)
+        if not hit_return:
+            return
 
         from selenium.webdriver.common.keys import Keys
 
-        login_password.send_keys(Keys.RETURN)
+        password_box.send_keys(Keys.RETURN)
 
     def fill_credentials(self: object) -> None:
         """Function `fill_credentials()` fills the user credentials in 
@@ -194,13 +222,33 @@ class LinkedIn(object):
         self.enter_email()
         self.enter_password()
 
-    def login(self: object) -> None:
+    def login(self: object, credentials: dict = ...) -> None:
         """Function `login()` logs into your personal LinkedIn profile.
 
         Args:
             self: object used to execute various functions in our 
             LinkedIn class.
         """
+        from errors.error import CredentialsNotGivenException
+
+        if not credentials and not self.user_email or not self.user_password:
+            raise CredentialsNotGivenException(
+                "User credentials are not given. Can't login!")
+
+        if credentials:
+            if not "user_email" in credentials:
+                raise KeyError(
+                    "Key 'user_email' doesn't exists in dictionary 'credentials'!")
+
+            if not "user_password" in credentials:
+                raise KeyError(
+                    "Key 'user_password' doesn't exists in dictionary 'credentials'!")
+
+            self._credentials = {
+                "user_email": credentials["user_email"],
+                "user_password": credentials["user_password"]
+            }
+
         from messages.console_messages import send_to_console
 
         send_to_console(f"""Connecting...""", color='b', pad='8', end='\r')
@@ -214,21 +262,3 @@ class LinkedIn(object):
 
         send_to_console(' ', pad='80', end='\r')
         send_to_console(f"""Connected ✔""", color='g', style='b', pad='8')
-
-    @property
-    def get_job_keywords(self: object) -> str:
-        """Function `get_job_keywords()` returns the job keywords."""
-        return self.data["job_keywords"]
-
-    @get_job_keywords.setter
-    def set_job_keywords(self: object, _keyword: str):
-        self.data["job_keywords"] = _keyword
-
-    @property
-    def get_job_location(self: object) -> str:
-        """Function `get_job_location()` returns the job location."""
-        return self.data["job_location"]
-
-    @get_job_location.setter
-    def set_job_location(self: object, _location: str):
-        self.data["job_location"] = _location
