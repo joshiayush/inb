@@ -181,6 +181,8 @@ try:
 except EmptyResponseException:
     print(f"""{error}""")
 
+# method run() starts the invitation process it calls the click_buttons() method from the same
+# class which does the actual work.
 _linkedin_connection.run()
 ```
 
