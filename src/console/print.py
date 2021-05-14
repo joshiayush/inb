@@ -51,6 +51,7 @@ def printWhite(_str: str, **kwargs: dict) -> None:
     if not Theme.PARROT:
         if kwargs and "force" in kwargs:
             if kwargs["force"] == "+f":
+                del kwargs["force"]
                 goto .begin
 
             del kwargs["force"]
@@ -66,6 +67,9 @@ def printWhite(_str: str, **kwargs: dict) -> None:
     if not kwargs:
         printk(f"""{colorama.Fore.WHITE}{_str}{colorama.Fore.RESET}""")
         return
+
+    if "force" in kwargs:
+        del kwargs["force"]
 
     if not "style" in kwargs:
         printk(f"""{colorama.Fore.WHITE}{_str}{colorama.Fore.RESET}""", **kwargs)
@@ -104,6 +108,7 @@ def printRed(_str: str, **kwargs: dict) -> None:
     if not Theme.PARROT:
         if kwargs and "force" in kwargs:
             if kwargs["force"] == "+f":
+                del kwargs["force"]
                 goto .begin
 
             del kwargs["force"]
@@ -119,6 +124,9 @@ def printRed(_str: str, **kwargs: dict) -> None:
     if not kwargs:
         printk(f"""{colorama.Fore.RED}{_str}{colorama.Fore.RESET}""")
         return
+
+    if "force" in kwargs:
+        del kwargs["force"]
 
     if not "style" in kwargs:
         printk(f"""{colorama.Fore.RED}{_str}{colorama.Fore.RESET}""", **kwargs)
@@ -157,6 +165,7 @@ def printGreen(_str: str, **kwargs: dict) -> None:
     if not Theme.PARROT:
         if kwargs and "force" in kwargs:
             if kwargs["force"] == "+f":
+                del kwargs["force"]
                 goto .begin
 
             del kwargs["force"]
@@ -172,6 +181,9 @@ def printGreen(_str: str, **kwargs: dict) -> None:
     if not kwargs:
         printk(f"""{colorama.Fore.GREEN}{_str}{colorama.Fore.RESET}""")
         return
+
+    if "force" in kwargs:
+        del kwargs["force"]
 
     if not "style" in kwargs:
         printk(f"""{colorama.Fore.GREEN}{_str}{colorama.Fore.RESET}""", **kwargs)
@@ -210,6 +222,7 @@ def printBlue(_str: str, **kwargs: dict) -> None:
     if not Theme.PARROT:
         if kwargs and "force" in kwargs:
             if kwargs["force"] == "+f":
+                del kwargs["force"]
                 goto .begin
 
             del kwargs["force"]
@@ -225,6 +238,9 @@ def printBlue(_str: str, **kwargs: dict) -> None:
     if not kwargs:
         printk(f"""{colorama.Fore.BLUE}{_str}{colorama.Fore.RESET}""")
         return
+
+    if "force" in kwargs:
+        del kwargs["force"]
 
     if not "style" in kwargs:
         printk(f"""{colorama.Fore.BLUE}{_str}{colorama.Fore.RESET}""", **kwargs)
@@ -263,6 +279,7 @@ def printYellow(_str: str, **kwargs: dict) -> None:
     if not Theme.PARROT:
         if kwargs and "force" in kwargs:
             if kwargs["force"] == "+f":
+                del kwargs["force"]
                 goto .begin
 
             del kwargs["force"]
@@ -278,6 +295,9 @@ def printYellow(_str: str, **kwargs: dict) -> None:
     if not kwargs:
         printk(f"""{colorama.Fore.YELLOW}{_str}{colorama.Fore.RESET}""")
         return
+
+    if "force" in kwargs:
+        del kwargs["force"]
 
     if not "style" in kwargs:
         printk(f"""{colorama.Fore.YELLOW}{_str}{colorama.Fore.RESET}""", **kwargs)
