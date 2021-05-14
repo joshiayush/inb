@@ -4,13 +4,24 @@ from __future__ import annotations
 import re
 import sys
 
+from dom.cleaners import clear_msg_overlay
+
 from console.print import printRed
 from console.print import printGreen
 
 from errors.error import ZeroFlagException
+from errors.error import EmptyResponseException
 from errors.error import CommandFlagNotFoundException
 from errors.error import CredentialsNotFoundException
+from errors.error import FailedLoadingResourceException
 from errors.error import NoSuchConfigurationFoundException
+from errors.error import DomainNameSystemNotResolveException
+
+from selenium.common.exceptions import NoSuchElementException
+
+from linkedin.LinkedIn import LinkedIn
+
+from linkedin.LinkedInConnectionsAuto import LinkedInConnectionsAuto
 
 
 class Main(object):
@@ -55,15 +66,15 @@ class Main(object):
         from helpers.command_help import help_with_configs
 
         self.commands = {
-            "config": help_with_configs,
-            "linkedin": self.handle_linkedin_commands,
             "show": self.handle_show_commands,
-            "delete": self.handle_delete_commands,
-            "developer": self.handle_developer_commands,
-            "theme": self.handle_theme_commands,
-            "clear": self.handle_clear_commands,
             "help": self.handle_help_commands,
             "exit": self.handle_exit_commands,
+            "theme": self.handle_theme_commands,
+            "clear": self.handle_clear_commands,
+            "config": help_with_configs,
+            "delete": self.handle_delete_commands,
+            "linkedin": self.handle_linkedin_commands,
+            "developer": self.handle_developer_commands,
         }
 
     def init_vars(self: Main) -> None:
@@ -79,13 +90,9 @@ class Main(object):
         self.data = {
             "user_email": "",
             "user_password": "",
-            "search_keywords": "",
-            "search_location": "",
-            "job_keywords": "",
-            "job_location": "",
-            "driver_path": "/Python/linkedin-bot/driver/chromedriver",
-            "headless": False
         }
+        self.driver_path = "/Python/linkedin-bot/driver/chromedriver"
+        self.if_headless = False
 
     @property
     def user_email(self: Main) -> str:
@@ -102,54 +109,6 @@ class Main(object):
     @user_password.setter
     def user_password(self: Main, password: str) -> None:
         self.data["user_password"] = password
-
-    @property
-    def search_keywords(self: Main) -> str:
-        return self.data["search_keywords"]
-
-    @search_keywords.setter
-    def search_keywords(self: Main, search_keywords: str) -> None:
-        self.data["search_keywords"] = search_keywords
-
-    @property
-    def search_location(self: Main) -> str:
-        return self.data["search_location"]
-
-    @search_location.setter
-    def search_location(self: Main, search_location: str) -> None:
-        self.data["search_location"] = search_location
-
-    @property
-    def job_keywords(self: Main) -> str:
-        return self.data["job_keywords"]
-
-    @job_keywords.setter
-    def job_keywords(self: Main, job_keywords: str) -> None:
-        self.data["job_keywords"] = job_keywords
-
-    @property
-    def job_location(self: Main) -> str:
-        return self.data["job_location"]
-
-    @job_location.setter
-    def job_location(self: Main, job_location: str) -> None:
-        self.data["job_location"] = job_location
-
-    @property
-    def driver_path(self: Main) -> str:
-        return self.data["driver_path"]
-
-    @driver_path.setter
-    def driver_path(self: Main, driver_path: str) -> None:
-        self.data["driver_path"] = driver_path
-
-    @property
-    def headless(self: Main) -> bool:
-        return self.data["headless"]
-
-    @headless.setter
-    def headless(self: Main, headless: bool) -> None:
-        self.data["headless"] = headless
 
     def store_cache(self: Main) -> None:
         """Method store_cache() applies encryption on the fields if both
@@ -258,6 +217,44 @@ class Main(object):
         self.search_location = querry.split(
             "&&")[1][querry.split("&&")[1].find("=")+1::]
 
+    def start_sending_invitation(self: Main) -> None:
+        _linkedin = LinkedIn(
+            {"user_email": self.user_email, "user_password": self.user_password}, self.driver_path)
+
+        _linkedin.set_browser_incognito_mode()
+        _linkedin.set_ignore_certificate_error()
+
+        if self.if_headless:
+            _linkedin.set_headless()
+
+        _linkedin.enable_webdriver_chrome(
+            _linkedin.get_chrome_driver_options())
+
+        try:
+            _linkedin.get_login_page()
+        except DomainNameSystemNotResolveException as error:
+            printRed(f"""{error}""", style='b', pad='4', force='+f')
+            return
+
+        _linkedin.login()
+
+        _linkedin_connection = LinkedInConnectionsAuto(_linkedin, limit=20)
+
+        try:
+            _linkedin_connection.get_my_network()
+        except EmptyResponseException:
+            printRed(f"""{error}""", style='b', pad='4', force='+f')
+            return
+
+        try:
+            clear_msg_overlay(_linkedin_connection)
+        except NoSuchElementException as error:
+            printRed(f"""{error}""", style='b', pad='4', force='+f')
+        except FailedLoadingResourceException as error:
+            printRed(f"""{error}""", style='b', pad='4', force='+f')
+
+        _linkedin_connection.run()
+
     def handle_send_commands(self: Main) -> None:
         """Method handle_send_commands() handles the operations when you
         apply flag 'send' with 'linkedin' command. We handle operation in
@@ -273,14 +270,12 @@ class Main(object):
         if self.get_command_at_index(2) != "send":
             return
 
-        from linkedin.LinkedInConnectionsAuto import LinkedInConnectionsAuto
-
         if self.get_command_at_index(-1) == "--use-cache":
             from creds.storage import get_credentials
             get_credentials(self)
 
         if self.get_command_at_index(-2) == "--headless":
-            self.headless = True
+            self.if_headless = True
 
         if self.get_command_at_index(3) == "suggestions":
             if self.get_command_at_index(4) == "--auto" or True:
@@ -288,7 +283,7 @@ class Main(object):
                     raise CredentialsNotFoundException(
                         "Credentials not found! Need credentials first use config.user.email/password to add them!")
 
-                LinkedInConnectionsAuto(self.data).run()
+                self.start_sending_invitation()
                 return
 
         if self.get_command_at_index(3) == "--headless" or self.get_command_at_index(3) == "--use-cache":
@@ -296,7 +291,7 @@ class Main(object):
                 raise CredentialsNotFoundException(
                     "Credentials not found! Need credentials first use config.user.email/password to add them!")
 
-            LinkedInConnectionsAuto(self.data).run()
+            self.start_sending_invitation()
             return
 
         if self.get_command_length() == 3:
@@ -304,7 +299,7 @@ class Main(object):
                 raise CredentialsNotFoundException(
                     "Credentials not found! Need credentials first use config.user.email/password to add them!")
 
-            LinkedInConnectionsAuto(self.data).run()
+            self.start_sending_invitation()
             return
 
         self.command = self.command[3:]
