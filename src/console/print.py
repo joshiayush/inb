@@ -127,9 +127,6 @@ def printRed(_str: str, **kwargs: dict) -> None:
         printk(f"""{colorama.Fore.RED}{_str}{colorama.Fore.RESET}""")
         return
 
-    if "force" in kwargs:
-        del kwargs["force"]
-
     if not "style" in kwargs:
         printk(f"""{colorama.Fore.RED}{_str}{colorama.Fore.RESET}""", **kwargs)
         return
@@ -184,9 +181,6 @@ def printGreen(_str: str, **kwargs: dict) -> None:
     if not kwargs:
         printk(f"""{colorama.Fore.GREEN}{_str}{colorama.Fore.RESET}""")
         return
-
-    if "force" in kwargs:
-        del kwargs["force"]
 
     if not "style" in kwargs:
         printk(f"""{colorama.Fore.GREEN}{_str}{colorama.Fore.RESET}""", **kwargs)
@@ -243,9 +237,6 @@ def printBlue(_str: str, **kwargs: dict) -> None:
         printk(f"""{colorama.Fore.BLUE}{_str}{colorama.Fore.RESET}""")
         return
 
-    if "force" in kwargs:
-        del kwargs["force"]
-
     if not "style" in kwargs:
         printk(f"""{colorama.Fore.BLUE}{_str}{colorama.Fore.RESET}""", **kwargs)
         return
@@ -300,9 +291,6 @@ def printYellow(_str: str, **kwargs: dict) -> None:
     if not kwargs:
         printk(f"""{colorama.Fore.YELLOW}{_str}{colorama.Fore.RESET}""")
         return
-
-    if "force" in kwargs:
-        del kwargs["force"]
 
     if not "style" in kwargs:
         printk(f"""{colorama.Fore.YELLOW}{_str}{colorama.Fore.RESET}""", **kwargs)

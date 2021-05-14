@@ -79,9 +79,6 @@ def scanWhite(_str: str, **kwargs: dict) -> str:
         print(f"""{colorama.Fore.RESET}""", end='')
         return _inp
 
-    if "force" in kwargs:
-        del kwargs["force"]
-
     if not "style" in kwargs:
         print(f"""{colorama.Fore.WHITE}""", end='')
         _inp = scank(f"""{_str}""", **kwargs)
@@ -143,9 +140,6 @@ def scanRed(_str: str, **kwargs: dict) -> str:
         _inp = scank(f"""{_str}""")
         print(f"""{colorama.Fore.RESET}""", end='')
         return _inp
-
-    if "force" in kwargs["force"]:
-        del kwargs["force"]
 
     if not "style" in kwargs:
         print(f"""{colorama.Fore.RED}""", end='')
@@ -209,9 +203,6 @@ def scanGreen(_str: str, **kwargs: dict) -> str:
         print(f"""{colorama.Fore.RESET}""", end='')
         return _inp
 
-    if "force" in kwargs:
-        del kwargs["force"]
-
     if not "style" in kwargs:
         print(f"""{colorama.Fore.GREEN}""", end='')
         _inp = scank(f"""{_str}""", **kwargs)
@@ -274,9 +265,6 @@ def scanBlue(_str: str, **kwargs: dict) -> str:
         print(f"""{colorama.Fore.RESET}""", end='')
         return _inp
 
-    if "force" in kwargs:
-        del kwargs["force"]
-
     if not "style" in kwargs:
         print(f"""{colorama.Fore.BLUE}""", end='')
         _inp = scank(f"""{_str}""", **kwargs)
@@ -338,9 +326,6 @@ def scanYellow(_str: str, **kwargs: dict) -> str:
         _inp = scank(f"""{_str}""")
         print(f"""{colorama.Fore.RESET}""", end='')
         return _inp
-
-    if "force" in kwargs:
-        del kwargs["force"]
 
     if not "style" in kwargs:
         print(f"""{colorama.Fore.YELLOW}""", end='')
