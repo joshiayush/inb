@@ -49,15 +49,16 @@ def printWhite(_str: str, **kwargs: dict) -> None:
         **kwargs: are the key-value pair that print method takes besides string.
     """
     if not Theme.PARROT:
-        if kwargs and "force" in kwargs:
-            if kwargs["force"] == "+f":
+        if kwargs:
+            if "force" in kwargs:
+                if kwargs["force"] == "+f":
+                    del kwargs["force"]
+                    goto .begin
+
                 del kwargs["force"]
-                goto .begin
 
-            del kwargs["force"]
-
-        if kwargs and "style" in kwargs:
-            del kwargs["style"]
+            if "style" in kwargs:
+                del kwargs["style"]
 
         printk(f"""{_str}""", **kwargs)
         return
@@ -106,15 +107,16 @@ def printRed(_str: str, **kwargs: dict) -> None:
         **kwargs: are the key-value pair that print method takes besides string.
     """
     if not Theme.PARROT:
-        if kwargs and "force" in kwargs:
-            if kwargs["force"] == "+f":
+        if kwargs:
+            if "force" in kwargs:
+                if kwargs["force"] == "+f":
+                    del kwargs["force"]
+                    goto .begin
+
                 del kwargs["force"]
-                goto .begin
 
-            del kwargs["force"]
-
-        if kwargs and "style" in kwargs:
-            del kwargs["style"]
+            if "style" in kwargs:
+                del kwargs["style"]
 
         printk(f"""{_str}""", **kwargs)
         return
@@ -163,15 +165,16 @@ def printGreen(_str: str, **kwargs: dict) -> None:
         **kwargs: are the key-value pair that print method takes besides string.
     """
     if not Theme.PARROT:
-        if kwargs and "force" in kwargs:
-            if kwargs["force"] == "+f":
+        if kwargs:
+            if "force" in kwargs:
+                if kwargs["force"] == "+f":
+                    del kwargs["force"]
+                    goto .begin
+
                 del kwargs["force"]
-                goto .begin
 
-            del kwargs["force"]
-
-        if kwargs and "style" in kwargs:
-            del kwargs["style"]
+            if "style" in kwargs:
+                del kwargs["style"]
 
         printk(f"""{_str}""", **kwargs)
         return
@@ -220,15 +223,16 @@ def printBlue(_str: str, **kwargs: dict) -> None:
         **kwargs: are the key-value pair that print method takes besides string.
     """
     if not Theme.PARROT:
-        if kwargs and "force" in kwargs:
-            if kwargs["force"] == "+f":
+        if kwargs:
+            if "force" in kwargs:
+                if kwargs["force"] == "+f":
+                    del kwargs["force"]
+                    goto .begin
+
                 del kwargs["force"]
-                goto .begin
 
-            del kwargs["force"]
-
-        if kwargs and "style" in kwargs:
-            del kwargs["style"]
+            if "style" in kwargs:
+                del kwargs["style"]
 
         printk(f"""{_str}""", **kwargs)
         return
@@ -277,15 +281,16 @@ def printYellow(_str: str, **kwargs: dict) -> None:
         **kwargs: are the key-value pair that print method takes besides string.
     """
     if not Theme.PARROT:
-        if kwargs and "force" in kwargs:
-            if kwargs["force"] == "+f":
+        if kwargs:
+            if "force" in kwargs:
+                if kwargs["force"] == "+f":
+                    del kwargs["force"]
+                    goto .begin
+
                 del kwargs["force"]
-                goto .begin
 
-            del kwargs["force"]
-
-        if kwargs and "style" in kwargs:
-            del kwargs["style"]
+            if "style" in kwargs:
+                del kwargs["style"]
 
         printk(f"""{_str}""", **kwargs)
         return

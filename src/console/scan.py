@@ -58,15 +58,16 @@ def scanWhite(_str: str, **kwargs: dict) -> str:
         returns the entered value.
     """
     if not Theme.PARROT:
-        if kwargs and "force" in kwargs:
-            if kwargs["force"] == "+f":
+        if kwargs:
+            if "force" in kwargs:
+                if kwargs["force"] == "+f":
+                    del kwargs["force"]
+                    goto .begin
+
                 del kwargs["force"]
-                goto .begin
 
-            del kwargs["force"]
-
-        if kwargs and "style" in kwargs:
-            del kwargs["style"]
+            if "style" in kwargs:
+                del kwargs["style"]
 
         return scank(f"""{_str}""", **kwargs)
 
@@ -122,15 +123,16 @@ def scanRed(_str: str, **kwargs: dict) -> str:
         returns entered value.
     """
     if not Theme.PARROT:
-        if kwargs and "force" in kwargs:
-            if kwargs["force"] == "+f":
+        if kwargs:
+            if "force" in kwargs:
+                if kwargs["force"] == "+f":
+                    del kwargs["force"]
+                    goto .begin
+
                 del kwargs["force"]
-                goto .begin
 
-            del kwargs["force"]
-
-        if kwargs and "style" in kwargs:
-            del kwargs["style"]
+            if "style" in kwargs:
+                del kwargs["style"]
 
         return scank(f"""{_str}""", **kwargs)
 
@@ -186,15 +188,16 @@ def scanGreen(_str: str, **kwargs: dict) -> str:
         returns entered value.
     """
     if not Theme.PARROT:
-        if kwargs and "force" in kwargs:
-            if kwargs["force"] == "+f":
+        if kwargs:
+            if "force" in kwargs:
+                if kwargs["force"] == "+f":
+                    del kwargs["force"]
+                    goto .begin
+
                 del kwargs["force"]
-                goto .begin
 
-            del kwargs["force"]
-
-        if kwargs and "style" in kwargs:
-            del kwargs["style"]
+            if "style" in kwargs:
+                del kwargs["style"]
 
         return scank(f"""{_str}""", **kwargs)
 
@@ -250,15 +253,16 @@ def scanBlue(_str: str, **kwargs: dict) -> str:
         returns entered value.
     """
     if not Theme.PARROT:
-        if kwargs and "force" in kwargs:
-            if kwargs["force"] == "+f":
+        if kwargs:
+            if "force" in kwargs:
+                if kwargs["force"] == "+f":
+                    del kwargs["force"]
+                    goto .begin
+
                 del kwargs["force"]
-                goto .begin
 
-            del kwargs["force"]
-
-        if kwargs and "style" in kwargs:
-            del kwargs["style"]
+            if "style" in kwargs:
+                del kwargs["style"]
 
         return scank(f"""{_str}""", **kwargs)
 
@@ -314,15 +318,16 @@ def scanYellow(_str: str, **kwargs: dict) -> str:
         returns entered value.
     """
     if not Theme.PARROT:
-        if kwargs and "force" in kwargs:
-            if kwargs["force"] == "+f":
+        if kwargs:
+            if "force" in kwargs:
+                if kwargs["force"] == "+f":
+                    del kwargs["force"]
+                    goto .begin
+
                 del kwargs["force"]
-                goto .begin
 
-            del kwargs["force"]
-
-        if kwargs and "style" in kwargs:
-            del kwargs["style"]
+            if "style" in kwargs:
+                del kwargs["style"]
 
         return scank(f"""{_str}""", **kwargs)
 
