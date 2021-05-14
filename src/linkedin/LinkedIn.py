@@ -40,22 +40,12 @@ class LinkedIn(object):
                 "user_password": credentials["user_password"]
             }
 
-        if not LinkedIn.SESSION_ALREADY_EXISTS:
-            """Making an option object for our chromedriver."""
-            self.options = webdriver.ChromeOptions()
-
-            """Turning webdriver on."""
-            self.enable_webdriver_chrome()
-
-            LinkedIn.SESSION_ALREADY_EXISTS = True
+        self.options = webdriver.ChromeOptions()
 
         if not LinkedIn.OLD_EMAIL == self.user_email and not LinkedIn.OLD_PASSWORD == self.user_password:
             """Save email and password."""
             LinkedIn.OLD_EMAIL = self.user_email
             LinkedIn.OLD_PASSWORD = self.user_password
-
-            """Calling `login()` function which will login for us."""
-            self.login()
 
     @property
     def user_email(self):
@@ -122,8 +112,11 @@ class LinkedIn(object):
 
         http://peter.sh/experiments/chromium-command-line-switches/
         """
+        if LinkedIn.SESSION_ALREADY_EXISTS:
+            return
+
         self.driver = webdriver.Chrome(
-            self.data["driver_path"], options=_options)
+            self.driver_path, options=_options)
 
     def disable_webdriver_chrome(self: object) -> None:
         """Function `disable_webdriver_chrome()` close the webdriver session 
@@ -222,7 +215,7 @@ class LinkedIn(object):
         self.enter_email()
         self.enter_password()
 
-    def login(self: object, credentials: dict = ...) -> None:
+    def login(self: object, credentials: dict = {}) -> None:
         """Function `login()` logs into your personal LinkedIn profile.
 
         Args:
@@ -249,16 +242,4 @@ class LinkedIn(object):
                 "user_password": credentials["user_password"]
             }
 
-        from messages.console_messages import send_to_console
-
-        send_to_console(f"""Connecting...""", color='b', pad='8', end='\r')
-
-        try:
-            self.get_login_page()
-        except DomainNameSystemNotResolveException as error:
-            send_to_console(f"""{error}""", color='r', style='b', pad='1')
-
         self.fill_credentials()
-
-        send_to_console(' ', pad='80', end='\r')
-        send_to_console(f"""Connected ✔""", color='g', style='b', pad='8')
