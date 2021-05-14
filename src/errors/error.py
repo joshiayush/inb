@@ -47,14 +47,14 @@ class UserCacheNotFoundException(Exception):
 class WebDriverPathNotGivenException(Exception):
     """Thrown when chrome driver's path is not given."""
 
-    def __init__(self, message: str = '') -> None:
+    def __init__(self: WebDriverPathNotGivenException, message: str = '') -> None:
         super(WebDriverPathNotGivenException, self).__init__(message)
 
 
 class CredentialsNotGivenException(Exception):
     """Thrown when user's credentials are not given to the LinkedIn class."""
 
-    def __init__(self, message: str = '') -> None:
+    def __init__(self: CredentialsNotGivenException, message: str = '') -> None:
         super(CredentialsNotGivenException, self).__init__(message)
 
 
@@ -91,3 +91,10 @@ class NoSuchConfigurationFoundException(Exception):
 
     def __init__(self: NoSuchConfigurationFoundException, message: str = '') -> None:
         super(NoSuchConfigurationFoundException, self).__init__(message)
+
+
+class ConnectionLimitExceededException(Exception):
+    """Thrown when connections limit given by the user exceeds."""
+
+    def __init__(self: ConnectionLimitExceededException, message: str = '') -> None:
+        super(ConnectionLimitExceededException, self).__init__(message)
