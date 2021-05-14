@@ -45,12 +45,12 @@ class LinkedInConnectionsAuto(LinkedIn):
 
         self._limit = limit
 
-    def get_my_network(self: object) -> None:
+    def get_my_network(self: object, url: str = "https://www.linkedin.com/mynetwork/") -> None:
         """Function get_my_network() changes the url by executing function
         `get()` from webdriver.
         """
         try:
-            self.driver.get("https://www.linkedin.com/mynetwork/")
+            self.driver.get(url)
         except TimeoutException:
             raise EmptyResponseException("ERR_EMPTY_RESPONSE")
 
