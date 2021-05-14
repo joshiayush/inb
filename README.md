@@ -58,6 +58,132 @@ Once you are done adding configurations you can run the command.
 
 It will start sending invitation.
 
+# Usage
+
+Note these imports should occur directly from `linkedin` module inside of the `src` directory, no
+module in between.
+
+## Module LinkedIn
+
+```python3
+from linkedin.LinkedIn import LinkedIn
+
+from errors.error import DomainNameSystemNotResolveException
+
+user_email = "example@gmail.com"
+user_password = "xxxx-xxxx-xxxx"
+
+driver_path = "chrome_driver_path"
+
+# enable the headless mode when required or when you don't need it just don't call
+# the method headless from LinkedIn class.
+if_headless = True
+
+# LinkedIn constructor takes user credentials and chromedriver path as its parameters.
+_linkedin = LinkedIn(
+            {"user_email": user_email, "user_password": user_password}, driver_path)
+
+# set browser in incognito mode.
+_linkedin.set_browser_incognito_mode()
+# set ignore certificate errors true.
+_linkedin.set_ignore_certificate_error()
+
+if if_headless:
+    # set browser in headless mode.
+    _linkedin.set_headless()
+
+# chromedriver options are set to ["--incognito", "--ignore-certificate-errors", "headless"]
+# if all the above functions are executed, but if you skip the set_headless method then
+# chromedriver options are set to ["--incognito", "--ignore-certificate-errors"], you decide
+# what best fits for you.
+
+# enables webdriver chrome and takes chromedriver options as its parameter.
+# method get_chrome_driver_options() will return the webdriver options.
+_linkedin.enable_webdriver_chrome(_linkedin.get_chrome_driver_options())
+
+try:
+    # method get_login_page() will send a get request for the given url, it raises error
+    # DomainNameSystemNotResolveException if domain name system is not resolved by your
+    # browser.
+    _linkedin.get_login_page("https://www.linkedin.com/login")
+except DomainNameSystemNotResolveException as error:
+    print(f"""{error}""")
+
+# login to LinkedIn, method login() throws the user credentials to there specific fields
+# on the login form.
+_linkedin.login()
+```
+
+## Module LinkedInConnectionsAuto
+
+```python3
+from linkedin.LinkedIn import LinkedIn
+
+from errors.error import EmptyResponseException
+from errors.error import DomainNameSystemNotResolveException
+
+user_email = "example@gmail.com"
+user_password = "xxxx-xxxx-xxxx"
+
+driver_path = "chrome_driver_path"
+
+# enable the headless mode when required or when you don't need it just don't call
+# the method headless from LinkedIn class.
+if_headless = True
+
+# LinkedIn constructor takes user credentials and chromedriver path as its parameters.
+_linkedin = LinkedIn(
+            {"user_email": user_email, "user_password": user_password}, driver_path)
+
+# set browser in incognito mode.
+_linkedin.set_browser_incognito_mode()
+# set ignore certificate errors true.
+_linkedin.set_ignore_certificate_error()
+
+if if_headless:
+    # set browser in headless mode.
+    _linkedin.set_headless()
+
+# chromedriver options are set to ["--incognito", "--ignore-certificate-errors", "headless"]
+# if all the above functions are executed, but if you skip the set_headless method then
+# chromedriver options are set to ["--incognito", "--ignore-certificate-errors"], you decide
+# what best fits for you.
+
+# enables webdriver chrome and takes chromedriver options as its parameter.
+# method get_chrome_driver_options() will return the webdriver options.
+_linkedin.enable_webdriver_chrome(_linkedin.get_chrome_driver_options())
+
+try:
+    # method get_login_page() will send a GET request for the given url, it raises error
+    # DomainNameSystemNotResolveException if domain name system is not resolved by your
+    # browser.
+    _linkedin.get_login_page("https://www.linkedin.com/login")
+except DomainNameSystemNotResolveException as error:
+    print(f"""{error}""")
+
+# login to LinkedIn, method login() throws the user credentials to there specific fields
+# on the login form.
+_linkedin.login()
+
+# LinkedInConnectionsAuto constructor takes LinkedIn object and daily connection limit as its
+# parameters, it throws two errors one `PropertyNotExistException` if object _linkedin doesn't
+# have property 'driver' in it because this class also needs the access of the driver and the
+# another exception is `ConnectionLimitExceededException` if you gave a daily connection limit
+# that is greater than 80, we recommend 40 so that your account won't be marked as a bot by
+# linekdin, so make sure that you catch those errors too you can import them from the error file
+# as we imported the DomainNameSystemNotResolveException Exception from it.
+_linkedin_connection = LinkedInConnectionsAuto(_linkedin, limit=20)
+
+try:
+    # method get_my_network() sends a GET request for the url given, raise EmptyResponseException
+    # if your internet connection is slow.
+    _linkedin_connection.get_my_network("https://www.linkedin.com/mynetwork/")
+except EmptyResponseException:
+    print(f"""{error}""")
+
+_linkedin_connection.run()
+```
+
 ## Commands
 
 ### `config.user.email "example@email.com" --cached`
