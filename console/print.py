@@ -29,6 +29,9 @@ def printk(_str: str, **kwargs: dict) -> None:
         print(f"""{_str}""", **kwargs)
         return
 
+    if "force" in kwargs:
+        del kwargs["force"]
+
     if "start" in kwargs:
         print(end=kwargs["start"])
         del kwargs["start"]
@@ -68,9 +71,6 @@ def printWhite(_str: str, **kwargs: dict) -> None:
     if not kwargs:
         printk(f"""{colorama.Fore.WHITE}{_str}{colorama.Fore.RESET}""")
         return
-
-    if "force" in kwargs:
-        del kwargs["force"]
 
     if not "style" in kwargs:
         printk(f"""{colorama.Fore.WHITE}{_str}{colorama.Fore.RESET}""", **kwargs)

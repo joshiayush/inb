@@ -25,22 +25,21 @@ from linkedin.LinkedInConnectionsAuto import LinkedInConnectionsAuto
 
 
 class Main(object):
-    """Class Main is the main class that gets executed after the user
-    hits the command `./run.sh` on the terminal screen, this class gives
-    the `cli` (Command Line Interface) to the user. We don't have `GUI`
-    (Graphical User Interface) here because I don't have any deign Idea
-    in my mind yet.
+    """Class Main is the main class that gets executed after the user hits the 
+    command `./run.sh` on the terminal screen, this class gives the `cli` 
+    (Command Line Interface) to the user. We don't have `GUI` (Graphical User Interface) 
+    here because I don't have any deign Idea in my mind yet.
 
     Class Variable:
         THEME: is the theme for our cli (command line interface).
     """
 
     def __init__(self: Main) -> None:
-        """Method __init__() initializes the commands and required variables,
-        it also prints the Logo on the screen it calls method init_commands()
-        that initializes all the commands that we can have in this program then
-        it calls the init_vars() method to initialize the variables required
-        then it calls method home() to print a sexy logo on the screen.
+        """Method __init__() initializes the commands and required variables, it also 
+        prints the Logo on the screen it calls method init_commands() that initializes 
+        all the commands that we can have in this program then it calls the init_vars() 
+        method to initialize the variables required then it calls method home() to print 
+        information about the current release on the screen.
         """
         self.init_commands()
 
@@ -49,19 +48,31 @@ class Main(object):
         Main.home()
 
     def init_commands(self: Main) -> None:
-        """Method init_commands() initialize the commands that LinkedIn
-        Automater provides for now we have following commands,
+        """Method init_commands() initialize the commands that LinkedIn Automater provides 
+        for now we have following commands,
 
-        Commands:
-            * config     : shows how you can add fields
-            * linkedin   : activates the automation process
-            * show       : shows the entered details
-            * delete     : deletes the cache stored
-            * developer  : prints the developer details
-            * theme      : sets the given theme
-            * clear      : clears the screen
-            * help       : prints the commands and their usage
-            * exit       : exit from the program
+            COMMANDS
+        ================
+
+        +--------------|----------------------------------------+
+        |   exit       +    exit from the program               |
+        +--------------|----------------------------------------+
+        |   show       +    shows the entered details           |
+        +--------------|----------------------------------------+
+        |   help       +    prints the commands and their usage |
+        +--------------|----------------------------------------+
+        |   clear      +    clears the screen                   |
+        +--------------|----------------------------------------+ 
+        |   theme      +    sets the given theme                |
+        +--------------|----------------------------------------+
+        |   config     +    shows how you can add fields        |
+        +--------------|----------------------------------------+
+        |   delete     +    deletes the cache stored            |
+        +--------------|----------------------------------------+
+        |   linkedin   +    activates the automation process    |
+        +--------------|----------------------------------------+
+        |   developer  +    prints the developer details        |
+        +--------------|----------------------------------------+
         """
         from helpers.command_help import help_with_configs
 
@@ -78,11 +89,10 @@ class Main(object):
         }
 
     def init_vars(self: Main) -> None:
-        """Method init_vars() intialize the dictionary that holds the
-        user's details like credentials and jobs search, etc, it also
-        initializes a dictionary which conatins commands and their
-        corresponding help functions, there's one more variable that
-        gets initializes that is the theme variable for our cli
+        """Method init_vars() intialize the dictionary that holds the user's details 
+        like credentials and jobs search, etc, it also initializes a dictionary which 
+        conatins commands and their corresponding help functions, there's one more 
+        variable that gets initializes that is the theme variable for our cli
         (Command Line Interface).
         """
         self.encrypted_email = ""
@@ -111,9 +121,9 @@ class Main(object):
         self.data["user_password"] = password
 
     def store_cache(self: Main) -> None:
-        """Method store_cache() applies encryption on the fields if both
-        the fields are available and the calls the method 'store_credentials'
-        to store the credentials as cache.
+        """Method store_cache() applies encryption on the fields if both the fields are 
+        available and the calls the method 'store_credentials' to store the credentials 
+        as cache.
         """
         if not self.user_email or not self.user_password:
             return
@@ -145,7 +155,8 @@ class Main(object):
     def home() -> None:
         """Method home() prints the home screen.
 
-        First it clears the screen using the method clear().
+        First it clears the screen using the method clear(). Then calls the user defined
+        function printGreen to print text in green color on the screen.
         """
         from helpers.window import clear
 
@@ -156,12 +167,12 @@ class Main(object):
 
     @staticmethod
     def set_theme(_theme: str) -> None:
-        """Function set_theme() sets the cli (Command Line Interface) theme
-        according to the value given.
+        """Function set_theme() sets the cli (Command Line Interface) theme according to 
+        the value given.
 
         Args:
-            _theme: it is the theme that the we need to give to our cli after
-            user has entered it.
+            _theme: it is the theme that the we need to give to our cli after user has 
+            entered it.
         """
         from console import Theme
 
@@ -176,23 +187,23 @@ class Main(object):
             return
 
         printRed(
-            f"""'{_theme}' can't be recognized as a 'theme' command""", style='b', pad='1')
+            f"""'{_theme}' can't be recognized as a 'theme' command""", style='b', pad='1', force="+f")
         return
 
     def get_command_length(self: Main) -> int:
-        """Method get_command_length() returns the lenght of the command
-        entered. We first change the entered string to a list object by
-        spliting the string on ' ' (whitespaces) then we return the lenght.
+        """Method get_command_length() returns the lenght of the command entered. 
+        We first change the entered string to a list object by spliting the string on 
+        ' ' (whitespaces) then we return the lenght.
 
-        return:
-            lenght of the command entered.
+        Return:
+            - lenght of the command entered.
         """
         return len(self.command.split(" "))
 
     def get_command_at_index(self: Main, index: int) -> str:
-        """Method get_command_at_index() returns a value at a given index
-        of the command after changing the string to a list object. We also
-        use strip() function to cut all the leading and trailing whitespaces.
+        """Method get_command_at_index() returns a value at a given index of the command 
+        after changing the string to a list object. We also use strip() function to cut 
+        all the leading and trailing whitespaces.
         """
         try:
             return self.command.split(" ")[index].strip()
@@ -256,11 +267,10 @@ class Main(object):
         _linkedin_connection.run()
 
     def handle_send_commands(self: Main) -> None:
-        """Method handle_send_commands() handles the operations when you
-        apply flag 'send' with 'linkedin' command. We handle operation in
-        two ways where one is when the user enters exact number of flags
-        with these commands and the other is when user ommits the default
-        flags.
+        """Method handle_send_commands() handles the operations when you apply flag 
+        'send' with 'linkedin' command. We handle operation in two ways where one is 
+        when the user enters exact number of flags with these commands and the other 
+        is when user ommits the default flags.
 
         Usage:
             -> linkedin [send] [suggestions^] --auto^ [--headless] [--use--cache]
@@ -383,7 +393,7 @@ class Main(object):
             from console.scan import scanBlue
 
             ch = scanBlue(f"""Show password anyway? [y/N]:""", style='b',
-                          pad='1', end=' ') if self.user_password else 'n'
+                          pad='1', end=' ', force="+f") if self.user_password else 'n'
 
             if ch.lower() != 'y':
                 return
@@ -476,17 +486,17 @@ class Main(object):
             return
 
         printGreen(f"""Name     :  Ayush Joshi""",
-                   style='b', pad='1')
+                   style='b', pad='1', force="+f")
         printGreen(f"""Email    :  ayush854032@gmail.com (primary)""",
-                   style='b', pad='1')
+                   style='b', pad='1', force="+f")
         printGreen(f"""Email    :  joshiayush.joshiayush@gmail.com""",
-                   style='b', pad='1')
+                   style='b', pad='1', force="+f")
         printGreen(f"""Mobile   :  +91 8941854032 (Only WhatsApp)""",
-                   style='b', pad='1')
+                   style='b', pad='1', force="+f")
         printGreen(f"""GitHub   :  https://github.com/JoshiAyush""",
-                   style='b', pad='1')
+                   style='b', pad='1', force="+f")
         printGreen(f"""LinkedIn :  https://www.linkedin.com/in/ayush-joshi-3600a01b7/""",
-                   style='b', pad='1')
+                   style='b', pad='1', force="+f")
 
     def handle_theme_commands(self: Main) -> None:
         """Method handle_theme_commands() handles the 'theme' commands
@@ -614,27 +624,40 @@ class Main(object):
             f"""'{self.get_command_at_index(2)}' is not recognized as a 'exit' flag!""")
 
     def Error(self: Main) -> None:
-        """Method Error() gets called when the entered command
-        is not recognized. We say 'self.command[8:]' because this
-        way we are triming the 'command ' from the entered command
-        because we don't want to confuse the user by showing him/her
+        """Method Error() gets called when the entered command is not recognized. 
+        We say 'self.command[8:]' because this way we are triming the 'command ' from 
+        the entered command because we don't want to confuse the user by showing him/her
         what is going in the background.
         """
         if not self.command:
             return
 
         printRed(
-            f"""`{self.command[8:]}` is not recognized as an internal command.""", style='b', pad='1')
+            f"""`{self.command[8:]}` is not recognized as an internal command.""", style='b', pad='1', force="+f")
 
     def slice_keyword(self: Main) -> str:
+        """Method slice_keyword() slice the keywords that comes between double quotes
+        for example, if there is a query like "ayush854032@gmail.com" then this method
+        only returns whatever is in between the double quotes.
+
+        Return:
+            - keyword that is in between the double quotes.
+        """
         try:
-            return self.command.split(" ")[2][self.command.split(" ")[2].find('"')+1:self.command.split(" ")[2].rfind('"')]
+            return self.command.split(' ')[2][self.command.split(" ")[2].find('"')+1:self.command.split(" ")[2].rfind('"')]
         except IndexError:
             return None
 
     def get_email(self: Main) -> str:
         """
-        Method check_email()
+        Method check_email() checks the email field for its validness if the email is valid
+        email or not if not it returns False otherwise returns the email.
+        This method apply a regex on the email to check if the email is a custom email or a 
+        normal email address if it finds yes then it return the email address otherwise it
+        returns False.
+
+        Return:
+            - valid email address if found otherwise False.
         """
         email = self.slice_keyword()
 
@@ -653,12 +676,12 @@ class Main(object):
         return False
 
     def handle_configs(self: Main) -> None:
-        """Method handle_configs() basically saves the user's configurations
-        that are passed by hitting the command `config.user.email/password`
-        or `config.job/keywords/location`. We use re.compile() and re.search()
-        method here to find the pattern in the command. We does a lot of argument
-        parsing in this function as you can see this is to fetch the right
-        commands and flags and if not found raise an error.
+        """Method handle_configs() basically saves the user's configurations that are 
+        passed by hitting the command 'config.user.email', 'config.user.password' or 
+        'config.job.keywords', 'config.job.location'. We use re.compile() and re.search() 
+        method here to find the pattern in the command. We does a lot of argument parsing 
+        in this function as you can see this is to fetch the rightcommands and flags and 
+        if not found raise an error.
         """
         if self.get_command_length() <= 2:
             if self.get_command_at_index(1) != "config.user.password":
@@ -744,13 +767,13 @@ class Main(object):
             try:
                 self.commands.get(self.command.split(" ")[1], self.Error)()
             except CredentialsNotFoundException as error:
-                printRed(f"""{error}""", style='b', pad='1')
+                printRed(f"""{error}""", style='b', pad='1', force="+f")
             except CommandFlagNotFoundException as error:
-                printRed(f"""{error}""", style='b', pad='1')
+                printRed(f"""{error}""", style='b', pad='1', force="+f")
             except ZeroFlagException as error:
-                printRed(f"""{error}""", style='b', pad='1')
+                printRed(f"""{error}""", style='b', pad='1', force="+f")
             except FileNotFoundError as error:
-                printRed(f"""{error}""", style='b', pad='1')
+                printRed(f"""{error}""", style='b', pad='1', force="+f")
 
     def run(self: Main) -> None:
         """Method run() runs a infinite loop and starts the `cli`

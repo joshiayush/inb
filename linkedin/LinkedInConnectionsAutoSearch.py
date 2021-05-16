@@ -1,16 +1,9 @@
-import time
-import colorama
-
-from .LinkedIn import re
 from .LinkedIn import By
 from .LinkedIn import Keys
 from .LinkedIn import LinkedIn
-from .LinkedIn import webdriver
-from .LinkedIn import ActionChains
 from .LinkedIn import WebDriverWait
 from .LinkedIn import TimeoutException
 from .LinkedIn import expected_conditions
-from .LinkedIn import NoSuchElementException
 from .LinkedIn import ElementNotInteractableException
 from .LinkedIn import ElementClickInterceptedException
 

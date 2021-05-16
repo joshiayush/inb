@@ -5,8 +5,8 @@ import os
 from cryptography.fernet import Fernet
 
 __key = ""
-__key_file = "/Python/linkedin-bot/creds/.key.key"
-__credentials_file = "/Python/linkedin-bot/creds/credentialsFile.ini"
+__key_file = "/Python/linkedin-bot/credentials/.key.key"
+__credentials_file = "/Python/linkedin-bot/credentials/credentialsFile.ini"
 
 
 if not os.path.exists(__key_file):

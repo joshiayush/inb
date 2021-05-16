@@ -4,9 +4,9 @@ function runProgram() {
     # Here the program start its execution `$1` is the first argument of the function `runProgram` and its value is the python
     # interpreter i.e., python[2/3], we check the system here because Windows uses '\' for navigation and Linux '/'.
     if [ "$2" = "linux" ]; then
-        $1 src/main.py
+        $1 main.py
     elif [ "$2" = "windows" ]; then
-        $1 src\main.py
+        $1 main.py
     else
         echo "System not identified"
     fi
@@ -132,18 +132,17 @@ function checkIfGarbage() {
     # Function checkIfGarbage() checks if the __pycache__ garbage is present, if yes then it returns a string 'yes' otherwise does
     # not return anything.
     declare -a garbages=("__pycache__+++"
-        "src+++__pycache__+++"
-        "src+++db+++__pycache__+++"
-        "src+++dom+++__pycache__+++"
-        "src+++creds+++__pycache__+++"
-        "src+++errors+++__pycache__+++"
-        "src+++helpers+++__pycache__+++"
-        "src+++console+++__pycache__+++"
-        "src+++linkedin+++__pycache__+++"
-        "src+++messages+++__pycache__+++"
-        "src+++invitation+++__pycache__+++"
-        "src+++javascript+++__pycache__+++"
-        "src+++python_goto+++__pycache__+++")
+        "db+++__pycache__+++"
+        "dom+++__pycache__+++"
+        "creds+++__pycache__+++"
+        "errors+++__pycache__+++"
+        "helpers+++__pycache__+++"
+        "console+++__pycache__+++"
+        "linkedin+++__pycache__+++"
+        "messages+++__pycache__+++"
+        "invitation+++__pycache__+++"
+        "javascript+++__pycache__+++"
+        "python_goto+++__pycache__+++")
 
     l_path="/"
     w_path="\\"
@@ -181,18 +180,17 @@ function deleteCache() {
     # Function deleteCache() deletes the cache produced by the program after each run of selenium webdriver. This function first
     # gets the system info then deletes the folder '__pycache__' accordingly.
     declare -a garbages=("__pycache__+++"
-        "src+++__pycache__+++"
-        "src+++db+++__pycache__+++"
-        "src+++dom+++__pycache__+++"
-        "src+++creds+++__pycache__+++"
-        "src+++errors+++__pycache__+++"
-        "src+++helpers+++__pycache__+++"
-        "src+++console+++__pycache__+++"
-        "src+++linkedin+++__pycache__+++"
-        "src+++messages+++__pycache__+++"
-        "src+++invitation+++__pycache__+++"
-        "src+++javascript+++__pycache__+++"
-        "src+++python_goto+++__pycache__+++")
+        "db+++__pycache__+++"
+        "dom+++__pycache__+++"
+        "creds+++__pycache__+++"
+        "errors+++__pycache__+++"
+        "helpers+++__pycache__+++"
+        "console+++__pycache__+++"
+        "linkedin+++__pycache__+++"
+        "messages+++__pycache__+++"
+        "invitation+++__pycache__+++"
+        "javascript+++__pycache__+++"
+        "python_goto+++__pycache__+++")
 
     l_path="/"
     w_path="\\"
