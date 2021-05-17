@@ -9,7 +9,7 @@ import readline
 
 from . import Theme
 
-from python_goto.goto import with_goto
+from goto.goto import with_goto
 
 """No error squiggles when using Pylance. DO NOT REMOVE! if you are using Pylance."""
 from typing import Any

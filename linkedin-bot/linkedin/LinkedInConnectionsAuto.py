@@ -5,8 +5,8 @@ import time
 
 from .LinkedIn import LinkedIn
 
-from dom.javascript import scroll_bottom
-from dom.javascript import get_page_y_offset
+from DOM.javascript import scroll_bottom
+from DOM.javascript import get_page_y_offset
 
 from errors.error import EmptyResponseException
 from errors.error import PropertyNotExistException

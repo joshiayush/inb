@@ -4,9 +4,9 @@ function runProgram() {
     # Here the program start its execution `$1` is the first argument of the function `runProgram` and its value is the python
     # interpreter i.e., python[2/3], we check the system here because Windows uses '\' for navigation and Linux '/'.
     if [ "$2" = "linux" ]; then
-        $1 main.py
+        $1 linkedin-bot/main.py
     elif [ "$2" = "windows" ]; then
-        $1 main.py
+        $1 linkedin-bot\main.py
     else
         echo "System not identified"
     fi
@@ -132,17 +132,18 @@ function checkIfGarbage() {
     # Function checkIfGarbage() checks if the __pycache__ garbage is present, if yes then it returns a string 'yes' otherwise does
     # not return anything.
     declare -a garbages=("__pycache__+++"
-        "db+++__pycache__+++"
-        "dom+++__pycache__+++"
-        "creds+++__pycache__+++"
-        "errors+++__pycache__+++"
-        "helpers+++__pycache__+++"
-        "console+++__pycache__+++"
-        "linkedin+++__pycache__+++"
-        "messages+++__pycache__+++"
-        "invitation+++__pycache__+++"
-        "javascript+++__pycache__+++"
-        "python_goto+++__pycache__+++")
+        "linkedin-bot+++__pycache__+++"
+        "linkedin-bot+++db+++__pycache__+++"
+        "linkedin-bot+++dom+++__pycache__+++"
+        "linkedin-bot+++creds+++__pycache__+++"
+        "linkedin-bot+++errors+++__pycache__+++"
+        "linkedin-bot+++helpers+++__pycache__+++"
+        "linkedin-bot+++console+++__pycache__+++"
+        "linkedin-bot+++linkedin+++__pycache__+++"
+        "linkedin-bot+++messages+++__pycache__+++"
+        "linkedin-bot+++invitation+++__pycache__+++"
+        "linkedin-bot+++javascript+++__pycache__+++"
+        "linkedin-bot+++python_goto+++__pycache__+++")
 
     l_path="/"
     w_path="\\"
@@ -180,17 +181,18 @@ function deleteCache() {
     # Function deleteCache() deletes the cache produced by the program after each run of selenium webdriver. This function first
     # gets the system info then deletes the folder '__pycache__' accordingly.
     declare -a garbages=("__pycache__+++"
-        "db+++__pycache__+++"
-        "dom+++__pycache__+++"
-        "creds+++__pycache__+++"
-        "errors+++__pycache__+++"
-        "helpers+++__pycache__+++"
-        "console+++__pycache__+++"
-        "linkedin+++__pycache__+++"
-        "messages+++__pycache__+++"
-        "invitation+++__pycache__+++"
-        "javascript+++__pycache__+++"
-        "python_goto+++__pycache__+++")
+        "linkedin-bot+++__pycache__+++"
+        "linkedin-bot+++db+++__pycache__+++"
+        "linkedin-bot+++dom+++__pycache__+++"
+        "linkedin-bot+++creds+++__pycache__+++"
+        "linkedin-bot+++errors+++__pycache__+++"
+        "linkedin-bot+++helpers+++__pycache__+++"
+        "linkedin-bot+++console+++__pycache__+++"
+        "linkedin-bot+++linkedin+++__pycache__+++"
+        "linkedin-bot+++messages+++__pycache__+++"
+        "linkedin-bot+++invitation+++__pycache__+++"
+        "linkedin-bot+++javascript+++__pycache__+++"
+        "linkedin-bot+++python_goto+++__pycache__+++")
 
     l_path="/"
     w_path="\\"

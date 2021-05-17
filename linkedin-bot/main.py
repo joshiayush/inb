@@ -4,7 +4,7 @@ from __future__ import annotations
 import re
 import sys
 
-from dom.cleaners import clear_msg_overlay
+from DOM.cleaners import clear_msg_overlay
 
 from console.print import printRed
 from console.print import printGreen
