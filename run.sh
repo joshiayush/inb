@@ -133,17 +133,17 @@ function checkIfGarbage() {
     # not return anything.
     declare -a garbages=("__pycache__+++"
         "linkedin-bot+++__pycache__+++"
-        "linkedin-bot+++db+++__pycache__+++"
-        "linkedin-bot+++dom+++__pycache__+++"
+        "linkedin-bot+++DOM+++__pycache__+++"
+        "linkedin-bot+++goto+++__pycache__+++"
         "linkedin-bot+++creds+++__pycache__+++"
         "linkedin-bot+++errors+++__pycache__+++"
         "linkedin-bot+++helpers+++__pycache__+++"
         "linkedin-bot+++console+++__pycache__+++"
         "linkedin-bot+++linkedin+++__pycache__+++"
+        "linkedin-bot+++database+++__pycache__+++"
         "linkedin-bot+++messages+++__pycache__+++"
         "linkedin-bot+++invitation+++__pycache__+++"
-        "linkedin-bot+++javascript+++__pycache__+++"
-        "linkedin-bot+++python_goto+++__pycache__+++")
+        "linkedin-bot+++javascript+++__pycache__+++")
 
     l_path="/"
     w_path="\\"
@@ -182,17 +182,17 @@ function deleteCache() {
     # gets the system info then deletes the folder '__pycache__' accordingly.
     declare -a garbages=("__pycache__+++"
         "linkedin-bot+++__pycache__+++"
-        "linkedin-bot+++db+++__pycache__+++"
-        "linkedin-bot+++dom+++__pycache__+++"
+        "linkedin-bot+++DOM+++__pycache__+++"
+        "linkedin-bot+++goto+++__pycache__+++"
         "linkedin-bot+++creds+++__pycache__+++"
         "linkedin-bot+++errors+++__pycache__+++"
         "linkedin-bot+++helpers+++__pycache__+++"
         "linkedin-bot+++console+++__pycache__+++"
+        "linkedin-bot+++database+++__pycache__+++"
         "linkedin-bot+++linkedin+++__pycache__+++"
         "linkedin-bot+++messages+++__pycache__+++"
         "linkedin-bot+++invitation+++__pycache__+++"
-        "linkedin-bot+++javascript+++__pycache__+++"
-        "linkedin-bot+++python_goto+++__pycache__+++")
+        "linkedin-bot+++javascript+++__pycache__+++")
 
     l_path="/"
     w_path="\\"

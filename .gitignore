@@ -1,12 +1,16 @@
 __pycache__/**
-db/__pycache__/**
-creds/__pycache__/**
-errors/__pycache__/**
-helpers/__pycache__/**
-linkedin/__pycache__/**
-linkedin/__pycache__/**
-invitation/__pycache__/**
-javascript/__pycache__/**
+linkedin-bot/__pycache__/**
+linkedin-bot/DOM/__pycache__/**
+linkedin-bot/goto/__pycache__/**
+linkedin-bot/creds/__pycache__/**
+linkedin-bot/errors/__pycache__/**
+linkedin-bot/helpers/__pycache__/**
+linkedin-bot/console/__pycache__/**
+linkedin-bot/linkedin/__pycache__/**
+linkedin-bot/messages/__pycache__/**
+linkedin-bot/database/__pycache__/**
+linkedin-bot/invitation/__pycache__/**
+linkedin-bot/javascript/__pycache__/**
 
-credentials/credentialsFile.ini
-db/firebaseCreds/serviceAccountKey.json
+creds/credentialsFile.ini
+database/firebaseCreds/serviceAccountKey.json
