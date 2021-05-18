@@ -137,13 +137,16 @@ class LinkedInConnectionsAuto(LinkedIn):
         for _person in self.get_person():
             try:
                 if LinkedInConnectionsAuto.SENT_INVITATION == self._limit:
-                    LinkedInConnectionsAuto.SENT_INVITATION = 0
                     break
+                
                 if not _person["invite_button"].find_element_by_tag_name("span").text == "Connect":
                     continue
+                
                 _person["invite_button"].click()
+                
                 show(name=_person["person_name"], occupation=_person["person_occupation"],
                      status="sent", elapsed_time=time.time() - _start)
+                
                 LinkedInConnectionsAuto.SENT_INVITATION += 1
                 continue
             except ElementNotInteractableException:
@@ -152,8 +155,12 @@ class LinkedInConnectionsAuto(LinkedIn):
                 continue
             except ElementClickInterceptedException:
                 reset()
+                return
 
+        LinkedInConnectionsAuto.SENT_INVITATION = 0
+        
         reset()
+        return
 
     def run(self: object) -> None:
         """Function run() is the main function from where the program
