@@ -11,7 +11,7 @@ class LinkedIn(object):
     OLD_PASSWORD = ''
     SESSION_ALREADY_EXISTS = False
 
-    def __init__(self: object, credentials: dict = ..., driver_path: str = '') -> None:
+    def __init__(self: object, credentials: dict = {}, driver_path: str = '') -> None:
         """Initializing the `LinkedIn` class."""
         self._credentials = {
             "user_email": '',
