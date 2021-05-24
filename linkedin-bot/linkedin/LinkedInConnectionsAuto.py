@@ -100,9 +100,7 @@ class LinkedInConnectionsAuto(LinkedIn):
 
         while _old_page_offset == _new_page_offset:
             scroll_bottom(self)
-
             time.sleep(1)
-
             _new_page_offset = get_page_y_offset(self)
 
         return
@@ -115,9 +113,7 @@ class LinkedInConnectionsAuto(LinkedIn):
         while 1:
             for _person in _person_list:
                 yield _person
-
             self.load_entities()
-
             _person_list = self.encode(self.get_entities())
 
     def click_buttons(self: object) -> None:
@@ -138,15 +134,13 @@ class LinkedInConnectionsAuto(LinkedIn):
             try:
                 if LinkedInConnectionsAuto.SENT_INVITATION == self._limit:
                     break
-                
+
                 if not _person["invite_button"].find_element_by_tag_name("span").text == "Connect":
                     continue
-                
+
                 _person["invite_button"].click()
-                
                 show(name=_person["person_name"], occupation=_person["person_occupation"],
                      status="sent", elapsed_time=time.time() - _start)
-                
                 LinkedInConnectionsAuto.SENT_INVITATION += 1
                 continue
             except ElementNotInteractableException:
@@ -157,10 +151,8 @@ class LinkedInConnectionsAuto(LinkedIn):
                 reset()
                 return
 
-        LinkedInConnectionsAuto.SENT_INVITATION = 0
-        
         reset()
-        return
+        LinkedInConnectionsAuto.SENT_INVITATION = 0
 
     def run(self: object) -> None:
         """Function run() is the main function from where the program
