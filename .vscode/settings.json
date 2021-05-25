@@ -3,6 +3,6 @@
   "[python]": {
     "editor.defaultFormatter": null
   },
-  "editor.formatOnSave": true,
-  "prettier.tabWidth": 2
+  "prettier.tabWidth": 2,
+  "prettier.singleQuote": false
 }
