@@ -8,6 +8,6 @@ function execute() {
     elif [ "$2" = "windows" ]; then
         $1 linkedin-bot\main.py
     else
-        echo "System not identified"
+        echo "System not identified!"
     fi
 }
