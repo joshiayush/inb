@@ -1,2 +1,2 @@
-__name__ = "Javascript"
-__package__ = "Javascript"
+__name__ = "javascript"
+__package__ = "javascript"

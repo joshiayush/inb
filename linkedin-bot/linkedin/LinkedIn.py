@@ -115,6 +115,8 @@ class LinkedIn(object):
         if LinkedIn.SESSION_ALREADY_EXISTS:
             return
 
+        LinkedIn.SESSION_ALREADY_EXISTS = True
+
         self.driver = webdriver.Chrome(
             self.driver_path, options=_options)
 

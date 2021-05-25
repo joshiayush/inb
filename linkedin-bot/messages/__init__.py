@@ -1,5 +1,5 @@
-__name__ = "Messages"
-__package__ = "Messages"
+__name__ = "messages"
+__package__ = "messages"
 
 
 class ConsoleMessages(object):

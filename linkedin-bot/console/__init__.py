@@ -1,5 +1,5 @@
-__name__ = "Console"
-__package__ = "Console"
+__name__ = "console"
+__package__ = "console"
 
 
 class Theme(object):

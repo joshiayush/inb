@@ -141,6 +141,6 @@ implementation. Modifying the bytecode, on the other hand, is fairly simple and 
 execution.
 """
 
-__name__ = "Goto"
-__package__ = "Goto"
+__name__ = "goto"
+__package__ = "goto"
 __version__ = "1.2.0"

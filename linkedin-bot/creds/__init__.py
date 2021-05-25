@@ -1,5 +1,5 @@
-__name__ = "Credentials"
-__package__ = "Credentials"
+__name__ = "creds"
+__package__ = "creds"
 
 import os
 from cryptography.fernet import Fernet

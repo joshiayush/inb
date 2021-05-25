@@ -1,2 +1,2 @@
-__name__ = "Errors"
-__package__ = "Errors"
+__name__ = "errors"
+__package__ = "errors"

@@ -1,3 +1,3 @@
 """LinkedIn package."""
-__name__ = "LinkedIn"
-__package__ = "LinkedIn"
+__name__ = "linkedIn"
+__package__ = "linkedIn"
