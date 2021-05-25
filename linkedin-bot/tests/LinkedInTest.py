@@ -6,7 +6,6 @@ from . import passed
 from . import failed
 
 from console.print import printRed
-from console.print import printBlue
 from console.print import printGreen
 
 from linkedin.LinkedIn import LinkedIn
@@ -92,7 +91,7 @@ def test_get_chrome_driver_options_method(_linkedin: LinkedIn) -> None:
         "LinkedInTest.py LinkedIn.get_chrome_driver_options method must return list type! test failed " + failed
 
 
-def test_linkedin() -> None:
+def test_linkedin() -> list:
     LinkedInTestNumber = 0
     LinkedInTestFailed = 0
     LinkedInTestSuccess = 0
@@ -159,7 +158,4 @@ def test_linkedin() -> None:
     finally:
         LinkedInTestNumber += 1
 
-    print()
-    printBlue("Total tests: " + str(LinkedInTestNumber), style='b')
-    printGreen("Success: " + str(LinkedInTestSuccess), style='b')
-    printRed("Failed: " + str(LinkedInTestFailed), style='b')
+    return [LinkedInTestNumber, LinkedInTestSuccess, LinkedInTestFailed]

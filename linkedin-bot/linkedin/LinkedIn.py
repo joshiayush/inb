@@ -1,6 +1,8 @@
 """from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!"""
 from __future__ import annotations
 
+from typing import Any
+
 from selenium import webdriver
 from errors.error import DomainNameSystemNotResolveException
 
@@ -140,7 +142,7 @@ class LinkedIn(object):
         except TimeoutException:
             raise DomainNameSystemNotResolveException("ERR_DNS_PROBE_STARTED")
 
-    def get_email_box(self: LinkedIn):
+    def get_email_box(self: LinkedIn) -> Any:
         return self.driver.find_element_by_name("session_key")
 
     def enter_email(self: LinkedIn, hit_return: bool = False) -> None:
@@ -170,7 +172,7 @@ class LinkedIn(object):
 
         email_box.send_keys(Keys.RETURN)
 
-    def get_password_box(self: LinkedIn):
+    def get_password_box(self: LinkedIn) -> Any:
         return self.driver.find_element_by_name("session_password")
 
     def enter_password(self: LinkedIn, hit_return: bool = True) -> None:
