@@ -12,5 +12,7 @@ linkedin-bot/database/__pycache__/**
 linkedin-bot/invitation/__pycache__/**
 linkedin-bot/javascript/__pycache__/**
 
+linkedin-bot/tests/creds/**
+
 creds/credentialsFile.ini
 database/firebaseCreds/serviceAccountKey.json
