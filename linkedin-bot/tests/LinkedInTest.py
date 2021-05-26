@@ -10,6 +10,7 @@ from console.print import printGreen
 
 from linkedin.LinkedIn import LinkedIn
 
+from selenium.webdriver import Chrome
 from selenium.webdriver.chrome.options import Options
 
 user_email = ''
@@ -91,6 +92,19 @@ def test_get_chrome_driver_options_method(_linkedin: LinkedIn) -> None:
         "LinkedInTest.py LinkedIn.get_chrome_driver_options method must return list type! test failed " + failed
 
 
+def test_webdriver_chrome(_linkedin) -> None:
+    _linkedin.set_headless()
+    _linkedin.set_browser_incognito_mode()
+    _linkedin.set_ignore_certificate_error()
+
+    _linkedin.enable_webdriver_chrome(_linkedin.get_chrome_driver_options())
+
+    assert isinstance(_linkedin.driver, Chrome), \
+        "LinkedInTest.py LinkedIn.driver must be of Chrome type! test failed " + failed
+
+    _linkedin.disable_webdriver_chrome()
+
+
 def test_linkedin() -> list:
     LinkedInTestNumber = 0
     LinkedInTestFailed = 0
@@ -151,6 +165,17 @@ def test_linkedin() -> list:
         test_get_chrome_driver_options_method(_linkedin)
         printGreen(
             "LinkedInTest.py test for chrome driver options passed " + passed, style='b')
+        LinkedInTestSuccess += 1
+    except AssertionError as error:
+        printRed(error)
+        LinkedInTestFailed += 1
+    finally:
+        LinkedInTestNumber += 1
+
+    try:
+        test_webdriver_chrome(_linkedin)
+        printGreen(
+            "LinkedInTest.py test for chrome driver passed " + passed, style='b')
         LinkedInTestSuccess += 1
     except AssertionError as error:
         printRed(error)
