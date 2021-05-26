@@ -16,3 +16,7 @@ linkedin-bot/tests/creds/**
 
 creds/credentialsFile.ini
 database/firebaseCreds/serviceAccountKey.json
+
+*.spec
+dist/**
+build/**
