@@ -14,7 +14,20 @@ class LinkedIn(object):
     SESSION_ALREADY_EXISTS = False
 
     def __init__(self: LinkedIn, credentials: dict = {}, driver_path: str = '') -> None:
-        """Initializing the `LinkedIn` class."""
+        """LinkedIn class constructor to initialise LinkedIn object.
+
+        :Args:
+            - self: {LinkedIn} object
+            - credentials: {dist} user's credentails in form of dictionary
+            - driver_path: {str} chrome driver path
+
+        :Returns: 
+            - {None}
+
+        :Raises:
+            - KeyError if 'user_email' or 'user_password' keys are not present in the dictionary
+                credentials
+        """
         self._credentials = {
             "user_email": '',
             "user_password": ''
@@ -51,68 +64,142 @@ class LinkedIn(object):
 
     @property
     def user_email(self: LinkedIn) -> str:
+        """Property method user_email to return user email address.
+
+        :Args:
+            - self: {LinkedIn} object
+
+        :Returns:
+            - {str} user email address
+
+        :Raises:
+            - KeyError if the key 'user_password' is not present in {dict} _credentials
+        """
         return self._credentials["user_email"]
 
     @user_email.setter
     def user_email(self: LinkedIn, user_email: str) -> None:
+        """Property method user_email to set user email address.
+
+        :Args:
+            - self: {LinkedIn} object
+            - user_email: {str} user email address
+
+        :Returns:
+            - {None}
+
+        :Raises:
+            - KeyError if the key 'user_password' is not present in {dict} _credentials
+        """
         self._credentials["user_email"] = user_email
 
     @property
     def user_password(self: LinkedIn) -> str:
+        """Property method user_password to return user password.
+
+        :Args:
+            - self: LinkedIn object
+
+        :Returns:
+            - {str} user password
+
+        :Raises:
+            - KeyError if the key 'user_password' is not present in {dict} _credentials
+        """
         return self._credentials["user_password"]
 
     @user_password.setter
     def user_password(self: LinkedIn, user_password: str) -> None:
+        """Property method user_password to set user password.
+
+        :Args:
+            - self: {LinkedIn} object
+            - user_email: {str} user email address
+
+        :Returns:
+            - {None}
+
+        :Raises:
+            - KeyError if the key 'user_password' is not present in {dict} _credentials
+        """
         self._credentials["user_password"] = user_password
 
     def set_browser_incognito_mode(self: LinkedIn) -> None:
-        """Setting the browser to incognito using a command line flag 
-        `--incognito`. This is because using a incognito window makes 
-        it possible to log in as a 'test' user, with none of your admin 
-        history remembered on the browser and we want that. To know more 
-        about chrome options go and visit the site,
+        """Method set_browser_incognito_mode adds argument '--incognito' to chrome options to
+        enable chromedriver in incognito mode to log in as a test user, with none of your admin
+        history remembered.
 
-        http://peter.sh/experiments/chromium-command-line-switches/
+        :Args:
+            - self: {LinkedIn} object
+
+        :Returns:
+            - {None}
+
+        :Raises:
+            - ValueError if the argument is null
+
+        :Reference:
+            - http://peter.sh/experiments/chromium-command-line-switches/
         """
         self.options.add_argument("--incognito")
 
     def set_ignore_certificate_error(self: LinkedIn) -> None:
-        """To disable the error windows related with certificate errors 
-        we are using a command line flag `--ignore-certificate-errors`. 
-        If you are willing to know more about chrome options,
+        """Method set_ignore_certificate_error is to disable the error windows related with 
+        certificate errors. 
 
-        http://peter.sh/experiments/chromium-command-line-switches/ 
+        :Args:
+            - self: {LinkedIn} object
 
-        go and visit the site.
+        :Returns:
+            - {None}
+
+        :Raises:
+            - ValueError if the argument is null
+
+        :Reference:
+            - http://peter.sh/experiments/chromium-command-line-switches/
         """
         self.options.add_argument("--ignore-certificate-errors")
 
     def set_headless(self: LinkedIn) -> None:
+        """Method set_headless is to set the chromedriver in headless mode.
+
+        :Args:
+            - self: {LinkedIn} object
+
+        :Returns:
+            - {None}
+
+        :Raises:
+            - ValueError if the argument is null
+        """
         self.options.add_argument("headless")
 
     def get_chrome_driver_options(self: LinkedIn) -> object:
-        """Function get_chrome_driver_options() returns a set of chrome 
-        options to be added during the execution of chromedriver. These 
-        options help in driver testing and automation.
+        """Method get_chrome_driver_options returns a set of chrome options to be added 
+        during the execution of chromedriver. These options help in driver testing and automation.
 
-        Args:
-            self: is the object from which the options are to be updated
+        :Args:
+            self: {LinkedIn} object
+
+        :Returns:
+            - {Options}
         """
         return self.options
 
     def enable_webdriver_chrome(self: LinkedIn, _options: object) -> None:
-        """Function enable_web_driver() makes a webdriver object called 
-        `self.driver` by executing the `webdriver.Chrome()` constructor 
-        which takes following arguments.
+        """Method enable_web_driver makes a webdriver object called by calling 
+        'webdriver.Chrome()' constructor.
 
-        Args:
-            executable_path: chromedriver absolute executable path
-            options: chromedriver options
+        :Args:
+            - self: {LinkedIn} object
+            - _options: {Options} to pass to webdriver.Chrome() constructor
 
-        If you want to know what chromedriver options are go check out 
-        the following link,
+        :Returns:
+            - {None}
 
-        http://peter.sh/experiments/chromium-command-line-switches/
+        :Reference:
+            - http://peter.sh/experiments/chromium-command-line-switches/
         """
         if LinkedIn.SESSION_ALREADY_EXISTS:
             return
@@ -123,17 +210,30 @@ class LinkedIn(object):
             self.driver_path, options=_options)
 
     def disable_webdriver_chrome(self: LinkedIn) -> None:
-        """Function `disable_webdriver_chrome()` close the webdriver session 
-        by executing a function called `close()`.
+        """Method 'disable_webdriver_chrome' closes the webdriver session by 
+        executing a function called 'close()' on webdriver object.
+
+        :Args:
+            - self: {LinkedIn} object
+
+        :Returns:
+            - {None}
         """
         self.driver.close()
 
     def get_login_page(self: LinkedIn, _url: str = "https://www.linkedin.com/login") -> None:
-        """Redirecting to the LinkedIn login page using `get()` function of 
-        our `webdriver` class.
+        """Method get_login_page takes you to the LinkedIn login page by executing 
+        function 'get()' on the webdriver object.
 
-        Args:
-            url: page's url
+        :Args:
+            - self: {LinkedIn} object
+            - _url: {str} website url
+
+        :Returns:
+            - {None}
+
+        :Raises:
+            - DomainNameSystemNotResolveException if there's a TimeourException
         """
         from selenium.common.exceptions import TimeoutException
 
@@ -143,23 +243,31 @@ class LinkedIn(object):
             raise DomainNameSystemNotResolveException("ERR_DNS_PROBE_STARTED")
 
     def get_email_box(self: LinkedIn) -> Any:
+        """Method get_email_box returns the input tag for entering email address.
+
+        :Args:
+            - self: {LinkedIn} object
+
+        :Returns:
+            - {WebElement} input tag
+
+        :Raises:
+            - NoSuchElementException if the element wasn't found
+
+        :Usage:
+            - email_box = self.get_email_box()
+        """
         return self.driver.find_element_by_name("session_key")
 
     def enter_email(self: LinkedIn, hit_return: bool = False) -> None:
-        """Function `enter_email()` enters the email in the email input 
-        field using function `find_element_by_name()` which first finds 
-        the email element by name `session_key` and then clears the field 
-        using function `clear()` which is needed to clear previously input 
-        value or to clear the buffer and then it sends the email address 
-        using function `send_keys()`.
+        """Method enter_email enters the email in the email input field.
 
-        find_element_by_name():
-            Args:
-                name: the name of the element to find.
-        send_keys():
-            Args:
-                *value: A string for typing, or setting form fields. 
-                For setting file input, this could be a local file path.
+        :Args:
+            - self: {LinkedIn} object
+            - hit_return: {bool} if to send return key or not
+
+        :Returns: 
+            - {None}
         """
         email_box = self.get_email_box()
         email_box.clear()
@@ -173,27 +281,31 @@ class LinkedIn(object):
         email_box.send_keys(Keys.RETURN)
 
     def get_password_box(self: LinkedIn) -> Any:
+        """Method get_password_box returns the input tag for entering password.
+
+        :Args:
+            - self: {LinkedIn} object
+
+        :Returns:
+            - {WebElement} input tag
+
+        :Raises:
+            - NoSuchElementException if the element wasn't found
+
+        :Usage:
+            - password_box = self.get_password_box()
+        """
         return self.driver.find_element_by_name("session_password")
 
     def enter_password(self: LinkedIn, hit_return: bool = True) -> None:
-        """Function `enter_password()` enters the password in the 
-        password input field using function `find_element_by_name()` 
-        which first finds the password element by name 
-        `session_password` and then clears the field using function 
-        `clear()` which is needed to clear previously input value or 
-        to clear the buffer and then it sends the password using 
-        function `send_keys()`.
+        """Method enter_password enters the password in the password input field.
 
-        find_element_by_name():
-            Args:
-                name: the name of the element to find.
-        send_keys():
-            Args:
-                *value: A string for typing, or setting form fields. 
-                For setting file input, this could be a local file path.
+        :Args:
+            - self: {LinkedIn} object
+            - hit_return: {bool} if to send return key or not
 
-        This function unlike the `enter_email()` also sends the field
-        object a `ENTER` event so to start the login process.
+        :Returns:
+            - {None}
         """
         password_box = self.get_password_box()
         password_box.clear()
@@ -207,24 +319,26 @@ class LinkedIn(object):
         password_box.send_keys(Keys.RETURN)
 
     def fill_credentials(self: LinkedIn) -> None:
-        """Function `fill_credentials()` fills the user credentials in 
-        the desired fields by invoking function, `enter_email()` which 
-        enters the email in the desired field and function `enter_password()` 
-        which enters the password in the desired field.
+        """Method fill_credentials fills the user credentials in the specified fields.
 
-        Args:
-            self: object used to invoke the functions `enter_email()` and 
-            `enter_password()`.
+        :Args:
+            - self: {LinkedIn} object
+
+        :Returns:
+            - {None}
         """
         self.enter_email()
         self.enter_password()
 
     def login(self: LinkedIn, credentials: dict = {}) -> None:
-        """Function `login()` logs into your personal LinkedIn profile.
+        """Method login logs into your personal LinkedIn profile.
 
-        Args:
-            self: object used to execute various functions in our 
-            LinkedIn class.
+        :Args:
+            - self: {LinkedIn} object 
+            - credentials: {dict} user's credentials in the form of dictionary
+
+        :Returns:
+            - {None}
         """
         from errors.error import CredentialsNotGivenException
 
