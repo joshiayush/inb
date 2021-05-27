@@ -210,6 +210,20 @@ class LinkedIn(object):
         """
         self.options.add_argument("--disable-infobars")
 
+    def enable_full_screen(self: LinkedIn) -> None:
+        """Method enable_full_screen() opens chromedriver in full screen.
+
+        :Args:
+            - self: {LinkedIn} object
+
+        :Returns:
+            - {None}
+
+        :Raises:
+            - ValueError if the argument is null
+        """
+        self.options.add_argument("--start-maximized")
+
     def disable_gpu(self: LinkedIn) -> None:
         """Method disable_gpu() is to disable gpu (for Windows).
 
