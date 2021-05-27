@@ -8,12 +8,11 @@ from errors.error import DomainNameSystemNotResolveException
 
 
 class LinkedIn(object):
-    """LinkedIn"""
     OLD_EMAIL = ''
     OLD_PASSWORD = ''
     SESSION_ALREADY_EXISTS = False
 
-    def __init__(self: LinkedIn, credentials: dict = {}, driver_path: str = '') -> None:
+    def __init__(self: LinkedIn, credentials: dict = {}, driver_path: str = '') -> LinkedIn:
         """LinkedIn class constructor to initialise LinkedIn object.
 
         :Args:
@@ -22,7 +21,7 @@ class LinkedIn(object):
             - driver_path: {str} chrome driver path
 
         :Returns: 
-            - {None}
+            - {LinkedIn}
 
         :Raises:
             - KeyError if 'user_email' or 'user_password' keys are not present in the dictionary
@@ -125,7 +124,7 @@ class LinkedIn(object):
         self._credentials["user_password"] = user_password
 
     def set_browser_incognito_mode(self: LinkedIn) -> None:
-        """Method set_browser_incognito_mode adds argument '--incognito' to chrome options to
+        """Method set_browser_incognito_mode() adds argument '--incognito' to chrome options to
         enable chromedriver in incognito mode to log in as a test user, with none of your admin
         history remembered.
 
@@ -144,7 +143,7 @@ class LinkedIn(object):
         self.options.add_argument("--incognito")
 
     def set_ignore_certificate_error(self: LinkedIn) -> None:
-        """Method set_ignore_certificate_error is to disable the error windows related with 
+        """Method set_ignore_certificate_error() is to disable the error windows related with 
         certificate errors. 
 
         :Args:
@@ -162,7 +161,7 @@ class LinkedIn(object):
         self.options.add_argument("--ignore-certificate-errors")
 
     def set_headless(self: LinkedIn) -> None:
-        """Method set_headless is to set the chromedriver in headless mode.
+        """Method set_headless() is to set the chromedriver in headless mode.
 
         :Args:
             - self: {LinkedIn} object
@@ -176,7 +175,7 @@ class LinkedIn(object):
         self.options.add_argument("headless")
 
     def get_chrome_driver_options(self: LinkedIn) -> object:
-        """Method get_chrome_driver_options returns a set of chrome options to be added 
+        """Method get_chrome_driver_options() returns a set of chrome options to be added 
         during the execution of chromedriver. These options help in driver testing and automation.
 
         :Args:
@@ -188,7 +187,7 @@ class LinkedIn(object):
         return self.options
 
     def enable_webdriver_chrome(self: LinkedIn, _options: object) -> None:
-        """Method enable_web_driver makes a webdriver object called by calling 
+        """Method enable_web_driver() makes a webdriver object called by calling 
         'webdriver.Chrome()' constructor.
 
         :Args:
@@ -210,7 +209,7 @@ class LinkedIn(object):
             self.driver_path, options=_options)
 
     def disable_webdriver_chrome(self: LinkedIn) -> None:
-        """Method 'disable_webdriver_chrome' closes the webdriver session by 
+        """Method disable_webdriver_chrome() closes the webdriver session by 
         executing a function called 'close()' on webdriver object.
 
         :Args:
@@ -222,7 +221,7 @@ class LinkedIn(object):
         self.driver.close()
 
     def get_login_page(self: LinkedIn, _url: str = "https://www.linkedin.com/login") -> None:
-        """Method get_login_page takes you to the LinkedIn login page by executing 
+        """Method get_login_page() takes you to the LinkedIn login page by executing 
         function 'get()' on the webdriver object.
 
         :Args:
@@ -243,7 +242,7 @@ class LinkedIn(object):
             raise DomainNameSystemNotResolveException("ERR_DNS_PROBE_STARTED")
 
     def get_email_box(self: LinkedIn) -> Any:
-        """Method get_email_box returns the input tag for entering email address.
+        """Method get_email_box() returns the input tag for entering email address.
 
         :Args:
             - self: {LinkedIn} object
@@ -260,7 +259,7 @@ class LinkedIn(object):
         return self.driver.find_element_by_name("session_key")
 
     def enter_email(self: LinkedIn, hit_return: bool = False) -> None:
-        """Method enter_email enters the email in the email input field.
+        """Method enter_email() enters the email in the email input field.
 
         :Args:
             - self: {LinkedIn} object
@@ -281,7 +280,7 @@ class LinkedIn(object):
         email_box.send_keys(Keys.RETURN)
 
     def get_password_box(self: LinkedIn) -> Any:
-        """Method get_password_box returns the input tag for entering password.
+        """Method get_password_box() returns the input tag for entering password.
 
         :Args:
             - self: {LinkedIn} object
@@ -298,7 +297,7 @@ class LinkedIn(object):
         return self.driver.find_element_by_name("session_password")
 
     def enter_password(self: LinkedIn, hit_return: bool = True) -> None:
-        """Method enter_password enters the password in the password input field.
+        """Method enter_password() enters the password in the password input field.
 
         :Args:
             - self: {LinkedIn} object
@@ -319,7 +318,7 @@ class LinkedIn(object):
         password_box.send_keys(Keys.RETURN)
 
     def fill_credentials(self: LinkedIn) -> None:
-        """Method fill_credentials fills the user credentials in the specified fields.
+        """Method fill_credentials() fills the user credentials in the specified fields.
 
         :Args:
             - self: {LinkedIn} object
@@ -331,7 +330,7 @@ class LinkedIn(object):
         self.enter_password()
 
     def login(self: LinkedIn, credentials: dict = {}) -> None:
-        """Method login logs into your personal LinkedIn profile.
+        """Method login() logs into your personal LinkedIn profile.
 
         :Args:
             - self: {LinkedIn} object 

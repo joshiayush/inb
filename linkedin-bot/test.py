@@ -11,6 +11,10 @@ def start_testing():
     failed = 0
 
     print()
+
+    printGreen("> testing linkedin-bot@1.31.15 ...", style='b')
+
+    print()
     _total, _success, _failed = test_linkedin()
     print()
 

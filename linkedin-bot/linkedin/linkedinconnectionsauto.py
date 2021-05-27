@@ -3,7 +3,7 @@ from __future__ import annotations
 
 import time
 
-from .LinkedIn import LinkedIn
+from .linkedin import LinkedIn
 
 from DOM.javascript import scroll_bottom
 from DOM.javascript import get_page_y_offset

@@ -24,21 +24,19 @@ from linkedin.linkedinconnectionsauto import LinkedInConnectionsAuto
 
 
 class Main(object):
-    """Class Main is the main class that gets executed after the user hits the 
-    command `./run.sh` on the terminal screen, this class gives the `cli` 
-    (Command Line Interface) to the user. We don't have `GUI` (Graphical User Interface) 
-    here because I don't have any deign Idea in my mind yet.
-
-    Class Variable:
-        THEME: is the theme for our cli (command line interface).
+    """Class Main is the main class, this class gives the 'cli' (Command Line Interface) 
+    to the user. We don't have `GUI` (Graphical User Interface) here because I don't have 
+    any deign Idea in my mind yet.
     """
 
     def __init__(self: Main) -> None:
-        """Method __init__() initializes the commands and required variables, it also 
-        prints the Logo on the screen it calls method init_commands() that initializes 
-        all the commands that we can have in this program then it calls the init_vars() 
-        method to initialize the variables required then it calls method home() to print 
-        information about the current release on the screen.
+        """Main class constructor to initialise the commands and required variables.
+
+        :Args:
+            - self: {Main} object
+
+        :Returns:
+            - {Main}
         """
         self.init_commands()
 
@@ -47,31 +45,36 @@ class Main(object):
         Main.home()
 
     def init_commands(self: Main) -> None:
-        """Method init_commands() initialize the commands that LinkedIn Automater provides 
-        for now we have following commands,
+        """Method init_commands() to initialize the commands that LinkedIn Automater provides,
 
             COMMANDS
         ================
 
-        +--------------|----------------------------------------+
-        |   exit       +    exit from the program               |
-        +--------------|----------------------------------------+
-        |   show       +    shows the entered details           |
-        +--------------|----------------------------------------+
-        |   help       +    prints the commands and their usage |
-        +--------------|----------------------------------------+
-        |   clear      +    clears the screen                   |
-        +--------------|----------------------------------------+ 
-        |   theme      +    sets the given theme                |
-        +--------------|----------------------------------------+
-        |   config     +    shows how you can add fields        |
-        +--------------|----------------------------------------+
-        |   delete     +    deletes the cache stored            |
-        +--------------|----------------------------------------+
-        |   linkedin   +    activates the automation process    |
-        +--------------|----------------------------------------+
-        |   developer  +    prints the developer details        |
-        +--------------|----------------------------------------+
+        +--------------+----------------------------------------+
+        |   exit       |    exit from the program               |
+        +--------------+----------------------------------------+
+        |   show       |    shows the entered details           |
+        +--------------+----------------------------------------+
+        |   help       |    prints the commands and their usage |
+        +--------------+----------------------------------------+
+        |   clear      |    clears the screen                   |
+        +--------------+----------------------------------------+ 
+        |   theme      |    sets the given theme                |
+        +--------------+----------------------------------------+
+        |   config     |    shows how you can add fields        |
+        +--------------+----------------------------------------+
+        |   delete     |    deletes the cache stored            |
+        +--------------+----------------------------------------+
+        |   linkedin   |    activates the automation process    |
+        +--------------+----------------------------------------+
+        |   developer  |    prints the developer details        |
+        +--------------+----------------------------------------+
+
+        :Args:
+            - self: {Main} object
+
+        :Returns:
+            - {None}
         """
         from helpers.command_help import help_with_configs
 
@@ -88,11 +91,14 @@ class Main(object):
         }
 
     def init_vars(self: Main) -> None:
-        """Method init_vars() intialize the dictionary that holds the user's details 
-        like credentials and jobs search, etc, it also initializes a dictionary which 
-        conatins commands and their corresponding help functions, there's one more 
-        variable that gets initializes that is the theme variable for our cli
-        (Command Line Interface).
+        """Method init_vars() to intialize variables like encrypted_email, encrypted_password,
+        data, driver_path and if_headless.
+
+        :Args:
+            - self: {Main} object
+
+        :Returns:
+            - {None}
         """
         self.encrypted_email = ""
         self.encrypted_password = ""
@@ -105,24 +111,88 @@ class Main(object):
 
     @property
     def user_email(self: Main) -> str:
+        """Property method user_email to return user email address.
+
+        :Args:
+            - self: {Main} object
+
+        :Returns:
+            - {str} user email address
+
+        :Raises:
+            - KeyError if the key 'user_password' is not present in {dict} _credentials
+
+        :Usage:
+            - user_email = self.user_email
+        """
         return self.data["user_email"]
 
     @user_email.setter
     def user_email(self: Main, email: str) -> None:
+        """Property method user_email to set user email address.
+
+        :Args:
+            - self: {LinkedIn} object
+            - user_email: {str} user email address
+
+        :Returns:
+            - {None}
+
+        :Raises:
+            - KeyError if the key 'user_password' is not present in {dict} _credentials
+
+        :Usage:
+            - self.user_email = user_email
+        """
         self.data["user_email"] = email
 
     @property
     def user_password(self: Main) -> str:
+        """Property method user_password to return user password.
+
+        :Args:
+            - self: LinkedIn object
+
+        :Returns:
+            - {str} user password
+
+        :Raises:
+            - KeyError if the key 'user_password' is not present in {dict} _credentials
+
+        :Usage:
+            - user_password = self.user_password
+        """
         return self.data["user_password"]
 
     @user_password.setter
     def user_password(self: Main, password: str) -> None:
+        """Property method user_password to set user password.
+
+        :Args:
+            - self: {LinkedIn} object
+            - user_email: {str} user email address
+
+        :Returns:
+            - {None}
+
+        :Raises:
+            - KeyError if the key 'user_password' is not present in {dict} _credentials
+
+        :Usage:
+            - self.user_password = user_password
+        """
         self.data["user_password"] = password
 
     def store_cache(self: Main) -> None:
         """Method store_cache() applies encryption on the fields if both the fields are 
-        available and the calls the method 'store_credentials' to store the credentials 
+        available and then calls the method 'store_credentials' to store the credentials 
         as cache.
+
+        :Args:
+            - self: {Main} object
+
+        :Returns:
+            - {None}
         """
         if not self.user_email or not self.user_password:
             return
@@ -154,8 +224,11 @@ class Main(object):
     def home() -> None:
         """Method home() prints the home screen.
 
-        First it clears the screen using the method clear(). Then calls the user defined
-        function printGreen to print text in green color on the screen.
+        :Args:
+            - {None}
+
+        :Returns:
+            - {None}
         """
         from helpers.window import clear
 
@@ -169,9 +242,15 @@ class Main(object):
         """Function set_theme() sets the cli (Command Line Interface) theme according to 
         the value given.
 
-        Args:
-            _theme: it is the theme that the we need to give to our cli after user has 
-            entered it.
+        :Args:
+            _theme: {str} theme
+
+        :Returns:
+            - {None}
+
+        :Usage:
+            - self.set_theme("--parrot")
+            - self.set_theme("--normal")
         """
         from console import Theme
 
@@ -191,18 +270,30 @@ class Main(object):
 
     def get_command_length(self: Main) -> int:
         """Method get_command_length() returns the lenght of the command entered. 
-        We first change the entered string to a list object by spliting the string on 
-        ' ' (whitespaces) then we return the lenght.
 
-        Return:
-            - lenght of the command entered.
+        :Args:
+            - self: {Main} object
+
+        :Returns:
+            - {int} lenght of the command entered.
+
+        :Usage:
+            - command_length = self.get_command_length()
         """
         return len(self.command.split(" "))
 
     def get_command_at_index(self: Main, index: int) -> str:
-        """Method get_command_at_index() returns a value at a given index of the command 
-        after changing the string to a list object. We also use strip() function to cut 
-        all the leading and trailing whitespaces.
+        """Method get_command_at_index() returns a value at a given index of the command list.
+
+        :Args:
+            - self: {Main} object
+            - index: {int} index
+
+        :Returns:
+            - {str} command at a specified index
+
+        :Usage:
+            - command_at_index_two = self.get_command_at_index(2)
         """
         try:
             return self.command.split(" ")[index].strip()
@@ -210,6 +301,14 @@ class Main(object):
             return None
 
     def get_search_query(self: Main) -> None:
+        """Method get_search_query() returns the search query entered by user.
+
+        :Args:
+            - self: {Main} object
+
+        :Returns:
+            - {None}
+        """
         querry = self.get_command_at_index(4)
 
         if len(querry.split("&&")) != 2:
@@ -227,7 +326,15 @@ class Main(object):
         self.search_location = querry.split(
             "&&")[1][querry.split("&&")[1].find("=")+1::]
 
-    def start_sending_invitation(self: Main) -> None:
+    def send_invitation(self: Main) -> None:
+        """Method send_invitation executes the process of sending invitation to people.
+
+        :Args:
+            - self: {Main} object
+
+        :Returns:
+            - {None}
+        """
         _linkedin = LinkedIn(
             {"user_email": self.user_email, "user_password": self.user_password}, self.driver_path)
 
@@ -266,15 +373,23 @@ class Main(object):
         _linkedin_connection.run()
 
     def handle_send_commands(self: Main) -> None:
-        """Method handle_send_commands() handles the operations when you apply flag 
-        'send' with 'linkedin' command. We handle operation in two ways where one is 
-        when the user enters exact number of flags with these commands and the other 
-        is when user ommits the default flags.
+        """Method handle_send_commands() handles the operations when you apply flag 'send' 
+        with 'linkedin' command. We handle operation in two ways where one is when the user 
+        enters exact number of flags with these commands and the other is when user ommits the 
+        default flags.
 
-        Usage:
-            -> linkedin [send] [suggestions^] --auto^ [--headless] [--use--cache]
+        :Args:
+            - self: {Main} object
 
-            -> linkedin [send] [search* industry=example&&location=india+usa+...] --auto^ [--headless] [--use-cache]
+        :Returns:
+            - {None}
+
+        :Raises:
+            - CredentialsNotFoundException if user's credentials not found
+
+        :Usage:
+            - linkedin [send] [suggestions^] --auto^ [--headless] [--use--cache]
+            - linkedin [send] [search* industry=example&&location=india+usa+...] --auto^ [--headless] [--use-cache]
         """
         if self.get_command_at_index(2) != "send":
             return
@@ -292,7 +407,7 @@ class Main(object):
                     raise CredentialsNotFoundException(
                         "Credentials not found! Need credentials first use config.user.email/password to add them!")
 
-                self.start_sending_invitation()
+                self.send_invitation()
                 return
 
         if self.get_command_at_index(3) == "--headless" or self.get_command_at_index(3) == "--use-cache":
@@ -300,7 +415,7 @@ class Main(object):
                 raise CredentialsNotFoundException(
                     "Credentials not found! Need credentials first use config.user.email/password to add them!")
 
-            self.start_sending_invitation()
+            self.send_invitation()
             return
 
         if self.get_command_length() == 3:
@@ -308,7 +423,7 @@ class Main(object):
                 raise CredentialsNotFoundException(
                     "Credentials not found! Need credentials first use config.user.email/password to add them!")
 
-            self.start_sending_invitation()
+            self.send_invitation()
             return
 
         self.command = self.command[3:]
@@ -322,10 +437,18 @@ class Main(object):
         pass
 
     def handle_linkedin_commands(self: Main) -> None:
-        """Method handle_linkedin_commands() calls the main LinkedIn
-        classes according to the commands given by the user, it checks
-        the flags that are applied with the `linkedin` command and calls
-        the LinkedIn classes accordingly.
+        """Method handle_linkedin_commands() handles the first flag given to the linkedin
+        command.
+
+        :Args:
+            - self: {Main} object
+
+        :Returns:
+            - {None}
+
+        :Raises:
+            - ZeroFlagException if command 'linkedin' is referenced alone
+            - CommandFlagNotFoundException if 'linkedin' command flag not found
         """
         if self.get_command_length() <= 2:
             raise ZeroFlagException(
@@ -355,17 +478,13 @@ class Main(object):
             f"""'{self.get_command_at_index(2)}' is not a 'linkedin' command!""")
 
     def show_job_details(self: Main) -> None:
-        """Function show_job_details() prints the job details that the
-        user entered we print the information about job keys once we have
-        any of these two fields otherwise we don't show it. We declare this
-        function static because we don't need to give this function an access
-        to the object for just a print functionality it's no use giving this
-        function access to the object. Although it recieves an argument 'self'
-        but it is not a object but it is a parameter object that we need in
-        order to access user details.
+        """Method show_job_details() prints the job details that the user entered.
 
-        Args:
-            self: it is the parameter object that has the user details in it.
+        :Args:
+            self: {Main} object
+
+        :Returns:
+            - {None}
         """
         if not self.job_keywords and not self.job_keywords:
             return
@@ -376,17 +495,14 @@ class Main(object):
                    style='b', pad='1')
 
     def ask_to_show_password(self: Main) -> None:
-        """Function ask_to_show_password() asks the user if (s)he want
-        to see the password if yes show them if not don't show them,
-        this is for security purpose. We declare this function static
-        because we don't need to give this function an access to the
-        object for just a print functionality it's no use giving this
-        function access to the object. Although it recieves an argument
-        'self' but it is not a object but it is a parameter object that
-        we need in order to access user details.
+        """Method ask_to_show_password() asks the user if (s)he want to see the password 
+        if yes show them if not don't show them, this is for security purpose. 
 
-        Args:
-            self: it is a parameter object that has user details in it.
+        :Args:
+            self: {Main} object
+
+        :Returns:
+            - {None}
         """
         try:
             from console.scan import scanBlue
@@ -408,10 +524,17 @@ class Main(object):
             sys.exit()
 
     def handle_show_commands(self: Main) -> None:
-        """Method show() gets executed once the user hit the
-        command `show` this basically prints the information
-        that user had entered like email, password, job
-        keys/location.
+        """Method show() gets executed once the user hit the command 'show' this basically 
+        prints the information that user had entered like email, password, job keys/location.
+
+        :Args:
+            - self: {Main} object
+
+        :Returns:
+            - {None}
+
+        :Raises:
+            - CommandFlagNotFoundException if 'show' is referenced with an unrecognized flag 
         """
         if self.get_command_length() > 2 and self.get_command_at_index(2) == "--help":
             from helpers.command_help import help_with_show
@@ -435,9 +558,18 @@ class Main(object):
         return
 
     def handle_delete_commands(self: Main) -> None:
-        """Method handle_delete_commands() gets executed once
-        the user hits the command `delete` this basically deletes
-        the cache stored (User credentials) if exists.
+        """Method handle_delete_commands() gets executed once the user hits the command
+        'delete' this basically deletes the cache stored (User credentials) if exists.
+
+        :Args:
+            - slef: {Main} object
+
+        :Returns:
+            - {None}
+
+        :Raises:
+            - ZeroFlagException if command 'delete' is referenced alone
+            - CommandFlagNotFoundException if 'delete' is referenced with an unrecognized flag
         """
         from creds.storage import delete_key
         from creds.storage import delete_cache
@@ -468,9 +600,17 @@ class Main(object):
             f"""{self.get_command_at_index(2)} is not recognized as a 'delete' command!""")
 
     def handle_developer_commands(self: Main) -> None:
-        """Method developer() gets executed once the user hits
-        the command `devdetails` it basically shows the developer's
-        network profiles and mail address.
+        """Method developer() gets executed once the user hits the command 'developer'
+        it basically shows the developer's network profiles and mail address.
+
+        :Args:
+            - self: {Main} object
+
+        :Returns:
+            - {None}
+
+        :Raises:
+            - CommandFlagNotFoundException if command 'developer' is referenced with an unrecognized flag
         """
         if self.get_command_length() > 2:
             if self.get_command_at_index(2) != "--help":
@@ -498,11 +638,19 @@ class Main(object):
                    style='b', pad='1', force="+f")
 
     def handle_theme_commands(self: Main) -> None:
-        """Method handle_theme_commands() handles the 'theme' commands
-        it calls the set_theme() function once it confirms that the flag
-        that is given with the theme command is an actual theme flag. We
-        does a lot of argument parsing in this function as you can see
-        this is to fetch the right flag and if not found raise an error.
+        """Method handle_theme_commands() handles the 'theme' commands it calls the 
+        set_theme() function once it confirms that the flag that is given with the theme 
+        command is an actual theme flag.
+
+        :Args:
+            - self: {Main} object
+
+        :Returns:
+            - {None}
+
+        :Raises:
+            - ZeroFlagException if command 'theme' is referenced alone
+            - CommandFlagNotFoundException if command 'theme' is referenced with an unrecognized flag
         """
         if self.get_command_length() < 3:
             raise ZeroFlagException(
@@ -521,12 +669,17 @@ class Main(object):
             f"""'{self.get_command_at_index(2)}' is not a 'theme' command!""")
 
     def handle_clear_commands(self: Main) -> None:
-        """Method handle_clear_commands() handles the 'clear' commands
-        it calls the home() function once it confirms that the given
-        command is exactly a 'clear' command, it also checks for the flag
-        that is given with the 'clear' command is an actual 'clear' flag.
-        We does a lot of argument parsing in this function as you can see
-        this is to fetch the right flag and if not found raise an error.
+        """Method handle_clear_commands() handles the 'clear' commands it calls the home() 
+        function once it confirms that the given command is exactly a 'clear' command.
+
+        :Args:
+            - self: {Main} object
+
+        :Returns:
+            - {None}
+
+        :Raises:
+            - CommandFlagNotFoundException if command 'clear' is referenced with an unrecognized command
         """
         if self.get_command_length() == 2:
             Main.home()
@@ -541,13 +694,17 @@ class Main(object):
             f"""'{self.get_command_at_index(2)}' is not a clear command""")
 
     def handle_help_commands(self: Main) -> None:
-        """Method hanlde_help_commands() handles the 'help' command
-        it provides a manual to the user if it identifies that the
-        given command is an actual help command, this guide contains
-        every information that a user needs in order to start linkedin
-        automation. We does a lot of argument parsing in this function
-        as you can see this is to fetch the right flag and if not found
-        raise an error.
+        """Method handle_help_commands() handles the 'help' command it provides a manual to 
+        the user if it identifies that the given command is an actual help command.
+
+        :Args:
+            - self: {Main} object
+
+        :Returns:
+            - {None}
+
+        :Raises:
+            - CommandFlagNotFoundException if command 'help' is referenced with an unrecognized flag
         """
         if self.get_command_length() > 2:
             if self.get_command_at_index(2) == "--help":
@@ -602,13 +759,17 @@ class Main(object):
                    style='b', pad='1', start='\n')
 
     def handle_exit_commands(self: Main) -> None:
-        """Method handle_exit_commands() handles the 'exit' commands
-        it calls the python's exit() function once it confirms that
-        the given command is exactly a 'exit' command, it also checks
-        for the flag that is given with the 'exit' command is an actual
-        'exit' flag. We does a lot of argument parsing in this function
-        as you can see this is to fetch the right flag and if not found
-        raise an error.
+        """Method handle_exit_commands() handles the 'exit' commands it calls the python's 
+        exit() function once it confirms that the given command is exactly a 'exit' command.
+
+        :Args:
+            - self: {Main} object
+
+        :Returns:
+            - {None}
+
+        :Raises:
+            - CommandFlagNotFoundException if command 'exit' is referenced with an unrecognized flag
         """
         if self.get_command_length() < 3:
             printGreen(f"""Piece""", style='b', pad='1')
@@ -624,9 +785,12 @@ class Main(object):
 
     def Error(self: Main) -> None:
         """Method Error() gets called when the entered command is not recognized. 
-        We say 'self.command[8:]' because this way we are triming the 'command ' from 
-        the entered command because we don't want to confuse the user by showing him/her
-        what is going in the background.
+
+        :Args:
+            - self: {Main} object
+
+        :Returns:
+            - {None}
         """
         if not self.command:
             return
@@ -635,12 +799,16 @@ class Main(object):
             f"""`{self.command[8:]}` is not recognized as an internal command.""", style='b', pad='1', force="+f")
 
     def slice_keyword(self: Main) -> str:
-        """Method slice_keyword() slice the keywords that comes between double quotes
-        for example, if there is a query like "ayush854032@gmail.com" then this method
-        only returns whatever is in between the double quotes.
+        """Method slice_keyword() slice the keywords that comes between double quotes.
 
-        Return:
-            - keyword that is in between the double quotes.
+        For example, if there is a query like "ayush854032@gmail.com" then this method only returns 
+        whatever is in between the double quotes.
+
+        :Args:
+            - self: {Main} object
+
+        :Returns:
+            - {str} keyword that is in between the double quotes
         """
         try:
             return self.command.split(' ')[2][self.command.split(" ")[2].find('"')+1:self.command.split(" ")[2].rfind('"')]
@@ -648,15 +816,17 @@ class Main(object):
             return None
 
     def get_email(self: Main) -> str:
-        """
-        Method check_email() checks the email field for its validness if the email is valid
+        """Method check_email() checks the email field for its validness if the email is valid
         email or not if not it returns False otherwise returns the email.
-        This method apply a regex on the email to check if the email is a custom email or a 
-        normal email address if it finds yes then it return the email address otherwise it
-        returns False.
 
-        Return:
-            - valid email address if found otherwise False.
+        This method apply a regex on the email to check if the email is a custom email or a normal 
+        email address if it finds yes then it return the email address otherwise it returns False.
+
+        :Args:
+            - self: {Main} object
+
+        :Returns:
+            - {str} valid email address
         """
         email = self.slice_keyword()
 
@@ -666,21 +836,37 @@ class Main(object):
         if re.search(r"^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w+$", email):
             return email
 
-        return False
+        return None
 
     def if_password_given(self: Main) -> bool:
+        """Method if_password_given() checks if the password if given with the command
+
+        user.config.password "xxx-xxx-xxx"
+
+        :Args:
+            - self: {Main} object
+
+        :Returns:
+            - {bool} True/False 
+        """
         if re.search(r'"[a-zA-z0-9~`!@#\$%\^&\*\(\)_\+=-\\\|\[\]\{\}\"\'\?<>,\.:;\/]*"', self.command.split(" ")[2].strip()):
             return True
 
         return False
 
     def handle_configs(self: Main) -> None:
-        """Method handle_configs() basically saves the user's configurations that are 
-        passed by hitting the command 'config.user.email', 'config.user.password' or 
-        'config.job.keywords', 'config.job.location'. We use re.compile() and re.search() 
-        method here to find the pattern in the command. We does a lot of argument parsing 
-        in this function as you can see this is to fetch the rightcommands and flags and 
-        if not found raise an error.
+        """Method handle_configs() saves the user's configurations.
+
+        We use re.compile() and re.search() method here to find the pattern in the commands.
+
+        :Args:
+            - self: {Main} object
+
+        :Returns:
+            - {None}
+
+        :Raises:
+            - NoSuchConfigurationFoundException if the configuration command is not recognized
         """
         if self.get_command_length() <= 2:
             if self.get_command_at_index(1) != "config.user.password":
@@ -741,19 +927,17 @@ class Main(object):
         raise NoSuchConfigurationFoundException("No such configuration found!")
 
     def handle_commands(self: Main) -> None:
-        """Method handle_commands() does the actually handling of the commands
-        entered, we first find pattern for 'configuration' commands using the
-        re.compile() and re.search() method, which finds the pattern in the
-        entered command and calls 'handle_configs()' method if it finds any
-        match if not it calls the functions according to the commands entered
-        and if still does not find any function call for the entered command it
-        just hits the self.Error() method.
+        """Method handle_commands() does the actual handling of the commands entered.
 
-        If you are really confused about what I'm doing in the else clause
-        then here's the explaination -> get() method of dictionary data type
-        returns value of passed argument if it is present in dictionary
-        otherwise second argument will be assigned as default value of passed
-        argument. (You remember the switch statement in C, C++, Javascript ...)
+        We find patterns for 'configuration' commands using the re.compile() and re.search()
+        method, which finds the pattern in the entered command and calls 'handle_configs()' method 
+        if it finds any match if not it calls the functions according to the commands entered.
+
+        :Args:
+            - self: {Main} object
+
+        :Returns:
+            - {None}
         """
         if re.compile(
             r"(config\.user\.email)|(config\.user\.password)|(config\.job\.keywords)|(config\.job\.location)",
@@ -775,15 +959,20 @@ class Main(object):
                 printRed(f"""{error}""", style='b', pad='1', force="+f")
 
     def run(self: Main) -> None:
-        """Method run() runs a infinite loop and starts the `cli`
-        (Command Line Interface) and it actually starts listening
-        to the commands and then it calls the function handle_commands()
+        """Method run() runs a infinite loop and starts the 'cli' (Command Line Interface),
+        it actually starts listening to the commands and then it calls the function handle_commands()
         which handles the commands.
 
-        We first get the command and add 'command ' in it this way we
-        can handle the commands by accessing their position in list.
-        Then we call function handle commands that is going to perform
-        operations as per command.
+        We first get the command and add 'command ' in it this way we can handle the commands by
+        accessing their position in list.
+
+        Then we call function handle commands that is going to perform operations as per command.
+
+        :Args:
+            - self: {Main} object
+
+        :Returns:
+            - {None}
         """
         from console.scan import scanGreen
 

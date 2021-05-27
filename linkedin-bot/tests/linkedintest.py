@@ -135,7 +135,7 @@ def test_linkedin() -> list:
     try:
         test_initial_state()
         printGreen(
-            "tests/linkedintest.py initial state test passed " + passed, style='b')
+            "tests/linkedintest.py test for initial state test passed " + passed, style='b')
         LinkedInTestSuccess += 1
     except AssertionError as error:
         printRed(error)
@@ -153,7 +153,7 @@ def test_linkedin() -> list:
     try:
         test_after_initialisation(_linkedin)
         printGreen(
-            "tests/linkedintest.py after initial state test passed " + passed, style='b')
+            "tests/linkedintest.py test for after initial state test passed " + passed, style='b')
         LinkedInTestSuccess += 1
     except AssertionError as error:
         printRed(error)
@@ -164,7 +164,7 @@ def test_linkedin() -> list:
     try:
         test_getters(_linkedin)
         printGreen(
-            "tests/linkedintest.py test getter methods passed " + passed, style='b')
+            "tests/linkedintest.py test for getter methods passed " + passed, style='b')
         LinkedInTestSuccess += 1
     except AssertionError as error:
         printRed(error)
@@ -175,7 +175,7 @@ def test_linkedin() -> list:
     try:
         test_setters(_linkedin)
         printGreen(
-            "tests/linkedintest.py test setter methods passed " + passed, style='b')
+            "tests/linkedintest.py test for setter methods passed " + passed, style='b')
         LinkedInTestSuccess += 1
     except AssertionError as error:
         printRed(error)
