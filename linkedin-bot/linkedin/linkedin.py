@@ -136,9 +136,6 @@ class LinkedIn(object):
 
         :Raises:
             - ValueError if the argument is null
-
-        :Reference:
-            - http://peter.sh/experiments/chromium-command-line-switches/
         """
         self.options.add_argument("--incognito")
 
@@ -154,9 +151,6 @@ class LinkedIn(object):
 
         :Raises:
             - ValueError if the argument is null
-
-        :Reference:
-            - http://peter.sh/experiments/chromium-command-line-switches/
         """
         self.options.add_argument("--ignore-certificate-errors")
 
@@ -172,7 +166,77 @@ class LinkedIn(object):
         :Raises:
             - ValueError if the argument is null
         """
-        self.options.add_argument("headless")
+        self.options.add_argument("--headless")
+
+    def enable_automation(self: LinkedIn) -> None:
+        """Method enable_automation() is to enable automation in chromedriver.
+
+        :Args:
+            - self: {LinkedIn} object
+
+        :Returns:
+            - {None}
+
+        :Raises:
+            - ValueError if the argument is null
+        """
+        self.options.add_argument("--enable-automation")
+
+    def no_sandbox(self: LinkedIn) -> None:
+        """Method no_sandbox() is to set the chromedriver in --no-sandbox mode.
+
+        :Args:
+            - self: {LinkedIn} object
+
+        :Returns:
+            - {None}
+
+        :Raises:
+            - ValueError if the argument is null
+        """
+        self.options.add_argument("--no-sandbox")
+
+    def disable_info_bars(self: LinkedIn) -> None:
+        """Method disable_info_bars() is to disable info bars in chromedriver.
+
+        :Args:
+            - self: {LinkedIn} object
+
+        :Returns:
+            - {None}
+
+        :Raises:
+            - ValueError if the argument is null
+        """
+        self.options.add_argument("--disable-infobars")
+
+    def disable_gpu(self: LinkedIn) -> None:
+        """Method disable_gpu() is to disable gpu (for Windows).
+
+        :Args:
+            - self: {LinkedIn} object
+
+        :Returns:
+            - {None}
+
+        :Raises:
+            - ValueError if the argument is null
+        """
+        self.options.add_argument("--disable-gpu")
+
+    def diable_notifications(self: LinkedIn) -> None:
+        """Method disable_notifications() is to disable notifications.
+
+        :Args:
+            - self: {LinkedIn} object
+
+        :Returns:
+            - {None}
+
+        :Raises:
+            - ValueError if the argument is null
+        """
+        self.options.add_argument("--disable-notifications")
 
     def get_chrome_driver_options(self: LinkedIn) -> object:
         """Method get_chrome_driver_options() returns a set of chrome options to be added 
