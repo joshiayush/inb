@@ -19,9 +19,8 @@ from errors.error import DomainNameSystemNotResolveException
 
 from selenium.common.exceptions import NoSuchElementException
 
-from linkedin.LinkedIn import LinkedIn
-
-from linkedin.LinkedInConnectionsAuto import LinkedInConnectionsAuto
+from linkedin.linkedin import LinkedIn
+from linkedin.linkedinconnectionsauto import LinkedInConnectionsAuto
 
 
 class Main(object):
@@ -786,10 +785,9 @@ class Main(object):
         Then we call function handle commands that is going to perform
         operations as per command.
         """
-
-        """Use `while 1` instead of `while True` for performace reason. DO NOT CHANGE!"""
         from console.scan import scanGreen
 
+        """Use `while 1` instead of `while True` for performace reason. DO NOT CHANGE!"""
         while 1:
             try:
                 self.command = ("command " + scanGreen("LinkedIn/>",
@@ -798,7 +796,8 @@ class Main(object):
                 printGreen(f"""Piece""", style='b', start='\n', pad='1')
                 sys.exit()
 
-            self.handle_commands() if self.get_command_length() > 1 else False
+            if self.get_command_length() > 1:
+                self.handle_commands()
 
 
 """Execute program"""

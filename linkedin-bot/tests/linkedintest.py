@@ -8,7 +8,7 @@ from . import failed
 from console.print import printRed
 from console.print import printGreen
 
-from linkedin.LinkedIn import LinkedIn
+from linkedin.linkedin import LinkedIn
 
 from selenium.webdriver import Chrome
 from selenium.webdriver.chrome.options import Options

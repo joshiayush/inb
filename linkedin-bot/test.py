@@ -2,7 +2,7 @@ from console.print import printRed
 from console.print import printBlue
 from console.print import printGreen
 
-from tests.LinkedInTest import test_linkedin
+from tests.linkedintest import test_linkedin
 
 
 def start_testing():
