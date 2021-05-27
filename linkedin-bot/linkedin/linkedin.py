@@ -196,6 +196,34 @@ class LinkedIn(object):
         """
         self.options.add_argument("--no-sandbox")
 
+    def disable_setuid_sandbox(self: LinkedIn) -> None:
+        """Method disable_setuid_sandbox() is to disable setuid sandbox.
+
+        :Args:
+            - self: {LinkedIn} object
+
+        :Returns:
+            - {None}
+
+        :Raises:
+            - ValueError if the argument is null
+        """
+        self.options.add_argument("--disable-setuid-sandbox")
+
+    def disable_extensions(self: LinkedIn) -> None:
+        """Method disable_extensions() is to disable chrome extensions.
+
+        :Args:
+            - self: {LinkedIn} object
+
+        :Returns:
+            - {None}
+
+        :Raises:
+            - ValueError if the argument is null
+        """
+        self.options.add_argument("--disable-extensions")
+
     def disable_info_bars(self: LinkedIn) -> None:
         """Method disable_info_bars() is to disable info bars in chromedriver.
 
