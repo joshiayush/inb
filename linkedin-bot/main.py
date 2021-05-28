@@ -477,23 +477,6 @@ class Main(object):
         raise CommandFlagNotFoundException(
             f"""'{self.get_command_at_index(2)}' is not a 'linkedin' command!""")
 
-    def show_job_details(self: Main) -> None:
-        """Method show_job_details() prints the job details that the user entered.
-
-        :Args:
-            self: {Main} object
-
-        :Returns:
-            - {None}
-        """
-        if not self.job_keywords and not self.job_keywords:
-            return
-
-        printGreen(f"""Job Keywords -> %s""" % (self.job_keywords if self.job_keywords else None),
-                   style='b', pad='1')
-        printGreen(f"""Job Location -> %s""" % (self.job_keywords if self.job_keywords else None),
-                   style='b', pad='1')
-
     def ask_to_show_password(self: Main) -> None:
         """Method ask_to_show_password() asks the user if (s)he want to see the password 
         if yes show them if not don't show them, this is for security purpose. 
@@ -548,7 +531,6 @@ class Main(object):
             "*"*len(self.user_password) if self.user_password else "use config.user.password to add user password"),
             style='b', pad='1')
 
-        self.show_job_details()
         self.ask_to_show_password()
 
         if self.get_command_length() > 2 and self.get_command_at_index(2) != "--help":
