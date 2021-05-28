@@ -466,3 +466,16 @@ class LinkedIn(object):
             }
 
         self.fill_credentials()
+
+    def __del__(self: LinkedIn) -> None:
+        """LinkedIn class destructor to de-initialise LinkedIn object.
+
+        :Args:
+            - self: {LinkedIn} object
+
+        :Returns:
+            - {None}
+        """
+        self.disable_webdriver_chrome()
+
+        LinkedIn.SESSION_ALREADY_EXISTS = False

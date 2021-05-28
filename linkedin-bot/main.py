@@ -76,7 +76,7 @@ class Main(object):
         :Returns:
             - {None}
         """
-        from helpers.command_help import help_with_configs
+        from helpers.command import help_with_configs
 
         self.commands = {
             "show": self.handle_show_commands,
@@ -470,7 +470,7 @@ class Main(object):
             return
 
         if self.get_command_at_index(2) == "--help":
-            from helpers.command_help import help_with_linkedin
+            from helpers.command import help_with_linkedin
             help_with_linkedin()
             return
 
@@ -537,7 +537,7 @@ class Main(object):
             - CommandFlagNotFoundException if 'show' is referenced with an unrecognized flag 
         """
         if self.get_command_length() > 2 and self.get_command_at_index(2) == "--help":
-            from helpers.command_help import help_with_show
+            from helpers.command import help_with_show
             help_with_show()
             return
 
@@ -579,7 +579,7 @@ class Main(object):
                 "command 'delete' cannot be referenced alone!")
 
         if self.get_command_at_index(2) == "--help":
-            from helpers.command_help import help_with_delete
+            from helpers.command import help_with_delete
             help_with_delete()
             return
 
@@ -618,7 +618,7 @@ class Main(object):
                     f"""{self.get_command_at_index(2)} is not a 'developer' command!""")
 
             if self.get_command_at_index(2) == "--help":
-                from helpers.command_help import help_with_developer
+                from helpers.command import help_with_developer
                 help_with_developer()
                 return
 
@@ -661,7 +661,7 @@ class Main(object):
             return
 
         if self.get_command_at_index(2) == "--help":
-            from helpers.command_help import help_with_theme
+            from helpers.command import help_with_theme
             help_with_theme()
             return
 
@@ -686,7 +686,7 @@ class Main(object):
             return
 
         if self.get_command_at_index(2) == "--help":
-            from helpers.command_help import help_with_clear
+            from helpers.command import help_with_clear
             help_with_clear()
             return
 
@@ -708,7 +708,7 @@ class Main(object):
         """
         if self.get_command_length() > 2:
             if self.get_command_at_index(2) == "--help":
-                from helpers.command_help import help_with_help
+                from helpers.command import help_with_help
                 help_with_help()
                 return
 
@@ -776,7 +776,7 @@ class Main(object):
             sys.exit()
 
         if self.get_command_at_index(2) == "--help":
-            from helpers.command_help import help_with_exit
+            from helpers.command import help_with_exit
             help_with_exit()
             return
 
@@ -982,11 +982,13 @@ class Main(object):
                 self.command = ("command " + scanGreen("LinkedIn/>",
                                 style='b', pad='1', start='\n', end=' ')).strip()
             except KeyboardInterrupt:
-                printGreen(f"""Piece""", style='b', start='\n', pad='1')
-                sys.exit()
+                break
 
             if self.get_command_length() > 1:
                 self.handle_commands()
+
+        printGreen(f"""Piece""", style='b', start='\n', pad='1')
+        sys.exit()
 
 
 """Execute program"""
