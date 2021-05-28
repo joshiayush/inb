@@ -476,6 +476,7 @@ class LinkedIn(object):
         :Returns:
             - {None}
         """
-        self.disable_webdriver_chrome()
+        if hasattr(self, "driver"):
+            self.disable_webdriver_chrome()
 
         LinkedIn.SESSION_ALREADY_EXISTS = False
