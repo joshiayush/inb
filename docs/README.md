@@ -16,23 +16,17 @@ $ pip3 install selenium
 $ pip3 install webdriver-manager
 ```
 
-**Google Chrome Version 89.0.4389.114 (Official Build) (64-bit)** to run chromedriver.
+**Google Chrome Version 91.0.4472.77 (Official Build) (64-bit)** to run chromedriver.
 
 ## Available Scripts
 
 In the project directory, you can run:
 
-### `./run.sh`
+### `./scripts/run.sh`
 
 Runs the program.
 
-It will install dependencies if they are not present in your system,
-
-it can install `python` interpreter `selenium`, `urllib`, `webdriver-manager`,
-
-`cryptography` packages on your system.
-
-### `./run.sh -d pycache`
+### `./scripts/delete-garbage.sh`
 
 Deletes all the cache files that gets created after the program run.
 
