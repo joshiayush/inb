@@ -5,7 +5,7 @@ import json
 from . import passed
 from . import failed
 
-from console.print import printRed
+from console.print import printBlue, printRed
 from console.print import printGreen
 
 from linkedin.linkedin import LinkedIn
@@ -24,27 +24,6 @@ with open("/Python/linkedin-bot/linkedin-bot/tests/creds/creds.json") as _file:
     user_email = creds["user_email"]
     user_password = creds["user_password"]
     driver_path = creds["driver_path"]
-
-
-def test_initial_state() -> None:
-    assert LinkedIn.OLD_EMAIL == '', \
-        "tests/linkedintest.py '_linkedin.OLD_EMAIL' should be emtpy initially! Test failed " + failed
-    assert LinkedIn.OLD_PASSWORD == '', \
-        "tests/linkedintest.py '_linkedin.OLD_PASSWORD' should be empty initially! Test failed " + failed
-    assert LinkedIn.SESSION_ALREADY_EXISTS == False, \
-        "tests/linkedintest.py '_linkedin.SESSION_ALREADY_EXISTS' should be False initially! Test failed " + failed
-
-
-def test_after_initialisation(_linkedin: LinkedIn) -> None:
-    global user_email
-    global user_password
-
-    assert _linkedin.OLD_EMAIL == user_email, \
-        "tests/linkedintest.py '_linkedin.OLD_EMAIL' should be equal to given user email! Test failed " + failed
-    assert _linkedin.OLD_PASSWORD == user_password, \
-        "tests/linkedintest.py '_linkedin.OLD_PASSWORD' should be equal to given user password! Test failed " + failed
-    assert _linkedin.SESSION_ALREADY_EXISTS == False, \
-        "tests/linkedintest.py _linkedin.SESSION_ALREADY_EXISTS' should be equal to True after initialisation! Test failed " + failed
 
 
 def test_getters(_linkedin: LinkedIn) -> None:
@@ -132,17 +111,6 @@ def test_linkedin() -> list:
     LinkedInTestFailed = 0
     LinkedInTestSuccess = 0
 
-    try:
-        test_initial_state()
-        printGreen(
-            "tests/linkedintest.py test for initial state test passed " + passed, style='b')
-        LinkedInTestSuccess += 1
-    except AssertionError as error:
-        printRed(error)
-        LinkedInTestFailed += 1
-    finally:
-        LinkedInTestNumber += 1
-
     global user_email
     global user_password
     global driver_path
@@ -151,20 +119,12 @@ def test_linkedin() -> list:
         {"user_email": user_email, "user_password": user_password}, driver_path=driver_path)
 
     try:
-        test_after_initialisation(_linkedin)
-        printGreen(
-            "tests/linkedintest.py test for after initial state test passed " + passed, style='b')
-        LinkedInTestSuccess += 1
-    except AssertionError as error:
-        printRed(error)
-        LinkedInTestFailed += 1
-    finally:
-        LinkedInTestNumber += 1
-
-    try:
+        printBlue(
+            "tests/linkedintest.py getter methods testing ...", style='b', end='\r')
         test_getters(_linkedin)
+        print(' '*80, end='\r')
         printGreen(
-            "tests/linkedintest.py test for getter methods passed " + passed, style='b')
+            "tests/linkedintest.py getter methods passed " + passed, style='b')
         LinkedInTestSuccess += 1
     except AssertionError as error:
         printRed(error)
@@ -173,9 +133,12 @@ def test_linkedin() -> list:
         LinkedInTestNumber += 1
 
     try:
+        printBlue(
+            "tests/linkedintest.py setter methods testing ...", style='b', end='\r')
         test_setters(_linkedin)
+        print(' '*80, end='\r')
         printGreen(
-            "tests/linkedintest.py test for setter methods passed " + passed, style='b')
+            "tests/linkedintest.py setter methods passed " + passed, style='b')
         LinkedInTestSuccess += 1
     except AssertionError as error:
         printRed(error)
@@ -184,9 +147,12 @@ def test_linkedin() -> list:
         LinkedInTestNumber += 1
 
     try:
+        printBlue(
+            "tests/linkedintest.py chrome driver options testing ...", style='b', end='\r')
         test_get_chrome_driver_options_method(_linkedin)
+        print(' '*80, end='\r')
         printGreen(
-            "tests/linkedintest.py test for chrome driver options passed " + passed, style='b')
+            "tests/linkedintest.py chrome driver options passed " + passed, style='b')
         LinkedInTestSuccess += 1
     except AssertionError as error:
         printRed(error)
@@ -195,9 +161,12 @@ def test_linkedin() -> list:
         LinkedInTestNumber += 1
 
     try:
+        printBlue(
+            "tests/linkedintest.py chrome driver testing ...", style='b', end='\r')
         test_webdriver_chrome(_linkedin)
+        print(' '*80, end='\r')
         printGreen(
-            "tests/linkedintest.py test for chrome driver passed " + passed, style='b')
+            "tests/linkedintest.py chrome driver passed " + passed, style='b')
         LinkedInTestSuccess += 1
     except AssertionError as error:
         printRed(error)
@@ -206,9 +175,12 @@ def test_linkedin() -> list:
         LinkedInTestNumber += 1
 
     try:
+        printBlue(
+            "tests/linkedintest.py web elements testing ...", style='b', end='\r')
         test_web_elements(_linkedin)
+        print(' '*80, end='\r')
         printGreen(
-            "tests/linkedintest.py test for web elements passed " + passed, style='b')
+            "tests/linkedintest.py web elements passed " + passed, style='b')
         LinkedInTestSuccess += 1
     except AssertionError as error:
         printRed(error)
