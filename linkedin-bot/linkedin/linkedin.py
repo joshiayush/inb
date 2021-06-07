@@ -8,8 +8,6 @@ from errors.error import DomainNameSystemNotResolveException
 
 
 class LinkedIn(object):
-    OLD_EMAIL = ''
-    OLD_PASSWORD = ''
     SESSION_ALREADY_EXISTS = False
 
     def __init__(self: LinkedIn, credentials: dict = {}, driver_path: str = '') -> LinkedIn:
@@ -55,11 +53,6 @@ class LinkedIn(object):
             }
 
         self.options = webdriver.ChromeOptions()
-
-        if not LinkedIn.OLD_EMAIL == self.user_email and not LinkedIn.OLD_PASSWORD == self.user_password:
-            """Save email and password."""
-            LinkedIn.OLD_EMAIL = self.user_email
-            LinkedIn.OLD_PASSWORD = self.user_password
 
     @property
     def user_email(self: LinkedIn) -> str:
@@ -476,7 +469,4 @@ class LinkedIn(object):
         :Returns:
             - {None}
         """
-        if hasattr(self, "driver"):
-            self.disable_webdriver_chrome()
-
         LinkedIn.SESSION_ALREADY_EXISTS = False
