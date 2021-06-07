@@ -224,6 +224,9 @@ class Main(object):
     def home() -> None:
         """Method home() prints the home screen.
 
+        We print a sexy logo too. If you have a logo that is sexier than this feel free
+        to add it.
+
         :Args:
             - {None}
 
@@ -233,6 +236,13 @@ class Main(object):
         from helpers.window import clear
 
         clear()
+
+        printGreen(r""" _____             _               _              ___         _     """, style='b', pad='1')
+        printGreen(r"""|_   _|           | |             | |            |  _ \      | |    """, style='b', pad='1')
+        printGreen(r"""  | |     ^  _ __ | |__  ___   ___| | ^  _ __    | |_) | ___ | |_   """, style='b', pad='1')
+        printGreen(r"""  | |    (_)| '_ \|  __`, __`,/  _` |(_)| '_ \   |  _ < / _ \| __|  """, style='b', pad='1')
+        printGreen(r""" _| |____(_)| | | \ ( _) (__))| (_) #(_)| | | \  | |_) | (_) | |_   """, style='b', pad='1')
+        printGreen(r"""|________(_)|_| |_|_|  \\____ \___/_|(_)| | | |  |____/ \___/ \__|  """, style='b', pad='1')
 
         printGreen(f"""Type help for more information!""",
                    style='b', start='\n', pad='1')
