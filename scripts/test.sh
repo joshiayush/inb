@@ -1,12 +1,10 @@
 #!/bin/bash
 
-source /Python/linkedin-bot/scripts/garbage.sh
-
-function _test() {
-    python3.7 linkedin-bot/test.py
-}
-
-_test
-if [ "$(checkIfGarbage)" = "yes" ]; then
-    deleteCache
+if [ "$EUID" -eq 0 ]; then
+  echo "Run this script as normal user!"
+  exit
 fi
+
+python3.7 linkedin-bot/test.py
+
+sudo ./scripts/delete-garbage.sh
