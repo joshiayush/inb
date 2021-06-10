@@ -1,9 +1,9 @@
 {
   "editor.defaultFormatter": "esbenp.prettier-vscode",
   "[python]": {
-    "editor.defaultFormatter": null,
+    "editor.defaultFormatter": "ms-python.python",
     "editor.insertSpaces": true,
-    "editor.tabSize": 2
+    "editor.tabSize": 4
   },
   "prettier.tabWidth": 2,
   "prettier.singleQuote": false,

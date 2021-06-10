@@ -5,6 +5,7 @@ import time
 
 from linkedin.linkedin import LinkedIn
 
+from DOM.cleaners import clear_msg_overlay
 from DOM.javascript import scroll_bottom
 from DOM.javascript import get_page_y_offset
 
@@ -222,6 +223,8 @@ class LinkedInConnectionsAuto(object):
         if not hasattr(self, "driver"):
             PropertyNotExistException(
                 "Object 'self' doesn't have property 'driver' in it!")
+
+        clear_msg_overlay(self)
 
         self.send_invitation()
 

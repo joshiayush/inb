@@ -1,3 +1,4 @@
+"""from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!"""
 from __future__ import annotations
 
 import json
@@ -5,7 +6,8 @@ import json
 from . import passed
 from . import failed
 
-from console.print import printBlue, printRed
+from console.print import printRed
+from console.print import printBlue
 from console.print import printGreen
 
 from linkedin.linkedin import LinkedIn

@@ -23,7 +23,7 @@ declare -a garbages=("__pycache__/"
 for garbage in "${garbages[@]}"; do
   if [ -d "${garbage}" ]; then
     sudo rm -rf "${garbage}"
-    echo "Deleted ${garbage} directory ..." 
+    echo "${garbage} directory is present, deleted ..." 
   else
     echo "${garbage} directory is not present, skipping ..."
   fi
