@@ -17,9 +17,12 @@ def printk(_str: str, **kwargs: dict) -> None:
     This function also adds left 'whitespace' padding to the given string if there is a
     'pad' property present in the 'kwargs' otherwise it simply displays that string.
 
-    Args:
-        string: it is the string that needs to be printed on the terminal.
-        **kwargs: are the key-value pair that print method takes besides string.
+    :Args:
+        - _str: {str} string to print on the screen.
+        - kwargs: {dict} keyword arguments.
+
+    :Returns:
+        - {None}
     """
     if not kwargs:
         print(f"""{_str}""")
@@ -40,16 +43,17 @@ def printk(_str: str, **kwargs: dict) -> None:
     del kwargs["pad"]
     print(f"""{_str}""", **kwargs)
 
-    return
-
 
 @with_goto
 def printWhite(_str: str, **kwargs: dict) -> None:
-    """Function printWhite() takes a string and displays that string in WHITEcolor.
+    """Function printWhite() takes a string and displays that string in white color.
 
-    Args:
-        _str: it is the string that needs to be printed on the terminal.
-        **kwargs: are the key-value pair that print method takes besides string.
+    :Args:
+        - _str: {str} string to print on the terminal.
+        - kwargs: {dict} keyword arguments.
+
+    :Returns:
+        - {None}
     """
     if not Theme.PARROT:
         if kwargs:
@@ -102,9 +106,12 @@ def printWhite(_str: str, **kwargs: dict) -> None:
 def printRed(_str: str, **kwargs: dict) -> None:
     """Function printRed() takes a string and displays that string in red color.
 
-    Args:
-        _str: it is the string that needs to be printed on the terminal.
-        **kwargs: are the key-value pair that print method takes besides string.
+    :Args:
+        - _str: {str} string to print on the terminal.
+        - kwargs: {dict} keyword arguments.
+
+    :Returns:
+        - {None}
     """
     if not Theme.PARROT:
         if kwargs:
@@ -157,9 +164,12 @@ def printRed(_str: str, **kwargs: dict) -> None:
 def printGreen(_str: str, **kwargs: dict) -> None:
     """Function printGreen() takes a string and displays that string in green color.
 
-    Args:
-        _str: it is the string that needs to be printed on the terminal.
-        **kwargs: are the key-value pair that print method takes besides string.
+    :Args:
+        - _str: {str} string to print on the terminal.
+        - kwargs: {dict} keyword arguments.
+
+    :Returns:
+        - {None}
     """
     if not Theme.PARROT:
         if kwargs:
@@ -212,9 +222,12 @@ def printGreen(_str: str, **kwargs: dict) -> None:
 def printBlue(_str: str, **kwargs: dict) -> None:
     """Function printBlue() takes a string and displays that string in blue color.
 
-    Args:
-        _str: it is the string that needs to be printed on the terminal.
-        **kwargs: are the key-value pair that print method takes besides string.
+    :Args:
+        - _str: {str} string to print on the terminal.
+        - kwargs: {dict} keyword arguments.
+
+    :Returns:
+        - {None}
     """
     if not Theme.PARROT:
         if kwargs:
@@ -267,9 +280,12 @@ def printBlue(_str: str, **kwargs: dict) -> None:
 def printYellow(_str: str, **kwargs: dict) -> None:
     """Function printYellow() takes a string and displays that string in yellow color.
 
-    Args:
-        _str: it is the string that needs to be printed on the terminal.
-        **kwargs: are the key-value pair that print method takes besides string.
+    :Args:
+        - _str: {str} string to print on the terminal.
+        - kwargs: {dict} keyword arguments.
+
+    :Returns:
+        - {None}
     """
     if not Theme.PARROT:
         if kwargs:

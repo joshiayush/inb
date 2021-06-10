@@ -10,9 +10,19 @@ from errors.error import UserCacheNotFoundException
 
 
 def store_credentials(self: object) -> None:
-    """Method store_credentials() stores the user secret fields
-    as cache in a file 'CredentialsFile.ini' so to use these
-    fields later.
+    """Function store_credentials() stores the user secret fields as cache in a file 
+    'CredentialsFile.ini' inside of the 'creds' folder that is inside of the project's
+    root directory so to use these fields later.
+
+    :Args:
+        - self: {object} object from which 'encrypted_email' and 'encrypted_password' are
+            to be accessed.
+
+    :Raises:
+        - {PropertyNotExistsException} if required properties can't be found in 'self' object.
+
+    :Returns:
+        - {None}
     """
     if not hasattr(self, "encrypted_email") or not hasattr(self, "encrypted_password"):
         raise PropertyNotExistException(
@@ -24,34 +34,54 @@ def store_credentials(self: object) -> None:
 
 
 def get_credentials(self: object) -> None:
-    """Method get_credentials() reads the credentials stored as
-    cache in file 'CredentialsFile.ini' if exists.
+    """Function get_credentials() reads the credentials stored as cache in file 
+    'CredentialsFile.ini' inside of the 'creds' folder that is inside of the project's
+    root directory if exists.
+
+    :Args:
+        - self: {object} object from which 'data' property is to be accessed.
+
+    :Raises:
+        - {UserCacheNotFoundException} if user's credentials are not found.
+
+    :Returns:
+        - {None}
     """
-    if os.path.exists(__credentials_file):
-        try:
-            with open(__credentials_file, 'r') as creds_file:
-                lines = creds_file.readlines()
+    if not os.path.exists(__credentials_file):
+        return
 
-                config = {
-                    "Username": "",
-                    "Password": ""
-                }
+    try:
+        with open(__credentials_file, 'r') as creds_file:
+            lines = creds_file.readlines()
 
-                for line in lines:
-                    creds = line.rstrip('\n').split('=', 1)
-                    if creds[0] in ("Username", "Password"):
-                        config[creds[0]] = creds[1]
+            config = {
+                "Username": "",
+                "Password": ""
+            }
 
-                decrypt_credentials(self, config)
-        except FileNotFoundError:
-            raise UserCacheNotFoundException(
-                "You don't have any cache stored!")
+            for line in lines:
+                creds = line.rstrip('\n').split('=', 1)
+                if creds[0] in ("Username", "Password"):
+                    config[creds[0]] = creds[1]
+
+            decrypt_credentials(self, config)
+    except FileNotFoundError:
+        raise UserCacheNotFoundException(
+            "You don't have any cache stored!")
 
 
 def delete_cache() -> None:
-    """Method delete_cache() deletes the stored cache (User credentials)
-    if exists, we use os.path.exists() to check if the file is present or
-    not if present we remove it.
+    """Function delete_cache() deletes the stored cache (User credentials) if exists, 
+    we use os.path.exists() to check if the file is present or not if present we remove it.
+
+    :Args:
+        - {None}
+
+    :Raises:
+        - {FileNotFoundError} if the credential file doesn't exist.
+
+    :Returns:
+        - {None}
     """
     if os.path.exists(__credentials_file):
         os.remove(__credentials_file)
@@ -60,9 +90,17 @@ def delete_cache() -> None:
 
 
 def delete_key() -> None:
-    """Method delete_key() deletes the stored cipher key if exists,
-    we use os.path.exists() to check if the file is present or not if
-    present we remove it.
+    """Function delete_key() deletes the stored cipher key if exists, we use 
+    os.path.exists() to check if the file is present or not if present we remove it.
+
+    :Args:
+        - {None}
+
+    :Raises:
+        - {FileNotFoundError} if the key file doesn't exist.
+
+    :Returns:
+        - {None}
     """
     if os.path.exists(__key_file):
         os.remove(__key_file)

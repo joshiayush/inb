@@ -5,15 +5,23 @@ from errors.error import PropertyNotExistException
 
 
 def encrypt_email(self: object) -> None:
-    """Method encrypt_email() encrypts the user email so
-    to store this field as a cache later. We use 'Fernet'
-    class to encrypt user password.
+    """Function encrypt_email() encrypts the user email so to store this field 
+    as cache later.
 
-        Fernet:
-        Fernet guarantees that a message encrypted using it cannot
-        be manipulated or read without the key. Fernet is an
-        implementation of symmetric (also known as “secret key”)
-        authenticated cryptography.
+    :Fernet:
+        Fernet guarantees that a message encrypted using it cannot be manipulated
+        or read without the key. Fernet is an implementation of symmetric (also known 
+        as “secret key”) authenticated cryptography.
+
+    :Args:
+        - self: {object} object from which 'encrypted_email' and 'data' properties are to be
+            accessed.
+
+    :Raises:
+        - {PropertyNotExistException} if required properties can't be found in 'self' object.
+
+    :Returns:
+        - {None} 
     """
     if not hasattr(self, "encrypted_email"):
         raise PropertyNotExistException(
@@ -32,15 +40,23 @@ def encrypt_email(self: object) -> None:
 
 
 def encrypt_password(self: object) -> None:
-    """Method encrypt_password() encrypts the user password so
-    to store this field as a cache later. We use 'Fernet' class
-    to encrypt user password.
+    """Function encrypt_password() encrypts the user password so to store this field 
+    as cache later.
 
-    Fernet:
-        Fernet guarantees that a message encrypted using it cannot
-        be manipulated or read without the key. Fernet is an
-        implementation of symmetric (also known as “secret key”)
-        authenticated cryptography.
+    :Fernet:
+        Fernet guarantees that a message encrypted using it cannot be manipulated
+        or read without the key. Fernet is an implementation of symmetric (also known 
+        as “secret key”) authenticated cryptography.
+
+    :Args:
+        - self: {object} object from which 'encrypted_password' and 'data' properties are to be
+            accessed.
+
+    :Raises:
+        - {PropertyNotExistException} if required properties can't be found in 'self' object.
+
+    :Returns:
+        - {None}
     """
     if not hasattr(self, "encrypted_password"):
         raise PropertyNotExistException(
@@ -59,19 +75,23 @@ def encrypt_password(self: object) -> None:
 
 
 def decrypt_credentials(self: object, config: dict) -> None:
-    """Method decrypt_credentials() decrypts the encrypted user
-    credentials that are stored in the Credentials file. We use
-    class 'Fernet' to achive this functionality.
+    """Function decrypt_credentials() decrypts the encrypted user credentials that 
+    are stored in the Credentials file.
 
-    Fernet:
-        Fernet guarantees that a message encrypted using it cannot
-        be manipulated or read without the key. Fernet is an
-        implementation of symmetric (also known as “secret key”)
-        authenticated cryptography.
+    :Fernet:
+        Fernet guarantees that a message encrypted using it cannot be manipulated
+        or read without the key. Fernet is an implementation of symmetric (also known 
+        as “secret key”) authenticated cryptography.
 
-    Args:
-        config: it is a dictionary object that holds user encrypted
-        fields.
+    :Args:
+        - self: {object} object from which 'data' property is to be accessed.
+        - config: {dict} dictionary that holds user's encrypted fields.
+
+    :Raises:
+        - {PropertyNotExistException} if required properties can't be found in 'self' object.
+
+    :Returns:
+        - {None}
     """
     if not hasattr(self, "data"):
         raise PropertyNotExistException(

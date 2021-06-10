@@ -12,15 +12,16 @@ from console.print import printGreen
 from console.print import printWhite
 
 
-def calculate_status(status: str = '') -> str:
-    """Method calculate_status() sets the value of '_stat' (status) according to the invitation 
-    status which turns out to be a green ✔ mark on status 'sent' and a red ✘ mark on status 'failed'.  
+def get_status(status: str = '') -> str:
+    """Function get_status() sets the value of 'status' (status) according to the invitation 
+    status which turns out to be a green ✔ mark on status 'sent' and a red ✘ mark on status 
+    'failed'.  
 
-    Args:
-        - status: status of the request sent or failed.
+    :Args:
+        - status: {str} status of the request sent or failed.
 
-    return:
-        - {String} invitation status.
+    :Returns:
+        - {str} invitation status.
     """
     global __success_rate
     global __failure_rate
@@ -47,20 +48,22 @@ def calculate_status(status: str = '') -> str:
 
 
 def show(name: str, occupation: str, status: str = '', elapsed_time: int = 0) -> None:
-    """Method show() shows the invitation status on the terminal window in a specific format
+    """Function show() shows the invitation status on the terminal window in a specific format
     which is,
 
-            ✔/✘ {Status} Person Name {Normal Style}
-            Person Occupation {Dim Style}
+        ✔/✘ {Status} Person Name {Normal Style}
+        Person Occupation {Dim Style}
 
-            Succes rate: # {Green} Failure rate: # {Red} Elapsed time: # {Blue}
+        Succes rate: # {Green} Failure rate: # {Red} Elapsed time: # {Blue}
 
-    Args:
-        - self: class object which has the property 'calculate_status' in it.
-        - obj: from which the name and occupation to be pulled.
-        - status: status of the request sent or failed.
-        - elapsed_time: how much time did it take to calculate and print the invitation status
-            for every person.
+    :Args:
+        - name: person's name.
+        - occupation: person's occupation.
+        - status: invitation status.
+        - elasped_time: elasped time.
+
+    :Returns:
+        - {None}
     """
     global __success_rate
     global __failure_rate
@@ -71,12 +74,12 @@ def show(name: str, occupation: str, status: str = '', elapsed_time: int = 0) ->
         elapsed_time = elapsed_time
 
     if len(occupation) >= 50:
-        occupation = occupation[0:50] + "."*3
+        occupation = occupation[0:50] + ' ' + '.'*3
 
     if __success_rate != 0 or __failure_rate != 0:
         sys.stdout.write("\033[F\033[F\033[F\033[F\033[F\033[F")
 
-    _stat = calculate_status(status=status)
+    _stat = get_status(status=status)
 
     printk(' ', start='\n', pad='80', end='\r')
 
@@ -102,8 +105,13 @@ def show(name: str, occupation: str, status: str = '', elapsed_time: int = 0) ->
 
 
 def reset() -> None:
-    """Function reset() resets the class static variables to their original values once the 
-    user is done sending the invitations to LinkedIn users.
+    """Function reset() resets the static variables to their original values.
+
+    :Args:
+        - {None}
+
+    :Returns:
+        - {None}
     """
     global __success_rate
     global __failure_rate

@@ -90,9 +90,7 @@ class LinkedInConnectionsAuto(object):
             try:
                 return WebDriverWait(self.driver, wait_time).until(
                     expected_conditions.presence_of_all_elements_located(
-                        (By.CSS_SELECTOR, selector)
-                    )
-                )
+                        (By.CSS_SELECTOR, selector)))
             except TimeoutException:
                 continue
 

@@ -1,11 +1,11 @@
-from .LinkedIn import By
-from .LinkedIn import Keys
-from .LinkedIn import LinkedIn
-from .LinkedIn import WebDriverWait
-from .LinkedIn import TimeoutException
-from .LinkedIn import expected_conditions
-from .LinkedIn import ElementNotInteractableException
-from .LinkedIn import ElementClickInterceptedException
+from .linkedin import By
+from .linkedin import Keys
+from .linkedin import LinkedIn
+from .linkedin import WebDriverWait
+from .linkedin import TimeoutException
+from .linkedin import expected_conditions
+from .linkedin import ElementNotInteractableException
+from .linkedin import ElementClickInterceptedException
 
 
 class LinkedInConnectionsAutoSearch(LinkedIn):

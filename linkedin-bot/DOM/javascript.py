@@ -1,19 +1,22 @@
+from errors.error import PropertyNotExistException
+
+
 def get_page_y_offset(self: object) -> int:
-    """Function get_page_y_offset() returns the window.pageYOffset
-    of the webpage, we need that so we can keep on scrolling untill
-    the page offset becomes constant. Declaration of this method is
-    static because we want to use this function across multiple
-    classes.
+    """Function get_page_y_offset() returns the window.pageYOffset of the webpage, 
+    we need that so we can keep on scrolling untill the page offset becomes constant.
 
-    Args:
-        self: is not a object here but it is a parameter object
-        that has a property 'driver' and we need that
+    :Args:
+        - self: {object} object from which 'driver' property is to be accessed.
 
-    return:
-        window.pageYOffset
+    :Raises:
+        - {PropertyNotExistException} if 'self' does not has a property called 'driver'.
+
+    :Returns:
+        - {int} window.pageYOffset
     """
     if not hasattr(self, "driver"):
-        return
+        raise PropertyNotExistException(
+            "Object 'self' must have a property 'driver' in it!")
 
     return self.driver.execute_script((
         "return (window.pageYOffset !== undefined)"
@@ -23,16 +26,21 @@ def get_page_y_offset(self: object) -> int:
 
 
 def scroll_bottom(self: object) -> None:
-    """Function scroll_bottom() scrolls the web page to the 
-    very bottom of it using the 'document.scrollingElement.scrollTop' 
-    property.
+    """Function scroll_bottom() scrolls the web page to the very bottom of it using 
+    the 'document.scrollingElement.scrollTop' property.
 
-    Args:
-        self: it is a parameter object that has a property 'driver' 
-        in it and we need that to access the webpage.
+    :Args:
+        - self: {object} object from which 'driver' property is to be accessed.
+
+    :Raises:
+        - {PropertyNotExistException} if 'self' does not has a property called 'driver'.
+
+    :Returns:
+        - {None}
     """
     if not hasattr(self, "driver"):
-        return
+        raise PropertyNotExistException(
+            "Object 'self' must have a property 'driver' in it!")
 
     self.driver.execute_script((
         "var scrollingElement = (document.scrollingElement || document.body);"

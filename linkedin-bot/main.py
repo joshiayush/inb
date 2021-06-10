@@ -240,8 +240,8 @@ class Main(object):
         printGreen(r""" _____             _               _              ___         _     """, style='b', pad='1')
         printGreen(r"""|_   _|           | |             | |            |  _ \      | |    """, style='b', pad='1')
         printGreen(r"""  | |     ^  _ __ | |__  ___   ___| | ^  _ __    | |_) | ___ | |_   """, style='b', pad='1')
-        printGreen(r"""  | |    (_)| '_ \|  __`, __`,/  _` |(_)| '_ \   |  _ < / _ \| __|  """, style='b', pad='1')
-        printGreen(r""" _| |____(_)| | | \ ( _) (__))| (_) #(_)| | | \  | |_) | (_) | |_   """, style='b', pad='1')
+        printGreen(r"""  | |    ( )| '_ \|  __`, __`,/  _` |( )| '_ \   |  _ < / _ \| __|  """, style='b', pad='1')
+        printGreen(r""" _| |____( )| | | \ ( _) (__))| (_) #( )| | | \  | |_) | (_) | |_   """, style='b', pad='1')
         printGreen(r"""|________(_)|_| |_|_|  \\____ \___/_|(_)| | | |  |____/ \___/ \__|  """, style='b', pad='1')
 
         printGreen(f"""Type help for more information!""",

@@ -2,7 +2,13 @@ from console.print import printBlue
 
 
 def help_with_configs() -> None:
-    """Function help_with_configs()
+    """Function help_with_configs() shows a guide for 'config' command.
+
+    :Args:
+        - {None}
+
+    :Returns:
+        - {None}
     """
     printBlue(f"""config.user.email "example@email.com" --cached""",
               style='b', pad='1')
@@ -11,22 +17,23 @@ def help_with_configs() -> None:
     printBlue(
         f"""Or you can use the following command if you don't want to show the password on the screen""",
         style='b', pad='1')
-    printBlue(f"""config.user.password --cached (hit enter)""",
-              style='b', pad='1')
+    printBlue(
+        f"""config.user.password --cached (hit enter)""", style='b', pad='1')
     printBlue(f"""Password: """, style='b', pad='1')
     printBlue(
         f"""config.job.keywords "Data%Science" (use '%' for space)""", style='b', pad='1')
-    printBlue(f"""config.job.location "Sanfrancisco%CA" """,
-              style='b', pad='1')
+    printBlue(
+        f"""config.job.location "Sanfrancisco%CA" """, style='b', pad='1')
 
 
 def help_with_linkedin() -> None:
-    """Method help_with_linkedin() shows how you can use the linkedin
-    command in case you missed the flags with the linkedin command or
-    mistakenly applied wrong flags with the linkedin command. We declare
-    this function static because we don't need to give this function an
-    access to the object it's no use giving this function access to the
-    object.
+    """Function help_with_linkedin() shows a guide for 'linkedin' command.
+
+    :Args:
+        - {None}
+
+    :Returns:
+        - {None}    
     """
     printBlue(
         f"""linkedin [send] [suggestions^] --auto/--guided [--headless] [--use-cache]""", style='b', pad='1')
@@ -129,11 +136,13 @@ def help_with_linkedin() -> None:
 
 
 def help_with_show() -> None:
-    """Function help_with_show() shows you how you can use the
-    'show' command in case you entered wrong command. We declare
-    this function static because we don't need to give this function
-    an access to the object it's no use giving this function access
-    to the object.
+    """Function help_with_show() shows a guide for 'show' command.
+
+    :Args:
+        - {None}
+
+    :Returns:
+        - {None}
     """
     printBlue(
         f"""'show' shows all the details you have entered like:""", style='b', pad='1')
@@ -145,30 +154,42 @@ def help_with_show() -> None:
 
 
 def help_with_delete() -> None:
-    printBlue(f"""'delete' command deletes the cache stored.""",
-              style='b', pad='1')
+    """Function help_with_delete() shows a guide for 'delete' command.
+
+    :Args:
+        - {None}
+
+    :Returns:
+        - {None}
+    """
+    printBlue(
+        f"""'delete' command deletes the cache stored.""", style='b', pad='1')
     printBlue(f"""Usage: delete --cache""", style='b', pad='1')
 
 
 def help_with_developer() -> None:
-    """Function help_with_developer() shows you how you can use the
-    'developer' command in case you entered wrong command. We declare
-    this function static because we don't need to give this function
-    an access to the object it's no use giving this function access to
-    the object.
+    """Function help_with_developer() shows a guide for 'developer' command.
+
+    :Args:
+        - {None}
+
+    :Returns:
+        - {None}
     """
-    printBlue(f"""'developer' shows the developer details like:""",
-              style='b', pad='1')
-    printBlue(f"""his number, email, profiles ...""",
-              style='b', pad='1')
+    printBlue(
+        f"""'developer' shows the developer details like:""", style='b', pad='1')
+    printBlue(
+        f"""his number, email, profiles ...""", style='b', pad='1')
 
 
 def help_with_theme() -> None:
-    """Function help_with_theme() shows you how you can use the
-    'theme' command in case you entered wrong command or entered
-    a un-matching flag. We declare this function static because
-    we don't need to give this function an access to the object
-    it's no use giving this function access to the object.
+    """Function help_with_theme() shows a guide for 'theme' command.
+
+    :Args:
+        - {None}
+
+    :Returns:
+        - {None}
     """
     printBlue(
         f"""'theme --parrot/--normal' changes the cli (command line theme) according to the given theme value.""",
@@ -176,32 +197,38 @@ def help_with_theme() -> None:
 
 
 def help_with_clear() -> None:
-    """Function help_with_clear() shows you how you can use the
-    'clear' command in case you entered wrong command. We declare
-    this function static because we don't need to give this function
-    an access to the object it's no use giving this function access
-    to the object.
+    """Function help_with_clear() shows a guide for 'clear' command.
+
+    :Args:
+        - {None}
+
+    :Returns:
+        - {None}
     """
     printBlue(f"""'clear' clears the screen""", style='b', pad='1')
 
 
 def help_with_exit() -> None:
-    """Function help_with_exit() shows you how you can use the
-    'exit' command in case you entered wrong command. We declare
-    this function static because we don't need to give this function
-    an access to the object it's no use giving this function access
-    to the object.
+    """Function help_with_exit() shows a guide for 'exit' command.
+
+    :Args:
+        - {None}
+
+    :Returns:
+        - {None}
     """
     printBlue(
         f"""'exit' exits the program and also does flushing jobs.""", style='b', pad='1')
 
 
 def help_with_help() -> None:
-    """Function help_with_help() shows you how you can use the
-    'help' command in case you entered wrong command. We declare
-    this function static because we don't need to give this function
-    an access to the object it's no use giving this function access
-    to the object.
+    """Function help_with_help() shows a guide for 'help' command.
+
+    :Args:
+        - {None}
+
+    :Returns:
+        - {None}
     """
     printBlue(
         f"""'help' prints a list of commands that the Linkedin Automater have.""",

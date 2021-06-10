@@ -4,26 +4,26 @@ from console.print import printk
 
 
 def terminal_size() -> list:
-    """Function terminal_size() returns the size of the terminal when
-    the LinkedIn Automator program executed, this functionality is required
-    in order to set the Home Logo according to the terminal size. We declare
-    this method static because we don't need to give this function an access
-    to the object it's no use giving this function access to the object.
+    """Function terminal_size() returns the very first size of the terminal window.
 
-    return:
-        terminal size.
+    :Args:
+        - {None}
+
+    :Returns:
+        - {list} terminal size x and y.
     """
     return os.get_terminal_size()
 
 
 def get_coords() -> list:
-    """Function get_coords() returns the co-ordinates that are needed to set
-    the Home Logo nearly to the center according to the terminal size. We
-    declare this function static because we don't need to give this function
-    an access to the object it's no use giving this function access to the object.
+    """Function get_coords() returns the co-ordinates that are needed to set the Home 
+    Logo near to the center according to the terminal size.
 
-    return:
-        co-ordinates that sets the Logo nearly to the center.
+    :Args:
+        - {None}
+
+    :Returns:
+        - {list} co-ordinates that sets the Logo near to the center.
     """
     if terminal_size()[0] >= 150:
         return [48, 5]
@@ -35,20 +35,26 @@ def get_coords() -> list:
 
 
 def gotoxy(x: int, y: int) -> None:
-    """Function gotoxy() sets the console cursor position. We declare this
-    function static because we don't need to give this function an access
-    to the object it's no use giving this function access to the object.
+    """Function gotoxy() sets the console cursor position.
 
-    Args:
-        x: column number for the cursor.
-        y: row number for the cursor.
+    :Args:
+        - x: {int} column number for the cursor.
+        - y: {int} row number for the cursor.
+
+    :Returns:
+        - {None}
     """
     printk("%c[%d;%df" % (0x1B, y, x), end='')
 
 
 def clear() -> None:
-    """Method clear() clears the terminal screen for windows we use command
-    `cls` and for linux based system we use command `clear`.
+    """Function clear() clears the terminal screen.
+
+    :Args:
+        - {None}
+
+    :Returns:
+        - {None}
     """
     if os.name == "nt":
         os.system("cls")

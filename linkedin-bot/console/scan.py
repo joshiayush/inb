@@ -19,15 +19,15 @@ label: Any = ...
 
 
 def scank(_str: str, **kwargs: dict) -> str:
-    """Function scank() is a dedicated input method for our LinkedIn `cli`
+    """Function scank() is a dedicated input method for our LinkedIn 'cli' 
     (Command Line Interface), it also handles the Keyboard interrupt error.
 
-    Args:
-        - _str: string to display on the screen while taking user input.
-        - kwargs: keyword arguments.
+    :Args:
+        - _str: {str} string to display on the terminal while taking input.
+        - kwargs: {dict} keyword arguments.
 
-    return:
-        returns the entered value.
+    :Returns:
+        - {str} user input.
     """
     _pad = 0
 
@@ -49,13 +49,12 @@ def scank(_str: str, **kwargs: dict) -> str:
 def scanWhite(_str: str, **kwargs: dict) -> str:
     """Function scanWhite() takes user input in white color.
 
-    Args:
-        _str: it is the string that needs to be printed on the terminal while taking 
-            user input.
-        **kwargs: are the key-value pair that scank method takes besides string.
+    :Args:
+        - _str: {str} string to display on the terminal while taking input.
+        - kwargs: {dict} keyword arguments.
 
-    return:
-        returns the entered value.
+    :Returns:
+        - {str} user input.
     """
     if not Theme.PARROT:
         if kwargs:
@@ -111,13 +110,12 @@ def scanWhite(_str: str, **kwargs: dict) -> str:
 def scanRed(_str: str, **kwargs: dict) -> str:
     """Function scanRed() takes user input in red color.
 
-    Args:
-        _str: it is the string that needs to be printed on the terminal while taking 
-            user input.
-        **kwargs: are the key-value pair that scank method takes besides string.
+    :Args:
+        - _str: {str} string to display on the terminal while taking input.
+        - kwargs: {dict} keyword arguments.
 
-    return:
-        returns entered value.
+    :Returns:
+        - {str} user input.
     """
     if not Theme.PARROT:
         if kwargs:
@@ -173,13 +171,12 @@ def scanRed(_str: str, **kwargs: dict) -> str:
 def scanGreen(_str: str, **kwargs: dict) -> str:
     """Function scanGreen() takes user input in green color.
 
-    Args:
-        _str: it is the string that needs to be printed on the terminal while taking 
-            user input.
-        **kwargs: are the key-value pair that scank method takes besides string.
+    :Args:
+        - _str: {str} string to display on the terminal while taking input.
+        - kwargs: {dict} keyword arguments.
 
-    return:
-        returns entered value.
+    :Returns:
+        - {str} user input.
     """
     if not Theme.PARROT:
         if kwargs:
@@ -235,13 +232,12 @@ def scanGreen(_str: str, **kwargs: dict) -> str:
 def scanBlue(_str: str, **kwargs: dict) -> str:
     """Function scanBlue() takes user input in blue color.
 
-    Args:
-        _str: it is the string that needs to be printed on the terminal while taking 
-            user input.
-        **kwargs: are the key-value pair that scank method takes besides string.
+    :Args:
+        - _str: {str} string to display on the terminal while taking input.
+        - kwargs: {dict} keyword arguments.
 
-    return:
-        returns entered value.
+    :Returns:
+        - {str} user input.
     """
     if not Theme.PARROT:
         if kwargs:
@@ -297,13 +293,12 @@ def scanBlue(_str: str, **kwargs: dict) -> str:
 def scanYellow(_str: str, **kwargs: dict) -> str:
     """Function scanYellow() takes user input in yellow color.
 
-    Args:
-        _str: it is the string that needs to be printed on the terminal while taking 
-            user input.
-        **kwargs: are the key-value pair that scank method takes besides string.
+    :Args:
+        - _str: {str} string to display on the terminal while taking input.
+        - kwargs: {dict} keyword arguments.
 
-    return:
-        returns entered value.
+    :Returns:
+        - {str} user input.
     """
     if not Theme.PARROT:
         if kwargs:

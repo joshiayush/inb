@@ -3,9 +3,9 @@
   "[python]": {
     "editor.defaultFormatter": null,
     "editor.insertSpaces": true,
-    "editor.tabSize": 4
+    "editor.tabSize": 2
   },
-  "prettier.tabWidth": 4,
+  "prettier.tabWidth": 2,
   "prettier.singleQuote": false,
   "[yaml]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"

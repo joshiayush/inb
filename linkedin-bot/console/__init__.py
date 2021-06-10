@@ -1,3 +1,5 @@
+"""Package console provides all the functions to interact with the user using the terminal."""
+
 __name__ = "console"
 __package__ = "console"
 
