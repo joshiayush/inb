@@ -194,7 +194,7 @@ class LinkedInConnectionsAuto(object):
 
         for _person in self.get_person():
             try:
-                if LinkedInConnectionsAuto.SENT_INVITATION == 40:
+                if LinkedInConnectionsAuto.SENT_INVITATION == self._limit:
                     break
 
                 if not _person["invite_button"].find_element_by_tag_name("span").text == "Connect":
