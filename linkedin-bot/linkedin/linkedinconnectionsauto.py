@@ -20,6 +20,8 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 from selenium.common.exceptions import TimeoutException
 
+from selenium.webdriver.common.action_chains import ActionChains
+
 
 class LinkedInConnectionsAuto(object):
     SENT_INVITATION = 0
@@ -186,17 +188,20 @@ class LinkedInConnectionsAuto(object):
         from selenium.common.exceptions import ElementNotInteractableException
         from selenium.common.exceptions import ElementClickInterceptedException
 
+        _driver = getattr(self, "driver")
+
         _start = time.time()
 
         for _person in self.get_person():
             try:
-                if LinkedInConnectionsAuto.SENT_INVITATION == self._limit:
+                if LinkedInConnectionsAuto.SENT_INVITATION == 40:
                     break
 
                 if not _person["invite_button"].find_element_by_tag_name("span").text == "Connect":
                     continue
 
-                _person["invite_button"].click()
+                ActionChains(_driver).move_to_element(
+                    _person["invite_button"]).click().perform()
                 show(name=_person["person_name"], occupation=_person["person_occupation"],
                      status="sent", elapsed_time=time.time() - _start)
                 LinkedInConnectionsAuto.SENT_INVITATION += 1
