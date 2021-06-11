@@ -37,14 +37,14 @@ def test_initial_state(_linkedin_connections_auto: LinkedInConnectionsAuto) -> N
 
 def test_method_encode(_linkedin_connections_auto: LinkedInConnectionsAuto) -> None:
     person_name = [
-        "Ayush Joshi", "Nikhil Negi", "Aryan Bisht", "Aman Bisht", "Mohika Negi",
-        "Priya Negi", "Himanshi Rawat", "Adarsh Negi", "Abhinav Chandra"]
+        "Ayush Joshi", "Nikhil Negi", "Aryan Bisht", "Aman Bisht", "Mohika Negi", "Priya Negi", "Himanshi Rawat", "Adarsh Negi",
+        "Abhinav Chandra", "Abhishek Rawat", "Gaurav Chaudhry", "Mayank Aswal"]
     person_occupation = [
-        "Software Developer", "Pharmacist", "Software Developer", "Civil Engineer",
-        "Doctor", "Mathematician", "Doctor", "Mechanical Engineer", "Mechanical Engineer"]
+        "Software Developer", "Pharmacist", "Software Developer", "Civil Engineer", "Doctor", "Mathematician", "Doctor",
+        "Mechanical Engineer", "Mechanical Engineer", "Mechanical Engineer", "Engineer", "Financer"]
     person_button = [
-        WebElement, WebElement, WebElement, WebElement,
-        WebElement, WebElement, WebElement, WebElement, WebElement]
+        WebElement, WebElement, WebElement, WebElement, WebElement, WebElement, WebElement, WebElement, WebElement, WebElement,
+        WebElement, WebElement]
 
     expected_result = [
         {
@@ -90,6 +90,21 @@ def test_method_encode(_linkedin_connections_auto: LinkedInConnectionsAuto) -> N
         {
             "person_name": "Abhinav Chandra",
             "person_occupation": "Mechanical Engineer",
+            "invite_button": WebElement
+        },
+        {
+            "person_name": "Abhishek Rawat",
+            "person_occupation": "Mechanical Engineer",
+            "invite_button": WebElement
+        },
+        {
+            "person_name": "Gaurav Chaudhry",
+            "person_occupation": "Engineer",
+            "invite_button": WebElement
+        },
+        {
+            "person_name": "Mayank Aswal",
+            "person_occupation": "Financer",
             "invite_button": WebElement
         }]
 
