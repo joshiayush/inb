@@ -4,6 +4,8 @@ from __future__ import annotations
 import re
 import sys
 
+from user import User
+
 from DOM.cleaners import clear_msg_overlay
 
 from console.print import printRed
@@ -21,6 +23,7 @@ from selenium.common.exceptions import NoSuchElementException
 
 from linkedin.linkedin import LinkedIn
 from linkedin.linkedinconnectionsauto import LinkedInConnectionsAuto
+import user
 
 
 class Main(object):
@@ -100,12 +103,9 @@ class Main(object):
         :Returns:
             - {None}
         """
+        self.user = User()
         self.encrypted_email = ""
         self.encrypted_password = ""
-        self.data = {
-            "user_email": "",
-            "user_password": "",
-        }
         self.driver_path = "/Python/linkedin-bot/driver/chromedriver"
         self.if_headless = False
 
@@ -125,7 +125,7 @@ class Main(object):
         :Usage:
             - user_email = self.user_email
         """
-        return self.data["user_email"]
+        return getattr(self.user, "user_email")
 
     @user_email.setter
     def user_email(self: Main, email: str) -> None:
@@ -144,7 +144,7 @@ class Main(object):
         :Usage:
             - self.user_email = user_email
         """
-        self.data["user_email"] = email
+        setattr(self.user, "user_email",  email)
 
     @property
     def user_password(self: Main) -> str:
@@ -162,7 +162,7 @@ class Main(object):
         :Usage:
             - user_password = self.user_password
         """
-        return self.data["user_password"]
+        return getattr(self.user, "user_password")
 
     @user_password.setter
     def user_password(self: Main, password: str) -> None:
@@ -181,7 +181,7 @@ class Main(object):
         :Usage:
             - self.user_password = user_password
         """
-        self.data["user_password"] = password
+        setattr(self.user, "user_password", password)
 
     def store_cache(self: Main) -> None:
         """Method store_cache() applies encryption on the fields if both the fields are 
@@ -237,12 +237,18 @@ class Main(object):
 
         clear()
 
-        printGreen(r""" _____             _               _              ___         _     """, style='b', pad='1')
-        printGreen(r"""|_   _|           | |             | |            |  _ \      | |    """, style='b', pad='1')
-        printGreen(r"""  | |     ^  _ __ | |__  ___   ___| | ^  _ __    | |_) | ___ | |_   """, style='b', pad='1')
-        printGreen(r"""  | |    ( )| '_ \|  __`, __`,/  _` |( )| '_ \   |  _ < / _ \| __|  """, style='b', pad='1')
-        printGreen(r""" _| |____( )| | | \ ( _) (__))| (_) #( )| | | \  | |_) | (_) | |_   """, style='b', pad='1')
-        printGreen(r"""|________(_)|_| |_|_|  \\____ \___/_|(_)| | | |  |____/ \___/ \__|  """, style='b', pad='1')
+        printGreen(
+            r""" _____             _               _              ___         _     """, style='b', pad='1')
+        printGreen(
+            r"""|_   _|           | |             | |            |  _ \      | |    """, style='b', pad='1')
+        printGreen(
+            r"""  | |     ^  _ __ | |__  ___   ___| | ^  _ __    | |_) | ___ | |_   """, style='b', pad='1')
+        printGreen(
+            r"""  | |    ( )| '_ \|  __`, __`,/  _` |( )| '_ \   |  _ < / _ \| __|  """, style='b', pad='1')
+        printGreen(
+            r""" _| |____( )| | | \ ( _) (__))| (_) #( )| | | \  | |_) | (_) | |_   """, style='b', pad='1')
+        printGreen(
+            r"""|________(_)|_| |_|_|  \\____ \___/_|(_)| | | |  |____/ \___/ \__|  """, style='b', pad='1')
 
         printGreen(f"""Type help for more information!""",
                    style='b', start='\n', pad='1')
