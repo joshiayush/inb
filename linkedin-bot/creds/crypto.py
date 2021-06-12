@@ -27,14 +27,14 @@ def encrypt_email(self: object) -> None:
         raise PropertyNotExistException(
             "Object 'self' must have a property 'encrypted_email' with credentials value in it!")
 
-    if not hasattr(self, "data"):
+    if not hasattr(self, "user"):
         raise PropertyNotExistException(
             "Object 'self' must have a property 'data' with user's decoded credentials field in it!")
 
     fernet = Fernet(__key)
 
     setattr(self, "encrypted_email", fernet.encrypt(
-        getattr(self, "data")["user_email"].encode()).decode())
+        self.user_email.encode()).decode())
 
     del fernet
 
@@ -62,14 +62,14 @@ def encrypt_password(self: object) -> None:
         raise PropertyNotExistException(
             "Object 'self' must have a property 'encrypted_password' with credentials value in it!")
 
-    if not hasattr(self, "data"):
+    if not hasattr(self, "user"):
         raise PropertyNotExistException(
             "Object 'self' must have a property 'data' with user's decoded credentials field in it!")
 
     fernet = Fernet(__key)
 
     setattr(self, "encrypted_password", fernet.encrypt(
-        getattr(self, "data")["user_password"].encode()).decode())
+        self.user_password.encode()).decode())
 
     del fernet
 
@@ -93,15 +93,15 @@ def decrypt_credentials(self: object, config: dict) -> None:
     :Returns:
         - {None}
     """
-    if not hasattr(self, "data"):
+    if not hasattr(self, "user"):
         raise PropertyNotExistException(
             "Object 'self' must have a property 'data' with user's encoded credentials field in it!")
 
     fernet = Fernet(__key)
 
-    getattr(self, "data")["user_email"] = fernet.decrypt(
+    self.user_email = fernet.decrypt(
         config["Username"].encode("utf-8")).decode("utf-8")
-    getattr(self, "data")["user_password"] = fernet.decrypt(
+    self.user_password = fernet.decrypt(
         config["Password"].encode("utf-8")).decode("utf-8")
 
     del fernet
