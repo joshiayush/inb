@@ -8,6 +8,7 @@ fi
 declare -a garbages=("__pycache__/"
   "linkedin-bot/__pycache__/"
   "linkedin-bot/DOM/__pycache__/"
+  "linkedin-bot/user/__pycache__/"
   "linkedin-bot/goto/__pycache__/"
   "linkedin-bot/tests/__pycache__/"
   "linkedin-bot/creds/__pycache__/"
