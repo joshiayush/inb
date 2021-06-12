@@ -8,13 +8,11 @@ from . import __second_entity_list_container_xpath__
 
 from linkedin.linkedin import LinkedIn
 
-from DOM.cleaners import clear_msg_overlay
 from DOM.javascript import scroll_bottom
 from DOM.javascript import get_page_y_offset
 
 from errors.error import EmptyResponseException
 from errors.error import PropertyNotExistException
-from errors.error import FailedLoadingResourceException
 from errors.error import ConnectionLimitExceededException
 
 from selenium.webdriver.common.by import By
