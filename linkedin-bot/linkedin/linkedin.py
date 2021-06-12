@@ -4,6 +4,12 @@ from __future__ import annotations
 from typing import Any
 
 from selenium import webdriver
+from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.common.keys import Keys
+
+
+from errors.error import CredentialsNotGivenException
+from errors.error import WebDriverPathNotGivenException
 from errors.error import DomainNameSystemNotResolveException
 
 
@@ -29,8 +35,6 @@ class LinkedIn(object):
             "user_email": '',
             "user_password": ''
         }
-
-        from errors.error import WebDriverPathNotGivenException
 
         if not driver_path:
             raise WebDriverPathNotGivenException(
@@ -333,8 +337,6 @@ class LinkedIn(object):
         :Raises:
             - DomainNameSystemNotResolveException if there's a TimeourException
         """
-        from selenium.common.exceptions import TimeoutException
-
         try:
             self.driver.get(_url)
         except TimeoutException:
@@ -374,8 +376,6 @@ class LinkedIn(object):
         if not hit_return:
             return
 
-        from selenium.webdriver.common.keys import Keys
-
         email_box.send_keys(Keys.RETURN)
 
     def get_password_box(self: LinkedIn) -> Any:
@@ -412,8 +412,6 @@ class LinkedIn(object):
         if not hit_return:
             return
 
-        from selenium.webdriver.common.keys import Keys
-
         password_box.send_keys(Keys.RETURN)
 
     def fill_credentials(self: LinkedIn) -> None:
@@ -438,8 +436,6 @@ class LinkedIn(object):
         :Returns:
             - {None}
         """
-        from errors.error import CredentialsNotGivenException
-
         if not credentials and not self.user_email or not self.user_password:
             raise CredentialsNotGivenException(
                 "User credentials are not given. Can't login!")

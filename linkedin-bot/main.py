@@ -8,7 +8,8 @@ from user import User
 
 from DOM.cleaners import clear_msg_overlay
 
-from console.print import printBlue, printRed
+from console.print import printRed
+from console.print import printBlue
 from console.print import printGreen
 
 from errors.error import ZeroFlagException
@@ -48,30 +49,7 @@ class Main(object):
         Main.home()
 
     def init_commands(self: Main) -> None:
-        """Method init_commands() to initialize the commands that LinkedIn Automater provides,
-
-            COMMANDS
-        ================
-
-        +--------------+----------------------------------------+
-        |   exit       |    exit from the program               |
-        +--------------+----------------------------------------+
-        |   show       |    shows the entered details           |
-        +--------------+----------------------------------------+
-        |   help       |    prints the commands and their usage |
-        +--------------+----------------------------------------+
-        |   clear      |    clears the screen                   |
-        +--------------+----------------------------------------+ 
-        |   theme      |    sets the given theme                |
-        +--------------+----------------------------------------+
-        |   config     |    shows how you can add fields        |
-        +--------------+----------------------------------------+
-        |   delete     |    deletes the cache stored            |
-        +--------------+----------------------------------------+
-        |   linkedin   |    activates the automation process    |
-        +--------------+----------------------------------------+
-        |   developer  |    prints the developer details        |
-        +--------------+----------------------------------------+
+        """Method init_commands() to initialize the commands that LinkedIn Automater provides.
 
         :Args:
             - self: {Main} object

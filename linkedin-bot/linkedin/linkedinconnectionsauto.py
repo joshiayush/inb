@@ -3,6 +3,9 @@ from __future__ import annotations
 
 import time
 
+from invitation.status import show
+from invitation.status import reset
+
 from . import __first_entity_list_container_xpath__
 from . import __second_entity_list_container_xpath__
 
@@ -21,6 +24,8 @@ from selenium.webdriver.support import expected_conditions
 from selenium.webdriver.support.ui import WebDriverWait
 
 from selenium.common.exceptions import TimeoutException
+from selenium.common.exceptions import ElementNotInteractableException
+from selenium.common.exceptions import ElementClickInterceptedException
 
 from selenium.webdriver.common.action_chains import ActionChains
 
@@ -257,12 +262,6 @@ class LinkedInConnectionsAuto(object):
         :Returns:
             - {None}
         """
-        from invitation.status import show
-        from invitation.status import reset
-
-        from selenium.common.exceptions import ElementNotInteractableException
-        from selenium.common.exceptions import ElementClickInterceptedException
-
         _driver = getattr(self, "driver")
 
         _start = time.time()
