@@ -3,6 +3,9 @@ from __future__ import annotations
 
 import time
 
+from . import __first_entity_list_container_xpath__
+from . import __second_entity_list_container_xpath__
+
 from linkedin.linkedin import LinkedIn
 
 from DOM.cleaners import clear_msg_overlay
@@ -11,6 +14,7 @@ from DOM.javascript import get_page_y_offset
 
 from errors.error import EmptyResponseException
 from errors.error import PropertyNotExistException
+from errors.error import FailedLoadingResourceException
 from errors.error import ConnectionLimitExceededException
 
 from selenium.webdriver.common.by import By
@@ -77,45 +81,118 @@ class LinkedInConnectionsAuto(object):
         except TimeoutException:
             raise EmptyResponseException("ERR_EMPTY_RESPONSE")
 
-    def find_all_elements_by_css_selector(self: LinkedInConnectionsAuto, selector: str = '', wait_time: int = 10) -> object:
-        """Method find_all_elements_by_css_selector() finds all the elements with the given css
-        selector, it also implicitly waits until the resource loads for the given wait time.
+    def discover_entity_list(self: LinkedInConnectionsAuto, xpath: str = "", wait_time: int = 10) -> object:
+        """Method discover_entity_list() returns a WebElement that is located at the given xpath.
 
         :Args:
             - self: {LinkedInConnectionsAuto} object
-            - selector: {str} css selector using which we will locate the resource
-            - wait_time: {int} time to wait for until the resource loads
+            - xpath: {str} xpath to the WebElement
+            - wait_time: {int} time to wait until the WebElement loads
 
         :Returns:
             - {WebElement}
         """
-        while 1:
+        while True:
             try:
                 return WebDriverWait(self.driver, wait_time).until(
-                    expected_conditions.presence_of_all_elements_located(
-                        (By.CSS_SELECTOR, selector)))
+                    expected_conditions.presence_of_element_located(
+                        (By.XPATH, xpath)))
             except TimeoutException:
                 continue
 
-    def get_entities(self: LinkedInConnectionsAuto) -> list:
-        """Method get_entities() returns a list of the name, occupation and the connect button.
+    def discover_entities(self: LinkedInConnectionsAuto, xpath: str = '') -> list:
+        """Method discover_entities() returns a list of WebElement that is inside of the WebElement
+        at the given xpath.
+
+        :Args:
+            - self: {LinkedInConnectionsAuto} object
+            - xpath: {str} xpath to the WebElement
+
+        :Returns:
+            - {list} list of web elements
+        """
+        return self.discover_entity_list(xpath=xpath, wait_time=10).find_elements_by_tag_name("li")
+
+    def get_entities(self: LinkedInConnectionsAuto, _list: list) -> list:
+        """Method get_entities() returns a list of entities (i.e., people object) that is in the network
+        page.
+
+        :Args:
+            - self: {LinkedInConnectionsAuto} object
+            - _list: {list} list of web elements
+
+        :Returns:
+            - {list} list of entities
+        """
+        return [li.find_element_by_tag_name("div").find_element_by_tag_name("section") for li in _list]
+
+    def get_people(self: LinkedInConnectionsAuto) -> list:
+        """Method get_people() returns a list of entities that are located at the __first_entity_list_container_xpath__
+        and at the __second_entity_list_container_xpath__.
 
         :Args:
             - self: {LinkedInConnectionsAuto} object
 
         :Returns:
-            - {list} a list of the name, occupation and the connect button
+            - {list} list of entities
         """
-        people_name = self.find_all_elements_by_css_selector(
-            "span[class^='discover-person-card__name']")
+        return self.get_entities(self.discover_entities(__first_entity_list_container_xpath__)).extend(
+            self.get_entities(self.discover_entities(__second_entity_list_container_xpath__)))
 
-        people_occupation = self.find_all_elements_by_css_selector(
-            "span[class^='discover-person-card__occupation']")
+    def get_people_names(self: LinkedInConnectionsAuto, _people: list) -> list:
+        """Method get_people_names() returns a list of names that are inside of this _people list.
 
-        people_button = self.find_all_elements_by_css_selector(
-            "button[aria-label^='Invite']")
+        :Args:
+            - self: {LinkedInConnectionsAuto} object
+            - _people: {list} list of web elements
 
-        return [[span.text for span in people_name], [span.text for span in people_occupation], people_button]
+        :Returns:
+            - {list} list of names
+        """
+        return [p.find_element_by_css_selector(
+            "div[class='discover-entity-type-card__info-container']").find_element_by_css_selector(
+            "span[class^='discover-person-card__name']").text for p in _people]
+
+    def get_people_occupation(self: LinkedInConnectionsAuto, _people: list):
+        """Method get_people_occupation() returns a list of occupation that are inside of this _people list.
+
+        :Args:
+            - self: {LinkedInConnectionsAuto} object
+            - _people: {list} list of web elements
+
+        :Returns:
+            - {list} list of occupation
+        """
+        return [p.find_element_by_css_selector(
+            "div[class='discover-entity-type-card__info-container']").find_element_by_css_selector(
+            "span[class^='discover-person-card__occupation']").text for p in _people]
+
+    def get_people_buttons(self: LinkedInConnectionsAuto, _people: list):
+        """Method get_people_buttons() returns a list of buttons that are inside of this _people list.
+
+        :Args:
+            - self: {LinkedInConnectionsAuto} object
+            - _people: {list} list of web elements
+
+        :Returns:
+            - {list} list of buttons
+        """
+        return [p.find_element_by_css_selector(
+            "div[class='discover-entity-type-card__bottom-container']").find_element_by_tag_name(
+            "footer").find_element_by_tag_name("button") for p in _people]
+
+    def get_person_list(self: LinkedInConnectionsAuto):
+        """Method get_person_list() returns a list containing list of names, occupation and buttons.
+
+        :Args:
+            - self: {LinkedInConnectionsAuto} object
+
+        :Returns:
+            - {list} list containing list of names, occupation and buttons
+        """
+        _people = self.get_people()
+
+        return [self.get_people_names(_people), self.get_people_occupation(_people), self.get_people_buttons(_people)]
 
     def encode(self: LinkedInConnectionsAuto, _obj: list) -> list:
         """Method encode() forms individual dictionaries for each person with its name,
@@ -163,7 +240,7 @@ class LinkedInConnectionsAuto(object):
         :Yeilds:
             - {dict} dictionary of a person with its name, occupation and connect button
         """
-        _person_list = self.encode(self.get_entities())
+        _person_list = self.encode(self.get_person_list())
 
         while 1:
             for _person in _person_list:
@@ -171,7 +248,7 @@ class LinkedInConnectionsAuto(object):
 
             self.load_entities()
 
-            _person_list = self.encode(self.get_entities())
+            _person_list = self.encode(self.get_person_list())
 
     def send_invitation(self: LinkedInConnectionsAuto) -> None:
         """Method send_invitation() starts sending invitation to people on linkedin.
@@ -228,8 +305,6 @@ class LinkedInConnectionsAuto(object):
         if not hasattr(self, "driver"):
             PropertyNotExistException(
                 "Object 'self' doesn't have property 'driver' in it!")
-
-        clear_msg_overlay(self)
 
         self.send_invitation()
 

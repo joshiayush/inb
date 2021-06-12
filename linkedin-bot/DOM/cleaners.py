@@ -33,6 +33,7 @@ def clear_msg_overlay(self: object) -> None:
         WebDriverWait(getattr(self, "driver"), 10).until(
             expected_conditions.presence_of_element_located(
                 (By.CSS_SELECTOR, "div[class^='msg-overlay-list-bubble']")))
+        
         getattr(getattr(self, "driver"), "execute_script")(("""
         (function () {
           document.querySelector("div[class^='msg-overlay-list-bubble']").style = "display: none";

@@ -8,7 +8,7 @@ from user import User
 
 from DOM.cleaners import clear_msg_overlay
 
-from console.print import printRed
+from console.print import printBlue, printRed
 from console.print import printGreen
 
 from errors.error import ZeroFlagException
@@ -250,8 +250,8 @@ class Main(object):
         printGreen(
             r"""|________(_)|_| |_|_|  \\____ \___/_|(_)| | | |  |____/ \___/ \__|  """, style='b', pad='1')
 
-        printGreen(f"""Type help for more information!""",
-                   style='b', start='\n', pad='1')
+        printGreen(
+            f"""Type help for more information!""", style='b', start='\n', pad='1')
 
     @staticmethod
     def set_theme(_theme: str) -> None:
@@ -363,28 +363,51 @@ class Main(object):
         _linkedin.enable_webdriver_chrome(
             _linkedin.get_chrome_driver_options())
 
+        printBlue(f"""Connecting ...""", style='n', pad='1', end='\r')
+
         try:
             _linkedin.get_login_page()
         except DomainNameSystemNotResolveException as error:
+            print(' '*80, end='\r')
             printRed(f"""{error}""", style='b', pad='4', force='+f')
             return
 
         _linkedin.login()
 
+        print(' '*80, end='\r')
+        printGreen(f"""Connected ✔""", style='b', pad='1')
+
         _linkedin_connection = LinkedInConnectionsAuto(_linkedin, limit=20)
+
+        printBlue(
+            f"""Moving to Network page ...""", style='n', pad='1', end='\r')
 
         try:
             _linkedin_connection.get_my_network()
         except EmptyResponseException:
+            print(' '*80, end='\r')
             printRed(f"""{error}""", style='b', pad='4', force='+f')
             return
 
-        try:
-            clear_msg_overlay(_linkedin_connection)
-        except NoSuchElementException as error:
-            printRed(f"""{error}""", style='b', pad='4', force='+f')
-        except FailedLoadingResourceException as error:
-            printRed(f"""{error}""", style='b', pad='4', force='+f')
+        print(' '*80, end='\r')
+        printBlue(
+            f"""Cleaning message overlay ...""", style='n', pad='1', end='\r')
+
+        while True:
+            try:
+                clear_msg_overlay(_linkedin_connection)
+                break
+            except NoSuchElementException as error:
+                printRed(f"""{error}""", style='b', pad='4', force='+f')
+                break
+            except FailedLoadingResourceException as error:
+                printRed(f"""{error}""", style='b', pad='4', force='+f')
+                continue
+
+        print(' '*80, end='\r')
+        printGreen(f"""Cleared message overlay ✔""", style='b', pad='1')
+
+        printGreen(f"""Starting sending invitation ...""", style='b', pad='1')
 
         _linkedin_connection.run()
 
