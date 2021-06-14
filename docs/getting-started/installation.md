@@ -38,6 +38,8 @@ $ pip install webdriver-manager
 
 Download it from here [Python][_python].
 
+**Note: You need to have a python version higher than 3.6 otherwise the goto library will just not work.**
+
 <!-- Definitions -->
 
 [_python]: https://www.python.org/downloads/
