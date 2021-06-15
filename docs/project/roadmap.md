@@ -1,6 +1,6 @@
 # Project's Roadmap
 
-**Warning: This document is only a draft and as such far from being complete. All information described here are subject to change anytime.**
+**Note: This document is only a draft and as such far from being complete. All information described here are subject to change anytime.**
 
 The project will be cut in the four phases described below.
 

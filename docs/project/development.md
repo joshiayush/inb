@@ -1,6 +1,6 @@
 # Project development
 
-**WARNING: This document is only a draft and as such far from being complete. All information described here are subject to change anytime.**
+**Note: This document is only a draft and as such far from being complete. All information described here are subject to change anytime.**
 
 - [Project development](#project-development)
   - [Languages](#languages)

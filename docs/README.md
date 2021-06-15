@@ -11,6 +11,7 @@
 
 - [Roadmap][_roadmap]
 - [Development][_development]
+- [Requirements][_requirements]
 
 <!-- ## [Usage][_usage]
 
@@ -24,7 +25,8 @@
 [_testing]: https://github.com/JoshiAyush/linkedin-bot/blob/master/docs/getting-started/testing.md
 [_project]: https://github.com/JoshiAyush/linkedin-bot/blob/master/docs/project
 [_roadmap]: https://github.com/JoshiAyush/linkedin-bot/blob/master/docs/project/roadmap.md
-[_roadmap]: https://github.com/JoshiAyush/linkedin-bot/blob/master/docs/project/development.md
+[_development]: https://github.com/JoshiAyush/linkedin-bot/blob/master/docs/project/development.md
+[_requirements]: https://github.com/JoshiAyush/linkedin-bot/blob/master/docs/project/requirements.md
 [_usage]: https://github.com/JoshiAyush/linkedin-bot/blob/master/docs/usage
 [_usage_md]: https://github.com/JoshiAyush/linkedin-bot/blob/master/docs/usage/usage.md
 [_commands]: https://github.com/JoshiAyush/linkedin-bot/blob/master/docs/usage/commands.md

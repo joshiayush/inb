@@ -2,7 +2,7 @@
 
 Welcome to getting started guide of `linkedin-bot`.
 
-**Please note that this part is far from being complete**, and many informations will be missing and/or are incomplete.
+**Note: This part is far from being complete, and many informations will be missing and/or are incomplete.**
 
 - [Installation][_installation]
 - [Testing][_testing]
