@@ -124,17 +124,8 @@ class TestLinkedInConnectionsAuto(unittest.TestCase):
         self.assertEqual(len(expected_result), len(actual_result), message(
             f"expected results and actual results must have equal lengths! Test failed {failed}", 'r'))
 
-        passed = False
-
-        for person in actual_result:
-            for expected_person in expected_result:
-                if person["person_name"] == expected_person["person_name"] \
-                        and person["person_occupation"] == expected_person["person_occupation"] \
-                        and person["invite_button"] == expected_person["invite_button"]:
-                    passed = True
-                    break
-
-            self.assertTrue(passed, message(
-                f"{person['person_name']}, {person['person_occupation']}, WebElement does not exist in expected results! Test failed {failed}", 'r'))
-
-            passed = False
+        # actually we first sort both the lists containing the expected and actual results and then
+        # do a equality check.
+        self.assertTrue(sorted(
+            expected_result, key=lambda item: item["person_name"]) == sorted(actual_result, key=lambda item: item["person_name"]),
+            message(f"There is a value that doesn't match! Test failed {failed}", 'r'))
