@@ -1,4 +1,4 @@
-from . import __key
+from . import Creds
 from . import Fernet
 
 from errors.error import PropertyNotExistException
@@ -31,7 +31,7 @@ def encrypt_email(self: object) -> None:
         raise PropertyNotExistException(
             "Object 'self' must have a property 'data' with user's decoded credentials field in it!")
 
-    fernet = Fernet(__key)
+    fernet = Fernet(Creds.get_key())
 
     setattr(self, "encrypted_email", fernet.encrypt(
         self.user_email.encode()).decode())
@@ -66,7 +66,7 @@ def encrypt_password(self: object) -> None:
         raise PropertyNotExistException(
             "Object 'self' must have a property 'data' with user's decoded credentials field in it!")
 
-    fernet = Fernet(__key)
+    fernet = Fernet(Creds.get_key())
 
     setattr(self, "encrypted_password", fernet.encrypt(
         self.user_password.encode()).decode())
@@ -97,7 +97,7 @@ def decrypt_credentials(self: object, config: dict) -> None:
         raise PropertyNotExistException(
             "Object 'self' must have a property 'data' with user's encoded credentials field in it!")
 
-    fernet = Fernet(__key)
+    fernet = Fernet(Creds.get_key())
 
     self.user_email = fernet.decrypt(
         config["Username"].encode("utf-8")).decode("utf-8")

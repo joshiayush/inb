@@ -1,7 +1,6 @@
 import os
 
-from . import __key_file
-from . import __credentials_file
+from . import Creds
 
 from creds.crypto import decrypt_credentials
 
@@ -28,7 +27,7 @@ def store_credentials(self: object) -> None:
         raise PropertyNotExistException(
             "Object 'self' must have properties 'encrypted_email'|'encrypted_password' with credentials value in it!")
 
-    with open(__credentials_file, 'w') as creds_file:
+    with open(Creds.get_credentials_file(), 'w') as creds_file:
         creds_file.write("Username={}\nPassword={}\n".format(
             getattr(self, "encrypted_email"), getattr(self, "encrypted_password")))
 
@@ -47,11 +46,11 @@ def get_credentials(self: object) -> None:
     :Returns:
         - {None}
     """
-    if not os.path.exists(__credentials_file):
+    if not os.path.exists(Creds.get_credentials_file()):
         return
 
     try:
-        with open(__credentials_file, 'r') as creds_file:
+        with open(Creds.get_credentials_file(), 'r') as creds_file:
             lines = creds_file.readlines()
 
             config = {
@@ -83,8 +82,8 @@ def delete_cache() -> None:
     :Returns:
         - {None}
     """
-    if os.path.exists(__credentials_file):
-        os.remove(__credentials_file)
+    if os.path.exists(Creds.get_credentials_file()):
+        os.remove(Creds.get_credentials_file())
     else:
         raise FileNotFoundError("There's no credential file exists to delete.")
 
@@ -102,7 +101,7 @@ def delete_key() -> None:
     :Returns:
         - {None}
     """
-    if os.path.exists(__key_file):
-        os.remove(__key_file)
+    if os.path.exists(Creds.get_key_file()):
+        os.remove(Creds.get_key_file())
     else:
         raise FileNotFoundError("There's no key file exists to delete.")

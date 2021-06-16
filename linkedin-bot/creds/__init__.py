@@ -4,16 +4,29 @@ __package__ = "creds"
 import os
 from cryptography.fernet import Fernet
 
-__key = ""
-__key_file = "/Python/linkedin-bot/creds/.key.key"
-__credentials_file = "/Python/linkedin-bot/creds/credentialsFile.ini"
 
+class Creds:
+    __key = ""
+    __key_file = "/Python/linkedin-bot/creds/.key.key"
+    __credentials_file = "/Python/linkedin-bot/creds/credentialsFile.ini"
 
-if not os.path.exists(__key_file):
-    __key = Fernet.generate_key()
+    @staticmethod
+    def get_key():
+        if not os.path.exists(Creds.__key_file):
+            Creds.__key = Fernet.generate_key()
 
-    with open(__key_file, 'w') as key_file:
-        key_file.write(__key.decode())
-else:
-    with open(__key_file, 'r') as key_file:
-        __key = key_file.readline().encode()
+            with open(Creds.__key_file, 'w') as key_file:
+                key_file.write(Creds.__key.decode())
+        else:
+            with open(Creds.__key_file, 'r') as key_file:
+                Creds.__key = key_file.readline().encode()
+
+        return Creds.__key
+
+    @staticmethod
+    def get_credentials_file():
+        return Creds.__credentials_file
+
+    @staticmethod
+    def get_key_file():
+        return Creds.__key_file
