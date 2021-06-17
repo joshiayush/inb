@@ -6,5 +6,3 @@ if [ "$EUID" -eq 0 ]; then
 fi
 
 python3.7 linkedin-bot/test.py
-
-sudo ./scripts/delete-garbage.sh

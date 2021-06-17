@@ -11,5 +11,3 @@ if python3.7 --version | grep "Python*" >/dev/null; then
 else
   echo "python3.7 is not installed, please install it first!"
 fi
-
-sudo ./scripts/delete-garbage.sh
