@@ -4,6 +4,7 @@ linkedin-bot/DOM/__pycache__/**
 linkedin-bot/user/__pycache__/**
 linkedin-bot/goto/__pycache__/**
 linkedin-bot/creds/__pycache__/**
+linkedin-bot/tests/__pycache__/**
 linkedin-bot/errors/__pycache__/**
 linkedin-bot/helpers/__pycache__/**
 linkedin-bot/console/__pycache__/**
@@ -12,6 +13,8 @@ linkedin-bot/messages/__pycache__/**
 linkedin-bot/database/__pycache__/**
 linkedin-bot/invitation/__pycache__/**
 linkedin-bot/javascript/__pycache__/**
+linkedin-bot/tests/console/__pycache__/**
+linkedin-bot/tests/linkedin/__pycache__/**
 
 linkedin-bot/tests/creds/**
 
