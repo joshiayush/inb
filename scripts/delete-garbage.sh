@@ -19,7 +19,9 @@ declare -a garbages=("__pycache__/"
   "linkedin-bot/database/__pycache__/"
   "linkedin-bot/messages/__pycache__/"
   "linkedin-bot/invitation/__pycache__/"
-  "linkedin-bot/javascript/__pycache__/")
+  "linkedin-bot/javascript/__pycache__/"
+  "linkedin-bot/tests/console/__pycache__/"
+  "linkedin-bot/tests/linkedin/__pycache__/")
 
 for garbage in "${garbages[@]}"; do
   if [ -d "${garbage}" ]; then
