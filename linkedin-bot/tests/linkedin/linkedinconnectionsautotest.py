@@ -4,8 +4,8 @@ from __future__ import annotations
 import json
 import unittest
 
-from . import failed
-from . import message
+from .. import failed
+from .. import message
 
 from selenium.webdriver.remote.webelement import WebElement
 
@@ -40,12 +40,30 @@ _linkedin_connections_auto = LinkedInConnectionsAuto(_linkedin, 40)
 class TestLinkedInConnectionsAuto(unittest.TestCase):
 
     def test_initial_state(self: TestLinkedInConnectionsAuto) -> None:
+        """Method test_initial_state() tests the initial state of the newly constructed object.
+
+        :Args:
+            - self: {LinkedInConnectionsAuto} class object
+
+        :Returns:
+            - {None}
+        """
         self.assertEqual(_linkedin_connections_auto.SENT_INVITATION, 0, message(
             f"_linkedin_connections_auto.SENT_INVITATION must be 0! Test failed {failed}", 'r'))
         self.assertEqual(_linkedin_connections_auto._limit, 40, message(
             f"_linkedin_connections_auto._limit must be 40! Test failed {failed}", 'r'))
 
     def test_encode(self: TestLinkedInConnectionsAuto) -> None:
+        """Method test_encode() checks if the encode method of class LinkedInConnectionsAuto works
+        fine or not by giving a bunch of data to that method and checking the results if found suspicious
+        it asserts the problem.
+
+        :Args:
+            - self: {LinkedInConnectionsAuto} class object
+
+        :Returns:
+            - {None}
+        """
         person_name = [
             "Ayush Joshi", "Nikhil Negi", "Aryan Bisht", "Aman Bisht", "Mohika Negi", "Priya Negi", "Himanshi Rawat", "Adarsh Negi",
             "Abhinav Chandra", "Abhishek Rawat", "Gaurav Chaudhry", "Mayank Aswal"]

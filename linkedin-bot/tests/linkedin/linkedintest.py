@@ -4,8 +4,8 @@ from __future__ import annotations
 import json
 import unittest
 
-from . import message
-from . import failed
+from .. import failed
+from .. import message
 
 from linkedin.linkedin import LinkedIn
 
