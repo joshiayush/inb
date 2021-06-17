@@ -1,7 +1,9 @@
 import unittest
 
-from tests.linkedintest import TestLinkedIn
-from tests.linkedinconnectionsautotest import TestLinkedInConnectionsAuto
+from tests.console.print import TestPrintFunctions
+
+from tests.linkedin.linkedintest import TestLinkedIn
+from tests.linkedin.linkedinconnectionsautotest import TestLinkedInConnectionsAuto
 
 if __name__ == "__main__":
     unittest.main()
