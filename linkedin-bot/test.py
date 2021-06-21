@@ -1,7 +1,7 @@
 import unittest
 
-from tests.console.scan import TestScanFunctions
-# from tests.console.print import TestPrintFunctions
+from tests.console.scantest import TestScanFunctions
+from tests.console.printtest import TestPrintFunctions
 
 from tests.linkedin.linkedintest import TestLinkedIn
 from tests.linkedin.linkedinconnectionsautotest import TestLinkedInConnectionsAuto
