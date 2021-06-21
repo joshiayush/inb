@@ -1,4 +1,4 @@
-import colorama  # type: ignore for Pylance you can remove it if you are not using Pylance
+import colorama
 
 from . import Theme
 
@@ -28,16 +28,16 @@ def printk(_str: str, **kwargs: dict) -> None:
         print(f"""{_str}""")
         return
 
+    if "start" in kwargs:
+        print(end=kwargs["start"])
+        del kwargs["start"]
+
     if not "pad" in kwargs:
         print(f"""{_str}""", **kwargs)
         return
 
     if "force" in kwargs:
         del kwargs["force"]
-
-    if "start" in kwargs:
-        print(end=kwargs["start"])
-        del kwargs["start"]
 
     print(' '*int(kwargs["pad"]), end='')
     del kwargs["pad"]
