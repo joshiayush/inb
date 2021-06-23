@@ -1,6 +1,8 @@
 # linkedin-bot cli
 
-## argparse.ArgumentParser
+This documentation describes how I have utilize `argparse` to create a cli for **linkedin-bot**.
+
+## `argparse.ArgumentParser`
 
 ```python
 class argparse.ArgumentParser(
@@ -34,7 +36,7 @@ Create a new [`ArgumentParser`][_argparse_argument_parser] object. All parameter
 - [add_help][_argparse_add_help] - Add a `-h/--help` option to the parser (default: `True`)
 - [allow_abbrev][_argparse_allow_abbrev] - Allows long options to be abbreviated if the abbreviation is unambiguous. (default: `True`)
 
-### CreateParser
+### `CreateParser()`
 
 ```python
 def CreateParser(
