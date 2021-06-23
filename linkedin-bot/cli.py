@@ -19,34 +19,83 @@ from linkedin import __version__
 
 from argparse import RawDescriptionHelpFormatter
 
+
+# usage: lbot [-h] {send,config,show,delete,developer} ...
+#
+#  _     _       _            _ ___         ____        _
+# | |   (_)_ __ | | _____  __| |_ _|_ __   | __ )  ___ | |_
+# | |   | | '_ \| |/ / _ \/ _` || || '_ \  |  _ \ / _ \| __|
+# | |___| | | | |   <  __/ (_| || || | | | | |_) | (_) | |_
+# |_____|_|_| |_|_|\_\___|\__,_|___|_| |_| |____/ \___/ \__|
+#
+#
+# LinkedIn Bash, version 1.51.35(1)-release (lbot-1.51.35)
+# These commands are defined internally. Type '--help' to see this list
+# Type (command) --help to know more about that command
+#
+# positional arguments:
+#   {send,config,show,delete,developer}
+#                         available actions
+#     send                Command 'send' sends invitation to people on linkedin.
+#     config              Command 'config' is used to store user's credentials
+#     show                Command 'show' prints the information that is in the database
+#     delete              Command 'delete' deletes the information stored in the database
+#     developer           Command 'developer' prints the information about the author
+#
+# optional arguments:
+#   -h, --help            show this help message and exit
+
+
 parser = CreateParser(
     prog="lbot", description=get_lbot_description(), formatter_class=RawDescriptionHelpFormatter)
 
 subparsers = parser.add_subparsers(help="available actions", metavar=None)
 
+
 # usage: lbot send [-h] [-c] [-ngpu] {limit} ...
+#
+#  _     _       _            _ ___         ____        _
+# | |   (_)_ __ | | _____  __| |_ _|_ __   | __ )  ___ | |_
+# | |   | | '_ \| |/ / _ \/ _` || || '_ \  |  _ \ / _ \| __|
+# | |___| | | | |   <  __/ (_| || || | | | | |_) | (_) | |_
+# |_____|_|_| |_|_|\_\___|\__,_|___|_| |_| |____/ \___/ \__|
+#
 #
 # Command 'send' sends invitation to people on linkedin.
 #
 # positional arguments:
-#   {limit}            sets the daily connection limit
-#     limit            sets the daily connection limit
+#   {limit}            available actions
+#     limit            Flag 'limit' sets the daily invitation limit
 #
 # optional arguments:
 #   -h, --help         show this help message and exit
 #   -c, --cookies      uses cookies for authentication
 #   -ngpu, --headless  starts chrome in headless mode
 
+
 send = subparsers.add_parser(
     "send", description=get_send_description(), formatter_class=RawDescriptionHelpFormatter, help=get_send_help())
 
+
 # usage: lbot send limit [-h] [limit]
+#
+#  _     _       _            _ ___         ____        _
+# | |   (_)_ __ | | _____  __| |_ _|_ __   | __ )  ___ | |_
+# | |   | | '_ \| |/ / _ \/ _` || || '_ \  |  _ \ / _ \| __|
+# | |___| | | | |   <  __/ (_| || || | | | | |_) | (_) | |_
+# |_____|_|_| |_|_|\_\___|\__,_|___|_| |_| |____/ \___/ \__|
+#
+#
+# Flag 'limit' is used to set the daily invitation limit
+# Limit must not exceed by 80 otherwise you'll be blocked for a entire
+# week
 #
 # positional arguments:
 #   limit
 #
 # optional arguments:
 #   -h, --help  show this help message and exit
+
 
 limit_subparsers = send.add_subparsers(
     help="available actions", metavar=None)
@@ -66,7 +115,15 @@ send.add_argument(
 
 send.set_defaults(headless=False, cookies=False)
 
+
 # usage: lbot config [-h] [-e] [-p] [value]
+#
+#  _     _       _            _ ___         ____        _
+# | |   (_)_ __ | | _____  __| |_ _|_ __   | __ )  ___ | |_
+# | |   | | '_ \| |/ / _ \/ _` || || '_ \  |  _ \ / _ \| __|
+# | |___| | | | |   <  __/ (_| || || | | | | |_) | (_) | |_
+# |_____|_|_| |_|_|\_\___|\__,_|___|_| |_| |____/ \___/ \__|
+#
 #
 # Command 'config' is used to add user's credentials to the database
 # Adding user's credentials to the database for ever or until user deletes
@@ -81,6 +138,7 @@ send.set_defaults(headless=False, cookies=False)
 #   -e, --email     store user's email address
 #   -p, --password  stores user's password
 
+
 config = subparsers.add_parser(
     "config", description=get_config_description(), formatter_class=RawDescriptionHelpFormatter, help=get_config_help())
 
@@ -93,18 +151,27 @@ config.add_argument(
 
 config.set_defaults(email=False, password=False)
 
-# usage: lbot show [-h] [-e] [-p] cookies
+
+# usage: lbot show [-h] [-e] [-p] [keyword]
+#
+#  _     _       _            _ ___         ____        _
+# | |   (_)_ __ | | _____  __| |_ _|_ __   | __ )  ___ | |_
+# | |   | | '_ \| |/ / _ \/ _` || || '_ \  |  _ \ / _ \| __|
+# | |___| | | | |   <  __/ (_| || || | | | | |_) | (_) | |_
+# |_____|_|_| |_|_|\_\___|\__,_|___|_| |_| |____/ \___/ \__|
+#
 #
 # Command 'show' prints the information stored in the database
 # For example -> email, password ...
 #
 # positional arguments:
-#   cookies
+#   keyword
 #
 # optional arguments:
 #   -h, --help      show this help message and exit
 #   -e, --email     print user's email address
 #   -p, --password  print user's password
+
 
 show = subparsers.add_parser(
     "show", description=get_show_description(), formatter_class=RawDescriptionHelpFormatter, help=get_show_help())
@@ -118,16 +185,25 @@ show.add_argument(
 
 show.set_defaults(keyword=None, email=None, password=None)
 
-# usage: lbot delete [-h] value
+
+# usage: lbot delete [-h] keyword
+#
+#  _     _       _            _ ___         ____        _
+# | |   (_)_ __ | | _____  __| |_ _|_ __   | __ )  ___ | |_
+# | |   | | '_ \| |/ / _ \/ _` || || '_ \  |  _ \ / _ \| __|
+# | |___| | | | |   <  __/ (_| || || | | | | |_) | (_) | |_
+# |_____|_|_| |_|_|\_\___|\__,_|___|_| |_| |____/ \___/ \__|
+#
 #
 # Command 'delete' deletes the information stored in the database
 # 'delete' deletes information like 'key', 'cookies' ...
 #
 # positional arguments:
-#   value
+#   keyword
 #
 # optional arguments:
 #   -h, --help  show this help message and exit
+
 
 delete = subparsers.add_parser(
     "delete", description=get_delete_description(), formatter_class=RawDescriptionHelpFormatter, help=get_delete_help())
@@ -136,7 +212,15 @@ delete.add_argument("keyword", type=str)
 
 delete.set_defaults(keyword=None)
 
+
 # usage: lbot developer [-h] [-n] [-l] [-g] [-m] [-e]
+#
+#  _     _       _            _ ___         ____        _
+# | |   (_)_ __ | | _____  __| |_ _|_ __   | __ )  ___ | |_
+# | |   | | '_ \| |/ / _ \/ _` || || '_ \  |  _ \ / _ \| __|
+# | |___| | | | |   <  __/ (_| || || | | | | |_) | (_) | |_
+# |_____|_|_| |_|_|\_\___|\__,_|___|_| |_| |____/ \___/ \__|
+#
 #
 # Command 'developer' prints the information about the author
 #
@@ -147,6 +231,7 @@ delete.set_defaults(keyword=None)
 #   -g, --github    print developer github
 #   -m, --mobile    print developer mobile number
 #   -e, --email     print developer email address
+
 
 developer = subparsers.add_parser(
     "developer", description=get_developer_description(), formatter_class=RawDescriptionHelpFormatter,
