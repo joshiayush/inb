@@ -53,11 +53,12 @@
 
 ### Positional arguments
 
-- `email` - store email address.
-- `password` - store password.
+- `value` - value to store in the database.
 
 ### Optional arguments
 
+- `-e`, `--email` - store email address.
+- `-p`, `--password` - store password.
 - `-h`, `--help` - print the help message for this command.
 
 ## `developer`
@@ -71,6 +72,6 @@
 - `-n`, `--name` - print developer name.
 - `-l`, `--linkedin` - print developer linkedin.
 - `-g`, `--github` - print developer github.
-- `m`, `--mobile` - print developer mobile number.
+- `-m`, `--mobile` - print developer mobile number.
 - `-e`, `--email` - print developer email address.
 - `-h`, `--help` - print a help message.
