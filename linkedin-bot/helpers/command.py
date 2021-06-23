@@ -1,5 +1,7 @@
 from linkedin import __version__
 
+from helpers.figlet import CreateFigletString
+
 
 def get_lbot_description() -> str:
     """Function get_lbot_description() returns the description for linkedin-bot.
@@ -11,6 +13,7 @@ def get_lbot_description() -> str:
         - {str}
     """
     return (
+        f"""{CreateFigletString("LinkedIn Bot")}\n"""
         f"""LinkedIn Bash, version {__version__}(1)-release (lbot-{__version__})\n"""
         """These commands are defined internally. Type '--help' to see this list\n"""
         """Type (command) --help to know more about that command""")
@@ -25,7 +28,9 @@ def get_send_description() -> str:
     :Returns:
         - {str}
     """
-    return ("""Command 'send' sends invitation to people on linkedin.""")
+    return (
+        f"""{CreateFigletString("LinkedIn Bot")}\n"""
+        """Command 'send' sends invitation to people on linkedin.""")
 
 
 def get_send_help() -> str:
@@ -50,6 +55,7 @@ def get_invitation_limit_description() -> str:
         - {str}
     """
     return (
+        f"""{CreateFigletString("LinkedIn Bot")}\n"""
         """Flag 'limit' is used to set the daily invitation limit\n"""
         """Limit must not exceed by 80 otherwise you'll be blocked for a entire\n"""
         """week""")
@@ -77,6 +83,7 @@ def get_config_description() -> str:
         - {str}
     """
     return (
+        f"""{CreateFigletString("LinkedIn Bot")}\n"""
         """Command 'config' is used to add user's credentials to the database\n"""
         """Adding user's credentials to the database for ever or until user deletes\n"""
         """them makes it feasible for user to send invitations without entering the\n"""
@@ -105,6 +112,7 @@ def get_show_description() -> str:
         - {str}
     """
     return (
+        f"""{CreateFigletString("LinkedIn Bot")}\n"""
         """Command 'show' prints the information stored in the database\n"""
         """For example -> email, password ...""")
 
@@ -131,6 +139,7 @@ def get_delete_description() -> str:
         - {str}
     """
     return (
+        f"""{CreateFigletString("LinkedIn Bot")}\n"""
         """Command 'delete' deletes the information stored in the database\n"""
         """'delete' deletes information like 'key', 'cookies' ...""")
 
@@ -156,7 +165,9 @@ def get_developer_description() -> None:
     :Returns:
         - {str}
     """
-    return ("""Command 'developer' prints the information about the author""")
+    return (
+        f"""{CreateFigletString("LinkedIn Bot")}\n"""
+        """Command 'developer' prints the information about the author""")
 
 
 def get_developer_help() -> None:
