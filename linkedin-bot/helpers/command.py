@@ -1,235 +1,171 @@
-from console.print import printBlue
+from linkedin import __version__
 
 
-def help_with_configs() -> None:
-    """Function help_with_configs() shows a guide for 'config' command.
-
-    :Args:
-        - {None}
-
-    :Returns:
-        - {None}
-    """
-    printBlue(f"""config.user.email "example@email.com" --cached""",
-              style='b', pad='1')
-    printBlue(
-        f"""config.user.password "example@password" --cached""", style='b', pad='1')
-    printBlue(
-        f"""Or you can use the following command if you don't want to show the password on the screen""",
-        style='b', pad='1')
-    printBlue(
-        f"""config.user.password --cached (hit enter)""", style='b', pad='1')
-    printBlue(f"""Password: """, style='b', pad='1')
-    printBlue(
-        f"""config.job.keywords "Data%Science" (use '%' for space)""", style='b', pad='1')
-    printBlue(
-        f"""config.job.location "Sanfrancisco%CA" """, style='b', pad='1')
-
-
-def help_with_linkedin() -> None:
-    """Function help_with_linkedin() shows a guide for 'linkedin' command.
+def get_lbot_description() -> str:
+    """Function get_lbot_description() returns the description for linkedin-bot.
 
     :Args:
         - {None}
 
     :Returns:
-        - {None}    
+        - {str}
     """
-    printBlue(
-        f"""linkedin [send] [suggestions^] --auto/--guided [--headless] [--use-cache]""", style='b', pad='1')
-    printBlue(
-        f"""'linkedin' command handles the linkedin process.""", style='b', pad='1')
-    printBlue(
-        f"""'send' flag sends invitations according to the path given to it.""", style='b', pad='1')
-    printBlue(
-        f"""'suggestions' flag lets linkedin know that it must use""", style='b', pad='1')
-    printBlue(f"""'MyNetwork' tab as a target.""", style='b', pad='1')
-    printBlue(
-        f"""'--auto/--guided' flag tells the linkedin to start process in auto(recommended) or guided mode.""",
-        style='b', pad='1')
-    printBlue(
-        f"""'--headless' flag tells the program to start automation without opening the browser.""", style='b', pad='1')
-    printBlue(
-        f"""'--use-cache' uses cache (if stored) for authentication.""", style='b', pad='1')
-    printBlue(
-        f"""linkedin [send] [search industry=example&&location=india+usa+...] --auto^/--guided [--headless]""", start='\n', style='b', pad='1')
-    printBlue(
-        f"""'linkedin' command handles the linkedin process.""", style='b', pad='1')
-    printBlue(
-        f"""'send' flag sends invitations according to the path given to it.""", style='b', pad='1')
-    printBlue(
-        f"""'search industry=example&&location=india+usa+...' flag lets linkedin know that it must""", style='b', pad='1')
-    printBlue(
-        f"""go and search for people associated to the given industry (use (%) for space between words in industry)""",
-        style='b', pad='1')
-    printBlue(
-        f"""and living in the given location. You can always add location.""", style='b', pad='1')
-    printBlue(
-        f"""'--auto/--guided' flag tells the linkedin to start process in auto(recommended) or guided mode.""",
-        style='b', pad='1')
-    printBlue(
-        f"""'--headless' flag tells the program to start automation without opening the browser.""", style='b', pad='1')
-    printBlue(
-        f"""'--use-cache' uses cache (if stored) for authentication.""", style='b', pad='1')
-    printBlue(
-        f"""linkedin [invitation-manager*] [show*] --sent*/--recieved* [--headless]""", start='\n', style='b', pad='1')
-    printBlue(
-        f"""'linkedin' command handles the linkedin process.""", style='b', pad='1')
-    printBlue(
-        f"""'invitation-manager' flag tells the linkedin to start performing operations on""", style='b', pad='1')
-    printBlue(f"""invitation manager tab.""", style='b', pad='1')
-    printBlue(
-        f"""'show' flag show tells the linkedin to show the people my account want to connect with.""", style='b', pad='1')
-    printBlue(
-        f"""'--sent/--recieved' flag tells the linkedin to fetch either sent invitations or recieved ones.""",
-        style='b', pad='1')
-    printBlue(
-        f"""'--headless' flag tells the program to start automation without opening the browser.""", style='b', pad='1')
-    printBlue(
-        f"""'--use-cache' uses cache (if stored) for authentication.""", style='b', pad='1')
-    printBlue(
-        f"""linkedin [invitation-manager*] [ignore*/withdraw*] [all*^/over > <days>*] [--headless]""",
-        start='\n', style='b', pad='1')
-    printBlue(
-        f"""'linkedin' command handles the linkedin process.""", style='b', pad='1')
-    printBlue(
-        f"""'invitation-manager' flag tells the linkedin to start performing operations on""", style='b', pad='1')
-    printBlue(
-        f"""'ignore/withdraw' flag tells the linkedin that you want to activate invitation ignoring or withdrawing process.""",
-        style='b', pad='1')
-    printBlue(
-        f"""'all/over > <days>' flag tell to either withdraw all the sent invitations or""", style='b', pad='1')
-    printBlue(
-        f"""use the amount of days given to withdraw sent invitations accordingly.""", style='b', pad='1')
-    printBlue(
-        f"""'--headless' flag tells the program to start automation without opening the browser.""", style='b', pad='1')
-    printBlue(
-        f"""'--use-cache' uses cache (if stored) for authentication.""", style='b', pad='1')
-    printBlue(
-        f"""linkedin [mynetwork*] [show*] [all*/page > 1^+2+3+...*] [--headless]""", start='\n', style='b', pad='1')
-    printBlue(
-        f"""'linkedin' command handles the linkedin process.""", style='b', pad='1')
-    printBlue(
-        f"""'mynetwork' flag tell the linkedin to start operating on MyNetworks.""", style='b', pad='1')
-    printBlue(
-        f"""'all/page > 1+2+3+...' flag tells either show all connections or use the pages given.""", style='b', pad='1')
-    printBlue(
-        f"""'--headless' flag tells the program to start automation without opening the browser.""", style='b', pad='1')
-    printBlue(
-        f"""'--use-cache' uses cache (if stored) for authentication.""", style='b', pad='1')
-    printBlue(
-        f"""linkedin [mynetwork*] [sendmessage*] [all*] [--greet*^] [--headless]""", start='\n', style='b', pad='1')
-    printBlue(
-        f"""'linkedin' command handles the linkedin process.""", style='b', pad='1')
-    printBlue(
-        f"""'mynetwork' flag tell the linkedin to start operating on MyNetworks.""", style='b', pad='1')
-    printBlue(
-        f"""'sendmessage' flag tells the linkedin to send messages to connections.""", style='b', pad='1')
-    printBlue(
-        f"""'all' flag tells the linkedin to use all connections.""", style='b', pad='1')
-    printBlue(
-        f"""'--greet' flag tells the linkedin to send greet message.""", style='b', pad='1')
-    printBlue(
-        f"""'--headless' flag tells the program to start automation without opening the browser.""", style='b', pad='1')
-    printBlue(
-        f"""'--use-cache' uses cache (if stored) for authentication.""", style='b', pad='1')
+    return (
+        f"""LinkedIn Bash, version {__version__}(1)-release (lbot-{__version__})\n"""
+        """These commands are defined internally. Type '--help' to see this list\n"""
+        """Type (command) --help to know more about that command""")
 
 
-def help_with_show() -> None:
-    """Function help_with_show() shows a guide for 'show' command.
+def get_send_description() -> str:
+    """Function get_send_description() returns the description for 'send' command.
 
     :Args:
         - {None}
 
     :Returns:
-        - {None}
+        - {str}
     """
-    printBlue(
-        f"""'show' shows all the details you have entered like:""", style='b', pad='1')
-    printBlue(f"""user.email,""", style='b', pad='1')
-    printBlue(
-        f"""user.password (asks first if you want to see it really or not),""", style='b', pad='1')
-    printBlue(f"""job.keywords,""", style='b', pad='1')
-    printBlue(f"""job.location""", style='b', pad='1')
+    return ("""Command 'send' sends invitation to people on linkedin.""")
 
 
-def help_with_delete() -> None:
-    """Function help_with_delete() shows a guide for 'delete' command.
+def get_send_help() -> str:
+    """Function get_send_help() returns the help text for 'send' command.
 
     :Args:
         - {None}
 
     :Returns:
-        - {None}
+        - {str}
     """
-    printBlue(
-        f"""'delete' command deletes the cache stored.""", style='b', pad='1')
-    printBlue(f"""Usage: delete --cache""", style='b', pad='1')
+    return ("""Command 'send' sends invitation to people on linkedin.""")
 
 
-def help_with_developer() -> None:
-    """Function help_with_developer() shows a guide for 'developer' command.
+def get_invitation_limit_description() -> str:
+    """Function get_invitation_limit_description() returns the description for 'limit' flag.
 
     :Args:
         - {None}
 
     :Returns:
-        - {None}
+        - {str}
     """
-    printBlue(
-        f"""'developer' shows the developer details like:""", style='b', pad='1')
-    printBlue(
-        f"""his number, email, profiles ...""", style='b', pad='1')
+    return (
+        """Flag 'limit' is used to set the daily invitation limit\n"""
+        """Limit must not exceed by 80 otherwise you'll be blocked for a entire\n"""
+        """week""")
 
 
-def help_with_theme() -> None:
-    """Function help_with_theme() shows a guide for 'theme' command.
+def get_invitation_limit_help() -> str:
+    """Function get_invitation_limit_help() returns the help text for 'limit' flag.
 
     :Args:
         - {None}
 
     :Returns:
-        - {None}
+        - {str}
     """
-    printBlue(
-        f"""'theme --parrot/--normal' changes the cli (command line theme) according to the given theme value.""",
-        style='b', pad='1')
+    return ("""Flag 'limit' sets the daily invitation limit""")
 
 
-def help_with_clear() -> None:
-    """Function help_with_clear() shows a guide for 'clear' command.
+def get_config_description() -> str:
+    """Function get_config_description() returns the description for 'config' command.
 
     :Args:
         - {None}
 
     :Returns:
-        - {None}
+        - {str}
     """
-    printBlue(f"""'clear' clears the screen""", style='b', pad='1')
+    return (
+        """Command 'config' is used to add user's credentials to the database\n"""
+        """Adding user's credentials to the database for ever or until user deletes\n"""
+        """them makes it feasible for user to send invitations without entering the\n"""
+        """fields again and again""")
 
 
-def help_with_exit() -> None:
-    """Function help_with_exit() shows a guide for 'exit' command.
+def get_config_help() -> str:
+    """Function get_config_help() returns the help text for 'config' command.
 
     :Args:
         - {None}
 
     :Returns:
-        - {None}
+        - {str}
     """
-    printBlue(
-        f"""'exit' exits the program and also does flushing jobs.""", style='b', pad='1')
+    return ("""Command 'config' is used to store user's credentials""")
 
 
-def help_with_help() -> None:
-    """Function help_with_help() shows a guide for 'help' command.
+def get_show_description() -> str:
+    """Function get_show_description() returns the description for 'show' command.
 
     :Args:
         - {None}
 
     :Returns:
-        - {None}
+        - {str}
     """
-    printBlue(
-        f"""'help' prints a list of commands that the Linkedin Automater have.""",
-        style='b', pad='1')
+    return (
+        """Command 'show' prints the information stored in the database\n"""
+        """For example -> email, password ...""")
+
+
+def get_show_help() -> str:
+    """Function get_show_help() returns the help text for 'show' command.
+
+    :Args:
+        - {None}
+
+    :Returns:
+        - {str}
+    """
+    return ("""Command 'show' prints the information that is in the database""")
+
+
+def get_delete_description() -> str:
+    """Function get_delete_description() returns the description for 'delete' command.
+
+    :Args:
+        - {None}
+
+    :Returns:
+        - {str}
+    """
+    return (
+        """Command 'delete' deletes the information stored in the database\n"""
+        """'delete' deletes information like 'key', 'cookies' ...""")
+
+
+def get_delete_help() -> str:
+    """Function get_delete_help() returns the help text for 'delete' command.
+
+    :Args:
+        - {None}
+
+    :Returns:
+        - {str}
+    """
+    return ("""Command 'delete' deletes the information stored in the database""")
+
+
+def get_developer_description() -> None:
+    """Function get_developer_description() returns the description 'developer' command.
+
+    :Args:
+        - {None}
+
+    :Returns:
+        - {str}
+    """
+    return ("""Command 'developer' prints the information about the author""")
+
+
+def get_developer_help() -> None:
+    """Function get_developer_help() returns the help text for 'developer' command.
+
+    :Args:
+        - {None}
+
+    :Returns:
+        - {str}
+    """
+    return ("""Command 'developer' prints the information about the author""")
