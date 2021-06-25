@@ -6,14 +6,16 @@ This command line tool is very helpful to increase your connections on **LinkedI
 
 ## Dependencies
 
-These dependencies will be installed automatically if not present in your system if you run `./run.sh` script but if in case it doesn't work then you can follow the methods.
-
 Use the package manager [pip](https://pip.pypa.io/en/stable/) to install them.
 
+```shell
+$ python3.7 -m pip3 install -r requirements.txt 
 ```
-$ pip3 install selenium
 
-$ pip3 install webdriver-manager
+**Or**
+
+```shell
+$ ./scripts/ipackages.sh
 ```
 
 **Google Chrome Version 91.0.4472.77 (Official Build) (64-bit)** to run chromedriver.
@@ -26,7 +28,7 @@ In the project directory, you can run:
 
 Runs the program.
 
-### `sudo ./scripts/delete-garbage.sh`
+### `sudo ./scripts/dcache.sh`
 
 Deletes all the cache files that gets created after the program run.
 

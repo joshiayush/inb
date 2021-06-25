@@ -29,7 +29,7 @@ database/firebaseCreds/serviceAccountKey.json
 dist/**
 build/**
 
-lib/**
+lib/
 lib64
 include
 bin
