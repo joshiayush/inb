@@ -5,6 +5,8 @@ from typing import Any
 
 import argparse
 
+from .coloredparser import ColoredArgumentParser
+
 
 def CreateParser(
         prog: str = None,
@@ -39,7 +41,7 @@ def CreateParser(
     :Returns:
         - {arparse.ArgumentParser}
     """
-    return argparse.ArgumentParser(
+    return ColoredArgumentParser(
         prog=prog,
         usage=usage,
         description=description,

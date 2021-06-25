@@ -5,7 +5,7 @@ from linkedin import __version__
 
 from lib.handler import CommandHandler
 
-from helpers.parser import CreateParser
+from helpers.parser.parser import CreateParser
 
 from helpers.command import get_send_help
 from helpers.command import get_show_help
