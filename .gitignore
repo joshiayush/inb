@@ -1,6 +1,7 @@
 __pycache__/**
 inb/__pycache__/**
 inb/DOM/__pycache__/**
+inb/lib/__pycache__/**
 inb/user/__pycache__/**
 inb/goto/__pycache__/**
 inb/creds/__pycache__/**
@@ -13,8 +14,11 @@ inb/messages/__pycache__/**
 inb/database/__pycache__/**
 inb/invitation/__pycache__/**
 inb/javascript/__pycache__/**
+inb/database/sql/__pycache__/**
 inb/tests/console/__pycache__/**
+inb/helpers/parser/__pycache__/**
 inb/tests/linkedin/__pycache__/**
+
 
 inb/tests/creds/**
 
