@@ -1,0 +1,9 @@
+name: inb (LinkedIn Bot)
+featured: false
+version: 1.51.35
+python_version: v3.7
+chromedriver_version: 91.0.4472.77
+google_chrome_version: 90.0.4430.212 (Official Build) (64-bit)
+technologies: Python, Selenium, Webdriver Chrome, Shell Script
+engineering_project: true
+slack: ""
