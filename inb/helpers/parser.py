@@ -1,14 +1,15 @@
 """from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!"""
 from __future__ import annotations
 
-import argparse
 from typing import Any
+
+import argparse
 
 
 def CreateParser(
-        prog: str,
-        usage: str,
-        description: str,
+        prog: str = None,
+        usage: str = None,
+        description: str = None,
         epilog: str = '',
         parents: list = [],
         formatter_class: object = argparse.HelpFormatter,

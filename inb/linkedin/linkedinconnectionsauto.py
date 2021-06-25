@@ -30,8 +30,12 @@ from selenium.common.exceptions import ElementClickInterceptedException
 from selenium.webdriver.common.action_chains import ActionChains
 
 
+"""@TODO: Use xpath to target entities. This is the most efficient way of connecting to people automatically."""
+
+
 class LinkedInConnectionsAuto(object):
     SENT_INVITATION = 0
+    SUGGESTION_BOX_UL_XPATH = """/html/body/div[6]/div[3]/div/div/div/div/div/div/div/main/div[2]/section/section/ul/li[1]"""
 
     def __init__(self: LinkedInConnectionsAuto, _linkedin: LinkedIn, limit: int = 40) -> None:
         """LinkedInConnectionsAuto class constructor to initialise LinkedInConnectionsAuto object.

@@ -7,8 +7,8 @@ from cryptography.fernet import Fernet
 
 class Creds:
     __key = ""
-    __key_file = "/Python/linkedin-bot/creds/.key.key"
-    __credentials_file = "/Python/linkedin-bot/creds/credentialsFile.ini"
+    __key_file = "/Python/inb/creds/.key.key"
+    __credentials_file = "/Python/inb/creds/credentialsFile.ini"
 
     @staticmethod
     def get_key():

@@ -12,8 +12,15 @@ from console.print import printRed
 from console.print import printBlue
 from console.print import printGreen
 
+from creds.crypto import encrypt_email
+from creds.crypto import encrypt_password
+from creds.storage import store_credentials
+
+from helpers.figlet import CreateFigletString
+
 from errors.error import ZeroFlagException
 from errors.error import EmptyResponseException
+from errors.error import PropertyNotExistException
 from errors.error import CommandFlagNotFoundException
 from errors.error import CredentialsNotFoundException
 from errors.error import FailedLoadingResourceException
@@ -24,7 +31,6 @@ from selenium.common.exceptions import NoSuchElementException
 
 from linkedin.linkedin import LinkedIn
 from linkedin.linkedinconnectionsauto import LinkedInConnectionsAuto
-import user
 
 
 class Main(object):
@@ -42,21 +48,6 @@ class Main(object):
         :Returns:
             - {Main}
         """
-        self.init_commands()
-
-        self.init_vars()
-
-        Main.home()
-
-    def init_commands(self: Main) -> None:
-        """Method init_commands() to initialize the commands that LinkedIn Automater provides.
-
-        :Args:
-            - self: {Main} object
-
-        :Returns:
-            - {None}
-        """
         from helpers.command import help_with_configs
 
         self.commands = {
@@ -71,21 +62,13 @@ class Main(object):
             "developer": self.handle_developer_commands,
         }
 
-    def init_vars(self: Main) -> None:
-        """Method init_vars() to intialize variables like encrypted_email, encrypted_password,
-        data, driver_path and if_headless.
-
-        :Args:
-            - self: {Main} object
-
-        :Returns:
-            - {None}
-        """
         self.user = User()
         self.encrypted_email = ""
         self.encrypted_password = ""
         self.driver_path = "/Python/linkedin-bot/driver/chromedriver"
         self.if_headless = False
+
+        Main.home()
 
     @property
     def user_email(self: Main) -> str:
@@ -175,23 +158,15 @@ class Main(object):
         if not self.user_email or not self.user_password:
             return
 
-        from creds.crypto import encrypt_email
-
-        from errors.error import PropertyNotExistException
-
         try:
             encrypt_email(self)
         except PropertyNotExistException as error:
             printRed(f"""{error}""", style='b', pad='1')
 
-        from creds.crypto import encrypt_password
-
         try:
             encrypt_password(self)
         except PropertyNotExistException as error:
             printRed(f"""{error}""", style='b', pad='1')
-
-        from creds.storage import store_credentials
 
         try:
             store_credentials(self)
@@ -215,21 +190,10 @@ class Main(object):
 
         clear()
 
-        printGreen(
-            r""" _____             _               _              ___         _     """, style='b', pad='1')
-        printGreen(
-            r"""|_   _|           | |             | |            |  _ \      | |    """, style='b', pad='1')
-        printGreen(
-            r"""  | |     ^  _ __ | |__  ___   ___| | ^  _ __    | |_) | ___ | |_   """, style='b', pad='1')
-        printGreen(
-            r"""  | |    ( )| '_ \|  __`, __`,/  _` |( )| '_ \   |  _ < / _ \| __|  """, style='b', pad='1')
-        printGreen(
-            r""" _| |____( )| | | \ ( _) (__))| (_) #( )| | | \  | |_) | (_) | |_   """, style='b', pad='1')
-        printGreen(
-            r"""|________(_)|_| |_|_|  \\____ \___/_|(_)| | | |  |____/ \___/ \__|  """, style='b', pad='1')
+        printGreen(CreateFigletString(" LinkedIn Bot"), style='b')
 
         printGreen(
-            f"""Type help for more information!""", style='b', start='\n', pad='1')
+            f"""Type help for more information!""", style='b', pad='1')
 
     @staticmethod
     def set_theme(_theme: str) -> None:
@@ -873,8 +837,11 @@ class Main(object):
 
             import getpass
 
-            self.user_password = getpass.getpass(
-                prompt=" Password: ")
+            try:
+                self.user_password = getpass.getpass(
+                    prompt=" Password: ")
+            except KeyboardInterrupt:
+                pass
 
             if self.get_command_at_index(2) != "--cached":
                 return
@@ -886,8 +853,8 @@ class Main(object):
             email = self.get_email()
 
             if not email:
-                printRed(f"""'{self.command.split(" ")[2].strip()}' is not a valid email address!""",
-                         style='b', pad='1')
+                printRed(
+                    f"""'{self.command.split(" ")[2].strip()}' is not a valid email address!""", style='b', pad='1')
                 return
 
             self.user_email = email
@@ -978,8 +945,8 @@ class Main(object):
         """Use `while 1` instead of `while True` for performace reason. DO NOT CHANGE!"""
         while 1:
             try:
-                self.command = ("command " + scanGreen("LinkedIn/>",
-                                                       style='b', pad='1', start='\n', end=' ')).strip()
+                self.command = ("command " + scanGreen(
+                    "LinkedIn/>", style='b', pad='1', start='\n', end=' ')).strip()
             except KeyboardInterrupt:
                 break
 

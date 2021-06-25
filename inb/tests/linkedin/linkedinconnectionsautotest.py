@@ -16,7 +16,7 @@ user_email = ''
 user_password = ''
 driver_path = ''
 
-with open("/Python/linkedin-bot/linkedin-bot/tests/creds/creds.json") as _file:
+with open("/Python/inb/inb/tests/creds/creds.json") as _file:
     creds = json.load(_file)
 
     user_email = creds["user_email"]

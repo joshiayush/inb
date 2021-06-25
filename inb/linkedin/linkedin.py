@@ -7,7 +7,6 @@ from selenium import webdriver
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.keys import Keys
 
-
 from errors.error import CredentialsNotGivenException
 from errors.error import WebDriverPathNotGivenException
 from errors.error import DomainNameSystemNotResolveException
