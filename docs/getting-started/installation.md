@@ -3,7 +3,7 @@
 ## git
 
 ```shell
-$ git clone https://github.com/JoshiAyush/linkedin-bot.git linkedin-bot
+$ git clone https://github.com/JoshiAyush/inb.git linkedin-bot
 $ cd linkedin-bot
 $ sudo ./scripts/rwx.sh
 ```
@@ -15,13 +15,13 @@ Executing script `rwx.sh` will change the directory permissions and will also se
 ### Linux
 
 ```shell
-$ sudo ./scripts/install-dependencies.sh
+$ ./scripts/ipackages.sh
 ```
 
 **Doesn't have Python?**
 
 ```shell
-$ sudo ./scripts/install-python.sh
+$ sudo ./scripts/ipython.sh
 ```
 
 _Note:_ This will also install the dependencies required to start the development of this project.
@@ -29,9 +29,7 @@ _Note:_ This will also install the dependencies required to start the developmen
 ### Others
 
 ```shell
-$ pip install selenium
-
-$ pip install webdriver-manager
+$ python3.7 -m pip install -r requirements.txt
 ```
 
 **Doesn't have Python?**

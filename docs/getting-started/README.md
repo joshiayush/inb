@@ -9,5 +9,5 @@ Welcome to getting started guide of `linkedin-bot`.
 
 <!-- Definitions -->
 
-[_installation]: https://github.com/JoshiAyush/linkedin-bot/blob/master/docs/getting-started/installation.md
-[_testing]: https://github.com/JoshiAyush/linkedin-bot/blob/master/docs/getting-started/testing.md
+[_installation]: https://github.com/JoshiAyush/inb/blob/master/docs/getting-started/installation.md
+[_testing]: https://github.com/JoshiAyush/inb/blob/master/docs/getting-started/testing.md
