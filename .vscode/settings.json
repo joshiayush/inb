@@ -12,5 +12,6 @@
   },
   "[jsonc]": {
     "editor.defaultFormatter": "esbenp.prettier-vscode"
-  }
+  },
+  "python.pythonPath": "/Python/inb/bin/python3.7"
 }
