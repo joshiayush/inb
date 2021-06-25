@@ -5,4 +5,4 @@ if [ "$EUID" -eq 0 ]; then
   exit
 fi
 
-python3.7 linkedin-bot/test.py
+python3.7 inb/test.py
