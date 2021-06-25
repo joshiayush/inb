@@ -23,6 +23,7 @@ declare -a garbages=("__pycache__/"
   "inb/javascript/__pycache__/"
   "inb/database/sql/__pycache__/"
   "inb/tests/console/__pycache__/"
+  "inb/helpers/parser/__pycache__/"
   "inb/tests/linkedin/__pycache__/"
   "inb/database/firebase/__pycache__/")
 
