@@ -1,5 +1,6 @@
-from argparse import RawDescriptionHelpFormatter
 import sys
+
+from argparse import RawDescriptionHelpFormatter
 
 from linkedin import __version__
 
@@ -80,10 +81,9 @@ send = subparsers.add_parser(
     "send", description=get_send_description(), formatter_class=RawDescriptionHelpFormatter, help=get_send_help())
 
 send.add_argument(
-    "EMAIL", type=str, nargs="?", default=None, help="User's email address")
+    "-e", "--email", type=str, nargs="?", default=None, help="User's email address")
 send.add_argument(
-    "PASSWORD", type=str, nargs="?", default=None, help="User's password")
-
+    "-p", "--password", type=str, nargs="?", default=None, help="User's password")
 
 # usage: lbot send limit [-h] [limit]
 #
@@ -116,13 +116,18 @@ limit.add_argument("limit", type=int, nargs="?", default=20)
 
 limit.set_defaults(limit=20)
 
+
 send.add_argument(
     "-c", "--cookies", action="store_true", help="uses cookies for authentication")
 send.add_argument(
+    "-i", "--incognito", action="store_true", help="set browser in incognito mode")
+send.add_argument(
     "-ngpu", "--headless", action="store_true", help="starts chrome in headless mode")
+send.add_argument(
+    "-m", "--start-maximized", action="store_true", help="set browser in full screen")
 
 send.set_defaults(
-    which="send", EMAIL=None, PASSWORD=None, headless=False, cookies=False)
+    which="send", email=None, password=None, headless=False, limit=20, cookies=False, incognito=False, start_maximized=False)
 
 
 # usage: inb config [-h] [EMAIL] [PASSWORD]
@@ -188,6 +193,8 @@ show.add_argument(
     "-e", "--email", action="store_true", help="print user's email address")
 show.add_argument(
     "-p", "--password", action="store_true", help="print user's password")
+show.add_argument(
+    "-d", "--decrypt", action="store_true", help="print information in decrypt form")
 
 show.set_defaults(which="show", keyword=None, email=None, password=None)
 
@@ -261,6 +268,7 @@ if len(sys.argv) <= 1:
     exit()
 
 try:
-    CommandHandler(parser.parse_args())
+    # CommandHandler(parser.parse_args())
+    print(parser.parse_args())
 except Exception as e:
     parser.error(e)

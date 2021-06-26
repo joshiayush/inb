@@ -23,7 +23,9 @@
 ### Optional arguments
 
 - `-c`, `--cookies` - use the cookies stored in the database.
-- `-ngpu`, `--headless` - start chrome browser in headless mode.
+- `-i`, `--incognito` - set browser in _incognito_ mode.
+- `-m`, `--start-maximized` - set browser in _full screen_.
+- `-ngpu`, `--headless` - set browser in _headless_ mode.
 - `-h`, `--help` - print the help message for this command.
 
 ## `show`
@@ -36,13 +38,14 @@
 
 - `-e`, `--email` - show the email stored.
 - `-p`, `--password` - show the password stored.
+- `-d`, `--decrypt` - show information in decrypted form.
 - `-h`, `--help` - print the help message for this command.
 
 ## `delete`
 
 ### Positional arguments
 
-- `identifier` - what to delete eg. `key`, `cookies`.
+- `identifier` - what to delete eg. `cookies`.
 
 ### Optional
 
