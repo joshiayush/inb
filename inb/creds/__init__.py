@@ -1,32 +1,37 @@
+from __future__ import annotations
+
 __name__ = "creds"
 __package__ = "creds"
 
-import os
 from cryptography.fernet import Fernet
 
+from database import database_path
+from database.sql.sql import Database
 
-class Creds:
-    __key = ""
-    __key_file = "/Python/inb/creds/.key.key"
-    __credentials_file = "/Python/inb/creds/credentialsFile.ini"
+from errors.error import DatabaseDoesNotExistException
 
-    @staticmethod
-    def get_key():
-        if not os.path.exists(Creds.__key_file):
-            Creds.__key = Fernet.generate_key()
 
-            with open(Creds.__key_file, 'w') as key_file:
-                key_file.write(Creds.__key.decode())
-        else:
-            with open(Creds.__key_file, 'r') as key_file:
-                Creds.__key = key_file.readline().encode()
+class Creds(object):
 
-        return Creds.__key
+    def get_key(self: Creds):
+        try:
+            _database = Database(database=database_path, mode="rw")
 
-    @staticmethod
-    def get_credentials_file():
-        return Creds.__credentials_file
+            fernet_key = _database.read("Key", table="Users", rows=".")
+        except DatabaseDoesNotExistException:
+            fernet_key = Fernet.generate_key()
 
-    @staticmethod
-    def get_key_file():
-        return Creds.__key_file
+            _database = Database(database=database_path, mode="rwc")
+
+            _database.create(
+                "Users", Name="varchar(255)", Email="varchar(255)", Password="varchar(255)", Key="varchar(255)")
+            _database.insert(
+                "Users", Name="", Email="", Password="", Key=str(Fernet.generate_key()))
+
+        _database.commit()
+        _database.close()
+
+        return fernet_key
+
+    def get_database_path(self: Creds):
+        return database_path
