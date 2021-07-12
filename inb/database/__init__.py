@@ -1,3 +1,6 @@
 import os
 
-database_path = os.path.dirname(os.path.abspath("setup.py")) + "/db/database.db"
+__all__ = ["SQL_DATABASE_PATH"]
+
+SQL_DATABASE_PATH = os.path.dirname(
+    os.path.abspath("setup.py")) + "/db/database.db"
