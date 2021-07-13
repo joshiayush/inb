@@ -11,21 +11,24 @@ from console import GREEN_HEX
 from console import ORANGE_HEX
 
 
-def inbprint(obj: Any,
-             color: Optional[str] = None,
-             link: Optional[str] = None,
-             bold: Optional[bool] = False,
-             blink: Optional[bool] = False,
-             blink2: Optional[bool] = False,
-             conceal: Optional[bool] = False,
-             italic: Optional[bool] = False,
-             reverse: Optional[bool] = False,
-             strike: Optional[bool] = False,
-             underline: Optional[bool] = False,
-             underline2: Optional[bool] = False,
-             frame: Optional[bool] = False,
-             encircle: Optional[bool] = False,
-             overline: Optional[bool] = False) -> None:
+def inbprint(
+    obj: Any,
+    color: Optional[str] = None,
+    link: Optional[str] = None,
+    bold: Optional[bool] = False,
+    blink: Optional[bool] = False,
+    blink2: Optional[bool] = False,
+    conceal: Optional[bool] = False,
+    italic: Optional[bool] = False,
+    reverse: Optional[bool] = False,
+    strike: Optional[bool] = False,
+    underline: Optional[bool] = False,
+    underline2: Optional[bool] = False,
+    frame: Optional[bool] = False,
+    encircle: Optional[bool] = False,
+    overline: Optional[bool] = False,
+    end: Optional[str] = '\n'
+) -> None:
     """Function inbprint() prints the given object out to the console using the rich
     library methods to print formatted text on the screen.
 
@@ -55,19 +58,21 @@ def inbprint(obj: Any,
         :Returns:
             - {Style}
         """
-        _kwargs = {link: link,
-                   bold: bold,
-                   blink: blink,
-                   blink2: blink2,
-                   conceal: conceal,
-                   italic: italic,
-                   reverse: reverse,
-                   strike: strike,
-                   underline: underline,
-                   underline2: underline2,
-                   frame: frame,
-                   encircle: encircle,
-                   overline: overline}
+        _kwargs = {
+            link: link,
+            bold: bold,
+            blink: blink,
+            blink2: blink2,
+            conceal: conceal,
+            italic: italic,
+            reverse: reverse,
+            strike: strike,
+            underline: underline,
+            underline2: underline2,
+            frame: frame,
+            encircle: encircle,
+            overline: overline
+        }
 
         if color.lower() == 'r' or color.lower() == "red":
             return Style(color=RED_HEX, **_kwargs)
@@ -86,4 +91,4 @@ def inbprint(obj: Any,
 
         return Style(**_kwargs)
 
-    Console().print(obj, style=style())
+    Console().print(obj, style=style(), end=end)
