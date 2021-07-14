@@ -59,20 +59,22 @@ def inbprint(
             - {Style}
         """
         _kwargs = {
-            link: link,
-            bold: bold,
-            blink: blink,
-            blink2: blink2,
-            conceal: conceal,
-            italic: italic,
-            reverse: reverse,
-            strike: strike,
-            underline: underline,
-            underline2: underline2,
-            frame: frame,
-            encircle: encircle,
-            overline: overline
+            "link": link,
+            "bold": bold,
+            "blink": blink,
+            "blink2": blink2,
+            "conceal": conceal,
+            "italic": italic,
+            "reverse": reverse,
+            "strike": strike,
+            "underline": underline,
+            "underline2": underline2,
+            "frame": frame,
+            "encircle": encircle,
+            "overline": overline
         }
+        if not color:
+            return Style(**_kwargs)
 
         if color.lower() == 'r' or color.lower() == "red":
             return Style(color=RED_HEX, **_kwargs)
@@ -88,7 +90,5 @@ def inbprint(
 
         if color.lower() == 'o' or color.lower() == "orange":
             return Style(color=ORANGE_HEX, **_kwargs)
-
-        return Style(**_kwargs)
 
     Console().print(obj, style=style(), end=end)

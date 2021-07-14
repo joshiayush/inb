@@ -46,19 +46,6 @@ def inbinput(
     """
     styles: list = []
 
-    if color.lower() == 'g' or color.lower() == "green":
-        styles.append(GREEN_HEX)
-    elif color.lower() == 'r' or color.lower() == "red":
-        styles.append(RED_HEX)
-    elif color.lower() == 'b' or color.lower() == "blue":
-        styles.append(BLUE_HEX)
-    elif color.lower() == 'c' or color.lower() == "cyan":
-        styles.append(CYAN_HEX)
-    elif color.lower() == 'o' or color.lower() == "orange":
-        styles.append(ORANGE_HEX)
-    else:
-        styles.append(DEFAULT)
-
     if bold:
         styles.append("bold")
     if blink:
@@ -83,6 +70,20 @@ def inbinput(
         styles.append("encircle")
     if overline:
         styles.append("overline")
+
+    if color:
+        if color.lower() == 'g' or color.lower() == "green":
+            styles.append(GREEN_HEX)
+        elif color.lower() == 'r' or color.lower() == "red":
+            styles.append(RED_HEX)
+        elif color.lower() == 'b' or color.lower() == "blue":
+            styles.append(BLUE_HEX)
+        elif color.lower() == 'c' or color.lower() == "cyan":
+            styles.append(CYAN_HEX)
+        elif color.lower() == 'o' or color.lower() == "orange":
+            styles.append(ORANGE_HEX)
+        else:
+            styles.append(DEFAULT)
 
     prompt = f"""[{' '.join(styles)}]{prompt}[/]"""
 
