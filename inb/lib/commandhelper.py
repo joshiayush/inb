@@ -2,8 +2,11 @@
 from __future__ import annotations
 
 import argparse
+
 from typing import Any
 from typing import List
+
+from console.input import inbinput
 
 from database import SQL_DATABASE_PATH
 from database.sql.sql import Database
@@ -42,13 +45,16 @@ class CommandHelper(object):
                 "User did not provide credentials!")
 
         def get_cookies() -> Any:
-            return Database(database=SQL_DATABASE_PATH).read(NAME_COLUMN, EMAIL_COLUMN, PASSWORD_COLUMN, table=USERS_TABLE, rows="*")
+            return Database(database=SQL_DATABASE_PATH).read(
+                NAME_COLUMN,
+                EMAIL_COLUMN,
+                PASSWORD_COLUMN,
+                table=USERS_TABLE,
+                rows="*")
 
         def get_user_choice(rows: List) -> int:
             Database(database=SQL_DATABASE_PATH).print(USERS_TABLE, rows=rows)
-            """This section is in progress. 
-            User will be asked to enter its email only, if email exists return an object
-            containing email and password otherwise return None"""
+            return inbinput("Enter your email: ", bold=True)
 
         if self.cookies:
             Cookies = get_cookies()
