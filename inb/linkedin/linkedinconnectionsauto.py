@@ -6,6 +6,8 @@ import time
 from invitation.status import show
 from invitation.status import reset
 
+from DOM.cleaners import ClearMessageOverlay
+
 from . import __first_entity_list_container_xpath__
 from . import __second_entity_list_container_xpath__
 
@@ -143,8 +145,9 @@ class LinkedInConnectionsAuto(object):
         :Returns:
             - {list} list of entities
         """
-        return self.get_entities(self.discover_entities(__first_entity_list_container_xpath__)).extend(
-            self.get_entities(self.discover_entities(__second_entity_list_container_xpath__)))
+        return self.get_entities(self.discover_entities(
+            __first_entity_list_container_xpath__)) + self.get_entities(
+                self.discover_entities(__second_entity_list_container_xpath__))
 
     def get_people_names(self: LinkedInConnectionsAuto, _people: list) -> list:
         """Method get_people_names() returns a list of names that are inside of this _people list.
@@ -293,6 +296,9 @@ class LinkedInConnectionsAuto(object):
 
         reset()
 
+    def execute_cleaners(self: LinkedInConnectionsAuto) -> None:
+        ClearMessageOverlay(self)
+
     def run(self: LinkedInConnectionsAuto) -> None:
         """Method run() calls the send_invitation method, but first it assures that the object
         self has driver property in it.
@@ -306,6 +312,8 @@ class LinkedInConnectionsAuto(object):
         if not hasattr(self, "driver"):
             PropertyNotExistException(
                 "Object 'self' doesn't have property 'driver' in it!")
+
+        self.execute_cleaners()
 
         self.send_invitation()
 
