@@ -3,8 +3,7 @@ from __future__ import annotations
 
 import time
 
-from invitation.status import show
-from invitation.status import reset
+from invitation.status import Invitation
 
 from DOM.cleaners import ClearMessageOverlay
 
@@ -283,18 +282,16 @@ class LinkedInConnectionsAuto(object):
 
                 ActionChains(_driver).move_to_element(
                     _person["invite_button"]).click().perform()
-                show(name=_person["person_name"], occupation=_person["person_occupation"],
-                     status="sent", elapsed_time=time.time() - _start)
+                Invitation(name=_person["person_name"], occupation=_person["person_occupation"],
+                           status="sent", elapsed_time=time.time() - _start).status()
                 LinkedInConnectionsAuto.SENT_INVITATION += 1
                 continue
             except ElementNotInteractableException:
-                show(name=_person["person_name"], occupation=_person["person_occupation"],
-                     status="failed", elapsed_time=time.time() - _start)
+                Invitation(name=_person["person_name"], occupation=_person["person_occupation"],
+                           status="failed", elapsed_time=time.time() - _start).status()
                 continue
             except ElementClickInterceptedException:
                 break
-
-        reset()
 
     def execute_cleaners(self: LinkedInConnectionsAuto) -> None:
         ClearMessageOverlay(self)
