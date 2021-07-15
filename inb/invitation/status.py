@@ -1,120 +1,63 @@
-import sys
+from __future__ import annotations
+
+import os
 import time
-import colorama
 
-from . import __success_rate
-from . import __failure_rate
+from . import SUCCESS_RATE
+from . import FAILURE_RATE
+from . import SENT_STATUS_SYMBOL
+from . import FAILED_STATUS_SYMBOL
+from . import UNDEFINED_STATUS_SYMBOL
 
-from console.print import printk
-from console.print import printRed
-from console.print import printBlue
-from console.print import printGreen
-from console.print import printWhite
+from console.print import inbprint
 
 
-def get_status(status: str = '') -> str:
-    """Function get_status() sets the value of 'status' (status) according to the invitation 
-    status which turns out to be a green ✔ mark on status 'sent' and a red ✘ mark on status 
-    'failed'.  
+class Invitation(object):
 
-    :Args:
-        - status: {str} status of the request sent or failed.
+    def __init__(self: Invitation, name: str, occupation: str, status: str = '', elapsed_time: int = 0) -> None:
+        self._name = name
 
-    :Returns:
-        - {str} invitation status.
-    """
-    global __success_rate
-    global __failure_rate
+        if len(occupation) >= 50:
+            self._occupation = occupation[0:50] + ' ' + '.'*3
+        else:
+            self._occupation = occupation
 
-    _stat = ''
+        self._success_rate = 0
+        self._failure_rate = 0
 
-    if status == "sent":
-        """_stat = ✔"""
-        _stat = u"\u2714"
-        _stat = f"""{colorama.Fore.GREEN}""" + \
-            _stat + f"""{colorama.Fore.RESET}"""
+        if status == "sent":
+            self._status = SENT_STATUS_SYMBOL
 
-        __success_rate += 1
-        return _stat
+            global SUCCESS_RATE
+            SUCCESS_RATE += 1
+            self._success_rate = SUCCESS_RATE
+        elif status == "failed":
+            self._status = FAILED_STATUS_SYMBOL
 
-    if status == "failed":
-        """_stat = ✘"""
-        _stat = u"\u2718"
-        _stat = f"""{colorama.Fore.RED}""" + \
-            _stat + f"""{colorama.Fore.RESET}"""
+            global FAILURE_RATE
+            FAILURE_RATE += 1
+            self._failure_rate = FAILURE_RATE
+        else:
+            self._status = UNDEFINED_STATUS_SYMBOL
 
-        __failure_rate += 1
-        return _stat
+        try:
+            self._elapsed_time = str(elapsed_time)[0:5] + "s"
+        except IndexError:
+            self._elapsed_time = elapsed_time
 
+    def clears_creen(self: Invitation):
+        if os.name == "nt":
+            os.system("cls")
+        elif os.name == "posix":
+            os.system("clear")
 
-def show(name: str, occupation: str, status: str = '', elapsed_time: int = 0) -> None:
-    """Function show() shows the invitation status on the terminal window in a specific format
-    which is,
+    def status(self: Invitation):
+        self.clears_creen()
 
-        ✔/✘ {Status} Person Name {Normal Style}
-        Person Occupation {Dim Style}
+        inbprint()
+        inbprint(f"""{self._status} {self._name}\n\n"""
+                 f"""{self._occupation}\n\n"""
+                 f"""Success: {self._success_rate} Failed: {self._failure_rate} Elapsed: {self._elapsed_time}""")
+        inbprint()
 
-        Succes rate: # {Green} Failure rate: # {Red} Elapsed time: # {Blue}
-
-    :Args:
-        - name: person's name.
-        - occupation: person's occupation.
-        - status: invitation status.
-        - elasped_time: elasped time.
-
-    :Returns:
-        - {None}
-    """
-    global __success_rate
-    global __failure_rate
-
-    try:
-        elapsed_time = str(elapsed_time)[0:5] + "s"
-    except IndexError:
-        elapsed_time = elapsed_time
-
-    if len(occupation) >= 50:
-        occupation = occupation[0:50] + ' ' + '.'*3
-
-    if __success_rate != 0 or __failure_rate != 0:
-        sys.stdout.write("\033[F\033[F\033[F\033[F\033[F\033[F")
-
-    _stat = get_status(status=status)
-
-    printk(' ', start='\n', pad='80', end='\r')
-
-    printk(f"""{_stat}""", pad='4', end='')
-    printWhite(f"""{name}""", style='n', pad='2')
-
-    printk(' ', pad='80', end='\r')
-
-    printWhite(f"""{occupation}""", style='d', pad='6')
-
-    printk(' ', start='\n', pad='80', end='\r')
-
-    printGreen(
-        f"""Success: {__success_rate}""", style='b', pad='4', end='')
-    printRed(f"""Failed: {__failure_rate}""",
-             style='b', pad='2', end='')
-    printBlue(
-        f"""Elapsed: {elapsed_time}""", style='b', pad='2')
-
-    printk("")
-
-    time.sleep(0.18)
-
-
-def reset() -> None:
-    """Function reset() resets the static variables to their original values.
-
-    :Args:
-        - {None}
-
-    :Returns:
-        - {None}
-    """
-    global __success_rate
-    global __failure_rate
-
-    __success_rate = 0
-    __failure_rate = 0
+        time.sleep(0.18)
