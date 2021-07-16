@@ -4,12 +4,24 @@
 
 This command line tool is very helpful to increase your connections on **LinkedIn**, you are going to achieve **500+** connections very easily. You just need to run it on your terminal, enter your LinkedIn username and password and execute command `linkedin send`.
 
+## Installation
+
+### git
+
+```shell
+$ git clone https://github.com/JoshiAyush/inb.git linkedin-bot
+$ cd linkedin-bot
+$ sudo ./scripts/rwx.sh
+```
+
+Executing script `rwx.sh` will change the directory permissions and will also set the `core.filemode` variable of `git` to `false` so that `git` doesn't track the filemode's if the project is in someone else's computer.
+
 ## Dependencies
 
 Use the package manager [pip](https://pip.pypa.io/en/stable/) to install them.
 
 ```shell
-$ python3.7 -m pip3 install -r requirements.txt 
+$ python3 -m pip3 install -r requirements.txt
 ```
 
 **Or**
@@ -24,56 +36,18 @@ $ ./scripts/ipackages.sh
 
 In the project directory, you can run:
 
-### `./scripts/run.sh`
-
-Runs the program.
-
 ### `sudo ./scripts/dcache.sh`
 
 Deletes all the cache files that gets created after the program run.
 
-### `config.user.email "example@email.com"`
+### `./scripts/test.sh`
 
-Add email to configurations.
+Tests inb.
 
-### `config.user.password "example@password"`
-
-Add password to configurations.
-
-**OR**
-
-### `config.user.password` (hit enter)
-
-Add password to configurations by allowing you to enter the password in password prompt. I used `getpass.getpass()` method for this functionality.
-
-Once you are done adding configurations you can run the command.
-
-### `linkedin send`
-
-It will start sending invitation.
-
-## Commands
-
-### `config.user.email "example@email.com" --cached`
-
-This command stores the user email as cache so the user does not have to enter this field every time it has to automate LinkedIn.
-
-### `config.user.password "example@password" --cached`
-
-**OR**
-
-### `config.user.password --cached`
-
-This command stores the user password as cache so the user does not have to enter this field every time it has to automate LinkedIn.
-
-_Note:_ Program only stores these fields as cache if it has both of the fields available.
-
-### `linkedin send suggestions --auto --headless --use-cache`
-
-Starts sending invitations to LinkedIn suggestions `--headless` starts the automation without opening the browser and `--use-cache` uses the cache stored for authentication.
+#### Check the branch [lvp][_lvp] for a working model of inb
 
 ### Happy Hacking
 
 <!-- Definitions -->
 
-[_stable]: https://github.com/JoshiAyush/linkedin-bot/tree/stable
+[_lvp]: https://github.com/JoshiAyush/inb/tree/lvp
