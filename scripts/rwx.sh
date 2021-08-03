@@ -1,12 +1,20 @@
 #!/bin/bash
 
-if [ "$EUID" -ne 0 ]; then
-  echo "Root permissions required ..."
-  exit
-fi
+#!/bin/bash
 
-echo "Setting git config core.filemode to false to not to track file bits when not in the main system ..."
-git config core.filemode false
+function rwx() {
+  # @brief Changes the filemodes of the files present in the
+  # ProjectRootDirectory
+  # @param 1 String containing the owners
+  # @param 2 String that tells whether to grant or revoke
+  # permission (+|-)
+  # @param 3 String containing the file modes
 
-echo "Changing $PWD directory permissions ..."
-sudo chmod 777 -R $PWD
+  # Change file mode of the files/directories and sub-directories
+  # present in the ProjectRootDirectory
+  chmod $1$2$3 -R "$ProjectRootDirectory/inb/" "$ProjectRootDirectory/scripts/"
+
+  # Set git config core.filemode to false to tell git not to track
+  # the access bits of the files/directories present in this project
+  git config core.filemode false
+}

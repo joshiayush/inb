@@ -1,9 +1,13 @@
 #!/bin/bash
 
-if [ "$EUID" -eq 0 ]; then
-  echo "Run this script as a normal user!"
-  exit
-fi
+function installPackages() {
+  local readonly verbose=$1
 
-echo "Installing ..."
-python3 -m pip install -r requirements.txt 
+  if [ -f "$ProjectRootDirectory/requirements.txt" -o -s "$ProjectRootDirectory/requirements.txt" ]; then
+    if [ $verbose -eq 0 ]; then
+      python3 -m pip install -r requirements.txt
+    else
+      python3 -m pip install -r requirements.txt >/dev/null
+    fi
+  fi
+}
