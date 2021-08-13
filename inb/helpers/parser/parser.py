@@ -1,11 +1,14 @@
 """from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!"""
 from __future__ import annotations
 
-from typing import Any
-
+import sys
 import argparse
 
-from .coloredparser import ColoredArgumentParser
+try:
+    from gettext import gettext as _
+except ImportError:
+    def _(message):
+        return message
 
 
 class NARGS(object):
@@ -16,20 +19,9 @@ class NARGS(object):
     ONE_OR_MORE: str = "+"
 
 
-def CreateParser(
-        prog: str = None,
-        usage: str = None,
-        description: str = None,
-        epilog: str = '',
-        parents: list = [],
-        formatter_class: object = argparse.HelpFormatter,
-        prefix_chars: str = '-',
-        fromfile_prefix_chars: str = '',
-        argument_default: Any = ...,
-        conflict_handler: str = "error",
-        add_help: bool = True,
-        allow_abbrev: bool = True) -> argparse.ArgumentParser:
-    """Function to create a new ArgumentParser object for our cli.
+class Parser(argparse.ArgumentParser):
+    """We don't want any compatibility issue so we don't overwrite the constructor!
+    The parent constructor method takes the following arguments:
 
     :Args:
         - prog: The name of the program (default: sys.argv[0])
@@ -39,26 +31,59 @@ def CreateParser(
         - parents: A list of ArgumentParser objects whose arguments should also be included
         - formatter_class: A class for customizing the help output
         - prefix_chars: The set of characters that prefix optional arguments (default: ‘-‘)
-        - fromfile_prefix_chars: The set of characters that prefix files from which additional arguments should 
+        - fromfile_prefix_chars: The set of characters that prefix files from which additional arguments should
             be read (default: None)
         - argument_default: The global default value for arguments (default: None)
         - conflict_handler: The strategy for resolving conflicting optionals (usually unnecessary)
         - add_help: Add a -h/--help option to the parser (default: True)
-        - allow_abbrev: Allows long options to be abbreviated if the abbreviation is unambiguous. (default: True)z
-
-    :Returns:
-        - {arparse.ArgumentParser}
+        - allow_abbrev: Allows long options to be abbreviated if the abbreviation is unambiguous. (default: True)
     """
-    return ColoredArgumentParser(
-        prog=prog,
-        usage=usage,
-        description=description,
-        epilog=epilog,
-        parents=parents,
-        formatter_class=formatter_class,
-        prefix_chars=prefix_chars,
-        fromfile_prefix_chars=fromfile_prefix_chars,
-        argument_default=argument_default,
-        conflict_handler=conflict_handler,
-        add_help=add_help,
-        allow_abbrev=allow_abbrev)
+    COLOR_DICT = {"RED": "1;31",
+                  "GREEN": "1;32",
+                  "YELLOW": "1;33",
+                  "BLUE": "1;36"}
+
+    def print_usage(self: Parser,
+                    file: str = None) -> None:
+        file = sys.stdout if file is None else file
+
+        self._print_message(
+            self.format_usage()[0].upper() + self.format_usage()[1:], file, self.COLOR_DICT["YELLOW"])
+
+    def print_help(self: Parser,
+                   file: str = None) -> None:
+        file = sys.stdout if file is None else file
+
+        self._print_message(
+            self.format_help()[0].upper() + self.format_help()[1:], file, self.COLOR_DICT["BLUE"])
+
+    def _print_message(self: Parser,
+                       message: str,
+                       file: str = None,
+                       color: str = None) -> None:
+        if not message:
+            return
+
+        file = sys.stderr if file is None else file
+
+        if color is None:
+            file.write(message)
+            return
+
+        file.write(
+            '\x1b[' + color + 'm' + message.strip() + '\x1b[0m\n')
+
+    def exit(self: Parser,
+             status: int = 0,
+             message: str = None) -> None:
+        if message:
+            self._print_message(message, sys.stderr, self.COLOR_DICT["RED"])
+
+        sys.exit(status)
+
+    def error(self: Parser,
+              message: str) -> None:
+        self.print_usage(sys.stderr)
+
+        self.exit(2, _(
+            "%(prog)s: Error: %(message)s\n") % {"prog": self.prog, "message": message})

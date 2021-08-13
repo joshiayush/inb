@@ -8,7 +8,7 @@ from lib.handler import CommandHandler
 
 from helpers.figlet import CreateFigletString
 from helpers.parser.parser import NARGS
-from helpers.parser.parser import CreateParser
+from helpers.parser.parser import Parser
 
 
 # usage: lbot [-h] {send,config,show,delete,developer} ...
@@ -37,13 +37,13 @@ from helpers.parser.parser import CreateParser
 #   -h, --help            show this help message and exit
 
 
-parser = CreateParser(prog="inb",
-                      description=(
-                          f"""{CreateFigletString("LinkedIn Bot")}\n"""
-                          f"""LinkedIn Bash, version {__version__}(1)-release (lbot-{__version__})\n"""
-                          """These commands are defined internally. Type '--help' to see this list\n"""
-                          """Type (command) --help to know more about that command"""),
-                      formatter_class=RawDescriptionHelpFormatter)
+parser = Parser(prog="inb",
+                description=(
+                    f"""{CreateFigletString("LinkedIn Bot")}\n"""
+                    f"""LinkedIn Bash, version {__version__}(1)-release (lbot-{__version__})\n"""
+                    """These commands are defined internally. Type '--help' to see this list\n"""
+                    """Type (command) --help to know more about that command"""),
+                formatter_class=RawDescriptionHelpFormatter)
 
 subparsers = parser.add_subparsers(help="available actions",
                                    metavar=None)
