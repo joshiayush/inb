@@ -1,3 +1,25 @@
+# MIT License
+#
+# Copyright (c) 2019 Creative Commons
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and sell copies
+# of the Software, and to permit persons to whom the Software is furnished to do
+# so, subject to the following conditions
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 """from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!"""
 from __future__ import annotations
 
@@ -58,43 +80,22 @@ class CredentialsNotGivenException(Exception):
         super(CredentialsNotGivenException, self).__init__(message)
 
 
-class CredentialsNotFoundException(Exception):
-    """Thrown when user's credentials are not found."""
-
-    def __init__(self: CredentialsNotFoundException, message: str = '') -> None:
-        super(CredentialsNotFoundException, self).__init__(message)
-
-
-class CommandNotFoundError(Exception):
-    """Thrown when user enters a command that is not recognized."""
-
-    def __init__(self: CommandNotFoundError, message: str = '') -> None:
-        super(CommandNotFoundError, self).__init__(message)
-
-
-class CommandFlagNotFoundException(Exception):
-    """Thrown when user enters a command flag that is not recognized."""
-
-    def __init__(self: CommandFlagNotFoundException, message: str = '') -> None:
-        super(CommandFlagNotFoundException, self).__init__(message)
-
-
-class ZeroFlagException(Exception):
-    """Thrown when a command is referenced without a flag."""
-
-    def __init__(self: ZeroFlagException, message: str = '') -> None:
-        super(ZeroFlagException, self).__init__(message)
-
-
-class NoSuchConfigurationFoundException(Exception):
-    """Thrown when user enters a configuration command that is not recognized."""
-
-    def __init__(self: NoSuchConfigurationFoundException, message: str = '') -> None:
-        super(NoSuchConfigurationFoundException, self).__init__(message)
-
-
 class ConnectionLimitExceededException(Exception):
     """Thrown when connections limit given by the user exceeds."""
 
     def __init__(self: ConnectionLimitExceededException, message: str = '') -> None:
         super(ConnectionLimitExceededException, self).__init__(message)
+
+
+class DatabaseDoesNotExistException(Exception):
+    """Thrown when database does not exist to perform read/write operations."""
+
+    def __init__(self: DatabaseDoesNotExistException, message: str = '') -> None:
+        super(DatabaseDoesNotExistException, self).__init__(message)
+
+
+class EmtpyDatabaseException(Exception):
+    """Thrown when email and password are requested and database is empty."""
+
+    def __init__(self: EmtpyDatabaseException, message: str = '') -> None:
+        super(EmtpyDatabaseException, self).__init__(message)
