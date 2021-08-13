@@ -7,6 +7,7 @@ from linkedin import __version__
 from lib.handler import CommandHandler
 
 from helpers.figlet import CreateFigletString
+from helpers.parser.parser import NARGS
 from helpers.parser.parser import CreateParser
 
 
@@ -85,12 +86,12 @@ send = subparsers.add_parser("send",
 
 send.add_argument("-e", "--email",
                   type=str,
-                  nargs="?",
+                  nargs=NARGS.OPTIONAL,
                   default=None,
                   help="User's email address")
 send.add_argument("-p", "--password",
                   type=str,
-                  nargs="?",
+                  nargs=NARGS.OPTIONAL,
                   default=None,
                   help="User's password")
 
@@ -128,7 +129,7 @@ limit = limit_subparsers.add_parser("limit",
 
 limit.add_argument("limit",
                    type=int,
-                   nargs="?",
+                   nargs=NARGS.OPTIONAL,
                    default=20)
 
 limit.set_defaults(limit=20)
@@ -191,12 +192,12 @@ config = subparsers.add_parser("config",
 
 config.add_argument("EMAIL",
                     type=str,
-                    nargs="?",
+                    nargs=NARGS.OPTIONAL,
                     default=None,
                     help="user's email address")
 config.add_argument("PASSWORD",
                     type=str,
-                    nargs="?",
+                    nargs=NARGS.OPTIONAL,
                     default=None,
                     help="user's password")
 
@@ -236,7 +237,7 @@ show = subparsers.add_parser("show",
 
 show.add_argument("keyword",
                   type=str,
-                  nargs="?",
+                  nargs=NARGS.OPTIONAL,
                   default=None)
 
 show.add_argument("-e", "--email",

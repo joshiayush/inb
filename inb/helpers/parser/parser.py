@@ -8,6 +8,14 @@ import argparse
 from .coloredparser import ColoredArgumentParser
 
 
+class NARGS(object):
+    """Class NARGS provides constant strings that specify the number of arguments for
+    the add_argument() method."""
+    OPTIONAL: str = "?"
+    ZERO_OR_MORE: str = "*"
+    ONE_OR_MORE: str = "+"
+
+
 def CreateParser(
         prog: str = None,
         usage: str = None,
