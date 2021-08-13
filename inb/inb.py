@@ -1,3 +1,25 @@
+# MIT License
+#
+# Copyright (c) 2019 Creative Commons
+#
+# Permission is hereby granted, free of charge, to any person obtaining a copy
+# of this software and associated documentation files (the "Software"), to deal
+# in the Software without restriction, including without limitation the rights
+# to use, copy, modify, merge, publish, distribute, sublicense, and sell copies
+# of the Software, and to permit persons to whom the Software is furnished to do
+# so, subject to the following conditions
+#
+# The above copyright notice and this permission notice shall be included in
+# all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+# SOFTWARE.
+
 import sys
 
 from argparse import RawDescriptionHelpFormatter
@@ -7,8 +29,16 @@ from linkedin import __version__
 from lib.handler import CommandHandler
 
 from helpers.figlet import CreateFigletString
-from helpers.parser.parser import NARGS
-from helpers.parser.parser import Parser
+
+from helpers.parser import NARGS
+from helpers.parser import OPT_ARGS_ACTION
+from helpers.parser import _ArgumentParser as ArgumentParser
+
+from errors.error import EmtpyDatabaseException
+from errors.error import UserCacheNotFoundException
+from errors.error import CredentialsNotGivenException
+from errors.error import DatabaseDoesNotExistException
+from errors.error import DomainNameSystemNotResolveException
 
 
 # usage: lbot [-h] {send,config,show,delete,developer} ...
@@ -37,13 +67,13 @@ from helpers.parser.parser import Parser
 #   -h, --help            show this help message and exit
 
 
-parser = Parser(prog="inb",
-                description=(
-                    f"""{CreateFigletString("LinkedIn Bot")}\n"""
-                    f"""LinkedIn Bash, version {__version__}(1)-release (lbot-{__version__})\n"""
-                    """These commands are defined internally. Type '--help' to see this list\n"""
-                    """Type (command) --help to know more about that command"""),
-                formatter_class=RawDescriptionHelpFormatter)
+parser = ArgumentParser(prog="inb",
+                        description=(
+                             f"""{CreateFigletString("LinkedIn Bot")}\n"""
+                             f"""LinkedIn Bash, version {__version__}(1)-release (lbot-{__version__})\n"""
+                             """These commands are defined internally. Type '--help' to see this list\n"""
+                             """Type (command) --help to know more about that command"""),
+                        formatter_class=RawDescriptionHelpFormatter)
 
 subparsers = parser.add_subparsers(help="available actions",
                                    metavar=None)
@@ -136,16 +166,16 @@ limit.set_defaults(limit=20)
 
 
 send.add_argument("-c", "--cookies",
-                  action="store_true",
+                  action=OPT_ARGS_ACTION.STORE_TRUE,
                   help="uses cookies for authentication")
 send.add_argument("-i", "--incognito",
-                  action="store_true",
+                  action=OPT_ARGS_ACTION.STORE_TRUE,
                   help="set browser in incognito mode")
 send.add_argument("-ngpu", "--headless",
-                  action="store_true",
+                  action=OPT_ARGS_ACTION.STORE_TRUE,
                   help="starts chrome in headless mode")
 send.add_argument("-m", "--start-maximized",
-                  action="store_true",
+                  action=OPT_ARGS_ACTION.STORE_TRUE,
                   help="set browser in full screen")
 
 send.set_defaults(which="send",
@@ -241,13 +271,13 @@ show.add_argument("keyword",
                   default=None)
 
 show.add_argument("-e", "--email",
-                  action="store_true",
+                  action=OPT_ARGS_ACTION.STORE_TRUE,
                   help="print user's email address")
 show.add_argument("-p", "--password",
-                  action="store_true",
+                  action=OPT_ARGS_ACTION.STORE_TRUE,
                   help="print user's password")
 show.add_argument("-d", "--decrypt",
-                  action="store_true",
+                  action=OPT_ARGS_ACTION.STORE_TRUE,
                   help="print information in decrypt form")
 
 show.set_defaults(which="show",
@@ -318,19 +348,19 @@ developer = subparsers.add_parser("developer",
                                   help=("""Command 'developer' prints the information about the author"""))
 
 developer.add_argument("-n", "--name",
-                       action="store_true",
+                       action=OPT_ARGS_ACTION.STORE_TRUE,
                        help="print developer name")
 developer.add_argument("-l", "--linkedin",
-                       action="store_true",
+                       action=OPT_ARGS_ACTION.STORE_TRUE,
                        help="print developer linkedin")
 developer.add_argument("-g", "--github",
-                       action="store_true",
+                       action=OPT_ARGS_ACTION.STORE_TRUE,
                        help="print developer github")
 developer.add_argument("-m", "--mobile",
-                       action="store_true",
+                       action=OPT_ARGS_ACTION.STORE_TRUE,
                        help="print developer mobile number")
 developer.add_argument("-e", "--email",
-                       action="store_true",
+                       action=OPT_ARGS_ACTION.STORE_TRUE,
                        help="print developer email address")
 
 developer.set_defaults(which="developer",
@@ -343,7 +373,18 @@ developer.set_defaults(which="developer",
 if len(sys.argv) <= 1:
     exit()
 
+# Exceptions that are not in this tuple will be printed with their stacktrace.
+#
+# These exceptions are custom exceptions to inform the user about their unexpected
+# input or unexpected demand like when database is not present but the user wants
+# to see the content of the database
+exceptions = tuple([EmtpyDatabaseException,
+                    UserCacheNotFoundException,
+                    CredentialsNotGivenException,
+                    DatabaseDoesNotExistException,
+                    DomainNameSystemNotResolveException])
+
 try:
     CommandHandler(parser.parse_args())
-except Exception as e:
-    parser.error(e)
+except exceptions as e:
+    parser.error(e, usage=False)
