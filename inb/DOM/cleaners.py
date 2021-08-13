@@ -1,5 +1,6 @@
-from errors.error import PropertyNotExistException
+from __future__ import annotations
 
+from selenium import webdriver
 from selenium.webdriver.common.by import By
 
 from selenium.webdriver.support import expected_conditions
@@ -9,34 +10,40 @@ from selenium.common.exceptions import TimeoutException
 from selenium.common.exceptions import NoSuchElementException
 
 
-def ClearMessageOverlay(self: object) -> None:
-    """Function clear_msg_overlay() clears the message overlay that gets on the top of the
-    network page.
+class Cleaner(object):
+    def __init__(self: Cleaner, driver: webdriver.Chrome) -> None:
+        """Constructor method to initialize a Cleaner object.
 
-    :Args:
-        - self: {object} object from which 'driver' property has to accessed.
+        :Args:
+            - self: {Cleaner} self.
+            - driver: {webdriver} Chromedriver
 
-    :Raises:
-        - {PropertyNotExistException} if object 'self' does not has a property called 'driver'.
+        :Raises:
+            - {Exception} if 'driver' object is not a 'webdriver' instance.
+        """
+        if not isinstance(driver, webdriver.Chrome):
+            raise Exception("'%(driver_type)s' object is not a 'webdriver' object" % {
+                            "driver_type": type(driver)})
 
-    :Returns:
-        - {None}
-    """
-    if not hasattr(self, "driver"):
-        raise PropertyNotExistException(
-            "Object 'self' must have a property 'driver' in it!")
+        self._driver = driver
 
-    while True:
+    def clear_message_overlay(self: Cleaner, time_out: int = 60) -> None:
+        """Function clear_msg_overlay() clears the message overlay that gets on the top of the
+        network page.
+
+        :Args:
+            - self: {Cleaner} object from which 'driver' property has to accessed.
+            - time_out: {int} timeout
+
+        :Returns:
+            - {None}
+        """
         try:
-            WebDriverWait(getattr(self, "driver"), 10).until(
+            WebDriverWait(self._driver, time_out).until(
                 expected_conditions.presence_of_element_located(
                     (By.CSS_SELECTOR, "div[class^='msg-overlay-list-bubble']")))
 
-            getattr(getattr(self, "driver"), "execute_script")(
+            self._driver.execute_script(
                 """document.querySelector("div[class^='msg-overlay-list-bubble']").style = "display: none";""")
-
-            break
-        except NoSuchElementException:
+        except (NoSuchElementException, TimeoutException):
             return
-        except TimeoutException:
-            continue
