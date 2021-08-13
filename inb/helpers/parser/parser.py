@@ -38,7 +38,7 @@ class Parser(argparse.ArgumentParser):
         - add_help: Add a -h/--help option to the parser (default: True)
         - allow_abbrev: Allows long options to be abbreviated if the abbreviation is unambiguous. (default: True)
     """
-    COLOR_DICT = {"RED": "1;31",
+    __COLOR_DICT = {"RED": "1;31",
                   "GREEN": "1;32",
                   "YELLOW": "1;33",
                   "BLUE": "1;36"}
@@ -48,14 +48,14 @@ class Parser(argparse.ArgumentParser):
         file = sys.stdout if file is None else file
 
         self._print_message(
-            self.format_usage()[0].upper() + self.format_usage()[1:], file, self.COLOR_DICT["YELLOW"])
+            self.format_usage()[0].upper() + self.format_usage()[1:], file, self.__COLOR_DICT["YELLOW"])
 
     def print_help(self: Parser,
                    file: str = None) -> None:
         file = sys.stdout if file is None else file
 
         self._print_message(
-            self.format_help()[0].upper() + self.format_help()[1:], file, self.COLOR_DICT["BLUE"])
+            self.format_help()[0].upper() + self.format_help()[1:], file, self.__COLOR_DICT["BLUE"])
 
     def _print_message(self: Parser,
                        message: str,
@@ -77,7 +77,7 @@ class Parser(argparse.ArgumentParser):
              status: int = 0,
              message: str = None) -> None:
         if message:
-            self._print_message(message, sys.stderr, self.COLOR_DICT["RED"])
+            self._print_message(message, sys.stderr, self.__COLOR_DICT["RED"])
 
         sys.exit(status)
 
