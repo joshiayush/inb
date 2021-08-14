@@ -17,7 +17,7 @@
 # FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
 # AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN 
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
 import sys
@@ -34,11 +34,11 @@ from helpers.parser import NARGS
 from helpers.parser import ArgumentParser
 from helpers.parser import OPT_ARGS_ACTION
 
-from errors.error import EmtpyDatabaseException
-from errors.error import UserCacheNotFoundException
-from errors.error import CredentialsNotGivenException
-from errors.error import DatabaseDoesNotExistException
-from errors.error import DomainNameSystemNotResolveException
+from errors import EmtpyDatabaseException
+from errors import UserCacheNotFoundException
+from errors import CredentialsNotGivenException
+from errors import DatabaseDoesNotExistException
+from errors import DomainNameSystemNotResolveException
 
 
 # usage: lbot [-h] {send,config,show,delete,developer} ...
@@ -110,9 +110,9 @@ subparsers = parser.add_subparsers(help="available actions",
 send = subparsers.add_parser("send",
                              description=(
                                  f"""{CreateFigletString("LinkedIn Bot")}\n"""
-                                 """Command 'send' sends invitation to people on linkedin."""),
+                                 """Sends invitation to people on linkedin."""),
                              formatter_class=RawDescriptionHelpFormatter,
-                             help=("""Command 'send' sends invitation to people on linkedin."""))
+                             help=("""sends invitation to people on linkedin."""))
 
 send.add_argument("-e", "--email",
                   type=str,
@@ -151,11 +151,11 @@ limit_subparsers = send.add_subparsers(help="available actions",
 limit = limit_subparsers.add_parser("limit",
                                     description=(
                                         f"""{CreateFigletString("LinkedIn Bot")}\n"""
-                                        """Flag 'limit' is used to set the daily invitation limit\n"""
+                                        """It is used to set the daily invitation limit\n"""
                                         """Limit must not exceed by 80 otherwise you'll be blocked for a entire\n"""
                                         """week"""),
                                     formatter_class=RawDescriptionHelpFormatter,
-                                    help=("""Flag 'limit' sets the daily invitation limit"""))
+                                    help=("""sets the daily invitation limit"""))
 
 limit.add_argument("limit",
                    type=int,
@@ -213,12 +213,12 @@ send.set_defaults(which="send",
 config = subparsers.add_parser("config",
                                description=(
                                    f"""{CreateFigletString("LinkedIn Bot")}\n"""
-                                   """Command 'config' is used to add user's credentials to the database\n"""
+                                   """It is used to add user's credentials to the database\n"""
                                    """Adding user's credentials to the database for ever or until user deletes\n"""
                                    """them makes it feasible for user to send invitations without entering the\n"""
                                    """fields again and again"""),
                                formatter_class=RawDescriptionHelpFormatter,
-                               help=("""Command 'config' is used to store user's credentials"""))
+                               help=("""used to store user's credentials"""))
 
 config.add_argument("EMAIL",
                     type=str,
@@ -260,10 +260,10 @@ config.set_defaults(which="config",
 show = subparsers.add_parser("show",
                              description=(
                                  f"""{CreateFigletString("LinkedIn Bot")}\n"""
-                                 """Command 'show' prints the information stored in the database\n"""
+                                 """It prints the information stored in the database\n"""
                                  """For example -> email, password ..."""),
                              formatter_class=RawDescriptionHelpFormatter,
-                             help=("""Command 'show' prints the information that is in the database"""))
+                             help=("""prints the information that is in the database"""))
 
 show.add_argument("keyword",
                   type=str,
@@ -308,10 +308,10 @@ show.set_defaults(which="show",
 delete = subparsers.add_parser("delete",
                                description=(
                                    f"""{CreateFigletString("LinkedIn Bot")}\n"""
-                                   """Command 'delete' deletes the information stored in the database\n"""
+                                   """It deletes the information stored in the database\n"""
                                    """'delete' deletes information like 'key', 'cookies' ..."""),
                                formatter_class=RawDescriptionHelpFormatter,
-                               help=("""Command 'delete' deletes the information stored in the database"""))
+                               help=("""deletes the information stored in the database"""))
 
 delete.add_argument("keyword",
                     type=str)
@@ -343,9 +343,9 @@ delete.set_defaults(which="delete",
 developer = subparsers.add_parser("developer",
                                   description=(
                                       f"""{CreateFigletString("LinkedIn Bot")}\n"""
-                                      """Command 'developer' prints the information about the author"""),
+                                      """It prints the information about the author"""),
                                   formatter_class=RawDescriptionHelpFormatter,
-                                  help=("""Command 'developer' prints the information about the author"""))
+                                  help=("""prints the information about the author"""))
 
 developer.add_argument("-n", "--name",
                        action=OPT_ARGS_ACTION.STORE_TRUE,
