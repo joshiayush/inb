@@ -66,6 +66,7 @@ class Person_Info(object):
         while not _profile_url[_indx] == '/':
             _indx += 1
 
+        _indx += 1
         _id: str = ''
 
         while not _profile_url[_indx] == '/' or not _profile_url[_indx] == '-':
