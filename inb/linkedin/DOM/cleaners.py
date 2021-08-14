@@ -1,3 +1,26 @@
+# MIT License
+#
+# Copyright (c) 2019 Creative Commons
+#
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the "Software"),
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions
+#
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+# OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+
+"""from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!"""
 from __future__ import annotations
 
 from selenium import webdriver
@@ -27,19 +50,19 @@ class Cleaner(object):
 
         self._driver = driver
 
-    def clear_message_overlay(self: Cleaner, time_out: int = 60) -> None:
+    def clear_message_overlay(self: Cleaner, time_out: int | float = 60) -> None:
         """Function clear_msg_overlay() clears the message overlay that gets on the top of the
         network page.
 
         :Args:
             - self: {Cleaner} object from which 'driver' property has to accessed.
-            - time_out: {int} timeout
+            - time_out: {int | float} timeout
 
         :Returns:
             - {None}
         """
         try:
-            WebDriverWait(self._driver, time_out).until(
+            WebDriverWait(self._driver, int(time_out)).until(
                 expected_conditions.presence_of_element_located(
                     (By.CSS_SELECTOR, "div[class^='msg-overlay-list-bubble']")))
 
