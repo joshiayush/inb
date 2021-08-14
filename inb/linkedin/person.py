@@ -37,7 +37,7 @@ from selenium.common.exceptions import NoSuchElementException
 
 from . import Path_To_Element_By
 
-from DOM.javascript import JS
+from .DOM.javascript import JS
 
 
 class Person_Info(object):
@@ -119,14 +119,17 @@ class Person(object):
             _xpath = _xpath[:-3] + \
                 '[' + str(self.__suggestion_box_element_count + 1) + ']'
 
+            self.__suggestion_box_element_count += 1
+            self.__load_page()
+
             while True:
                 try:
-                    self.__load_page()
                     return WebDriverWait(self._driver, 60).until(
                         EC.presence_of_element_located((By.XPATH, _xpath))
                     )
-                except (TimeoutException, NoSuchElementException):
-                    self.__load_page()
+                except (TimeoutException, NoSuchElementException) as error:
+                    if isinstance(error, TimeoutException):
+                        self.__load_page()
                     continue
 
         def transform_to_object(li: webdriver.Chrome) -> Person_Info:
@@ -148,11 +151,11 @@ class Person(object):
 
             _person_name: str = \
                 _anchor_tag.find_element_by_css_selector(
-                    "span[class^='discover-person-card__name']")
+                    "span[class^='discover-person-card__name']").text
 
             _person_occupation: str = \
                 _anchor_tag.find_element_by_css_selector(
-                    "span[class^='discover-person-card__occupation']")
+                    "span[class^='discover-person-card__occupation']").text
 
             _bottom_container: webdriver.Chrome = \
                 li.find_element_by_css_selector(
@@ -163,7 +166,7 @@ class Person(object):
 
             _person_connect_button: str = \
                 _footer.find_element_by_css_selector(
-                    f"button[aria-label='Invite {_person_name} to connect']")
+                    f"button[aria-label^='Invite']")
 
             return Person_Info(name=_person_name,
                                occupation=_person_occupation,
