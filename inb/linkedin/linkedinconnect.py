@@ -118,27 +118,37 @@ class LinkedInConnectionsAuto(object):
         _person = _p.get_suggestion_box_element()
 
         while _person:
+            if LinkedInConnectionsAuto.__INVITATION_SENT == self._limit:
+                break
+
+            if not _person._connect_button.find_element_by_tag_name("span").text == "Connect":
+                continue
+
             try:
-                if LinkedInConnectionsAuto.__INVITATION_SENT == self._limit:
-                    break
-
-                if not _person._connect_button.find_element_by_tag_name("span").text == "Connect":
-                    continue
-
                 ActionChains(self._driver).move_to_element(
                     _person._connect_button).click().perform()
-                Invitation(name=_person._name, occupation=_person._occupation,
-                           status="sent", elapsed_time=time.time() - _start).status()
+                Invitation(name=_person._name,
+                           occupation=_person._occupation,
+                           status="sent",
+                           elapsed_time=time.time() - _start).status()
                 LinkedInConnectionsAuto.__INVITATION_SENT += 1
-            except ElementNotInteractableException:
-                Invitation(name=_person._name, occupation=_person._occupation,
-                           status="failed", elapsed_time=time.time() - _start).status()
-            except ElementClickInterceptedException:
-                break
+            except (ElementNotInteractableException, ElementClickInterceptedException) as error:
+                if isinstance(error, ElementClickInterceptedException):
+                    break
+                Invitation(name=_person._name,
+                           occupation=_person._occupation,
+                           status="failed",
+                           elapsed_time=time.time() - _start).status()
 
             _person = _p.get_suggestion_box_element()
 
     def execute_cleaners(self: LinkedInConnectionsAuto) -> None:
+        """Method execute_cleaners() scours the unwanted element from the page during the
+        connect process.
+
+        :Args:
+            - self: {LinkedInConnectionsAuto}
+        """
         Cleaner(self._driver).clear_message_overlay()
 
     def run(self: LinkedInConnectionsAuto) -> None:
@@ -164,6 +174,7 @@ class LinkedInConnectionsAuto(object):
         :Returns:
             - {None}
         """
-        LinkedInConnectionsAuto.SENT_INVITATION = 0
-        # close the browser
-        self._driver.quit()
+        LinkedInConnectionsAuto.__INVITATION_SENT = 0
+
+        if isinstance(self._driver, webdriver.Chrome):
+            self._driver.quit()
