@@ -20,9 +20,85 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+"""from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!"""
+from __future__ import annotations
+
+from selenium import webdriver
+from selenium.webdriver.chrome import options
+
+from errors import WebDriverPathNotGivenException
+
 __version__ = "1.51.35"
 
 
 class Path_To_Element_By(object):
     SUGGESTION_BOX_ELEMENT_XPATH: str = \
         "/html/body/div[6]/div[3]/div/div/div/div/div[2]/div/div/main/div[2]/section/section/section/div/ul/li[1]"
+
+
+class Driver(object):
+    __SESSION_ALREADY_EXISTS: bool = False
+
+    HEADLESS: str = "--headless"
+    INCOGNITO: str = "--incognito"
+    NO_SANDBOX: str = "--no-sandbox"
+    DISABLE_GPU: str = "--disable-gpu"
+    START_MAXIMIZED: str = "--start-maximized"
+    DISABLE_INFOBARS: str = "--disable-infobars"
+    ENABLE_AUTOMATION: str = "--enable-automation"
+    DISABLE_EXTENSIONS: str = "--disable-extensions"
+    DISABLE_NOTIFICATIONS: str = "--disable-notifications"
+    DISABLE_SETUID_SANDBOX: str = "--disable-setuid-sandbox"
+    IGNORE_CERTIFICATE_ERRORS: str = "--ignore-certificate-errors"
+
+    def __init__(self: Driver, driver_path: str, options: list = []) -> None:
+        if driver_path.strip() == '':
+            raise WebDriverPathNotGivenException(
+                "User did not provide chromedriver's path!")
+
+        self._driver_path = driver_path
+        self._options = webdriver.ChromeOptions()
+
+        if not len(options) == 0:
+            for arg in options:
+                self._options.add_argument(arg)
+
+        self.enable_webdriver_chrome()
+
+    def enable_webdriver_chrome(self: Driver) -> None:
+        """Method enable_web_driver() makes a webdriver object called by calling 
+        'webdriver.Chrome()' constructor.
+
+        :Args:
+            - self: {LinkedIn} object
+            - _options: {Options} to pass to webdriver.Chrome() constructor
+
+        :Returns:
+            - {None}
+
+        """
+        if Driver.__SESSION_ALREADY_EXISTS:
+            return
+
+        Driver.__SESSION_ALREADY_EXISTS = True
+
+        self._driver = webdriver.Chrome(self._driver_path,
+                                        options=self._options)
+
+    def disable_webdriver_chrome(self: Driver) -> None:
+        """Method disable_webdriver_chrome() closes the webdriver session by 
+        executing a function called 'close()' on webdriver object.
+
+        :Args:
+            - self: {LinkedIn} object
+
+        :Returns:
+            - {None}
+        """
+        self._driver.quit()
+
+    def __del__(self: Driver) -> None:
+        Driver.__SESSION_ALREADY_EXISTS = False
+
+        if isinstance(self._driver, webdriver.Chrome):
+            self._driver.quit()

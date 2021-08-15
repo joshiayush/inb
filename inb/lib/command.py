@@ -30,6 +30,8 @@ from console.print import inbprint
 from errors import EmptyResponseException
 from errors import DomainNameSystemNotResolveException
 
+from linkedin import Driver
+
 from linkedin.linkedin import LinkedIn
 from linkedin.linkedinconnectionsauto import LinkedInConnectionsAuto
 
@@ -43,17 +45,18 @@ class Command(CommandHelper):
         super().__init__(namespace=namespace)
 
     def send(self: Command) -> None:
-        _linkedin = LinkedIn(
-            {"user_email": self.email, "user_password": self.password}, driver_path=DRIVER_PATH)
+        _chrome_driver_options: list = []
 
-        _linkedin.set_browser_incognito_mode()
-        _linkedin.set_ignore_certificate_error()
+        _chrome_driver_options.append(Driver.INCOGNITO)
+        _chrome_driver_options.append(Driver.IGNORE_CERTIFICATE_ERRORS)
 
-        if self.headless:
-            _linkedin.set_headless()
+        if self.headless == True:
+            _chrome_driver_options.append(Driver.HEADLESS)
 
-        _linkedin.enable_webdriver_chrome(
-            _linkedin.get_chrome_driver_options())
+        _linkedin = LinkedIn(user_email=self.email,
+                             user_password=self.password,
+                             driver_path=DRIVER_PATH,
+                             opt_chromedriver_options=_chrome_driver_options)
 
         inbprint("Connecting ...", color="cyan", blink=True, end="\r")
 
@@ -69,8 +72,8 @@ class Command(CommandHelper):
         inbprint(' '*80, end='\r')
         inbprint(f"Connected ✔", color="green", bold=True)
 
-        _linkedin_connection = LinkedInConnectionsAuto(
-            _linkedin.driver, limit=self.limit)
+        _linkedin_connection = LinkedInConnectionsAuto(_linkedin._driver,
+                                                       limit=self.limit)
 
         try:
             _linkedin_connection.get_my_network()
