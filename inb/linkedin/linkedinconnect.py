@@ -53,14 +53,13 @@ class LinkedInConnectionsAuto(object):
 
         :Args:
             - self: {LinkedInConnectionsAuto} object
-            - _linkedin: {LinkedIn} LinkedIn class object to access the driver object
+            - driver: {webdriver.Chrome} chromedriver instance
             - limit: {int} daily invitation limit
 
         :Returns:
             - {LinkedInConnectionsAuto} LinkedInConnectionsAuto object
 
         :Raises:
-            - PropertyNotExistException if object _linkedin doesn't have a property driver in it
             - ConnectionLimitExceededException if user gives a connection limit that exceeds 80
 
         :Usage:
@@ -120,9 +119,6 @@ class LinkedInConnectionsAuto(object):
         while _person:
             if LinkedInConnectionsAuto.__INVITATION_SENT == self._limit:
                 break
-
-            if not _person._connect_button.find_element_by_tag_name("span").text == "Connect":
-                continue
 
             try:
                 ActionChains(self._driver).move_to_element(
