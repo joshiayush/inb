@@ -33,7 +33,7 @@ from errors import DomainNameSystemNotResolveException
 from linkedin import Driver
 
 from linkedin.linkedin import LinkedIn
-from linkedin.linkedinconnectionsauto import LinkedInConnectionsAuto
+from linkedin.linkedinconnect import LinkedInConnectionsAuto
 
 from . import DRIVER_PATH
 from .commandhelper import CommandHelper
