@@ -19,13 +19,15 @@ _deleteCache=1
 _owners=
 _modes="rwx"
 
-while getopts "ivdo:m:h" option; do
+while getopts "ivdo:m:hl" option; do
     case $option in
     i) _installPackages=0 ;;
     v) _verbose=0 ;;
     d) _deleteCache=0 ;;
     o) _owners=$OPTARG ;;
     m) _modes=$OPTARG ;;
+    l) find inb/ -name '*.py' -exec cat {} \; | wc -l 
+        exit 0 ;;
     ?) 
         # We would like to throw error showing 
         # the correct usage
