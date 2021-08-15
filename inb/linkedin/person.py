@@ -66,11 +66,10 @@ class Person_Info(object):
 
         while not _profile_url[_indx] == '/':
             _indx += 1
+        _indx -= 1
 
-        _indx += 1
         _id: str = ''
-
-        while not _profile_url[_indx] == '/' or not _profile_url[_indx] == '-':
+        while not _profile_url[_indx] == '-' and not _profile_url[_indx] == '/':
             _id += _profile_url[_indx]
             _indx -= 1
 
@@ -120,8 +119,10 @@ class Person(object):
             _xpath = _xpath[:-3] + '[' + \
                 str(self.__suggestion_box_element_count + 1) + ']'
 
+            if self.__suggestion_box_element_count == 0:
+                self.__load_page()
+
             self.__suggestion_box_element_count += 1
-            self.__load_page()
 
             while True:
                 try:
@@ -150,8 +151,7 @@ class Person(object):
             _person_occupation: str = _anchor_tag.find_element_by_css_selector(
                 "span[class^='discover-person-card__occupation']").text
             _person_photo_url: str = _img_tag.get_attribute("src")
-            _person_profile_url: str = "%(base_url)s%(profile_path)s" % {
-                "base_url": Person_Info.BASE_LINKEDIN_URL,
+            _person_profile_url: str = "%(profile_path)s" % {
                 "profile_path": _anchor_tag.get_attribute("href")}
             _person_connect_button: str = _footer.find_element_by_css_selector(
                 f"button[aria-label^='Invite']")
