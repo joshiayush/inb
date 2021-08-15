@@ -23,9 +23,12 @@
 """from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!"""
 from __future__ import annotations
 
+import sys
 import time
+import json
 
 from typing import Union
+from typing import TextIO
 
 from selenium import webdriver
 from selenium.webdriver.common.by import By
@@ -77,10 +80,40 @@ class Person_Info(object):
 
     def freeze(
         self: Person_Info,
-        file: str = None,
-        format: str = None
+        file: Union[str, TextIO] = sys.stdout,
+        mode: str = "w",
+        _format: str = None
     ) -> None:
-        pass
+        _message: str = ''
+
+        if _format == "json":
+            _message = json.dump({
+                "name": self._name,
+                "person_id": self._person_id,
+                "occupation": self._occupation,
+                "profile_url": self._profile_url,
+                "photo_url": self._photo_url
+            })
+        elif _format == "raw":
+            _message = "name: %(name)s\nperson_id: %(person_id)s\noccupation: %(occupation)s\nprofile_url: %(profile_url)s\nphoto_url: %(photo_url)s" % {
+                "name": self._name,
+                "person_id": self._person_id,
+                "occupation": self._occupation,
+                "profile_url": self._profile_url,
+                "photo_url": self._photo_url}
+        else:
+            raise Exception("Format '%(frmt)s' is not supported!" %
+                            {"frmt": _format})
+
+        if isinstance(file, str):
+            with open(file=file, mode=mode) as file:
+                if file.endswith(".json"):
+                    json.dump(_message, file)
+                else:
+                    file.write(_message)
+            return
+
+        file.write(_message)
 
 
 class Person(object):
