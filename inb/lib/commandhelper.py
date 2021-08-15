@@ -4,7 +4,6 @@ from __future__ import annotations
 import argparse
 
 from typing import Any
-from typing import List
 
 from console.input import inbinput
 
@@ -17,8 +16,8 @@ from database.sql.sql import PASSWORD_COLUMN
 from database.sql.sql import EMAIL_INDEX
 from database.sql.sql import PASSWORD_INDEX
 
-from errors.error import CredentialsNotFoundException
-from errors.error import ConnectionLimitExceededException
+from errors import CredentialsNotGivenException
+from errors import ConnectionLimitExceededException
 
 
 class CommandHelper(object):
@@ -41,7 +40,7 @@ class CommandHelper(object):
 
         if ((self.email == None or self.email.strip() == '') or (self.password == None or self.password.strip() == '')) \
                 and not self.cookies:
-            raise CredentialsNotFoundException(
+            raise CredentialsNotGivenException(
                 "User did not provide credentials!")
 
         def get_cookies() -> Any:
@@ -52,7 +51,7 @@ class CommandHelper(object):
                 table=USERS_TABLE,
                 rows="*")
 
-        def get_user_choice(rows: List) -> int:
+        def get_user_choice(rows: list) -> int:
             Database(database=SQL_DATABASE_PATH).print(USERS_TABLE, rows=rows)
             return inbinput("Enter your email: ", bold=True)
 
@@ -67,7 +66,8 @@ class CommandHelper(object):
                 self.email = Cookies[EMAIL_INDEX]
                 self.password = Cookies[PASSWORD_INDEX]
 
-        self.limit = namespace.limit
+        self.limit = namespace.limit if type(
+            namespace.limit) is int else int(namespace.limit) if type(namespace.limit) is str else 20
 
         if self.limit > 80:
             raise ConnectionLimitExceededException(
