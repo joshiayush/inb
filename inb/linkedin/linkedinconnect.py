@@ -25,7 +25,7 @@ from __future__ import annotations
 
 import time
 
-from .person import Person
+from .person.person import Person
 from .DOM.cleaners import Cleaner
 from .invitation.status import Invitation
 
@@ -128,7 +128,8 @@ class LinkedInConnectionsAuto(object):
                            status="sent",
                            elapsed_time=time.time() - _start).status()
                 LinkedInConnectionsAuto.__INVITATION_SENT += 1
-            except (ElementNotInteractableException, ElementClickInterceptedException) as error:
+            except (ElementNotInteractableException,
+                    ElementClickInterceptedException) as error:
                 if isinstance(error, ElementClickInterceptedException):
                     break
                 Invitation(name=_person._name,
@@ -144,6 +145,9 @@ class LinkedInConnectionsAuto(object):
 
         :Args:
             - self: {LinkedInConnectionsAuto}
+
+        :Returns:
+            - {None}
         """
         Cleaner(self._driver).clear_message_overlay()
 
@@ -158,7 +162,6 @@ class LinkedInConnectionsAuto(object):
             - {None}
         """
         self.execute_cleaners()
-
         self.send_invitation()
 
     def __del__(self: LinkedInConnectionsAuto) -> None:
