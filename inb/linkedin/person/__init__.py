@@ -32,6 +32,12 @@ from typing import TextIO
 from selenium import webdriver
 
 
+class Path_To_Element_By(object):
+    SUGGESTION_BOX_ELEMENT_XPATH: str = \
+        """/html/body/div[6]/div[3]/div/div/div/div/div[2]/div/div/main/div[2]/section/section/section/div/ul/li[1]"""
+    SEARCH_RESULTS_PEOPLE_XPATH: str = """//*[@id="main"]/div/div/div[2]/ul/li[1]"""
+
+
 class Person_Info(object):
     """Class Person_Info provides an object with person's necessary details fetched
     from linkedin's page.
@@ -44,6 +50,8 @@ class Person_Info(object):
             occupation: Union[str, None] = None,
             profile_url: Union[str, None] = None,
             photo_url: Union[str, None] = None,
+            location: Union[str, None] = None,
+            summary: Union[str, None] = None,
             connect_button: Union[webdriver.Chrome, None] = None
     ) -> None:
         """Constructor method initializes the Person_Info object with basic details
@@ -62,6 +70,8 @@ class Person_Info(object):
         self._profile_url = profile_url
         self._photo_url = photo_url
         self._connect_button = connect_button
+        self._location = location
+        self._summary = summary
         self._person_id = self.person_id()
 
     def person_id(self: Person_Info) -> str:
@@ -114,19 +124,25 @@ class Person_Info(object):
                 "person_id": self._person_id,
                 "occupation": self._occupation,
                 "profile_url": self._profile_url,
-                "photo_url": self._photo_url
+                "photo_url": self._photo_url,
+                "location": self._location,
+                "summary": self._summary
             })
         elif _format == "raw":
             _message = ("name: %(name)s\n" +
                         "person_id: %(person_id)s\n" +
                         "occupation: %(occupation)s\n" +
                         "profile_url: %(profile_url)s\n" +
-                        "photo_url: %(photo_url)s") % {
+                        "photo_url: %(photo_url)s\m" +
+                        "location: %(location)s\n" +
+                        "summary: %(summary)s") % {
                 "name": self._name,
                 "person_id": self._person_id,
                 "occupation": self._occupation,
                 "profile_url": self._profile_url,
-                "photo_url": self._photo_url}
+                "photo_url": self._photo_url,
+                "location": self._location,
+                "summary": self._summary}
         else:
             raise Exception("Format '%(frmt)s' is not supported!" %
                             {"frmt": _format})

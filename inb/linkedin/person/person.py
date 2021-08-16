@@ -24,6 +24,7 @@
 from __future__ import annotations
 
 import time
+from typing import List
 
 from selenium import webdriver
 from selenium.webdriver.support import expected_conditions as EC
@@ -35,7 +36,7 @@ from selenium.common.exceptions import NoSuchElementException
 
 from . import Person_Info
 
-from .. import Path_To_Element_By
+from . import Path_To_Element_By
 from ..DOM.javascript import JS
 
 
@@ -174,3 +175,78 @@ class Person(object):
             )
 
         return transform_to_object(get_suggestion_box_person_li())
+
+    def get_search_results_elements(self: Person) -> List[Person_Info]:
+        def get_search_results_person_lis() -> List[webdriver.Chrome]:
+            nonlocal self
+
+            _target: int = 1
+
+            # Traget the element using its root xpath
+            _xpath: str = Path_To_Element_By.SEARCH_RESULTS_PEOPLE_XPATH
+
+            _search_results_person_lis: List[webdriver.Chrome] = []
+
+            while True:
+                # Update the xpath every time the function is called to target the next element
+                _xpath = _xpath[:-3] + '[' + str(_target) + ']'
+                try:
+                    _search_results_person_lis.append(WebDriverWait(self._driver, 60).until(
+                        EC.presence_of_element_located((By.XPATH, _xpath))
+                    ))
+                except (TimeoutException, NoSuchElementException) as error:
+                    if isinstance(error, NoSuchElementException):
+                        break
+                    continue
+                _target += 1
+
+            return _search_results_person_lis
+
+        def transform_to_object(lis: List[webdriver.Chrome]) -> List[Person_Info]:
+            _person_infos: List[Person_Info] = []
+
+            for li in lis:
+                _entity_result_item_container: webdriver.Chrome = li.find_element_by_css_selector(
+                    "div[class='entity_result']").find_element_by_css_selector(
+                        "div[class='entity-result__item']")
+                _entity_result_image_container: webdriver.Chrome = _entity_result_item_container.find_element_by_css_selector(
+                    "div[class='entity-result__image']")
+
+                _entity_result_anchor_tag: webdriver.Chrome = _entity_result_image_container.find_element_by_tag_name(
+                    "a")
+                _person_profile_url: str = _entity_result_anchor_tag.get_attribute(
+                    "href")
+                _entity_result_img_tag: webdriver.Chrome = _entity_result_image_container.find_element_by_tag_name(
+                    "img")
+                _person_photo_url: str = _entity_result_img_tag.get_attribute(
+                    "src")
+
+                _entity_result_content_container: webdriver.Chrome = _entity_result_item_container.find_element_by_css_selector(
+                    "div[class^='entity-result__content']")
+                _person_occupation: str = _entity_result_content_container.find_element_by_css_selector(
+                    "div[class^='entity-result__primary-subtitle']")
+                _person_location: str = _entity_result_content_container.find_element_by_css_selector(
+                    "div[class^='entity-result__secondary-subtitle']")
+                _person_summary: str = _entity_result_content_container.find_element_by_css_selector(
+                    "p[class^='entity-result__summary']")
+
+                _entity_result_content_anchor_tag: webdriver.Chrome = _entity_result_content_container.find_element_by_tag_name(
+                    "a")
+                _person_name: str = _entity_result_content_anchor_tag.text
+
+                _person_connect_button: webdriver.Chrome = _entity_result_item_container.find_element_by_css_selector(
+                    "div[class^='entity-result__actions']").find_element_by_tag_name("button")
+
+                _person_infos.append(Person_Info(
+                    name=_person_name,
+                    occupation=_person_occupation,
+                    photo_url=_person_photo_url,
+                    profile_url=_person_profile_url,
+                    location=_person_location,
+                    summary=_person_summary,
+                    connect_button=_person_connect_button
+                ))
+
+            return _person_infos
+
+        return transform_to_object(get_search_results_person_lis())
