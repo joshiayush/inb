@@ -41,11 +41,11 @@ from selenium.common.exceptions import ElementClickInterceptedException
 from selenium.webdriver.common.action_chains import ActionChains
 
 
-class LinkedInConnectionsAuto(object):
+class LinkedInConnect(object):
     __INVITATION_SENT: int = 0
 
     def __init__(
-        self: LinkedInConnectionsAuto,
+        self: LinkedInConnect,
         driver: webdriver.Chrome,
         limit: int = 40
     ) -> None:
@@ -79,7 +79,7 @@ class LinkedInConnectionsAuto(object):
         self._limit = limit
 
     def get_my_network(
-        self: LinkedInConnectionsAuto,
+        self: LinkedInConnect,
         _url: str = "https://www.linkedin.com/mynetwork/"
     ) -> None:
         """Method get_my_network() sends a GET request to the network page of LinkedIn.
@@ -102,7 +102,7 @@ class LinkedInConnectionsAuto(object):
         except TimeoutException:
             raise EmptyResponseException("ERR_EMPTY_RESPONSE")
 
-    def send_invitation(self: LinkedInConnectionsAuto) -> None:
+    def send_invitation(self: LinkedInConnect) -> None:
         """Method send_invitation() starts sending invitation to people on linkedin.
 
         :Args:
@@ -117,7 +117,7 @@ class LinkedInConnectionsAuto(object):
         _person = _p.get_suggestion_box_element()
 
         while _person:
-            if LinkedInConnectionsAuto.__INVITATION_SENT == self._limit:
+            if LinkedInConnect.__INVITATION_SENT == self._limit:
                 break
 
             try:
@@ -127,7 +127,7 @@ class LinkedInConnectionsAuto(object):
                            occupation=_person._occupation,
                            status="sent",
                            elapsed_time=time.time() - _start).status()
-                LinkedInConnectionsAuto.__INVITATION_SENT += 1
+                LinkedInConnect.__INVITATION_SENT += 1
             except (ElementNotInteractableException,
                     ElementClickInterceptedException) as error:
                 if isinstance(error, ElementClickInterceptedException):
@@ -139,7 +139,7 @@ class LinkedInConnectionsAuto(object):
 
             _person = _p.get_suggestion_box_element()
 
-    def execute_cleaners(self: LinkedInConnectionsAuto) -> None:
+    def execute_cleaners(self: LinkedInConnect) -> None:
         """Method execute_cleaners() scours the unwanted element from the page during the
         connect process.
 
@@ -151,7 +151,7 @@ class LinkedInConnectionsAuto(object):
         """
         Cleaner(self._driver).clear_message_overlay()
 
-    def run(self: LinkedInConnectionsAuto) -> None:
+    def run(self: LinkedInConnect) -> None:
         """Method run() calls the send_invitation method, but first it assures that the object
         self has driver property in it.
 
@@ -164,7 +164,7 @@ class LinkedInConnectionsAuto(object):
         self.execute_cleaners()
         self.send_invitation()
 
-    def __del__(self: LinkedInConnectionsAuto) -> None:
+    def __del__(self: LinkedInConnect) -> None:
         """LinkedInConnectionsAuto destructor to de-initialise LinkedInConnectionsAuto object.
 
         :Args:
@@ -173,7 +173,7 @@ class LinkedInConnectionsAuto(object):
         :Returns:
             - {None}
         """
-        LinkedInConnectionsAuto.__INVITATION_SENT = 0
+        LinkedInConnect.__INVITATION_SENT = 0
 
         if isinstance(self._driver, webdriver.Chrome):
             self._driver.quit()

@@ -33,7 +33,7 @@ from errors import DomainNameSystemNotResolveException
 from linkedin import Driver
 
 from linkedin.linkedin import LinkedIn
-from linkedin.linkedinconnect import LinkedInConnectionsAuto
+from linkedin.linkedinconnect import LinkedInConnect
 
 from . import DRIVER_PATH
 from .commandhelper import CommandHelper
@@ -72,8 +72,8 @@ class Command(CommandHelper):
         inbprint(' '*80, end='\r')
         inbprint(f"Connected ✔", color="green", bold=True)
 
-        _linkedin_connection = LinkedInConnectionsAuto(_linkedin._driver,
-                                                       limit=self.limit)
+        _linkedin_connection = LinkedInConnect(_linkedin._driver,
+                                               limit=self.limit)
 
         try:
             _linkedin_connection.get_my_network()
