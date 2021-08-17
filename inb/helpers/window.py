@@ -32,7 +32,12 @@ from typing import TextIO
 
 
 class Terminal(object):
-    def setcursorposition(self: Terminal, x: int, y: int, file: TextIO = sys.stdout) -> None:
+    def setcursorposition(
+        self: Terminal,
+        x: int,
+        y: int,
+        file: TextIO = sys.stdout
+    ) -> None:
         """Method setcursorposition() sets the console cursor position.
 
         :Args:
