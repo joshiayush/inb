@@ -71,10 +71,11 @@ class _ArgumentParser(argparse.ArgumentParser):
         - allow_abbrev: Allows long options to be abbreviated if the abbreviation is unambiguous. 
             (default: True)
     """
-    __COLOR_DICT = {"RED": "1;31",
-                    "GREEN": "1;32",
-                    "YELLOW": "1;33",
-                    "BLUE": "1;36"}
+    __COLOR_DICT = {"RED": "\x1b[1;31m",
+                    "GREEN": "\x1b[1;32m",
+                    "YELLOW": "\x1b[1;33m",
+                    "BLUE": "\x1b[1;36m",
+                    "RESET": "\x1b[0m"}
 
     def print_usage(self: _ArgumentParser, file: TextIO = None) -> None:
         """Method print_usage() is an overrided version of the parent's print_usage() method.
@@ -142,8 +143,7 @@ class _ArgumentParser(argparse.ArgumentParser):
             file.write(message)
             return
 
-        file.write(
-            "\x1b[" + color + 'm' + message.strip() + "\x1b[0m\n")
+        file.write(color + message.strip() + self.__COLOR_DICT["RESET"] + '\n')
 
     def exit(
         self: _ArgumentParser,
