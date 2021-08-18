@@ -50,6 +50,7 @@ class LinkedIn(Driver):
             - self: {LinkedIn} object
             - credentials: {dist} user's credentails in form of dictionary
             - driver_path: {str} chrome driver path
+            - opt_chromedriver_options: {list} chromedriver options if any (optional)
 
         :Returns: 
             - {LinkedIn}
