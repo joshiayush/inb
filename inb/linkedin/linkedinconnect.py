@@ -139,7 +139,7 @@ class LinkedInConnect(object):
 
             _person = _p.get_suggestion_box_element()
 
-    def execute_cleaners(self: LinkedInConnect) -> None:
+    def __execute_cleaners(self: LinkedInConnect) -> None:
         """Method execute_cleaners() scours the unwanted element from the page during the
         connect process.
 
@@ -161,7 +161,7 @@ class LinkedInConnect(object):
         :Returns:
             - {None}
         """
-        self.execute_cleaners()
+        self.__execute_cleaners()
         self.send_invitation()
 
     def __del__(self: LinkedInConnect) -> None:
