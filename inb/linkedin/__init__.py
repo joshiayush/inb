@@ -89,6 +89,7 @@ class Driver(object):
         :Returns:
             - {None}
         """
+        Driver.__SESSION_ALREADY_EXISTS = False
         self._driver.quit()
 
     def __del__(self: Driver) -> None:
