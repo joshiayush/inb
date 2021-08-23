@@ -32,17 +32,28 @@ This document has the following sections:
 
 ## Driver Options
 
-> `HEADLESS: str = "--headless"` (Sets the `chromedriver` in `headless` mode.) <br>
-> `INCOGNITO: str = "--incognito"` (Sets the `chromedriver` in `incognito` mode.) <br>
-> `NO_SANDBOX: str = "--no-sandbox"` (Sets the `chromedriver` in `no-sandbox` mode.) <br>
-> `DISABLE_GPU: str = "--disable-gpu"` (Sets the `chromedriver` in `disable-gpu` mode.) <br>
-> `START_MAXIMIZED: str = "--start-maximized"` (Sets the `chromedriver` in `start-maximized` mode.) <br>
-> `DISABLE_INFOBARS: str = "--disable-infobars"` (Sets the `chromedriver` in `disable-inforbars` mode.) <br>
-> `ENABLE_AUTOMATION: str = "--enable-automation"` (Sets the `chromedriver` in `enable-automation` mode.) <br>
-> `DISABLE_EXTENSIONS: str = "--disable-extensions"` (Sets the `chromedriver` in `disable-extensions` mode.) <br>
-> `DISABLE_NOTIFICATIONS: str = "--disable-notifications"` (Sets the `chromedriver` in `disable-notifications` mode.) <br>
-> `DISABLE_SETUID_SANDBOX: str = "--disable-setuid-sandbox"` (Sets the `chromedriver` in `disable-setuid-sandbox` mode.) <br>
-> `IGNORE_CERTIFICATE_ERRORS: str = "--ignore-certificate-errors"` (Sets the `chromedriver` in `ignore-certificate-errors` mode.) <br>
+> To set the chromedriver in _headless_ mode use: <br>
+> `HEADLESS: str = "--headless"` <br><br>
+> To set the chromedriver in _incognito_ mode use: <br>
+> `INCOGNITO: str = "--incognito"` <br><br>
+> To set the chromedriver in _no-snadbox_ mode use: <br>
+> `NO_SANDBOX: str = "--no-sandbox"` <br><br>
+> To set the chromedriver in _disable-gpu_ mode use: <br>
+> `DISABLE_GPU: str = "--disable-gpu"` <br><br>
+> To set the chromedriver in _start-maximized_ mode use: <br>
+> `START_MAXIMIZED: str = "--start-maximized"` <br><br>
+> To set the chromedriver in _disable-infobars_ mode use: <br>
+> `DISABLE_INFOBARS: str = "--disable-infobars"` <br><br>
+> To set the chromedriver in _enable-automatio_ mode use: <br>
+> `ENABLE_AUTOMATION: str = "--enable-automation"` <br><br>
+> To set the chromedriver in _disable-extensions_ mode use: <br>
+> `DISABLE_EXTENSIONS: str = "--disable-extensions"` <br><br>
+> To set thr chromedriver in _disable-notifications_ mode use: <br>
+> `DISABLE_NOTIFICATIONS: str = "--disable-notifications"` <br><br>
+> To set the chromedriver in _disable-setuid-sandbox_ mode use: <br>
+> `DISABLE_SETUID_SANDBOX: str = "--disable-setuid-sandbox"` <br><br>
+> To set the chromedriver in _ignore-certificate-errors_ mode use: <br>
+> `IGNORE_CERTIFICATE_ERRORS: str = "--ignore-certificate-errors"` <br><br>
 
 ## System Call Interface
 
