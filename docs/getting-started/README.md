@@ -1,6 +1,6 @@
 # Welcome to Getting Started Guide
 
-Welcome to getting started guide of `linkedin-bot`.
+Welcome to getting started guide of `inb`.
 
 **Note: This part is far from being complete, and many informations will be missing and/or are incomplete.**
 

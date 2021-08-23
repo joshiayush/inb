@@ -3,8 +3,8 @@
 ## git
 
 ```shell
-$ git clone https://github.com/JoshiAyush/inb.git linkedin-bot
-$ cd linkedin-bot
+$ git clone https://github.com/JoshiAyush/inb.git inb
+$ cd inb
 $ sudo ./scripts/rwx.sh
 ```
 
@@ -35,8 +35,6 @@ $ python3.7 -m pip install -r requirements.txt
 **Doesn't have Python?**
 
 Download it from here [Python][_python].
-
-**Note: You need to have a python version higher than 3.6 otherwise the goto library will just not work.**
 
 <!-- Definitions -->
 
