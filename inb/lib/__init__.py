@@ -20,6 +20,8 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+import os
+
 from .algo import levenshtein
 
 from .parser import NARGS
@@ -31,4 +33,11 @@ from .utils import CreateFigletString
 
 __all__ = ["DRIVER_PATH"]
 
-DRIVER_PATH = "/Python/inb/driver/chromedriver"
+
+def chromedriver_abs_path() -> str:
+    _dir_path: str = os.path.dirname(os.path.abspath(__file__))
+    _last_inb_indx: int = _dir_path.rfind("inb")
+    return os.path.join(_dir_path[:_last_inb_indx], "driver/chromedriver")
+
+
+DRIVER_PATH = chromedriver_abs_path()
