@@ -26,7 +26,7 @@ from __future__ import annotations
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 
-from selenium.webdriver.support import expected_conditions
+from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
 from selenium.common.exceptions import TimeoutException
@@ -34,6 +34,9 @@ from selenium.common.exceptions import NoSuchElementException
 
 
 class Cleaner(object):
+    WAIT: int = 60
+    MSG_OVERLAY_XPATH: str = "//*[@id='msg-overlay']"
+
     def __init__(self: Cleaner, driver: webdriver.Chrome) -> None:
         """Constructor method to initialize a Cleaner object.
 
@@ -50,23 +53,38 @@ class Cleaner(object):
 
         self._driver = driver
 
-    def clear_message_overlay(self: Cleaner, time_out: int | float = 60) -> None:
+    def clear_message_overlay(self: Cleaner, wait: int = 60) -> None:
         """Function clear_msg_overlay() clears the message overlay that gets on the top of the
         network page.
 
         :Args:
             - self: {Cleaner} object from which 'driver' property has to accessed.
-            - time_out: {int | float} timeout
+            - wait: {int} timeout
 
         :Returns:
             - {None}
         """
-        try:
-            WebDriverWait(self._driver, int(time_out)).until(
-                expected_conditions.presence_of_element_located(
-                    (By.CSS_SELECTOR, "div[class^='msg-overlay-list-bubble']")))
+        if not isinstance(wait, int):
+            wait = Cleaner.WAIT
 
+        try:
+            WebDriverWait(self._driver, wait).until(
+                EC.presence_of_element_located(
+                    (By.CSS_SELECTOR, "div[class^='msg-overlay-list-bubble']")
+                )
+            )
             self._driver.execute_script(
-                """document.querySelector("div[class^='msg-overlay-list-bubble']").style = "display: none";""")
+                """
+                function getElementByXpath(path) {
+                  return document.evaluate(
+                      path, 
+                      document, 
+                      null, 
+                      XPathResult.FIRST_ORDERED_NODE_TYPE, 
+                      null
+                    ).singleNodeValue;
+                }
+                getElementByXpath("%(msg_overlay_xpath)s").style = "display: none;";
+                """ % {"msg_overlay_xpath": Cleaner.MSG_OVERLAY_XPATH})
         except (NoSuchElementException, TimeoutException):
             return
