@@ -178,17 +178,18 @@ class Person(object):
 
     def get_search_results_elements(self: Person) -> List[Person_Info]:
         def get_search_results_person_lis() -> List[webdriver.Chrome]:
+            # Using parent function 'self' variable
             nonlocal self
 
             _target: int = 1
 
-            # Traget the element using its root xpath
+            # Traget the element using its relative xpath
             _xpath: str = Path_To_Element_By.SEARCH_RESULTS_PEOPLE_XPATH
 
             _search_results_person_lis: List[webdriver.Chrome] = []
 
             while True:
-                # Update the xpath every time the function is called to target the next element
+                # Update the xpath in each iteration
                 _xpath = _xpath[:-3] + '[' + str(_target) + ']'
                 try:
                     _search_results_person_lis.append(WebDriverWait(self._driver, 60).until(

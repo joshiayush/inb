@@ -43,7 +43,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 from errors import ConnectionLimitExceededException
 
-from helpers.algo import levenshtein
+from lib.algo import levenshtein
 
 from .DOM import Cleaner
 from .person.person import Person

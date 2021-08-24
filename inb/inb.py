@@ -26,13 +26,11 @@ from argparse import RawDescriptionHelpFormatter
 
 from linkedin import __version__
 
+from lib import NARGS
+from lib import ArgumentParser
+from lib import OPT_ARGS_ACTION
+from lib.utils import CreateFigletString
 from lib.handler import CommandHandler
-
-from helpers.figlet import CreateFigletString
-
-from helpers.parser import NARGS
-from helpers.parser import ArgumentParser
-from helpers.parser import OPT_ARGS_ACTION
 
 from errors import EmtpyDatabaseException
 from errors import UserCacheNotFoundException
