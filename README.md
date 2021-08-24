@@ -44,7 +44,7 @@ $ python3 inb/inb.py -h
 
 You will get a output something like this:
 
-```shell
+```
 Usage: inb [-h] {send,config,show,delete,developer} ...
 
  _     _       _            _ ___         ____        _

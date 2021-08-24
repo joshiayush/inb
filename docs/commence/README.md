@@ -20,7 +20,7 @@ $ python3 inb/inb.py -h
 
 You will get the following output:
 
-```shell
+```
 Usage: inb [-h] {send,config,show,delete,developer} ...
 
  _     _       _            _ ___         ____        _
@@ -57,7 +57,7 @@ $ python3 inb/inb.py send -h
 
 The above command will give the following output:
 
-```shell
+```
 Usage: inb send [-h] [-e [EMAIL]] [-p [PASSWORD]] [-c] [-i] [-ngpu] [-m]
                 {limit} ...
 
@@ -97,7 +97,7 @@ $ python3 inb/inb.py send -h
 
 The above command will give the following output:
 
-```shell
+```
 Usage: inb send [-h] [-e [EMAIL]] [-p [PASSWORD]] [-c] [-i] [-ngpu] [-m]
                 {limit} ...
 
