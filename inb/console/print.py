@@ -10,9 +10,11 @@ from console import BLUE_HEX
 from console import GREEN_HEX
 from console import ORANGE_HEX
 
+from lib.utils import Terminal
+
 
 def inbprint(
-    obj: Any,
+    obj: Optional[Any] = '',
     color: Optional[str] = None,
     link: Optional[str] = None,
     bold: Optional[bool] = False,
@@ -27,7 +29,8 @@ def inbprint(
     frame: Optional[bool] = False,
     encircle: Optional[bool] = False,
     overline: Optional[bool] = False,
-    end: Optional[str] = '\n'
+    end: Optional[str] = '\n',
+    goto: Optional[tuple] = None
 ) -> None:
     """Function inbprint() prints the given object out to the console using the rich
     library methods to print formatted text on the screen.
@@ -48,6 +51,8 @@ def inbprint(
         - frame: {Optional[str]} for framed text
         - encircle: {Optional[str]} for encircled text
         - overline: {Optional[str]} for overlined text
+        - end: {Optional[str]} string to end with
+        - goto: {Optional[tuple]} (x, y) to set cursor position
 
     :Returns:
         - {None}
@@ -58,21 +63,20 @@ def inbprint(
         :Returns:
             - {Style}
         """
-        _kwargs = {
-            "link": link,
-            "bold": bold,
-            "blink": blink,
-            "blink2": blink2,
-            "conceal": conceal,
-            "italic": italic,
-            "reverse": reverse,
-            "strike": strike,
-            "underline": underline,
-            "underline2": underline2,
-            "frame": frame,
-            "encircle": encircle,
-            "overline": overline
-        }
+        _kwargs = {"link": link,
+                   "bold": bold,
+                   "frame": frame,
+                   "blink": blink,
+                   "blink2": blink2,
+                   "italic": italic,
+                   "strike": strike,
+                   "conceal": conceal,
+                   "reverse": reverse,
+                   "encircle": encircle,
+                   "overline": overline,
+                   "underline": underline,
+                   "underline2": underline2}
+
         if not color:
             return Style(**_kwargs)
 
@@ -90,5 +94,8 @@ def inbprint(
 
         if color.lower() == 'o' or color.lower() == "orange":
             return Style(color=ORANGE_HEX, **_kwargs)
+
+    if goto and type(goto) is tuple:
+        Terminal().setcursorposition(goto[0], goto[1])
 
     Console().print(obj, style=style(), end=end)
