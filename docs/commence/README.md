@@ -1,4 +1,4 @@
-# Welcome to inb
+# inb 🤖
 
 You must know the _installation_ guide for `inb` before moving further.
 
