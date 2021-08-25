@@ -32,8 +32,9 @@ def __init__(
 ) -> None:
 ```
 
-> Argument `driver_path` is neccessary to locate the chromedriver executable in your system, you must give the absolute <br>
-> path to the `chromedriver` executable in your system. <br>
+> Argument `driver_path` is neccessary to locate the chromedriver executable in your system, you must give the absolute path to the
+> `chromedriver` executable in your system, if the `driver_path` is not given, you will get an  `WebDriverPathNotGivenException`. 
+> <br><br>
 > Argument `options` is optional, it is a list of chromedriver options that you may want to enable while automating the browser. <br>
 
 **Driver Destructor:**

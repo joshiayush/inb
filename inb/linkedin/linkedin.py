@@ -198,4 +198,4 @@ class LinkedIn(Driver):
             - {None}
         """
         if isinstance(self._driver, webdriver.Chrome):
-            self._driver.quit()
+            self.disable_webdriver_chrome()
