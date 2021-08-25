@@ -92,7 +92,7 @@ class LinkedIn(Driver):
         except TimeoutException:
             raise DomainNameSystemNotResolveException("ERR_DNS_PROBE_STARTED")
 
-    def __get_email_box(self: LinkedIn) -> Any:
+    def __get_email_box(self: LinkedIn) -> webdriver.Chrome:
         """Method get_email_box() returns the input tag for entering email address.
 
         :Args:
