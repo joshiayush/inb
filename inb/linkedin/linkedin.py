@@ -23,8 +23,6 @@
 """from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!"""
 from __future__ import annotations
 
-from typing import Any
-
 from . import Driver
 
 from selenium import webdriver
@@ -36,6 +34,7 @@ from errors import DomainNameSystemNotResolveException
 
 
 class LinkedIn(Driver):
+    LOGIN_PAGE_URL: str = "https://www.linkedin.com/login"
 
     def __init__(
         self: LinkedIn,
@@ -73,7 +72,7 @@ class LinkedIn(Driver):
         self.__user_email = user_email
         self.__user_password = user_password
 
-    def get_login_page(self: LinkedIn, _url: str = "https://www.linkedin.com/login") -> None:
+    def get_login_page(self: LinkedIn, _url: str = None) -> None:
         """Method get_login_page() takes you to the LinkedIn login page by executing 
         function 'get()' on the webdriver object.
 
@@ -87,6 +86,9 @@ class LinkedIn(Driver):
         :Raises:
             - DomainNameSystemNotResolveException if there's a TimeourException
         """
+        if _url == None:
+            _url = LinkedIn.LOGIN_PAGE_URL
+
         try:
             self._driver.get(_url)
         except TimeoutException:

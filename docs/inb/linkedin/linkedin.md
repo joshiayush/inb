@@ -70,15 +70,16 @@ def __del__(self: LinkedIn) -> None:
   ```python
   def get_login_page(
       self: LinkedIn,
-      _url: str = "https://www.linkedin.com/login"
+      _url: str = None
   ) -> None:
   ```
 
   > This method will raise exception `DomainNameSystemNotResolveException` if weak network is found, means if `TimeoutException`
   > is raised by the `driver.get()` method.
   > <br><br>
-  > This method takes in an argument `_url` which is set to `"https://www.linkedin.com/login"` by default but you can also
-  > provide the value for this argument explicitly.
+  > This method takes in an argument `_url` which is set to `None` by default but you can also provide the value for this argument
+  > explicitly, if no value is given then this method sets the value of `_url` to `LinkedIn.LOGIN_PAGE_URL` which is a static
+  > variable of `LinkedIn` class with a value of `"https://www.linkedin.com/login"`.
 
 - **Method login()**
 
@@ -94,77 +95,77 @@ def __del__(self: LinkedIn) -> None:
 
 ## System Internal Call Interface
 
-- **Method __get_email_box()**
+- **Method \_\_get_email_box()**
 
-    > This private method when called returns the email field element from the form that is in the LinkedIn login page.
+  > This private method when called returns the email field element from the form that is in the LinkedIn login page.
 
-    ```python
-    def __get_email_box(self: LinkedIn) -> webdriver.Chrome:
-    ```
+  ```python
+  def __get_email_box(self: LinkedIn) -> webdriver.Chrome:
+  ```
 
-    > This private method is internally used by the `__enter_email()` method to send user email to the form.
+  > This private method is internally used by the `__enter_email()` method to send user email to the form.
 
-- **Method __enter_email()**
+- **Method \_\_enter_email()**
 
-    > This private method interacts with the email field that is in the LinkedIn login page.
+  > This private method interacts with the email field that is in the LinkedIn login page.
 
-    ```python
-    def __enter_email(
-        self: LinkedIn, 
-        _return: bool = False
-    ) -> None:
-    ```
+  ```python
+  def __enter_email(
+      self: LinkedIn,
+      _return: bool = False
+  ) -> None:
+  ```
 
-    > This private method is internally used by the private method `__fill_credentials()`.
-    > <br><br>
-    > This private method internally uses the `__get_email_box()` private method to first get the element where it needs to send
-    > the user email to.
-    > <br><br>
-    > You may notice an optional argument `_return` that is used internally to decide whether to send return (i.e., carriage return)
-    > key after sending the user email. This carriage return if sent emits an submit event in the form.
+  > This private method is internally used by the private method `__fill_credentials()`.
+  > <br><br>
+  > This private method internally uses the `__get_email_box()` private method to first get the element where it needs to send
+  > the user email to.
+  > <br><br>
+  > You may notice an optional argument `_return` that is used internally to decide whether to send return (i.e., carriage return)
+  > key after sending the user email. This carriage return if sent emits an submit event in the form.
 
-- **Method __get_password_box()**
+- **Method \_\_get_password_box()**
 
-    > This private method when called returns the password field element from the form that is in the LinkedIn login page.
+  > This private method when called returns the password field element from the form that is in the LinkedIn login page.
 
-    ```python
-    def __get_password_box(self: LinkedIn) -> webdriver.Chrome:
-    ```
+  ```python
+  def __get_password_box(self: LinkedIn) -> webdriver.Chrome:
+  ```
 
-    > This private method is internally used by the `__enter_password()` method to send user password to the form.
+  > This private method is internally used by the `__enter_password()` method to send user password to the form.
 
-- **Method __enter_password()**
+- **Method \_\_enter_password()**
 
-    > This private method interacts with the password field that is in the LinkedIn login page.
+  > This private method interacts with the password field that is in the LinkedIn login page.
 
-    ```python
-    def __enter_password(
-        self: LinkedIn, 
-        _return: bool = True
-    ) -> None:
-    ```
+  ```python
+  def __enter_password(
+      self: LinkedIn,
+      _return: bool = True
+  ) -> None:
+  ```
 
-    > This private method is internally used by the private method `__fill_credentials()`.
-    > <br><br>
-    > This private method internally uses the `__get_password_box()` private method to first get the element where it needs to send
-    > the user password to.
-    > <br><br>
-    > You may notice an optional argument `_return` that is used internally to decide whether to send return (i.e., carriage return)
-    > key after sending the user email. This carriage return if sent emits an submit event in the form. This time this argument's
-    > value is set to `True` that is because after sending the user password we want to submit the form.
+  > This private method is internally used by the private method `__fill_credentials()`.
+  > <br><br>
+  > This private method internally uses the `__get_password_box()` private method to first get the element where it needs to send
+  > the user password to.
+  > <br><br>
+  > You may notice an optional argument `_return` that is used internally to decide whether to send return (i.e., carriage return)
+  > key after sending the user email. This carriage return if sent emits an submit event in the form. This time this argument's
+  > value is set to `True` that is because after sending the user password we want to submit the form.
 
-- **Method __fill_credentials()**
+- **Method \_\_fill_credentials()**
 
-    > This private method interacts with the form that is in the LinkedIn login page.
+  > This private method interacts with the form that is in the LinkedIn login page.
 
-    ```python
-    def __fill_credentials(self: LinkedIn) -> None:
-    ```
+  ```python
+  def __fill_credentials(self: LinkedIn) -> None:
+  ```
 
-    > As we have already discussed that this method is internally used by the `login()` method to log into LinkedIn.
-    > <br>
-    > This method internally uses private methods `__enter_email()` and `__enter_password()` to send the user email and password to
-    > the login form.
+  > As we have already discussed that this method is internally used by the `login()` method to log into LinkedIn.
+  > <br>
+  > This method internally uses private methods `__enter_email()` and `__enter_password()` to send the user email and password to
+  > the login form.
 
 <!-- Definitions -->
 
