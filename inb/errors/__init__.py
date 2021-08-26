@@ -27,55 +27,131 @@ from typing import Any
 from typing import Tuple
 
 from lib.utils import _type
+from lib.utils.validator import Validator
 
 
 class EmptyResponseException(Exception):
     """Thrown when recieved an empty response."""
 
-    def __init__(self: EmptyResponseException, message: str = '') -> None:
-        super(EmptyResponseException, self).__init__(message)
+    def __init__(self: EmptyResponseException, *args: Tuple[Any]) -> None:
+        super(EmptyResponseException, self).__init__(*args)
+        if args:
+            if isinstance(args[0], str):
+                self.message = args[0]
+            else:
+                raise Exception(
+                    "EmptyResponseException: Constructor's first argument must be of type 'str' not '%(type)s'" % {
+                        "type": _type(args[0])})
+        else:
+            self.message = None
+
+    def __str__(self: EmptyResponseException) -> str:
+        if self.message:
+            return "EmptyResponseException: %(message)s" % {"message": self.message}
+        else:
+            return "EmptyResponseException has been raised!"
 
 
 class FailedLoadingResourceException(Exception):
     """Thrown when failed loading the resources properly."""
 
-    def __init__(self: FailedLoadingResourceException, message: str = '') -> None:
-        super(FailedLoadingResourceException, self).__init__(message)
+    def __init__(self: FailedLoadingResourceException, *args: Tuple[Any]) -> None:
+        super(FailedLoadingResourceException, self).__init__(*args)
+        if args:
+            if isinstance(args[0], str):
+                self.message = args[0]
+            else:
+                raise Exception(
+                    "FailedLoadingResourceException: Constructor's first argument must be of type 'str' not '%(type)s'" % {
+                        "type": _type(args[0])})
+        else:
+            self.message = None
+
+    def __str__(self: FailedLoadingResourceException) -> str:
+        if self.message:
+            return "FailedLoadingResourceException: %(message)s" % {"message": self.message}
+        else:
+            return "FailedLoadingResourceException has been raised!"
 
 
 class LinkedInBlockException(Exception):
     """Thrown when LinkedIn blocks."""
 
-    def __init__(self: LinkedInBlockException, message: str = '') -> None:
-        super(LinkedInBlockException, self).__init__(message)
+    def __init__(self: LinkedInBlockException, *args: Tuple[Any]) -> None:
+        super(LinkedInBlockException, self).__init__(*args)
+        if args:
+            if isinstance(args[0], str):
+                self.message = args[0]
+            else:
+                raise Exception(
+                    "LinkedInBlockException: Constructor's first argument must be of type 'str' not '%(type)s'" % {
+                        "type": _type(args[0])})
+        else:
+            self.message = None
+
+    def __str__(self: LinkedInBlockException) -> str:
+        if self.message:
+            return "LinkedInBlockException: %(message)s" % {"message": self.message}
+        else:
+            return "LinkedInBlockException has been raised!"
 
 
 class DomainNameSystemNotResolveException(Exception):
     """Thrown when DNS could not be resolved."""
 
-    def __init__(self: DomainNameSystemNotResolveException, message: str = '') -> None:
-        super(DomainNameSystemNotResolveException, self).__init__(message)
+    def __init__(self: DomainNameSystemNotResolveException, *args: Tuple[Any]) -> None:
+        super(DomainNameSystemNotResolveException, self).__init__(*args)
+        if args:
+            if isinstance(args[0], str):
+                self.message = args[0]
+            else:
+                raise Exception(
+                    "DomainNameSystemNotResolveException: Constructor's first argument must be of type 'str' not '%(type)s'" % {
+                        "type": _type(args[0])})
+            if len(args) > 1:
+                if isinstance(args[1], str):
+                    if Validator(args[1]).is_url():
+                        self.url = args[1]
+                    else:
+                        raise ValidationError("DomainNameSystemNotResolveException: [URL] (%(url)s) is not a valid url!" % {
+                            "url": args[1]})
+                else:
+                    raise Exception(
+                        "DomainNameSystemNotResolveException: Constructor's second argument"
+                        " (url) must be of type 'str' not '%(type)s'" % {
+                            "type": _type(args[1])})
+        else:
+            self.message = None
+            self.url = None
 
-
-class PropertyNotExistException(Exception):
-    """Thrown when a binding does not have a property name."""
-
-    def __init__(self: PropertyNotExistException, message: str = '') -> None:
-        super(PropertyNotExistException, self).__init__(message)
-
-
-class UserCacheNotFoundException(Exception):
-    """Thrown when user doesn't have any cache stored."""
-
-    def __init__(self: UserCacheNotFoundException, message: str = '') -> None:
-        super(UserCacheNotFoundException, self).__init__(message)
+    def __str__(self: DomainNameSystemNotResolveException) -> str:
+        if self.message and self.url:
+            return "DomainNameSystemNotResolveException: %(message)s\n[URL] %(url)s" % {
+                "message": self.message, "url": self.url}
+        else:
+            return "DomainNameSystemNotResolveException has been raised!"
 
 
 class WebDriverPathNotGivenException(Exception):
     """Thrown when chrome driver's path is not given."""
 
-    def __init__(self: WebDriverPathNotGivenException, message: str = '') -> None:
-        super(WebDriverPathNotGivenException, self).__init__(message)
+    def __init__(self: WebDriverPathNotGivenException, *args: Tuple[Any]) -> None:
+        super(WebDriverPathNotGivenException, self).__init__(*args)
+        if args:
+            if isinstance(args[0], str):
+                self.message = args[0]
+            else:
+                raise Exception(
+                    "WebDriverPathNotGivenException: Constructor's first argument must be of type 'str' not '%(type)s'" % {
+                        "type": _type(args[0])})
+        else:
+            self.message = None
+
+    def __str__(self: WebDriverPathNotGivenException) -> str:
+        if self.message:
+            return "WebDriverPathNotGivenException: %(message)s" % {"message": self.message}
+        else:
+            return "WebDriverPathNotGivenException has been raised!"
 
 
 class CredentialsNotGivenException(Exception):
