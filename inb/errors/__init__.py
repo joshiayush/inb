@@ -128,6 +128,8 @@ class DomainNameSystemNotResolveException(Exception):
         if self.message and self.url:
             return "DomainNameSystemNotResolveException: %(message)s\n[URL] %(url)s" % {
                 "message": self.message, "url": self.url}
+        elif self.message:
+            return "DomainNameSystemNotResolveException: %(message)s" % {"message": self.message}
         else:
             return "DomainNameSystemNotResolveException has been raised!"
 
