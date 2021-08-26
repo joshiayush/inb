@@ -26,8 +26,11 @@ from __future__ import annotations
 from selenium import webdriver
 
 from errors import WebDriverPathNotGivenException
+from errors import WebDriverNotExecutableException
 
-__version__ = "1.51.35"
+from lib.utils.validator import Validator
+
+__version__: str = "1.51.35"
 
 
 class Driver(object):
@@ -46,7 +49,14 @@ class Driver(object):
     IGNORE_CERTIFICATE_ERRORS: str = "--ignore-certificate-errors"
 
     def __init__(self: Driver, driver_path: str, options: list = []) -> None:
-        if driver_path.strip() == '':
+        if isinstance(driver_path, str):
+            if driver_path.strip() == '':
+                raise WebDriverPathNotGivenException(
+                    "User did not provide chromedriver's path!")
+            if not Validator(driver_path).is_executable():
+                raise WebDriverNotExecutableException(
+                    "%(path)s is not executable!" % {"path": driver_path})
+        else:
             raise WebDriverPathNotGivenException(
                 "User did not provide chromedriver's path!")
 
