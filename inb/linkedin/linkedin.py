@@ -105,9 +105,6 @@ class LinkedIn(Driver):
 
         :Raises:
             - NoSuchElementException if the element wasn't found
-
-        :Usage:
-            - email_box = self.get_email_box()
         """
         return self._driver.find_element_by_name("session_key")
 
@@ -141,9 +138,6 @@ class LinkedIn(Driver):
 
         :Raises:
             - NoSuchElementException if the element wasn't found
-
-        :Usage:
-            - password_box = self.get_password_box()
         """
         return self._driver.find_element_by_name("session_password")
 

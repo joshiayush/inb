@@ -61,9 +61,6 @@ class LinkedInConnect(object):
 
         :Raises:
             - ConnectionLimitExceededException if user gives a connection limit that exceeds 80
-
-        :Usage:
-            - _linkedin_connection_auto = LinkedInConnectionAuto(_linkedin, 40)
         """
         if not isinstance(driver, webdriver.Chrome):
             raise Exception(
@@ -93,9 +90,6 @@ class LinkedInConnect(object):
 
         :Raises:
             - EmptyResponseException if there is a TimeoutException
-
-        :Usage:
-            - _linkedin_connections_auto.get_my_network("https://www.linkedin.com/mynetwork/")
         """
         try:
             self._driver.get(_url)
