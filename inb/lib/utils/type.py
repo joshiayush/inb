@@ -20,26 +20,11 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-import os
+from typing import Any
 
-from .algo import levenshtein
-
-from .parser import NARGS
-from .parser import ArgumentParser
-from .parser import OPT_ARGS_ACTION
-
-from .utils import _type
-from .utils import Terminal
-from .utils import Validator
-from .utils import CreateFigletString
-
-__all__ = ["DRIVER_PATH"]
+import re
 
 
-def chromedriver_abs_path() -> str:
-    _dir_path: str = os.path.dirname(os.path.abspath(__file__))
-    _last_inb_indx: int = _dir_path.rfind("inb")
-    return os.path.join(_dir_path[:_last_inb_indx], "driver/chromedriver")
-
-
-DRIVER_PATH = chromedriver_abs_path()
+def _type(value: Any) -> str:
+    _regex = re.compile(r"<class '(.*?)'>", re.IGNORECASE)
+    return re.search(_regex, str(type(value))).group(1)

@@ -20,5 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+from .type import _type
 from .window import Terminal
 from .figlet import CreateFigletString
+from .validator import Validator

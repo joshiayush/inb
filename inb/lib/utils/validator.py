@@ -20,26 +20,31 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-import os
+"""from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!"""
+from __future__ import annotations
 
-from .algo import levenshtein
-
-from .parser import NARGS
-from .parser import ArgumentParser
-from .parser import OPT_ARGS_ACTION
-
-from .utils import _type
-from .utils import Terminal
-from .utils import Validator
-from .utils import CreateFigletString
-
-__all__ = ["DRIVER_PATH"]
+import re
 
 
-def chromedriver_abs_path() -> str:
-    _dir_path: str = os.path.dirname(os.path.abspath(__file__))
-    _last_inb_indx: int = _dir_path.rfind("inb")
-    return os.path.join(_dir_path[:_last_inb_indx], "driver/chromedriver")
+class Validator(object):
+    def __init__(self: Validator, field: str) -> None:
+        if isinstance(field, str):
+            self._field = field
+        else:
+            raise ValueError(
+                "Value %(field)s is not a valid value for Validator instance!" % {"field": field})
 
+    def is_url(self: Validator) -> bool:
+        _regex = re.compile(
+            r"^(?:http|ftp)s?://"
+            r"(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|"
+            r"localhost|"
+            r"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})"
+            r"(?::\d+)?"
+            r"(?:/?|[/?]\S+)$", re.IGNORECASE)
+        return re.match(_regex, self._field) is not None
 
-DRIVER_PATH = chromedriver_abs_path()
+    def is_email(self: Validator) -> bool:
+        _regex = re.compile(
+            r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", re.IGNORECASE)
+        return re.match(_regex, self._field) is not None
