@@ -23,9 +23,6 @@ class LinkedIn(Driver):
 
 **LinkedIn Constructor:**
 
-> The constructor method takes in four arguments, obligatory arguments are `user_email`, `user_password` and `driver_path` and the
-> optional one is `opt_chromedriver_options`.
-
 ```python
 def __init__(
     self: LinkedIn,
@@ -36,6 +33,9 @@ def __init__(
 ) -> None:
 ```
 
+> The constructor method takes in four arguments, obligatory arguments are `user_email`, `user_password` and `driver_path` and the
+> optional one is `opt_chromedriver_options`.
+> <br><br>
 > Arguments `user_email` and `user_password` are obligatory otherwise you will end up having an exception
 > `CredentialsNotGivenException` that the constructor method will raise.
 > <br><br>
@@ -51,21 +51,19 @@ def __init__(
 
 **LinkedIn Destructor:**
 
-> The destructor method calls the `disable_webdriver_chrome()` on itself which it was given during the initialization from the base
-> class `Driver`.
-
 ```python
 def __del__(self: LinkedIn) -> None:
 ```
 
+> The destructor method calls the `disable_webdriver_chrome()` on itself which it was given during the initialization from the base
+> class `Driver`.
+> <br><br>
 > The `disable_webdriver_chrome()` method sets the `Driver` class variable `__SESSION_ALREADY_EXISTS` to `False` which was set to
 > `True` when you instantiate a `chromedriver` object and then the `quit` method is invoked on the `chromedriver` instance.
 
 ## System Call Interface
 
 - **Method get_login_page()**
-
-  > This method takes you to the LinkedIn login page.
 
   ```python
   def get_login_page(
@@ -74,6 +72,8 @@ def __del__(self: LinkedIn) -> None:
   ) -> None:
   ```
 
+  > This method takes you to the LinkedIn login page.
+  > <br><br>
   > This method will raise exception `DomainNameSystemNotResolveException` if weak network is found, means if `TimeoutException`
   > is raised by the `driver.get()` method.
   > <br><br>
@@ -83,12 +83,12 @@ def __del__(self: LinkedIn) -> None:
 
 - **Method login()**
 
-  > This method fills the login form that is in the LinkedIn login page.
-
   ```python
   def login(self: LinkedIn) -> None:
   ```
 
+  > This method fills the login form that is in the LinkedIn login page.
+  > <br><br>
   > This method must be called after the successful execution of `get_login_page()` method otherwise you will get exceptions.
   > <br><br>
   > This method calls a private method called `__fill_credentials()` to fill the form.
@@ -97,17 +97,14 @@ def __del__(self: LinkedIn) -> None:
 
 - **Method \_\_get_email_box()**
 
-  > This private method when called returns the email field element from the form that is in the LinkedIn login page.
-
   ```python
   def __get_email_box(self: LinkedIn) -> webdriver.Chrome:
   ```
 
+  > This private method when called returns the email field element from the form that is in the LinkedIn login page. <br><br>
   > This private method is internally used by the `__enter_email()` method to send user email to the form.
 
 - **Method \_\_enter_email()**
-
-  > This private method interacts with the email field that is in the LinkedIn login page.
 
   ```python
   def __enter_email(
@@ -116,6 +113,8 @@ def __del__(self: LinkedIn) -> None:
   ) -> None:
   ```
 
+  > This private method interacts with the email field that is in the LinkedIn login page.
+  > <br><br>
   > This private method is internally used by the private method `__fill_credentials()`.
   > <br><br>
   > This private method internally uses the `__get_email_box()` private method to first get the element where it needs to send
@@ -126,17 +125,15 @@ def __del__(self: LinkedIn) -> None:
 
 - **Method \_\_get_password_box()**
 
-  > This private method when called returns the password field element from the form that is in the LinkedIn login page.
-
   ```python
   def __get_password_box(self: LinkedIn) -> webdriver.Chrome:
   ```
 
+  > This private method when called returns the password field element from the form that is in the LinkedIn login page. 
+  > <br><br>
   > This private method is internally used by the `__enter_password()` method to send user password to the form.
 
 - **Method \_\_enter_password()**
-
-  > This private method interacts with the password field that is in the LinkedIn login page.
 
   ```python
   def __enter_password(
@@ -145,6 +142,8 @@ def __del__(self: LinkedIn) -> None:
   ) -> None:
   ```
 
+  > This private method interacts with the password field that is in the LinkedIn login page. 
+  > <br><br>
   > This private method is internally used by the private method `__fill_credentials()`.
   > <br><br>
   > This private method internally uses the `__get_password_box()` private method to first get the element where it needs to send
@@ -156,12 +155,12 @@ def __del__(self: LinkedIn) -> None:
 
 - **Method \_\_fill_credentials()**
 
-  > This private method interacts with the form that is in the LinkedIn login page.
-
   ```python
   def __fill_credentials(self: LinkedIn) -> None:
   ```
 
+  > This private method interacts with the form that is in the LinkedIn login page. 
+  > <br><br>
   > As we have already discussed that this method is internally used by the `login()` method to log into LinkedIn.
   > <br>
   > This method internally uses private methods `__enter_email()` and `__enter_password()` to send the user email and password to
