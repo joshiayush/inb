@@ -68,9 +68,9 @@ from errors import DomainNameSystemNotResolveException
 parser = ArgumentParser(prog="inb",
                         description=(
                              f"""{CreateFigletString("LinkedIn Bot")}\n"""
-                             f"""LinkedIn Bash, version {__version__}(1)-release (lbot-{__version__})\n"""
-                             """These commands are defined internally. Type '--help' to see this list\n"""
-                             """Type (command) --help to know more about that command"""),
+                             f"""LinkedIn Bash, version {__version__}(1)-release (inb-{__version__})\n"""
+                             f"""These commands are defined internally. Type '--help' to see this list\n"""
+                             f"""Type (command) --help to know more about that command"""),
                         formatter_class=RawDescriptionHelpFormatter)
 
 subparsers = parser.add_subparsers(help="available actions",
