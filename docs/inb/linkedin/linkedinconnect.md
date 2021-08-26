@@ -63,10 +63,9 @@ def __del__(self: LinkedInConnect) -> None:
 
   > This method takes you to the _mynetwork_ page in your **LinkedIn** account.
   > <br><br>
-  > This method takes in an argument `url` (i.e., the url to your _mynetwork_ page). Note that currently I haven't coded any kind of
-  > validator to check if the url is valid or not, in case you provide an invalid url explicilty it will be taken in and you might
-  > see some kind of unexpected behaviour. If the url is not given (means it is `None`) then the value of url is set to the value of
-  > an internal variable called `MY_NETWORK_PAGE`, this is an static variable of `LinkedInConnect` class.
+  > This method takes in an argument `url` (i.e., the url to your _mynetwork_ page). If the url is not given (means it is `None`) 
+  > then the value of url is set to the value of an internal variable called `MY_NETWORK_PAGE`, this is an static variable of 
+  > `LinkedInConnect` class.
   > <br><br>
   > Note that this method will raise an exception `EmptyResponseException` in case weak network is found (means `TimeoutException`
   > is raised by the driver instance).

@@ -29,8 +29,11 @@ from selenium import webdriver
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.keys import Keys
 
+from errors import ValidationError
 from errors import CredentialsNotGivenException
 from errors import DomainNameSystemNotResolveException
+
+from lib.utils.validator import InbValidator
 
 
 class LinkedIn(Driver):
@@ -64,7 +67,6 @@ class LinkedIn(Driver):
         if user_email.strip() == '':
             raise CredentialsNotGivenException(
                 "ValueError: 'user_email' can not be empty!")
-
         if user_password.strip() == '':
             raise CredentialsNotGivenException(
                 "ValueError: 'user_password' can not be empty!")
@@ -72,7 +74,7 @@ class LinkedIn(Driver):
         self.__user_email = user_email
         self.__user_password = user_password
 
-    def get_login_page(self: LinkedIn, _url: str = None) -> None:
+    def get_login_page(self: LinkedIn, url: str = None) -> None:
         """Method get_login_page() takes you to the LinkedIn login page by executing 
         function 'get()' on the webdriver object.
 
@@ -86,11 +88,14 @@ class LinkedIn(Driver):
         :Raises:
             - DomainNameSystemNotResolveException if there's a TimeourException
         """
-        if _url == None:
-            _url = LinkedIn.LOGIN_PAGE_URL
-
+        if url == None:
+            url = LinkedIn.LOGIN_PAGE_URL
+        elif isinstance(url, str):
+            if not InbValidator(url).is_url():
+                ValidationError(
+                    "LinkedIn: [URL] (%(url)s) is not a valid url!" % {"url": url})
         try:
-            self._driver.get(_url)
+            self._driver.get(url)
         except TimeoutException:
             raise DomainNameSystemNotResolveException("ERR_DNS_PROBE_STARTED")
 

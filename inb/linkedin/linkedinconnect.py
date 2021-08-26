@@ -24,11 +24,15 @@
 from __future__ import annotations
 
 import time
+from typing import Union
+
+from lib.utils.validator import InbValidator
 
 from .person.person import Person
 from .DOM.cleaners import Cleaner
 from .invitation.status import Invitation
 
+from errors import ValidationError
 from errors import EmptyResponseException
 from errors import ConnectionLimitExceededException
 
@@ -43,6 +47,7 @@ from selenium.webdriver.common.action_chains import ActionChains
 
 class LinkedInConnect(object):
     __INVITATION_SENT: int = 0
+    MY_NETWORK_PAGE: str = "https://www.linkedin.com/mynetwork/"
 
     def __init__(
         self: LinkedInConnect,
@@ -77,7 +82,7 @@ class LinkedInConnect(object):
 
     def get_my_network(
         self: LinkedInConnect,
-        _url: str = "https://www.linkedin.com/mynetwork/"
+        url: Union[str, None] = None
     ) -> None:
         """Method get_my_network() sends a GET request to the network page of LinkedIn.
 
@@ -91,12 +96,18 @@ class LinkedInConnect(object):
         :Raises:
             - EmptyResponseException if there is a TimeoutException
         """
+        if url == None:
+            url = LinkedInConnect.MY_NETWORK_PAGE
+        elif isinstance(url, str):
+            if not InbValidator(url).is_url():
+                ValidationError(
+                    "LinkedInConnect: [URL] (%(url)s) is not a valid url!" % {"url": url})
         try:
-            self._driver.get(_url)
+            self._driver.get(url)
         except TimeoutException:
             raise EmptyResponseException("ERR_EMPTY_RESPONSE")
 
-    def send_invitation(self: LinkedInConnect) -> None:
+    def __send_invitation(self: LinkedInConnect) -> None:
         """Method send_invitation() starts sending invitation to people on linkedin.
 
         :Args:
@@ -156,7 +167,7 @@ class LinkedInConnect(object):
             - {None}
         """
         self.__execute_cleaners()
-        self.send_invitation()
+        self.__send_invitation()
 
     def __del__(self: LinkedInConnect) -> None:
         """LinkedInConnectionsAuto destructor to de-initialise LinkedInConnectionsAuto object.
