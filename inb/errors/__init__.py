@@ -138,6 +138,27 @@ class WebDriverPathNotGivenException(Exception):
     """Thrown when chrome driver's path is not given."""
 
     def __init__(self: WebDriverPathNotGivenException, *args: Tuple[Any]) -> None:
+        super(WebDriverNotExecutableException, self).__init__(*args)
+        if args:
+            if isinstance(args[0], str):
+                self.message = args[0]
+            else:
+                raise Exception(
+                    "WebDriverNotExecutableException: Constructor's first argument must be of type 'str' not '%(type)s'" % {
+                        "type": _type(args[0])})
+        else:
+            self.message = None
+
+    def __str__(self: WebDriverNotExecutableException) -> str:
+        if self.message:
+            return "WebDriverNotExecutableException: %(message)s" % {"message": self.message}
+        else:
+            return "WebDriverNotExecutableException has been raised!"
+
+class WebDriverNotExecutableException(Exception):
+    """Thrown when chrome driver's path is not given."""
+
+    def __init__(self: WebDriverNotExecutableException, *args: Tuple[Any]) -> None:
         super(WebDriverPathNotGivenException, self).__init__(*args)
         if args:
             if isinstance(args[0], str):
