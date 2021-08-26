@@ -23,6 +23,11 @@
 """from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!"""
 from __future__ import annotations
 
+from typing import Any
+from typing import Tuple
+
+from lib.utils import _type
+
 
 class EmptyResponseException(Exception):
     """Thrown when recieved an empty response."""
@@ -76,26 +81,148 @@ class WebDriverPathNotGivenException(Exception):
 class CredentialsNotGivenException(Exception):
     """Thrown when user's credentials are not given to the LinkedIn class."""
 
-    def __init__(self: CredentialsNotGivenException, message: str = '') -> None:
-        super(CredentialsNotGivenException, self).__init__(message)
+    def __init__(self: CredentialsNotGivenException, *args: Tuple[Any]) -> None:
+        super(CredentialsNotGivenException, self).__init__(*args)
+        if args:
+            if isinstance(args[0], str):
+                self.message = args[0]
+            else:
+                raise Exception(
+                    "CredentialsNotGivenException: Constructor's first argument must be of type 'str' not '%(type)s'" % {
+                        "type": _type(args[0])})
+            if len(args) > 1:
+                if isinstance(args[1], dict):
+                    self.credentials_dict = args[1]
+                    if not "user_email" in args[1] or not "user_password" in args[1]:
+                        raise KeyError(
+                            "CredentialsNotGivenException: Constructor's second argument's mapping key"
+                            " 'user_email' or 'user_password' not found!")
+                else:
+                    raise Exception(
+                        "CredentialsNotGivenException: Constructor's second argument"
+                        " (credentials dictionary) must be of type 'dict' not '%(type)s'" % {
+                            "type": _type(args[0])})
+        else:
+            self.message = None
+            self.credentials_dict = None
+
+    def __str__(self: CredentialsNotGivenException) -> str:
+        if self.message and self.credentials_dict:
+            return ("CredentialsNotGivenException: %(message)s\n"
+                    "[credentials] {'user_email': %(user_email)s, 'user_password': %(user_password)s}") % {
+                "message": self.message, "user_email": _type(self.credentials_dict["user_email"]),
+                "user_password": _type(self.credentials_dict["user_password"])}
+        elif self.message:
+            return "CredentialsNotGivenException: %(message)s" % {"message": self.message}
+        else:
+            return "CredentialsNotGivenException has been raised!"
 
 
 class ConnectionLimitExceededException(Exception):
     """Thrown when connections limit given by the user exceeds."""
 
-    def __init__(self: ConnectionLimitExceededException, message: str = '') -> None:
-        super(ConnectionLimitExceededException, self).__init__(message)
+    def __init__(self: ConnectionLimitExceededException, *args: Tuple[Any]) -> None:
+        super(ConnectionLimitExceededException, self).__init__(*args)
+        if args:
+            if isinstance(args[0], str):
+                self.message = args[0]
+            else:
+                raise Exception(
+                    "ConnectionLimitExceededException: Constructor's first argument must be of type 'str' not '%(type)s'" % {
+                        "type": _type(args[0])})
+        else:
+            self.message = None
+
+    def __str__(self: ConnectionLimitExceededException) -> str:
+        if self.message:
+            return "ConnectionLimitExceededException: %(message)s" % {"message": self.message}
+        else:
+            return "ConnectionLimitExceededException has been raised!"
 
 
 class DatabaseDoesNotExistException(Exception):
     """Thrown when database does not exist to perform read/write operations."""
 
-    def __init__(self: DatabaseDoesNotExistException, message: str = '') -> None:
-        super(DatabaseDoesNotExistException, self).__init__(message)
+    def __init__(self: DatabaseDoesNotExistException, *args: Tuple[Any]) -> None:
+        super(DatabaseDoesNotExistException, self).__init__(*args)
+        if args:
+            if isinstance(args[0], str):
+                self.message = args[0]
+            else:
+                raise Exception(
+                    "DatabaseDoesNotExistException: Constructor's first argument must be of type 'str' not '%(type)s'" % {
+                        "type": _type(args[0])})
+            if len(args) > 1:
+                if isinstance(args[1], str):
+                    self.database_path = args[1]
+                else:
+                    raise Exception(
+                        "DatabaseDoesNotExistException: Constructor's second argument "
+                        "(database path) must be of type 'str' not '%(type)s'" % {
+                            "type": _type(args[0])})
+        else:
+            self.message = None
+            self.database_path = None
+
+    def __str__(self: DatabaseDoesNotExistException) -> str:
+        if self.message and self.database_path:
+            return "DatabaseDoesNotExistException: %(message)s\n[database path] %(database_path)s" % {
+                "message": self.message, "database_path": self.database_path}
+        elif self.message:
+            return "DatabaseDoesNotExistException: %(message)s" % {"message": self.message}
+        else:
+            return "DatabaseDoesNotExistException has been raised!"
 
 
 class EmtpyDatabaseException(Exception):
     """Thrown when email and password are requested and database is empty."""
 
-    def __init__(self: EmtpyDatabaseException, message: str = '') -> None:
-        super(EmtpyDatabaseException, self).__init__(message)
+    def __init__(self: EmtpyDatabaseException, *args: Tuple[Any]) -> None:
+        super(EmtpyDatabaseException, self).__init__(*args)
+        if args:
+            if isinstance(args[0], str):
+                self.message = args[0]
+            else:
+                raise Exception(
+                    "EmtpyDatabaseException: Constructor's first argument must be of type 'str' not '%(type)s'" % {
+                        "type": _type(args[0])})
+            if len(args) > 1:
+                if isinstance(args[1], str):
+                    self.database_path = args[1]
+                else:
+                    raise Exception(
+                        "EmtpyDatabaseException: Constructor's second argument "
+                        "(database path) must be of type 'str' not '%(type)s'" % {
+                            "type": _type(args[0])})
+        else:
+            self.message = None
+            self.database_path = None
+
+    def __str__(self: EmtpyDatabaseException) -> str:
+        if self.message and self.database_path:
+            return "EmptyDatabaseException: %(message)s\n[database path] %(database_path)s" % {
+                "message": self.message, "database_path": self.database_path}
+        elif self.message:
+            return "EmptyDatabaseException: %(message)s" % {"message": self.message}
+        else:
+            return "EmptyDatabaseException has been raised!"
+
+
+class ValidationError(Exception):
+    def __init__(self: ValidationError, *args: Tuple[Any]) -> None:
+        super(ValidationError, self).__init__(*args)
+        if args:
+            if isinstance(args[0], str):
+                self.message = args[0]
+            else:
+                raise Exception(
+                    "ValidationError: Constructor's first argument must be of type 'str' not '%(type)s'" % {
+                        "type": _type(args[0])})
+        else:
+            self.message = None
+
+    def __str__(self: ValidationError) -> str:
+        if self.message:
+            return "ValidationError: %(message)s" % {"message": self.message}
+        else:
+            return "ValidationError has been raised!"
