@@ -31,6 +31,7 @@ from .parser import OPT_ARGS_ACTION
 from .utils import _type
 from .utils import Terminal
 from .utils import Validator
+from .utils import InbValidator
 from .utils import CreateFigletString
 
 __all__ = ["DRIVER_PATH"]

@@ -24,3 +24,4 @@ from .type import _type
 from .window import Terminal
 from .figlet import CreateFigletString
 from .validator import Validator
+from .validator import InbValidator
