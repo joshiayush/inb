@@ -130,8 +130,8 @@ class Validator(object):
                 return True
         else:
             for path in os.environ["PATH"].split(os.pathsep):
-                exe_file = os.path.join(path, self._field)
-                if is_exe(exe_file):
+                _exe_file = os.path.join(path, self._field)
+                if is_exe(_exe_file):
                     return True
         return False
 
