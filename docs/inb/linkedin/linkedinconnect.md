@@ -63,8 +63,8 @@ def __del__(self: LinkedInConnect) -> None:
 
   > This method takes you to the _mynetwork_ page in your **LinkedIn** account.
   > <br><br>
-  > This method takes in an argument `url` (i.e., the url to your _mynetwork_ page). If the url is not given (means it is `None`) 
-  > then the value of url is set to the value of an internal variable called `MY_NETWORK_PAGE`, this is an static variable of 
+  > This method takes in an argument `url` (i.e., the url to your _mynetwork_ page). If the url is not given (means it is `None`)
+  > then the value of url is set to the value of an internal variable called `MY_NETWORK_PAGE`, this is an static variable of
   > `LinkedInConnect` class.
   > <br><br>
   > Note that this method will raise an exception `EmptyResponseException` in case weak network is found (means `TimeoutException`
@@ -76,4 +76,43 @@ def __del__(self: LinkedInConnect) -> None:
   def run(self: LinkedInConnect) -> None:
   ```
 
+  > This method must be called after the successful execution of the above `get_my_network()` method, otherwise exceptions may
+  > occur.
+  > <br><br>
+  > This method first performs cleanup on the page that has the person elements in it so that no other element overlap the person
+  > element that way it will target every person element that is on the page. It calls an internal method called
+  > `__execute_cleaners()` to perform cleanup on the page.
+  > <br><br>
+  > After performing cleanup it finally calls the internal method `__send_invitation()` that does the actual inviting job.
+
 ## System Internal Call Interface
+
+- **Method \_\_execute_cleaners()**
+
+  ```python
+  def __execute_cleaners(self: LinkedInConnect) -> None:
+  ```
+
+  > This private method internally calls the `Cleaner` service to clean up certain elements from the page.
+  > <br><br>
+  > This time we remove the _message overlay_ that lies on the _mynetwork_ page. This _message overlay_ loads up dynamically so the
+  > `Cleaner` service by default waits for `60` seconds for the arrival of this _message overlay_, if you have a weak network this
+  > _message overlay_ might not arrive by that time and you will see some failures while sending invitations because of the
+  > `ElementNotInteractableException`.
+
+- **Method \_\_send_invitation()**
+
+  ```python
+  def __send_invitation(self: LinkedInConnect) -> None:
+  ```
+
+  > This private method internally calls the `get_suggestion_box_element()` method of the `Person` service to get a person element
+  > from the page.
+  > <br><br>
+  > The element returned by the `get_suggestion_box_element()` method of the `Person` service is a `dict` (dictionary) object that
+  > has keys `name`, `occupation` and `connect_button` attached to it. Later on this dictionary we access the `connect_button`
+  > which is apparently is a `webdriver.Chrome` object, therefore, we perform click operation on it by using `ActionChains` which
+  > is a service that `selenium` provides.
+  > <br><br>
+  > We keep performing the above operations until we reach the limit. This method also logs the invitation status on the console
+  > using the `Invitation` service.
