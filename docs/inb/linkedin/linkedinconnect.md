@@ -111,7 +111,7 @@ def __del__(self: LinkedInConnect) -> None:
   > <br><br>
   > The element returned by the `get_suggestion_box_element()` method of the `Person` service is a `dict` (dictionary) object that
   > has keys `name`, `occupation` and `connect_button` attached to it. Later on this dictionary we access the `connect_button`
-  > which is apparently is a `webdriver.Chrome` object, therefore, we perform click operation on it by using `ActionChains` which
+  > which is apparently a `webdriver.Chrome` object, therefore, we perform click operation on it by using `ActionChains` which
   > is a service that `selenium` provides.
   > <br><br>
   > We keep performing the above operations until we reach the limit. This method also logs the invitation status on the console
