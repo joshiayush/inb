@@ -2,9 +2,6 @@ __pycache__
 
 inb/tests/creds/**
 
-creds/credentialsFile.ini
-database/firebaseCreds/serviceAccountKey.json
-
 *.spec
 dist/**
 build/**
@@ -13,6 +10,5 @@ lib/**
 lib64
 include
 bin
-
 
 .vscode

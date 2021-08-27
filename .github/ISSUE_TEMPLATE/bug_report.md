@@ -1,12 +1,10 @@
----
-name: Bug report
-about: Create a report to help us improve
-labels: "🛠 goal: fix, 🚦 status: awaiting triage, 💻 aspect: code, 🟧 priority: high"
----
+| Name       | About                              | Labels                                                                        |
+| ---------- | ---------------------------------- | ----------------------------------------------------------------------------- |
+| Bug report | Create a report to help us improve | "🛠 goal: fix, 🚦 status: awaiting triage, 💻 aspect: code, 🟧 priority: high" |
 
 ## Description
 
-Concisely describe the bug here.
+Write a succinct bug description here.
 
 ## Reproduction
 
@@ -19,7 +17,7 @@ Provide detailed steps to reproduce the bug.
 
 ## Expectation
 
-Concisely describe what you expected to happen.
+Succinctly describe what you expected to happen.
 
 ## Screenshots
 
@@ -29,10 +27,10 @@ Add screenshots (if possible) to show the problem; or delete the section entirel
 
 Please complete this, unless you are certain the problem is not environment specific.
 
- - Device: (_eg._ laptop; PC)
- - OS: (_eg._ iOS 13.5; Fedora 32; Windows; Ubuntu; Kali Linux)
- - Interpreter: (_eg._ python; python3)
- - Other info: (_eg._ Chrome Driver version; Google Chrome Version)
+- Device: (_eg._ laptop; PC)
+- OS: (_eg._ iOS 13.5; Fedora 32; Windows; Ubuntu; Kali Linux)
+- Interpreter: (_eg._ python; python3)
+- Other info: (_eg._ Chrome Driver version; Google Chrome Version)
 
 ## Additional context
 
