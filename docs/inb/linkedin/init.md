@@ -33,7 +33,7 @@ def __init__(
 ```
 
 > Argument `driver_path` is neccessary to locate the chromedriver executable in your system, you must give the absolute path to the
-> `chromedriver` executable in your system, if the `driver_path` is not given, you will get an  `WebDriverPathNotGivenException`. 
+> `chromedriver` executable in your system, if the `driver_path` is not given, you will get an `WebDriverPathNotGivenException`.
 > <br><br>
 > Argument `options` is optional, it is a list of chromedriver options that you may want to enable while automating the browser. <br>
 
@@ -49,71 +49,19 @@ def __del__(self: Driver) -> None:
 
 ## Driver Options
 
-> To set the chromedriver in _headless_ mode use:
-
-```python
-HEADLESS: str = "--headless"
-```
-
-> To set the chromedriver in _incognito_ mode use:
-
-```python
-INCOGNITO: str = "--incognito"
-```
-
-> To set the chromedriver in _no-snadbox_ mode use:
-
-```python
-NO_SANDBOX: str = "--no-sandbox"
-```
-
-> To set the chromedriver in _disable-gpu_ mode use:
-
-```python
-DISABLE_GPU: str = "--disable-gpu"
-```
-
-> To set the chromedriver in _start-maximized_ mode use:
-
-```python
-START_MAXIMIZED: str = "--start-maximized"
-```
-
-> To set the chromedriver in _disable-infobars_ mode use:
-
-```python
-DISABLE_INFOBARS: str = "--disable-infobars"
-```
-
-> To set the chromedriver in _enable-automatio_ mode use:
-
-```python
-ENABLE_AUTOMATION: str = "--enable-automation"
-```
-
-> To set the chromedriver in _disable-extensions_ mode use:
-
-```python
-DISABLE_EXTENSIONS: str = "--disable-extensions"
-```
-
-> To set thr chromedriver in _disable-notifications_ mode use:
-
-```python
-DISABLE_NOTIFICATIONS: str = "--disable-notifications"
-```
-
-> To set the chromedriver in _disable-setuid-sandbox_ mode use:
-
-```python
-DISABLE_SETUID_SANDBOX: str = "--disable-setuid-sandbox"
-```
-
-> To set the chromedriver in _ignore-certificate-errors_ mode use:
-
-```python
-IGNORE_CERTIFICATE_ERRORS: str = "--ignore-certificate-errors"
-```
+| Option                                                           | Use                                                             |
+| ---------------------------------------------------------------- | --------------------------------------------------------------- |
+| `HEADLESS: str = "--headless"`                                   | To set the chromedriver in _headless_ mode use                  |
+| `INCOGNITO: str = "--incognito"`                                 | To set the chromedriver in _incognito_ mode use                 |
+| `NO_SANDBOX: str = "--no-sandbox"`                               | To set the chromedriver in _no-snadbox_ mode use                |
+| `DISABLE_GPU: str = "--disable-gpu"`                             | To set the chromedriver in _disable-gpu_ mode use               |
+| `START_MAXIMIZED: str = "--start-maximized"`                     | To set the chromedriver in _start-maximized_ mode use           |
+| `DISABLE_INFOBARS: str = "--disable-infobars"`                   | To set the chromedriver in _disable-infobars_ mode use          |
+| `ENABLE_AUTOMATION: str = "--enable-automation"`                 | To set the chromedriver in _enable-automatio_ mode use          |
+| `DISABLE_EXTENSIONS: str = "--disable-extensions"`               | To set the chromedriver in _disable-extensions_ mode use        |
+| `DISABLE_NOTIFICATIONS: str = "--disable-notifications"`         | To set thr chromedriver in _disable-notifications_ mode use     |
+| `DISABLE_SETUID_SANDBOX: str = "--disable-setuid-sandbox"`       | To set the chromedriver in _disable-setuid-sandbox_ mode use    |
+| `IGNORE_CERTIFICATE_ERRORS: str = "--ignore-certificate-errors"` | To set the chromedriver in _ignore-certificate-errors_ mode use |
 
 ## System Call Interface
 
