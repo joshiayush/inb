@@ -13,3 +13,6 @@ lib/**
 lib64
 include
 bin
+
+
+.vscode
