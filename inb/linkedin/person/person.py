@@ -192,14 +192,16 @@ class Person(object):
                 # Update the xpath in each iteration
                 _xpath = _xpath[:-3] + '[' + str(_target) + ']'
                 try:
-                    _search_results_person_lis.append(WebDriverWait(self._driver, 60).until(
+                    _search_results_person_lis.append(WebDriverWait(self._driver, 0.5).until(
                         EC.presence_of_element_located((By.XPATH, _xpath))
                     ))
-                except (TimeoutException, NoSuchElementException) as error:
-                    if isinstance(error, NoSuchElementException):
+                except (TimeoutException, NoSuchElementException) as exc:
+                    if isinstance(exc, NoSuchElementException):
                         break
                     continue
                 _target += 1
+                if _target > 10:
+                    break
 
             return _search_results_person_lis
 
@@ -208,7 +210,7 @@ class Person(object):
 
             for li in lis:
                 _entity_result_item_container: webdriver.Chrome = li.find_element_by_css_selector(
-                    "div[class='entity_result']").find_element_by_css_selector(
+                    "div[class^='entity_result']").find_element_by_css_selector(
                         "div[class='entity-result__item']")
                 _entity_result_image_container: webdriver.Chrome = _entity_result_item_container.find_element_by_css_selector(
                     "div[class='entity-result__image']")

@@ -44,6 +44,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from errors import ConnectionLimitExceededException
 
 from lib.algo import levenshtein
+from lib.utils import _type
 
 from .DOM import Cleaner
 from .person.person import Person
@@ -54,7 +55,7 @@ class LinkedInSearchConnect(object):
     """Class LinkedInSearchConnect() will search people based on the given Keyword,
     Location, Current Company, School, Industry, Profile Language, First Name,
     Last Name, Title."""
-    WAIT: int = 0
+    WAIT: int = 60
     __INVITATION_SENT: int = 0
 
     def __init__(
@@ -93,34 +94,23 @@ class LinkedInSearchConnect(object):
         if not isinstance(driver, webdriver.Chrome):
             raise Exception(
                 "Object '%(driver)s' is not a 'webdriver.Chrome' object!" % {
-                    "driver": type(driver)})
-
+                    "driver": _type(driver)})
         self._driver = driver
 
         if limit > 80:
             raise ConnectionLimitExceededException(
                 "Daily invitation limit can't be greater than 80, we recommend 40!")
-
         self._limit = limit
 
-        self._keyword = keyword.strip()
-        if ":" in location:
-            self._location = location.split(":")
-        else:
-            self._location = location.strip()
+        self._keyword = keyword
+        self._location = location
         self._title = title
         self._first_name = first_name
         self._last_name = last_name
         self._school = school
-        if ":" in industry:
-            self._industry = industry.split(":")
-        else:
-            self._industry = industry.strip()
+        self._industry = industry
         self._current_company = current_company
-        if ":" in profile_language:
-            self._profile_language = profile_language.split(":")
-        else:
-            self._profile_language = profile_language.strip()
+        self._profile_language = profile_language
 
     def __get_search_results_page(self: LinkedInSearchConnect) -> None:
         _search_box: webdriver.Chrome = WebDriverWait(self._driver, 60).until(
@@ -135,22 +125,24 @@ class LinkedInSearchConnect(object):
     def __execute_cleaners(self: LinkedInSearchConnect) -> None:
         """Method execute_cleaners() scours the unwanted element from the page during the
         connect process.
-
         :Args:
             - self: {LinkedInConnectionsAuto}
-
         :Returns:
             - {None}
         """
         Cleaner(self._driver).clear_message_overlay()
 
     def __apply_filters(self: LinkedInSearchConnect):
-        def get_element_by_xpath(xpath: str, wait: int = LinkedInSearchConnect.WAIT) -> webdriver.Chrome:
+        def get_element_by_xpath(xpath: str, wait: int = None) -> webdriver.Chrome:
+            if wait == None:
+                wait = LinkedInSearchConnect.WAIT
             return WebDriverWait(self._driver, wait).until(
                 EC.presence_of_element_located((By.XPATH, xpath))
             )
 
-        def get_elements_by_xpath(xpath: str, wait: int = LinkedInSearchConnect.WAIT) -> webdriver.Chrome:
+        def get_elements_by_xpath(xpath: str, wait: int = None) -> webdriver.Chrome:
+            if wait == None:
+                wait = LinkedInSearchConnect.WAIT
             return WebDriverWait(self._driver, wait).until(
                 EC.presence_of_all_elements_located((By.XPATH, xpath))
             )
@@ -160,10 +152,12 @@ class LinkedInSearchConnect(object):
         _people_button.click()
         del _people_button
 
-        _filters_button: webdriver.Chrome = get_element_by_xpath(
-            "//div[@id='search-reusables__filters-bar']//button[@aria-label='All filters']")
-        _filters_button.click()
-        del _filters_button
+        if self._location or self._industry or self._profile_language or self._first_name or \
+                self._last_name or self._title or self._current_company or self._school:
+            _filters_button: webdriver.Chrome = get_element_by_xpath(
+                "//div[@id='search-reusables__filters-bar']//button[@aria-label='All filters']")
+            _filters_button.click()
+            del _filters_button
 
         def check_for_filter(
                 _filter: str,
@@ -283,10 +277,12 @@ class LinkedInSearchConnect(object):
             _school_box.send_keys(self._school)
             del _school_box
 
-        _show_results_button: webdriver.Chrome = get_element_by_xpath(
-            "//div[@id='artdeco-modal-outlet']//button[@aria-label='Apply current filters to show results']")
-        _show_results_button.click()
-        del _show_results_button
+        if self._location or self._industry or self._profile_language or self._first_name or \
+                self._last_name or self._title or self._current_company or self._school:
+            _show_results_button: webdriver.Chrome = get_element_by_xpath(
+                "//div[@id='artdeco-modal-outlet']//button[@aria-label='Apply current filters to show results']")
+            _show_results_button.click()
+            del _show_results_button
 
     def __send_invitation(self: LinkedInSearchConnect) -> None:
         _start = time.time()
