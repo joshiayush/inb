@@ -30,10 +30,9 @@ from lib import NARGS
 from lib import ArgumentParser
 from lib import OPT_ARGS_ACTION
 from lib.utils import CreateFigletString
-from lib.handler import CommandHandler
+from lib.handler import Handler
 
 from errors import EmtpyDatabaseException
-from errors import UserCacheNotFoundException
 from errors import CredentialsNotGivenException
 from errors import DatabaseDoesNotExistException
 from errors import DomainNameSystemNotResolveException
@@ -68,7 +67,7 @@ from errors import DomainNameSystemNotResolveException
 parser = ArgumentParser(prog="inb",
                         description=(
                              f"""{CreateFigletString("LinkedIn Bot")}\n"""
-                             f"""LinkedIn Bash, version {__version__}(1)-release (inb-{__version__})\n"""
+                             f"""inb Bash, version {__version__}(1)-release (inb-{__version__})\n"""
                              f"""These commands are defined internally. Type '--help' to see this list\n"""
                              f"""Type (command) --help to know more about that command"""),
                         formatter_class=RawDescriptionHelpFormatter)
@@ -185,6 +184,187 @@ send.set_defaults(which="send",
                   incognito=False,
                   start_maximized=False)
 
+# Usage: inb search [-h] [-e [EMAIL]] [-p [PASSWORD]] [-k [KEYWORD]]
+#                   [-l [LOCATION]] [-t [TITLE]] [-fn [FIRST_NAME]]
+#                   [-ln [LAST_NAME]] [-s [SCHOOL]] [-inds [INDUSTRY]]
+#                   [-cc [CURRENT_COMPANY]] [-pl [PROFILE_LANGUAGE]] [-c] [-i]
+#                   [-ngpu] [-m]
+#                   {limit} ...
+#
+#  _     _       _            _ ___         ____        _
+# | |   (_)_ __ | | _____  __| |_ _|_ __   | __ )  ___ | |_
+# | |   | | '_ \| |/ / _ \/ _` || || '_ \  |  _ \ / _ \| __|
+# | |___| | | | |   <  __/ (_| || || | | | | |_) | (_) | |_
+# |_____|_|_| |_|_|\_\___|\__,_|___|_| |_| |____/ \___/ \__|
+#
+#
+# Searches people on LinkedIn and then invites them.
+#
+# positional arguments:
+#   {limit}               available actions
+#     limit               sets the daily invitation limit
+#
+# optional arguments:
+#   -h, --help            show this help message and exit
+#   -e [EMAIL], --email [EMAIL]
+#                         User's email address
+#   -p [PASSWORD], --password [PASSWORD]
+#                         User's password
+#   -k [KEYWORD], --keyword [KEYWORD]
+#                         Keyword to search for
+#   -l [LOCATION], --location [LOCATION]
+#                         Location(s) to search in (separated by (:) colon)
+#   -t [TITLE], --title [TITLE]
+#                         Match title
+#   -fn [FIRST_NAME], --first-name [FIRST_NAME]
+#                         Match first name
+#   -ln [LAST_NAME], --last-name [LAST_NAME]
+#                         Match last name
+#   -s [SCHOOL], --school [SCHOOL]
+#                         Person's school
+#   -inds [INDUSTRY], --industry [INDUSTRY]
+#                         Industry(ies) to search in (separated by (:) colon)
+#   -cc [CURRENT_COMPANY], --current-company [CURRENT_COMPANY]
+#                         Person's current company
+#   -pl [PROFILE_LANGUAGE], --profile-language [PROFILE_LANGUAGE]
+#                         Person's profile language
+#   -c, --cookies         uses cookies for authentication
+#   -i, --incognito       set browser in incognito mode
+#   -ngpu, --headless     starts chrome in headless mode
+#   -m, --start-maximized
+#                         set browser in full screen
+
+search = subparsers.add_parser("search",
+                               description=(
+                                   f"""{CreateFigletString("LinkedIn Bot")}\n"""
+                                   """Searches people on LinkedIn and then invites them."""),
+                               formatter_class=RawDescriptionHelpFormatter,
+                               help=("""searches people on LinekdIn and then invites them."""))
+
+search.add_argument("-e", "--email",
+                    type=str,
+                    nargs=NARGS.OPTIONAL,
+                    default=None,
+                    help="User's email address")
+search.add_argument("-p", "--password",
+                    type=str,
+                    nargs=NARGS.OPTIONAL,
+                    default=None,
+                    help="User's password")
+search.add_argument("-k", "--keyword",
+                    type=str,
+                    nargs=NARGS.OPTIONAL,
+                    default=None,
+                    help="Keyword to search for")
+search.add_argument("-l", "--location",
+                    type=str,
+                    nargs=NARGS.OPTIONAL,
+                    default=None,
+                    help="Location(s) to search in (separated by (:) colon)")
+search.add_argument("-t", "--title",
+                    type=str,
+                    nargs=NARGS.OPTIONAL,
+                    default=None,
+                    help="Match title")
+search.add_argument("-fn", "--first-name",
+                    type=str,
+                    nargs=NARGS.OPTIONAL,
+                    default=None,
+                    help="Match first name")
+search.add_argument("-ln", "--last-name",
+                    type=str,
+                    nargs=NARGS.OPTIONAL,
+                    default=None,
+                    help="Match last name")
+search.add_argument("-s", "--school",
+                    type=str,
+                    nargs=NARGS.OPTIONAL,
+                    default=None,
+                    help="Person's school")
+search.add_argument("-inds", "--industry",
+                    type=str,
+                    nargs=NARGS.OPTIONAL,
+                    default=None,
+                    help="Industry(ies) to search in (separated by (:) colon)")
+search.add_argument("-cc", "--current-company",
+                    type=str,
+                    nargs=NARGS.OPTIONAL,
+                    default=None,
+                    help="Person's current company")
+search.add_argument("-pl", "--profile-language",
+                    type=str,
+                    nargs=NARGS.OPTIONAL,
+                    default=None,
+                    help="Person's profile language")
+
+# Usage: inb search limit [-h] [limit]
+#
+#  _     _       _            _ ___         ____        _
+# | |   (_)_ __ | | _____  __| |_ _|_ __   | __ )  ___ | |_
+# | |   | | '_ \| |/ / _ \/ _` || || '_ \  |  _ \ / _ \| __|
+# | |___| | | | |   <  __/ (_| || || | | | | |_) | (_) | |_
+# |_____|_|_| |_|_|\_\___|\__,_|___|_| |_| |____/ \___/ \__|
+#
+#
+# It is used to set the daily invitation limit
+# Limit must not exceed by 80 otherwise you'll be blocked for a entire
+# week
+#
+# positional arguments:
+#   limit
+#
+# optional arguments:
+#   -h, --help  show this help message and exit
+
+limit_subparsers = search.add_subparsers(help="available actions",
+                                         metavar=None)
+
+limit = limit_subparsers.add_parser("limit",
+                                    description=(
+                                        f"""{CreateFigletString("LinkedIn Bot")}\n"""
+                                        """It is used to set the daily invitation limit\n"""
+                                        """Limit must not exceed by 80 otherwise you'll be blocked for a entire\n"""
+                                        """week"""),
+                                    formatter_class=RawDescriptionHelpFormatter,
+                                    help=("""sets the daily invitation limit"""))
+
+limit.add_argument("limit",
+                   type=int,
+                   nargs=NARGS.OPTIONAL,
+                   default=20)
+
+limit.set_defaults(limit=20)
+
+search.add_argument("-c", "--cookies",
+                    action=OPT_ARGS_ACTION.STORE_TRUE,
+                    help="uses cookies for authentication")
+search.add_argument("-i", "--incognito",
+                    action=OPT_ARGS_ACTION.STORE_TRUE,
+                    help="set browser in incognito mode")
+search.add_argument("-ngpu", "--headless",
+                    action=OPT_ARGS_ACTION.STORE_TRUE,
+                    help="starts chrome in headless mode")
+search.add_argument("-m", "--start-maximized",
+                    action=OPT_ARGS_ACTION.STORE_TRUE,
+                    help="set browser in full screen")
+
+search.set_defaults(which="search",
+                    email=None,
+                    password=None,
+                    keyword=None,
+                    location=None,
+                    title=None,
+                    first_name=None,
+                    last_name=None,
+                    school=None,
+                    industry=None,
+                    current_company=None,
+                    profile_language=None,
+                    headless=False,
+                    limit=20,
+                    cookies=False,
+                    incognito=False,
+                    start_maximized=False)
 
 # usage: inb config [-h] [EMAIL] [PASSWORD]
 #
@@ -377,12 +557,11 @@ if len(sys.argv) <= 1:
 # input or unexpected demand like when database is not present but the user wants
 # to see the content of the database
 exceptions = tuple([EmtpyDatabaseException,
-                    UserCacheNotFoundException,
                     CredentialsNotGivenException,
                     DatabaseDoesNotExistException,
                     DomainNameSystemNotResolveException])
 
 try:
-    CommandHandler(parser.parse_args())
+    Handler(parser.parse_args())
 except exceptions as e:
     parser.error(e, usage=False)

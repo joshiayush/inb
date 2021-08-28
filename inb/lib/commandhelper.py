@@ -1,3 +1,26 @@
+# MIT License
+#
+# Copyright (c) 2019 Creative Commons
+#
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the "Software"),
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions
+#
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+# OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+
+
 """from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!"""
 from __future__ import annotations
 
@@ -17,13 +40,14 @@ from database.sql.sql import EMAIL_INDEX
 from database.sql.sql import PASSWORD_INDEX
 
 from errors import CredentialsNotGivenException
-from errors import ConnectionLimitExceededException
 
 
-class CommandHelper(object):
-    def __init__(self: CommandHelper, namespace: argparse.Namespace) -> None:
+class CommandAide(object):
+    def __init__(self: CommandAide, namespace: argparse.Namespace) -> None:
         if namespace.which == "send":
             self.__send(namespace)
+        elif namespace.which == "search":
+            self.__search(namespace)
         elif namespace.which == "show":
             self.__show(namespace)
         elif namespace.which == "config":
@@ -33,7 +57,7 @@ class CommandHelper(object):
         elif namespace.which == "developer":
             self.__developer(namespace)
 
-    def __send(self: CommandHelper, namespace: argparse.Namespace) -> None:
+    def __send(self: CommandAide, namespace: argparse.Namespace) -> None:
         self.email: str = namespace.email
         self.password: str = namespace.password
         self.cookies: bool = namespace.cookies
@@ -44,12 +68,11 @@ class CommandHelper(object):
                 "User did not provide credentials!")
 
         def get_cookies() -> Any:
-            return Database(database=SQL_DATABASE_PATH).read(
-                NAME_COLUMN,
-                EMAIL_COLUMN,
-                PASSWORD_COLUMN,
-                table=USERS_TABLE,
-                rows="*")
+            return Database(database=SQL_DATABASE_PATH).read(NAME_COLUMN,
+                                                             EMAIL_COLUMN,
+                                                             PASSWORD_COLUMN,
+                                                             table=USERS_TABLE,
+                                                             rows="*")
 
         def get_user_choice(rows: list) -> int:
             Database(database=SQL_DATABASE_PATH).print(USERS_TABLE, rows=rows)
@@ -60,31 +83,126 @@ class CommandHelper(object):
 
             if len(Cookies) > 1:
                 self.email = get_user_choice(Cookies)
-                self.password = Database(database=SQL_DATABASE_PATH).read(
-                    EMAIL_COLUMN, PASSWORD_COLUMN, USERS_TABLE, rows=".", where="Email = '%s'" % (self.email))[PASSWORD_INDEX]
+                self.password = Database(database=SQL_DATABASE_PATH).read(EMAIL_COLUMN,
+                                                                          PASSWORD_COLUMN,
+                                                                          USERS_TABLE,
+                                                                          rows=".",
+                                                                          where="Email = '%s'" % (self.email))[PASSWORD_INDEX]
             else:
                 self.email = Cookies[EMAIL_INDEX]
                 self.password = Cookies[PASSWORD_INDEX]
 
         self.limit = namespace.limit if type(
             namespace.limit) is int else int(namespace.limit) if type(namespace.limit) is str else 20
-
-        if self.limit > 80:
-            raise ConnectionLimitExceededException(
-                "Daily connection limit can't exceed by 80!")
-
         self.headless = namespace.headless
         self.incognito = namespace.incognito
         self.start_maximized = namespace.start_maximized
 
-    def __show(self: CommandHelper) -> None:
+    def __search(self: CommandAide, namespace: argparse.Namespace) -> None:
+        if namespace.email and not namespace.email.strip() == '':
+            self.email = namespace.email
+        else:
+            self.email = None
+        if namespace.email and not namespace.password.strip() == '':
+            self.password = namespace.password
+        else:
+            self.password = None
+        self.cookies = namespace.cookies
+
+        def get_cookies() -> Any:
+            return Database(database=SQL_DATABASE_PATH).read(NAME_COLUMN,
+                                                             EMAIL_COLUMN,
+                                                             PASSWORD_COLUMN,
+                                                             table=USERS_TABLE,
+                                                             rows="*")
+
+        def get_user_choice(rows: list) -> int:
+            Database(database=SQL_DATABASE_PATH).print(USERS_TABLE, rows=rows)
+            return inbinput("Enter your email: ", bold=True)
+
+        if self.cookies:
+            Cookies = get_cookies()
+
+            if len(Cookies) > 1:
+                self.email = get_user_choice(Cookies)
+                self.password = Database(database=SQL_DATABASE_PATH).read(EMAIL_COLUMN,
+                                                                          PASSWORD_COLUMN,
+                                                                          USERS_TABLE,
+                                                                          rows=".",
+                                                                          where="Email = '%s'" % (self.email))[PASSWORD_INDEX]
+            else:
+                self.email = Cookies[EMAIL_INDEX]
+                self.password = Cookies[PASSWORD_INDEX]
+
+        if namespace.keyword and not namespace.keyword.strip() == '':
+            self.keyword = namespace.keyword
+        else:
+            self.keyword = None
+        if namespace.location and ":" in namespace.location:
+            self.location = namespace.location.split(":")
+            for i in range(len(self.location)):
+                if self.location[i].strip() == '':
+                    self.location = self.location[:i:] + self.location[i+1::]
+        else:
+            if namespace.location and not namespace.location.strip() == '':
+                self.location = namespace.location
+            else:
+                self.location = None
+        if namespace.title and not namespace.title.strip() == '':
+            self.title = namespace.title
+        else:
+            self.title = None
+        if namespace.first_name and not namespace.first_name.strip() == '':
+            self.first_name = namespace.first_name
+        else:
+            self.first_name = None
+        if namespace.last_name and not namespace.last_name.strip() == '':
+            self.last_name = namespace.last_name
+        else:
+            self.last_name = None
+        if namespace.school and not namespace.school.strip() == '':
+            self.school = namespace.school
+        else:
+            self.school = None
+        if namespace.industry and ":" in namespace.industry:
+            self.industry = namespace.industry.split(":")
+            for i in range(len(self.industry)):
+                if self.industry[i].strip() == '':
+                    self.industry = self.industry[:i:] + self.industry[i+1::]
+        else:
+            if namespace.industry and not namespace.industry.strip() == '':
+                self.industry = namespace.industry.strip()
+            else:
+                self.industry = None
+        if namespace.current_company and not namespace.current_company.strip() == '':
+            self.current_company = namespace.current_company
+        else:
+            self.current_company = None
+        if namespace.profile_language and ":" in namespace.profile_language:
+            self.profile_language = namespace.profile_language.split(":")
+            for i in range(len(self.profile_language)):
+                if self.profile_language[i].strip() == '':
+                    self.profile_language = self.profile_language[:i:] + \
+                        self.profile_language[i+1::]
+        else:
+            if namespace.profile_language and not namespace.profile_language.strip() == '':
+                self.profile_language = namespace.profile_language
+            else:
+                self.profile_language = None
+        self.limit = namespace.limit if type(
+            namespace.limit) is int else int(namespace.limit) if type(namespace.limit) is str else 20
+        self.headless = namespace.headless
+        self.incognito = namespace.incognito
+        self.start_maximized = namespace.start_maximized
+
+    def __show(self: CommandAide) -> None:
         pass
 
-    def __delete(self: CommandHelper) -> None:
+    def __delete(self: CommandAide) -> None:
         pass
 
-    def __config(self: CommandHelper) -> None:
+    def __config(self: CommandAide) -> None:
         pass
 
-    def __developer(self: CommandHelper) -> None:
+    def __developer(self: CommandAide) -> None:
         pass

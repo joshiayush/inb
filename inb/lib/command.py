@@ -34,12 +34,13 @@ from linkedin import Driver
 
 from linkedin.linkedin import LinkedIn
 from linkedin.linkedinconnect import LinkedInConnect
+from linkedin.linkedinsearchconnect import LinkedInSearchConnect
 
 from . import DRIVER_PATH
-from .commandhelper import CommandHelper
+from .commandhelper import CommandAide
 
 
-class Command(CommandHelper):
+class Command(CommandAide):
 
     def __init__(self: Command, namespace: argparse.Namespace) -> None:
         super().__init__(namespace=namespace)
@@ -72,7 +73,7 @@ class Command(CommandHelper):
         inbprint(' '*80, end='\r')
         inbprint(f"Connected ✔", color="green", bold=True)
 
-        _linkedin_connection = LinkedInConnect(_linkedin._driver,
+        _linkedin_connection = LinkedInConnect(driver=_linkedin.driver,
                                                limit=self.limit)
 
         try:
@@ -86,6 +87,47 @@ class Command(CommandHelper):
         inbprint(f"Starting sending invitation ...", color="green", bold=True)
 
         _linkedin_connection.run()
+
+    def search(self: Command) -> None:
+        _chrome_driver_options: list = []
+
+        _chrome_driver_options.append(Driver.INCOGNITO)
+        _chrome_driver_options.append(Driver.IGNORE_CERTIFICATE_ERRORS)
+
+        if self.headless == True:
+            _chrome_driver_options.append(Driver.HEADLESS)
+
+        _linkedin = LinkedIn(user_email=self.email,
+                             user_password=self.password,
+                             driver_path=DRIVER_PATH,
+                             opt_chromedriver_options=_chrome_driver_options)
+
+        inbprint("Connecting ...", color="cyan", blink=True, end="\r")
+
+        try:
+            _linkedin.get_login_page()
+        except DomainNameSystemNotResolveException as exc:
+            inbprint(' '*80, end='\r')
+            inbprint(f"{exc}", color="red", bold=True)
+            return
+
+        _linkedin.login()
+
+        inbprint(' '*80, end='\r')
+        inbprint(f"Connected ✔", color="green", bold=True)
+
+        _linkedin_search_connect = LinkedInSearchConnect(driver=_linkedin.driver,
+                                                         keyword=self.keyword,
+                                                         location=self.location,
+                                                         title=self.title,
+                                                         first_name=self.first_name,
+                                                         last_name=self.last_name,
+                                                         school=self.school,
+                                                         industry=self.industry,
+                                                         current_company=self.current_company,
+                                                         profile_language=self.profile_language,
+                                                         limit=self.limit)
+        _linkedin_search_connect.run()
 
     def show(self: Command) -> None:
         """Show the table formed by the CommandHelper() class."""

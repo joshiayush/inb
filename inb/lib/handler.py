@@ -25,12 +25,19 @@ import argparse
 from .command import Command
 
 
-def CommandHandler(namespace: argparse.Namespace) -> None:
+def Handler(namespace: argparse.Namespace) -> None:
     if namespace.which == "send":
         try:
             Command(namespace).send()
         except Exception as e:
             raise e
+        return
+
+    if namespace.which == "search":
+        try:
+            Command(namespace).search()
+        except Exception as exc:
+            raise exc
         return
 
     if namespace.which == "show":
