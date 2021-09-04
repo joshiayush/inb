@@ -45,23 +45,24 @@ $ python3 inb/inb.py -h
 You will get a output something like this:
 
 ```
-Usage: inb [-h] {send,config,show,delete,developer} ...
+Usage: inb [-h] {send,search,config,show,delete,developer} ...
 
- _     _       _            _ ___         ____        _
-| |   (_)_ __ | | _____  __| |_ _|_ __   | __ )  ___ | |_
-| |   | | '_ \| |/ / _ \/ _` || || '_ \  |  _ \ / _ \| __|
-| |___| | | | |   <  __/ (_| || || | | | | |_) | (_) | |_
-|_____|_|_| |_|_|\_\___|\__,_|___|_| |_| |____/ \___/ \__|
+ _       _
+(_)_ __ | |__
+| | '_ \| '_ \
+| | | | | |_) |
+|_|_| |_|_.__/
 
 
-LinkedIn Bash, version 1.51.35(1)-release (lbot-1.51.35)
+inb Bash, version 1.51.35(1)-release (inb-1.51.35)
 These commands are defined internally. Type '--help' to see this list
 Type (command) --help to know more about that command
 
 positional arguments:
-  {send,config,show,delete,developer}
+  {send,search,config,show,delete,developer}
                         available actions
     send                sends invitation to people on linkedin.
+    search              searches people on LinekdIn and then invites them.
     config              used to store user's credentials
     show                prints the information that is in the database
     delete              deletes the information stored in the database
