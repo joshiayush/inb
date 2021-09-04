@@ -86,8 +86,8 @@ class Driver(object):
 
         Driver.__SESSION_ALREADY_EXISTS = True
 
-        self._driver = webdriver.Chrome(self._driver_path,
-                                        options=self._options)
+        self.driver = webdriver.Chrome(self._driver_path,
+                                       options=self._options)
 
     def disable_webdriver_chrome(self: Driver) -> None:
         """Method disable_webdriver_chrome() closes the webdriver session by 
@@ -100,10 +100,10 @@ class Driver(object):
             - {None}
         """
         Driver.__SESSION_ALREADY_EXISTS = False
-        self._driver.quit()
+        self.driver.quit()
 
     def __del__(self: Driver) -> None:
         Driver.__SESSION_ALREADY_EXISTS = False
 
-        if isinstance(self._driver, webdriver.Chrome):
-            self._driver.quit()
+        if isinstance(self.driver, webdriver.Chrome):
+            self.driver.quit()

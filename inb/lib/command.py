@@ -23,7 +23,10 @@
 """from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!"""
 from __future__ import annotations
 
+import logging
 import argparse
+
+from typing import List
 
 from console.print import inbprint
 
@@ -46,47 +49,47 @@ class Command(CommandAide):
         super().__init__(namespace=namespace)
 
     def send(self: Command) -> None:
-        _chrome_driver_options: list = []
+        chrome_driver_options: List[str] = []
 
-        _chrome_driver_options.append(Driver.INCOGNITO)
-        _chrome_driver_options.append(Driver.IGNORE_CERTIFICATE_ERRORS)
-
+        chrome_driver_options.append(Driver.INCOGNITO)
+        chrome_driver_options.append(Driver.IGNORE_CERTIFICATE_ERRORS)
         if self.headless == True:
-            _chrome_driver_options.append(Driver.HEADLESS)
+            chrome_driver_options.append(Driver.HEADLESS)
 
-        _linkedin = LinkedIn(user_email=self.email,
-                             user_password=self.password,
-                             driver_path=DRIVER_PATH,
-                             opt_chromedriver_options=_chrome_driver_options)
+        linkedin = LinkedIn(user_email=self.email,
+                            user_password=self.password,
+                            driver_path=DRIVER_PATH,
+                            opt_chromedriver_options=chrome_driver_options)
 
-        inbprint("Connecting ...", color="cyan", blink=True, end="\r")
-
+        logging.basicConfig(format="%(levelname)s:%(message)s", level=logging.INFO)
+        logging.info("Connecting")
         try:
-            _linkedin.get_login_page()
+            logging.info("Sending GET request to login page")
+            linkedin.get_login_page()
+            logging.info("Connected to login page")
         except DomainNameSystemNotResolveException as error:
-            inbprint(' '*80, end='\r')
-            inbprint(f"{error}", color="red", bold=True)
+            logging.critical(error)
             return
 
-        _linkedin.login()
+        logging.info("Logging in LinkedIn account (user-id=%(user_id)s)" %
+                     {"user_id": self.email})
+        linkedin.login()
+        logging.info("Successfully connected")
 
-        inbprint(' '*80, end='\r')
-        inbprint(f"Connected ✔", color="green", bold=True)
-
-        _linkedin_connection = LinkedInConnect(driver=_linkedin.driver,
-                                               limit=self.limit)
+        logging.info("Instantiating connection object")
+        linkedin_connection = LinkedInConnect(driver=linkedin.driver,
+                                              limit=self.limit)
 
         try:
-            _linkedin_connection.get_my_network()
+            logging.info("Sending GET request to mynetwork page")
+            linkedin_connection.get_my_network()
+            logging.info("Successfully connected to mynetwork page")
         except EmptyResponseException as error:
-            inbprint(' '*80, end='\r')
-            inbprint(f"{error}", color="red", bold=True)
+            logging.critical(error)
             return
 
-        inbprint(' '*80, end='\r')
-        inbprint(f"Starting sending invitation ...", color="green", bold=True)
-
-        _linkedin_connection.run()
+        logging.info("Starting sending invitation")
+        linkedin_connection.run()
 
     def search(self: Command) -> None:
         _chrome_driver_options: list = []

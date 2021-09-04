@@ -95,7 +95,7 @@ class LinkedIn(Driver):
                 ValidationError(
                     "LinkedIn: [URL] (%(url)s) is not a valid url!" % {"url": url})
         try:
-            self._driver.get(url)
+            self.driver.get(url)
         except TimeoutException:
             raise DomainNameSystemNotResolveException("ERR_DNS_PROBE_STARTED")
 
@@ -111,7 +111,7 @@ class LinkedIn(Driver):
         :Raises:
             - NoSuchElementException if the element wasn't found
         """
-        return self._driver.find_element_by_name("session_key")
+        return self.driver.find_element_by_name("session_key")
 
     def __enter_email(self: LinkedIn, _return: bool = False) -> None:
         """Method enter_email() enters the email in the email input field.
@@ -144,7 +144,7 @@ class LinkedIn(Driver):
         :Raises:
             - NoSuchElementException if the element wasn't found
         """
-        return self._driver.find_element_by_name("session_password")
+        return self.driver.find_element_by_name("session_password")
 
     def __enter_password(self: LinkedIn, _return: bool = True) -> None:
         """Method enter_password() enters the password in the password input field.
@@ -198,5 +198,5 @@ class LinkedIn(Driver):
         :Returns:
             - {None}
         """
-        if isinstance(self._driver, webdriver.Chrome):
+        if isinstance(self.driver, webdriver.Chrome):
             self.disable_webdriver_chrome()

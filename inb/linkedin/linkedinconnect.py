@@ -116,33 +116,33 @@ class LinkedInConnect(object):
         :Returns:
             - {None}
         """
-        _start = time.time()
+        start = time.time()
 
-        _p = Person(self._driver)
-        _person = _p.get_suggestion_box_element()
+        p = Person(self._driver)
+        person = p.get_suggestion_box_element()
 
-        while _person:
+        while person:
             if LinkedInConnect.__INVITATION_SENT == self._limit:
                 break
 
             try:
                 ActionChains(self._driver).move_to_element(
-                    _person._connect_button).click().perform()
-                Invitation(name=_person._name,
-                           occupation=_person._occupation,
+                    person.connect_button).click().perform()
+                Invitation(name=person.name,
+                           occupation=person.occupation,
                            status="sent",
-                           elapsed_time=time.time() - _start).status()
+                           elapsed_time=time.time() - start).status()
                 LinkedInConnect.__INVITATION_SENT += 1
             except (ElementNotInteractableException,
                     ElementClickInterceptedException) as error:
                 if isinstance(error, ElementClickInterceptedException):
                     break
-                Invitation(name=_person._name,
-                           occupation=_person._occupation,
+                Invitation(name=person.name,
+                           occupation=person.occupation,
                            status="failed",
-                           elapsed_time=time.time() - _start).status()
+                           elapsed_time=time.time() - start).status()
 
-            _person = _p.get_suggestion_box_element()
+            person = p.get_suggestion_box_element()
 
     def __execute_cleaners(self: LinkedInConnect) -> None:
         """Method execute_cleaners() scours the unwanted element from the page during the
