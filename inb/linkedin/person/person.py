@@ -69,15 +69,15 @@ class Person(object):
         :Returns:
             - {None}
         """
-        _js = JS(self._driver)
+        js = JS(self._driver)
 
-        _old_page_offset = _js.get_page_y_offset()
-        _new_page_offset = _js.get_page_y_offset()
+        old_page_offset = js.get_page_y_offset()
+        new_page_offset = js.get_page_y_offset()
 
-        while _old_page_offset == _new_page_offset:
-            _js.scroll_bottom()
+        while old_page_offset == new_page_offset:
+            js.scroll_bottom()
             time.sleep(1)
-            _new_page_offset = _js.get_page_y_offset()
+            new_page_offset = js.get_page_y_offset()
 
     def get_suggestion_box_element(self: Person):
         """Method get_suggestion_box_element() an object containing the person details
@@ -103,9 +103,9 @@ class Person(object):
             nonlocal self
 
             # Traget the element using its root xpath
-            _xpath: str = Path_To_Element_By.SUGGESTION_BOX_ELEMENT_XPATH
+            xpath: str = Path_To_Element_By.SUGGESTION_BOX_ELEMENT_XPATH
             # Update the xpath every time the function is called to target the next element
-            _xpath = _xpath[:-3] + '[' + \
+            xpath = xpath[:-3] + '[' + \
                 str(self.__suggestion_box_element_count + 1) + ']'
 
             if self.__suggestion_box_element_count == 0:
@@ -116,7 +116,7 @@ class Person(object):
             while True:
                 try:
                     return WebDriverWait(self._driver, 60).until(
-                        EC.presence_of_element_located((By.XPATH, _xpath))
+                        EC.presence_of_element_located((By.XPATH, xpath))
                     )
                 except (TimeoutException, NoSuchElementException) as error:
                     if isinstance(error, TimeoutException):
@@ -170,29 +170,29 @@ class Person(object):
             # Using parent function 'self' variable
             nonlocal self
 
-            _target: int = 1
+            target: int = 1
 
             # Traget the element using its relative xpath
-            _xpath: str = Path_To_Element_By.SEARCH_RESULTS_PEOPLE_XPATH
+            xpath: str = Path_To_Element_By.SEARCH_RESULTS_PEOPLE_XPATH
 
-            _search_results_person_lis: List[webdriver.Chrome] = []
+            search_results_person_lis: List[webdriver.Chrome] = []
 
             while True:
                 # Update the xpath in each iteration
-                _xpath = _xpath[:-3] + '[' + str(_target) + ']'
+                xpath = xpath[:-3] + '[' + str(target) + ']'
                 try:
-                    _search_results_person_lis.append(WebDriverWait(self._driver, 0.5).until(
-                        EC.presence_of_element_located((By.XPATH, _xpath))
+                    search_results_person_lis.append(WebDriverWait(self._driver, 0.5).until(
+                        EC.presence_of_element_located((By.XPATH, xpath))
                     ))
                 except (TimeoutException, NoSuchElementException) as exc:
                     if isinstance(exc, NoSuchElementException):
                         break
                     continue
-                _target += 1
-                if _target > 10:
+                target += 1
+                if target > 10:
                     break
 
-            return _search_results_person_lis
+            return search_results_person_lis
 
         def transform_to_object(lis: List[webdriver.Chrome]) -> List[Person_Info]:
             person_infos: List[Person_Info] = []
@@ -239,8 +239,7 @@ class Person(object):
                     profile_url=person_profile_url,
                     location=person_location,
                     summary=person_summary,
-                    connect_button=person_connect_button
-                ))
+                    connect_button=person_connect_button))
 
             return person_infos
 
