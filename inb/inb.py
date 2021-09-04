@@ -35,6 +35,7 @@ from lib.handler import Handler
 from errors import EmtpyDatabaseException
 from errors import CredentialsNotGivenException
 from errors import DatabaseDoesNotExistException
+from errors import InternetNotConnectedException
 from errors import DomainNameSystemNotResolveException
 
 #
@@ -568,6 +569,7 @@ if len(sys.argv) <= 1:
 exceptions = tuple([EmtpyDatabaseException,
                     CredentialsNotGivenException,
                     DatabaseDoesNotExistException,
+                    InternetNotConnectedException,
                     DomainNameSystemNotResolveException])
 
 try:

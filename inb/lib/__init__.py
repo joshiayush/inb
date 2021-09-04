@@ -28,6 +28,7 @@ from .parser import NARGS
 from .parser import ArgumentParser
 from .parser import OPT_ARGS_ACTION
 
+from .utils import ping
 from .utils import _type
 from .utils import Terminal
 from .utils import Validator

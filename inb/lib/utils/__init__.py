@@ -20,6 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+from .net import ping
 from .type import _type
 from .window import Terminal
 from .figlet import CreateFigletString

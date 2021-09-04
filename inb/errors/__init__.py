@@ -326,3 +326,23 @@ class ValidationError(Exception):
             return "ValidationError: %(message)s" % {"message": self.message}
         else:
             return "ValidationError has been raised!"
+
+
+class InternetNotConnectedException(Exception):
+    def __init__(self: InternetNotConnectedException, *args: Tuple[Any]) -> None:
+        super(InternetNotConnectedException, self).__init__(*args)
+        if args:
+            if isinstance(args[0], str):
+                self.message = args[0]
+            else:
+                raise Exception(
+                    "InternetNotConnectedException: Constructor's first argument must be of type 'str' not '%(type)s'" % {
+                        "type": _type(args[0])})
+        else:
+            self.message = None
+
+    def __str__(self: InternetNotConnectedException) -> str:
+        if self.message:
+            return "InternetNotConnectedException: %(message)s" % {"message": self.message}
+        else:
+            return "InternetNotConnectedException has been raised!"
