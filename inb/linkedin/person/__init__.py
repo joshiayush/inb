@@ -29,6 +29,7 @@ import json
 from typing import Union
 from typing import TextIO
 
+import re
 from selenium import webdriver
 
 
@@ -42,7 +43,6 @@ class Person_Info(object):
     """Class Person_Info provides an object with person's necessary details fetched
     from linkedin's page.
     """
-    BASE_LINKEDIN_URL: str = "https://www.linkedin.com"
 
     def __init__(
             self: Person_Info,
@@ -75,8 +75,7 @@ class Person_Info(object):
         self.connect_button = connect_button
         self.location = location
         self.summary = summary
-        # type: bug
-        # self._person_id = self.person_id()
+        self.id = self.person_id()
 
     def person_id(self: Person_Info) -> str:
         """Method person_id() returns the person id filtering the person's profile url.
@@ -87,19 +86,8 @@ class Person_Info(object):
         :Returns:
             - {str} person id.
         """
-        url_base = self.BASE_LINKEDIN_URL + "/in/"
-        indx = self.profile_url.find(url_base) + len(url_base)
-
-        profile_url = self.profile_url
-        while not profile_url[indx] == '/':
-            indx += 1
-        indx -= 1
-        
-        id = ''
-        while not profile_url[indx] == '-' and not profile_url[indx] == '/':
-            id += profile_url[indx]
-            indx -= 1
-        return id[::-1]
+        _re = re.compile(r"([a-z]+-)+([a-zA-Z0-9]+)?", re.IGNORECASE)
+        return _re.search(self.profile_url)
 
     def freeze(
         self: Person_Info,
@@ -118,7 +106,7 @@ class Person_Info(object):
         :Raises:
             - {Exception} if the format and the file is not identified.
         """
-        message: str = ''
+        message = ''
 
         if _format == "json":
             message = json.dump({
@@ -132,12 +120,12 @@ class Person_Info(object):
             })
         elif _format == "raw":
             message = ("name: %(name)s\n" +
-                        "person_id: %(person_id)s\n" +
-                        "occupation: %(occupation)s\n" +
-                        "profile_url: %(profile_url)s\n" +
-                        "photo_url: %(photo_url)s\m" +
-                        "location: %(location)s\n" +
-                        "summary: %(summary)s") % {
+                       "person_id: %(person_id)s\n" +
+                       "occupation: %(occupation)s\n" +
+                       "profile_url: %(profile_url)s\n" +
+                       "photo_url: %(photo_url)s\m" +
+                       "location: %(location)s\n" +
+                       "summary: %(summary)s") % {
                 "name": self.name,
                 "person_id": self._person_id,
                 "occupation": self.occupation,
