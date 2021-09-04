@@ -37,36 +37,37 @@ from errors import CredentialsNotGivenException
 from errors import DatabaseDoesNotExistException
 from errors import DomainNameSystemNotResolveException
 
-
-# usage: lbot [-h] {send,config,show,delete,developer} ...
 #
-#  _     _       _            _ ___         ____        _
-# | |   (_)_ __ | | _____  __| |_ _|_ __   | __ )  ___ | |_
-# | |   | | '_ \| |/ / _ \/ _` || || '_ \  |  _ \ / _ \| __|
-# | |___| | | | |   <  __/ (_| || || | | | | |_) | (_) | |_
-# |_____|_|_| |_|_|\_\___|\__,_|___|_| |_| |____/ \___/ \__|
+# Usage: inb [-h] {send,search,config,show,delete,developer} ...
+#
+#  _       _
+# (_)_ __ | |__
+# | | '_ \| '_ \
+# | | | | | |_) |
+# |_|_| |_|_.__/
 #
 #
-# LinkedIn Bash, version 1.51.35(1)-release (lbot-1.51.35)
+# inb Bash, version 1.51.35(1)-release (inb-1.51.35)
 # These commands are defined internally. Type '--help' to see this list
 # Type (command) --help to know more about that command
 #
 # positional arguments:
-#   {send,config,show,delete,developer}
+#   {send,search,config,show,delete,developer}
 #                         available actions
-#     send                Command 'send' sends invitation to people on linkedin.
-#     config              Command 'config' is used to store user's credentials
-#     show                Command 'show' prints the information that is in the database
-#     delete              Command 'delete' deletes the information stored in the database
-#     developer           Command 'developer' prints the information about the author
+#     send                sends invitation to people on linkedin.
+#     search              searches people on LinekdIn and then invites them.
+#     config              used to store user's credentials
+#     show                prints the information that is in the database
+#     delete              deletes the information stored in the database
+#     developer           prints the information about the author
 #
 # optional arguments:
 #   -h, --help            show this help message and exit
-
+#
 
 parser = ArgumentParser(prog="inb",
                         description=(
-                             f"""{CreateFigletString("LinkedIn Bot")}\n"""
+                             f"""{CreateFigletString("inb")}\n"""
                              f"""inb Bash, version {__version__}(1)-release (inb-{__version__})\n"""
                              f"""These commands are defined internally. Type '--help' to see this list\n"""
                              f"""Type (command) --help to know more about that command"""),
@@ -75,22 +76,22 @@ parser = ArgumentParser(prog="inb",
 subparsers = parser.add_subparsers(help="available actions",
                                    metavar=None)
 
-
+#
 # Usage: inb send [-h] [-e [EMAIL]] [-p [PASSWORD]] [-c] [-i] [-ngpu] [-m]
 #                 {limit} ...
 #
-#  _     _       _            _ ___         ____        _
-# | |   (_)_ __ | | _____  __| |_ _|_ __   | __ )  ___ | |_
-# | |   | | '_ \| |/ / _ \/ _` || || '_ \  |  _ \ / _ \| __|
-# | |___| | | | |   <  __/ (_| || || | | | | |_) | (_) | |_
-# |_____|_|_| |_|_|\_\___|\__,_|___|_| |_| |____/ \___/ \__|
+#  _       _
+# (_)_ __ | |__
+# | | '_ \| '_ \
+# | | | | | |_) |
+# |_|_| |_|_.__/
 #
 #
-# Command 'send' sends invitation to people on linkedin.
+# Sends invitation to people on linkedin.
 #
 # positional arguments:
 #   {limit}               available actions
-#     limit               Flag 'limit' sets the daily invitation limit
+#     limit               sets the daily invitation limit
 #
 # optional arguments:
 #   -h, --help            show this help message and exit
@@ -103,10 +104,11 @@ subparsers = parser.add_subparsers(help="available actions",
 #   -ngpu, --headless     starts chrome in headless mode
 #   -m, --start-maximized
 #                         set browser in full screen
+#
 
 send = subparsers.add_parser("send",
                              description=(
-                                 f"""{CreateFigletString("LinkedIn Bot")}\n"""
+                                 f"""{CreateFigletString("inb")}\n"""
                                  """Sends invitation to people on linkedin."""),
                              formatter_class=RawDescriptionHelpFormatter,
                              help=("""sends invitation to people on linkedin."""))
@@ -122,16 +124,17 @@ send.add_argument("-p", "--password",
                   default=None,
                   help="User's password")
 
-# usage: lbot send limit [-h] [limit]
 #
-#  _     _       _            _ ___         ____        _
-# | |   (_)_ __ | | _____  __| |_ _|_ __   | __ )  ___ | |_
-# | |   | | '_ \| |/ / _ \/ _` || || '_ \  |  _ \ / _ \| __|
-# | |___| | | | |   <  __/ (_| || || | | | | |_) | (_) | |_
-# |_____|_|_| |_|_|\_\___|\__,_|___|_| |_| |____/ \___/ \__|
+# Usage: inb send limit [-h] [limit]
+#
+#  _       _
+# (_)_ __ | |__
+# | | '_ \| '_ \
+# | | | | | |_) |
+# |_|_| |_|_.__/
 #
 #
-# Flag 'limit' is used to set the daily invitation limit
+# It is used to set the daily invitation limit
 # Limit must not exceed by 80 otherwise you'll be blocked for a entire
 # week
 #
@@ -140,14 +143,14 @@ send.add_argument("-p", "--password",
 #
 # optional arguments:
 #   -h, --help  show this help message and exit
-
+#
 
 limit_subparsers = send.add_subparsers(help="available actions",
                                        metavar=None)
 
 limit = limit_subparsers.add_parser("limit",
                                     description=(
-                                        f"""{CreateFigletString("LinkedIn Bot")}\n"""
+                                        f"""{CreateFigletString("inb")}\n"""
                                         """It is used to set the daily invitation limit\n"""
                                         """Limit must not exceed by 80 otherwise you'll be blocked for a entire\n"""
                                         """week"""),
@@ -184,6 +187,7 @@ send.set_defaults(which="send",
                   incognito=False,
                   start_maximized=False)
 
+#
 # Usage: inb search [-h] [-e [EMAIL]] [-p [PASSWORD]] [-k [KEYWORD]]
 #                   [-l [LOCATION]] [-t [TITLE]] [-fn [FIRST_NAME]]
 #                   [-ln [LAST_NAME]] [-s [SCHOOL]] [-inds [INDUSTRY]]
@@ -191,11 +195,11 @@ send.set_defaults(which="send",
 #                   [-ngpu] [-m]
 #                   {limit} ...
 #
-#  _     _       _            _ ___         ____        _
-# | |   (_)_ __ | | _____  __| |_ _|_ __   | __ )  ___ | |_
-# | |   | | '_ \| |/ / _ \/ _` || || '_ \  |  _ \ / _ \| __|
-# | |___| | | | |   <  __/ (_| || || | | | | |_) | (_) | |_
-# |_____|_|_| |_|_|\_\___|\__,_|___|_| |_| |____/ \___/ \__|
+#  _       _
+# (_)_ __ | |__
+# | | '_ \| '_ \
+# | | | | | |_) |
+# |_|_| |_|_.__/
 #
 #
 # Searches people on LinkedIn and then invites them.
@@ -233,10 +237,11 @@ send.set_defaults(which="send",
 #   -ngpu, --headless     starts chrome in headless mode
 #   -m, --start-maximized
 #                         set browser in full screen
+#
 
 search = subparsers.add_parser("search",
                                description=(
-                                   f"""{CreateFigletString("LinkedIn Bot")}\n"""
+                                   f"""{CreateFigletString("inb")}\n"""
                                    """Searches people on LinkedIn and then invites them."""),
                                formatter_class=RawDescriptionHelpFormatter,
                                help=("""searches people on LinekdIn and then invites them."""))
@@ -297,13 +302,14 @@ search.add_argument("-pl", "--profile-language",
                     default=None,
                     help="Person's profile language")
 
+#
 # Usage: inb search limit [-h] [limit]
 #
-#  _     _       _            _ ___         ____        _
-# | |   (_)_ __ | | _____  __| |_ _|_ __   | __ )  ___ | |_
-# | |   | | '_ \| |/ / _ \/ _` || || '_ \  |  _ \ / _ \| __|
-# | |___| | | | |   <  __/ (_| || || | | | | |_) | (_) | |_
-# |_____|_|_| |_|_|\_\___|\__,_|___|_| |_| |____/ \___/ \__|
+#  _       _
+# (_)_ __ | |__
+# | | '_ \| '_ \
+# | | | | | |_) |
+# |_|_| |_|_.__/
 #
 #
 # It is used to set the daily invitation limit
@@ -315,13 +321,14 @@ search.add_argument("-pl", "--profile-language",
 #
 # optional arguments:
 #   -h, --help  show this help message and exit
+#
 
 limit_subparsers = search.add_subparsers(help="available actions",
                                          metavar=None)
 
 limit = limit_subparsers.add_parser("limit",
                                     description=(
-                                        f"""{CreateFigletString("LinkedIn Bot")}\n"""
+                                        f"""{CreateFigletString("inb")}\n"""
                                         """It is used to set the daily invitation limit\n"""
                                         """Limit must not exceed by 80 otherwise you'll be blocked for a entire\n"""
                                         """week"""),
@@ -366,16 +373,17 @@ search.set_defaults(which="search",
                     incognito=False,
                     start_maximized=False)
 
-# usage: inb config [-h] [EMAIL] [PASSWORD]
 #
-#  _     _       _            _ ___         ____        _
-# | |   (_)_ __ | | _____  __| |_ _|_ __   | __ )  ___ | |_
-# | |   | | '_ \| |/ / _ \/ _` || || '_ \  |  _ \ / _ \| __|
-# | |___| | | | |   <  __/ (_| || || | | | | |_) | (_) | |_
-# |_____|_|_| |_|_|\_\___|\__,_|___|_| |_| |____/ \___/ \__|
+# Usage: inb config [-h] [EMAIL] [PASSWORD]
+#
+#  _       _
+# (_)_ __ | |__
+# | | '_ \| '_ \
+# | | | | | |_) |
+# |_|_| |_|_.__/
 #
 #
-# Command 'config' is used to add user's credentials to the database
+# It is used to add user's credentials to the database
 # Adding user's credentials to the database for ever or until user deletes
 # them makes it feasible for user to send invitations without entering the
 # fields again and again
@@ -386,11 +394,11 @@ search.set_defaults(which="search",
 #
 # optional arguments:
 #   -h, --help  show this help message and exit
-
+#
 
 config = subparsers.add_parser("config",
                                description=(
-                                   f"""{CreateFigletString("LinkedIn Bot")}\n"""
+                                   f"""{CreateFigletString("inb")}\n"""
                                    """It is used to add user's credentials to the database\n"""
                                    """Adding user's credentials to the database for ever or until user deletes\n"""
                                    """them makes it feasible for user to send invitations without entering the\n"""
@@ -413,17 +421,17 @@ config.set_defaults(which="config",
                     EMAIL=None,
                     PASSWORD=None)
 
-
-# usage: lbot show [-h] [-e] [-p] [keyword]
 #
-#  _     _       _            _ ___         ____        _
-# | |   (_)_ __ | | _____  __| |_ _|_ __   | __ )  ___ | |_
-# | |   | | '_ \| |/ / _ \/ _` || || '_ \  |  _ \ / _ \| __|
-# | |___| | | | |   <  __/ (_| || || | | | | |_) | (_) | |_
-# |_____|_|_| |_|_|\_\___|\__,_|___|_| |_| |____/ \___/ \__|
+# Usage: inb show [-h] [-e] [-p] [-d] [keyword]
+#
+#  _       _
+# (_)_ __ | |__
+# | | '_ \| '_ \
+# | | | | | |_) |
+# |_|_| |_|_.__/
 #
 #
-# Command 'show' prints the information stored in the database
+# It prints the information stored in the database
 # For example -> email, password ...
 #
 # positional arguments:
@@ -433,11 +441,12 @@ config.set_defaults(which="config",
 #   -h, --help      show this help message and exit
 #   -e, --email     print user's email address
 #   -p, --password  print user's password
-
+#   -d, --decrypt   print information in decrypt form
+#
 
 show = subparsers.add_parser("show",
                              description=(
-                                 f"""{CreateFigletString("LinkedIn Bot")}\n"""
+                                 f"""{CreateFigletString("inb")}\n"""
                                  """It prints the information stored in the database\n"""
                                  """For example -> email, password ..."""),
                              formatter_class=RawDescriptionHelpFormatter,
@@ -463,17 +472,17 @@ show.set_defaults(which="show",
                   email=None,
                   password=None)
 
-
-# usage: lbot delete [-h] keyword
 #
-#  _     _       _            _ ___         ____        _
-# | |   (_)_ __ | | _____  __| |_ _|_ __   | __ )  ___ | |_
-# | |   | | '_ \| |/ / _ \/ _` || || '_ \  |  _ \ / _ \| __|
-# | |___| | | | |   <  __/ (_| || || | | | | |_) | (_) | |_
-# |_____|_|_| |_|_|\_\___|\__,_|___|_| |_| |____/ \___/ \__|
+# Usage: inb delete [-h] keyword
+#
+#  _       _
+# (_)_ __ | |__
+# | | '_ \| '_ \
+# | | | | | |_) |
+# |_|_| |_|_.__/
 #
 #
-# Command 'delete' deletes the information stored in the database
+# It deletes the information stored in the database
 # 'delete' deletes information like 'key', 'cookies' ...
 #
 # positional arguments:
@@ -481,11 +490,11 @@ show.set_defaults(which="show",
 #
 # optional arguments:
 #   -h, --help  show this help message and exit
-
+#
 
 delete = subparsers.add_parser("delete",
                                description=(
-                                   f"""{CreateFigletString("LinkedIn Bot")}\n"""
+                                   f"""{CreateFigletString("inb")}\n"""
                                    """It deletes the information stored in the database\n"""
                                    """'delete' deletes information like 'key', 'cookies' ..."""),
                                formatter_class=RawDescriptionHelpFormatter,
@@ -497,17 +506,17 @@ delete.add_argument("keyword",
 delete.set_defaults(which="delete",
                     keyword=None)
 
-
-# usage: lbot developer [-h] [-n] [-l] [-g] [-m] [-e]
 #
-#  _     _       _            _ ___         ____        _
-# | |   (_)_ __ | | _____  __| |_ _|_ __   | __ )  ___ | |_
-# | |   | | '_ \| |/ / _ \/ _` || || '_ \  |  _ \ / _ \| __|
-# | |___| | | | |   <  __/ (_| || || | | | | |_) | (_) | |_
-# |_____|_|_| |_|_|\_\___|\__,_|___|_| |_| |____/ \___/ \__|
+# Usage: inb developer [-h] [-n] [-l] [-g] [-m] [-e]
+#
+#  _       _
+# (_)_ __ | |__
+# | | '_ \| '_ \
+# | | | | | |_) |
+# |_|_| |_|_.__/
 #
 #
-# Command 'developer' prints the information about the author
+# It prints the information about the author
 #
 # optional arguments:
 #   -h, --help      show this help message and exit
@@ -516,11 +525,11 @@ delete.set_defaults(which="delete",
 #   -g, --github    print developer github
 #   -m, --mobile    print developer mobile number
 #   -e, --email     print developer email address
-
+#
 
 developer = subparsers.add_parser("developer",
                                   description=(
-                                      f"""{CreateFigletString("LinkedIn Bot")}\n"""
+                                      f"""{CreateFigletString("inb")}\n"""
                                       """It prints the information about the author"""),
                                   formatter_class=RawDescriptionHelpFormatter,
                                   help=("""prints the information about the author"""))
