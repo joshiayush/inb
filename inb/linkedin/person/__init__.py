@@ -68,11 +68,15 @@ class Person_Info(object):
         self._name = name
         self._occupation = occupation
         self._profile_url = profile_url
-        self._photo_url = photo_url
+        if "?" in photo_url:
+            self._photo_url = photo_url.split("?")[0]
+        else:
+            self._photo_url = photo_url
         self._connect_button = connect_button
         self._location = location
         self._summary = summary
-        self._person_id = self.person_id()
+        # type: bug
+        # self._person_id = self.person_id()
 
     def person_id(self: Person_Info) -> str:
         """Method person_id() returns the person id filtering the person's profile url.

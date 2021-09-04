@@ -133,46 +133,35 @@ class Person(object):
             :Returns:
                 - {Person_Info}
             """
-            # Target the info container that is inside of the element we are given
-            _info_container: webdriver.Chrome = li.find_element_by_css_selector(
+            # first target the html elements that holds the actual details of a person
+            # that we are interested in
+            info_container = li.find_element_by_css_selector(
                 "div[class='discover-entity-type-card__info-container']")
-            # Target the anchor tag from the info container to later get the image url
-            # and the profile url of the person
-            _anchor_tag: webdriver.Chrome = _info_container.find_element_by_tag_name(
-                "a")
-            # Target the image element to get the image url later
-            _img_tag: webdriver.Chrome = _anchor_tag.find_element_by_tag_name(
-                "img")
-            # Target the bottom container inside of the info container to target the connect
-            # button
-            _bottom_container: webdriver.Chrome = li.find_element_by_css_selector(
+            anchor_tag = info_container.find_element_by_tag_name("a")
+            img_tag = anchor_tag.find_element_by_tag_name("img")
+            bottom_container = li.find_element_by_css_selector(
                 "div[class^='discover-entity-type-card__bottom-container']")
-            # Target the footer element inside of the bottom container to get the connect button
-            _footer: webdriver.Chrome = _bottom_container.find_element_by_tag_name(
-                "footer")
+            footer = bottom_container.find_element_by_tag_name("footer")
 
-            # Get the person's name from the element inside of the anchor tag
-            _person_name: str = _anchor_tag.find_element_by_css_selector(
+            # target the actual values from the html elements that we get from the above
+            # operations and store them to later create a Person_Info object with these
+            # details
+            person_name = anchor_tag.find_element_by_css_selector(
                 "span[class^='discover-person-card__name']").text
-            # Get the person's occupation from the element inside of the anchor tag
-            _person_occupation: str = _anchor_tag.find_element_by_css_selector(
+            person_occupation = anchor_tag.find_element_by_css_selector(
                 "span[class^='discover-person-card__occupation']").text
-            # Get the person's photo url from the image tag
-            _person_photo_url: str = _img_tag.get_attribute("src")
-            # Get the person's profile url from the anchor tag
-            _person_profile_url: str = "%(profile_path)s" % {
-                "profile_path": _anchor_tag.get_attribute("href")}
-            # Get the connect button from the footer element
-            _person_connect_button: str = _footer.find_element_by_css_selector(
+            person_photo_url = img_tag.get_attribute("src")
+            person_profile_url = "%(profile_path)s" % {
+                "profile_path": anchor_tag.get_attribute("href")}
+            person_connect_button = footer.find_element_by_css_selector(
                 f"button[aria-label^='Invite']")
 
             return Person_Info(
-                name=_person_name,
-                occupation=_person_occupation,
-                profile_url=_person_profile_url,
-                photo_url=_person_photo_url,
-                connect_button=_person_connect_button
-            )
+                name=person_name,
+                occupation=person_occupation,
+                profile_url=person_profile_url,
+                photo_url=person_photo_url,
+                connect_button=person_connect_button)
 
         return transform_to_object(get_suggestion_box_person_li())
 
@@ -206,50 +195,53 @@ class Person(object):
             return _search_results_person_lis
 
         def transform_to_object(lis: List[webdriver.Chrome]) -> List[Person_Info]:
-            _person_infos: List[Person_Info] = []
+            person_infos: List[Person_Info] = []
 
             for li in lis:
-                _entity_result_item_container: webdriver.Chrome = li.find_element_by_css_selector(
-                    "div[class^='entity_result']").find_element_by_css_selector(
-                        "div[class='entity-result__item']")
-                _entity_result_image_container: webdriver.Chrome = _entity_result_item_container.find_element_by_css_selector(
+                entity_result_item_container = li.find_element_by_tag_name(
+                    "div").find_element_by_css_selector("div[class='entity-result__item']")
+                entity_result_image_container = entity_result_item_container.find_element_by_css_selector(
                     "div[class='entity-result__image']")
 
-                _entity_result_anchor_tag: webdriver.Chrome = _entity_result_image_container.find_element_by_tag_name(
-                    "a")
-                _person_profile_url: str = _entity_result_anchor_tag.get_attribute(
-                    "href")
-                _entity_result_img_tag: webdriver.Chrome = _entity_result_image_container.find_element_by_tag_name(
-                    "img")
-                _person_photo_url: str = _entity_result_img_tag.get_attribute(
-                    "src")
+                entity_result_anchor_tag = entity_result_image_container.find_element_by_tag_name("a")
+                person_profile_url = entity_result_anchor_tag.get_attribute("href")
+                entity_result_img_tag = entity_result_image_container.find_element_by_xpath("//div/a/div[1]/div[1]/img[1]")
+                person_photo_url = entity_result_img_tag.get_attribute("src")
 
-                _entity_result_content_container: webdriver.Chrome = _entity_result_item_container.find_element_by_css_selector(
+                entity_result_content_container = entity_result_item_container.find_element_by_css_selector(
                     "div[class^='entity-result__content']")
-                _person_occupation: str = _entity_result_content_container.find_element_by_css_selector(
-                    "div[class^='entity-result__primary-subtitle']")
-                _person_location: str = _entity_result_content_container.find_element_by_css_selector(
-                    "div[class^='entity-result__secondary-subtitle']")
-                _person_summary: str = _entity_result_content_container.find_element_by_css_selector(
-                    "p[class^='entity-result__summary']")
+                try:
+                    person_occupation = entity_result_content_container.find_element_by_css_selector(
+                        "div[class^='entity-result__primary-subtitle']").text
+                except NoSuchElementException:
+                    person_occupation = ''
+                try:
+                    person_location = entity_result_content_container.find_element_by_css_selector(
+                        "div[class^='entity-result__secondary-subtitle']").text
+                except NoSuchElementException:
+                    person_location = ''
+                try:
+                    person_summary = entity_result_content_container.find_element_by_css_selector(
+                        "p[class^='entity-result__summary']").text
+                except NoSuchElementException:
+                    person_summary = ''
 
-                _entity_result_content_anchor_tag: webdriver.Chrome = _entity_result_content_container.find_element_by_tag_name(
-                    "a")
-                _person_name: str = _entity_result_content_anchor_tag.text
+                entity_result_content_anchor_tag = entity_result_content_container.find_element_by_tag_name("a")
+                person_name = entity_result_content_anchor_tag.text
 
-                _person_connect_button: webdriver.Chrome = _entity_result_item_container.find_element_by_css_selector(
+                person_connect_button = entity_result_item_container.find_element_by_css_selector(
                     "div[class^='entity-result__actions']").find_element_by_tag_name("button")
 
-                _person_infos.append(Person_Info(
-                    name=_person_name,
-                    occupation=_person_occupation,
-                    photo_url=_person_photo_url,
-                    profile_url=_person_profile_url,
-                    location=_person_location,
-                    summary=_person_summary,
-                    connect_button=_person_connect_button
+                person_infos.append(Person_Info(
+                    name=person_name,
+                    occupation=person_occupation,
+                    photo_url=person_photo_url,
+                    profile_url=person_profile_url,
+                    location=person_location,
+                    summary=person_summary,
+                    connect_button=person_connect_button
                 ))
 
-            return _person_infos
+            return person_infos
 
         return transform_to_object(get_search_results_person_lis())

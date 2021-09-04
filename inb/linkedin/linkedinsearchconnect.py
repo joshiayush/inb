@@ -288,34 +288,46 @@ class LinkedInSearchConnect(object):
         _start = time.time()
 
         _p = Person(self._driver)
-        _person = _p.get_search_results_elements()
+        _persons = _p.get_search_results_elements()
 
-        while _person:
-            if LinkedInSearchConnect.__INVITATION_SENT == self._limit:
-                break
-
-            try:
-                ActionChains(self._driver).move_to_element(
-                    _person._connect_button).click().perform()
-                Invitation(name=_person._name,
-                           occupation=_person._occupation,
-                           status="sent",
-                           elapsed_time=time.time() - _start).status()
-                LinkedInSearchConnect.__INVITATION_SENT += 1
-            except (ElementNotInteractableException,
-                    ElementClickInterceptedException) as error:
-                if isinstance(error, ElementClickInterceptedException):
+        while True:
+            for _person in _persons:
+                if LinkedInSearchConnect.__INVITATION_SENT == self._limit:
                     break
-                Invitation(name=_person._name,
-                           occupation=_person._occupation,
-                           status="failed",
-                           elapsed_time=time.time() - _start).status()
+                if _person._connect_button.text == "Pending" or \
+                        _person._connect_button.get_attribute("aria-label") == "Follow":
+                    continue
+
+                try:
+                    ActionChains(self._driver).move_to_element(
+                        _person._connect_button).click().perform()
+                    send_invite_modal = WebDriverWait(self._driver, LinkedInSearchConnect.WAIT).until(
+                        EC.presence_of_element_located(
+                            (By.XPATH, "//div[@aria-labelledby='send-invite-modal']")
+                        )
+                    )
+                    send_now = send_invite_modal.find_element_by_xpath("//button[@aria-label='Send now']")
+                    ActionChains(self._driver).move_to_element(
+                        send_now).click().perform()
+                    Invitation(name=_person._name,
+                               occupation=_person._occupation,
+                               status="sent",
+                               elapsed_time=time.time() - _start).status()
+                    LinkedInSearchConnect.__INVITATION_SENT += 1
+                except (ElementNotInteractableException,
+                        ElementClickInterceptedException) as exc:
+                    if isinstance(exc, ElementClickInterceptedException):
+                        break
+                    Invitation(name=_person._name,
+                               occupation=_person._occupation,
+                               status="failed",
+                               elapsed_time=time.time() - _start).status()
 
             _next: webdriver.Chrome = self._driver.find_element_by_xpath(
                 "//main[@id='main']//button[@aria-label='Next']")
             _next.click()
 
-            _person = _p.get_search_results_elements()
+            _persons = _p.get_search_results_elements()
 
     def run(self: LinkedInSearchConnect) -> None:
         """Method run() calls the send_invitation method, but first it assures that the object
