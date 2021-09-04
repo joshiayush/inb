@@ -65,16 +65,16 @@ class Person_Info(object):
             - photo_url: {str} person's linkedin profile photo url.
             - connect_button: {webdriver.Chrome} person's connect button instance.
         """
-        self._name = name
-        self._occupation = occupation
-        self._profile_url = profile_url
+        self.name = name
+        self.occupation = occupation
+        self.profile_url = profile_url
         if "?" in photo_url:
-            self._photo_url = photo_url.split("?")[0]
+            self.photo_url = photo_url.split("?")[0]
         else:
-            self._photo_url = photo_url
-        self._connect_button = connect_button
-        self._location = location
-        self._summary = summary
+            self.photo_url = photo_url
+        self.connect_button = connect_button
+        self.location = location
+        self.summary = summary
         # type: bug
         # self._person_id = self.person_id()
 
@@ -87,21 +87,19 @@ class Person_Info(object):
         :Returns:
             - {str} person id.
         """
-        _url_base: str = self.BASE_LINKEDIN_URL + "/in/"
-        _indx: int = self._profile_url.find(_url_base) + len(_url_base)
+        url_base = self.BASE_LINKEDIN_URL + "/in/"
+        indx = self.profile_url.find(url_base) + len(url_base)
 
-        _profile_url: str = self._profile_url
-
-        while not _profile_url[_indx] == '/':
-            _indx += 1
-        _indx -= 1
-
-        _id: str = ''
-        while not _profile_url[_indx] == '-' and not _profile_url[_indx] == '/':
-            _id += _profile_url[_indx]
-            _indx -= 1
-
-        return _id[::-1]
+        profile_url = self.profile_url
+        while not profile_url[indx] == '/':
+            indx += 1
+        indx -= 1
+        
+        id = ''
+        while not profile_url[indx] == '-' and not profile_url[indx] == '/':
+            id += profile_url[indx]
+            indx -= 1
+        return id[::-1]
 
     def freeze(
         self: Person_Info,
@@ -120,33 +118,33 @@ class Person_Info(object):
         :Raises:
             - {Exception} if the format and the file is not identified.
         """
-        _message: str = ''
+        message: str = ''
 
         if _format == "json":
-            _message = json.dump({
-                "name": self._name,
+            message = json.dump({
+                "name": self.name,
                 "person_id": self._person_id,
-                "occupation": self._occupation,
-                "profile_url": self._profile_url,
-                "photo_url": self._photo_url,
-                "location": self._location,
-                "summary": self._summary
+                "occupation": self.occupation,
+                "profile_url": self.profile_url,
+                "photo_url": self.photo_url,
+                "location": self.location,
+                "summary": self.summary
             })
         elif _format == "raw":
-            _message = ("name: %(name)s\n" +
+            message = ("name: %(name)s\n" +
                         "person_id: %(person_id)s\n" +
                         "occupation: %(occupation)s\n" +
                         "profile_url: %(profile_url)s\n" +
                         "photo_url: %(photo_url)s\m" +
                         "location: %(location)s\n" +
                         "summary: %(summary)s") % {
-                "name": self._name,
+                "name": self.name,
                 "person_id": self._person_id,
-                "occupation": self._occupation,
-                "profile_url": self._profile_url,
-                "photo_url": self._photo_url,
-                "location": self._location,
-                "summary": self._summary}
+                "occupation": self.occupation,
+                "profile_url": self.profile_url,
+                "photo_url": self.photo_url,
+                "location": self.location,
+                "summary": self.summary}
         else:
             raise Exception("Format '%(frmt)s' is not supported!" %
                             {"frmt": _format})
@@ -154,12 +152,12 @@ class Person_Info(object):
         if isinstance(file, str):
             with open(file=file, mode=mode) as file:
                 if file.endswith(".json"):
-                    json.dump(_message, file, indent=2)
+                    json.dump(message, file, indent=2)
                 else:
-                    file.write(_message)
+                    file.write(message)
             return
         elif file == sys.stdout:
-            file.write(_message)
+            file.write(message)
         else:
             raise Exception("File '%(file)s' is not supported!" %
                             {"file": file})

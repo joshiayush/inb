@@ -113,14 +113,14 @@ class LinkedInSearchConnect(object):
         self._profile_language = profile_language
 
     def __get_search_results_page(self: LinkedInSearchConnect) -> None:
-        _search_box: webdriver.Chrome = WebDriverWait(self._driver, 60).until(
+        search_box: webdriver.Chrome = WebDriverWait(self._driver, 60).until(
             EC.presence_of_element_located(
                 (By.XPATH, """//*[@id="global-nav-typeahead"]/input"""))
         )
 
-        _search_box.clear()
-        _search_box.send_keys(self._keyword)
-        _search_box.send_keys(Keys.RETURN)
+        search_box.clear()
+        search_box.send_keys(self._keyword)
+        search_box.send_keys(Keys.RETURN)
 
     def __execute_cleaners(self: LinkedInSearchConnect) -> None:
         """Method execute_cleaners() scours the unwanted element from the page during the
@@ -147,187 +147,185 @@ class LinkedInSearchConnect(object):
                 EC.presence_of_all_elements_located((By.XPATH, xpath))
             )
 
-        _people_button: webdriver.Chrome = get_element_by_xpath(
+        people_button = get_element_by_xpath(
             "//div[@id='search-reusables__filters-bar']//button[@aria-label='People']")
-        _people_button.click()
-        del _people_button
+        people_button.click()
+        del people_button
 
         if self._location or self._industry or self._profile_language or self._first_name or \
                 self._last_name or self._title or self._current_company or self._school:
-            _filters_button: webdriver.Chrome = get_element_by_xpath(
+            filters_button = get_element_by_xpath(
                 "//div[@id='search-reusables__filters-bar']//button[@aria-label='All filters']")
-            _filters_button.click()
-            del _filters_button
+            filters_button.click()
+            del filters_button
 
-        def check_for_filter(
-                _filter: str,
-                _filter_dict: Dict[str, webdriver.Chrome],
-                _threshold: float = 80.0
-        ) -> None:
-            if isinstance(_filter, str):
-                if _filter in _filter_dict:
-                    _filter_dict[_filter].click()
-                else:
-                    for fltr in _filter_dict.keys():
-                        _levenshtein_dis: int = levenshtein(
-                            _filter, fltr)
-                        _total_str_len: int = (len(_filter) + len(fltr))
-                        _levenshtein_dis_percent: float = (
-                            (_total_str_len - _levenshtein_dis) / _total_str_len) * 100
-                        if _levenshtein_dis_percent >= _threshold:
-                            _filter_dict[fltr].click()
-            elif isinstance(_filter, list):
-                _filters_present: List[str] = _filter_dict.keys()
-                for fltr in _filter:
-                    if fltr in _filters_present:
-                        _filter_dict[fltr].click()
-                    else:
-                        for _fltr in _filters_present:
-                            _levenshtein_dis: int = levenshtein(
-                                fltr, _fltr)
-                            _total_str_len: int = (len(fltr) + len(_fltr))
-                            _levenshtein_dis_percent: float = (
-                                (_total_str_len - _levenshtein_dis) / _total_str_len) * 100
-                            if _levenshtein_dis_percent >= _threshold:
-                                _filter_dict[_fltr].click()
+        def check_for_filter(filter: str,
+                             filter_dict: Dict[str, webdriver.Chrome],
+                             threshold: float = 80.0) -> None:
+            if isinstance(filter, str):
+                if filter in filter_dict:
+                    filter_dict[filter].click()
+                    return
+                for fltr in filter_dict.keys():
+                    levenshtein_dis = levenshtein(filter, fltr)
+                    total_str_len = (len(filter) + len(fltr))
+                    levenshtein_dis_percent = ((total_str_len - levenshtein_dis) / total_str_len) * 100
+                    if levenshtein_dis_percent >= threshold:
+                        filter_dict[fltr].click()
+                return
+
+            if isinstance(filter, list):
+                filters_present: List[str] = filter_dict.keys()
+                for fltr in filter:
+                    if fltr in filters_present:
+                        filter_dict[fltr].click()
+                        continue
+                    for _fltr in filters_present:
+                        levenshtein_dis = levenshtein(fltr, _fltr)
+                        total_str_len = (len(fltr) + len(_fltr))
+                        levenshtein_dis_percent = ((total_str_len - levenshtein_dis) / total_str_len) * 100
+                        if levenshtein_dis_percent >= threshold:
+                            filter_dict[_fltr].click()
+                return
 
         if self._location:
-            _location_inps: webdriver.Chrome = get_elements_by_xpath(
+            location_inps = get_elements_by_xpath(
                 "//input[starts-with(@id, 'advanced-filter-geoUrn-')]")
-            _location_labels: webdriver.Chrome = get_elements_by_xpath(
+            location_labels = get_elements_by_xpath(
                 "//label[starts-with(@for, 'advanced-filter-geoUrn-')]")
-            _locations: List[str] = [label.find_element_by_tag_name(
-                "span").text for label in _location_labels]
-            del _location_labels
-            _locations_dict: Dict[str, webdriver.Chrome]
-            for _location, _location_inp in zip(_locations, _location_inps):
-                _locations_dict[_location] = _location_inp
-            del _locations
-            del _location_inps
+            locations: List[str] = [label.find_element_by_tag_name("span").text
+                                    for label in location_labels]
+            del location_labels
+            locations_dict: Dict[str, webdriver.Chrome]
+            for location, location_inp in zip(locations, location_inps):
+                locations_dict[location] = location_inp
+            del locations
+            del location_inps
 
-            check_for_filter(self._location, _locations_dict)
-            del _locations_dict
+            check_for_filter(self._location, locations_dict)
+            del locations_dict
 
         if self._industry:
-            _industry_inps: webdriver.Chrome = get_elements_by_xpath(
+            industry_inps = get_elements_by_xpath(
                 "//input[starts-with(@id, 'advanced-filter-industry-')]")
-            _industry_labels: webdriver.Chrome = get_elements_by_xpath(
+            industry_labels = get_elements_by_xpath(
                 "//label[starts-with(@for, 'advanced-filter-industry-')]")
-            _industries: List[str] = [label.find_element_by_tag_name(
-                "span").text for label in _industry_labels]
-            del _industry_labels
-            _industries_dict: Dict[str, webdriver.Chrome]
-            for _industry, _industry_inp in zip(_industries, _industry_inps):
-                _industries_dict[_industry] = _industry_inp
-            del _industries
-            del _industry_inps
+            industries: List[str] = [label.find_element_by_tag_name("span").text
+                                     for label in industry_labels]
+            del industry_labels
+            industries_dict: Dict[str, webdriver.Chrome]
+            for industry, industry_inp in zip(industries, industry_inps):
+                industries_dict[industry] = industry_inp
+            del industries
+            del industry_inps
 
-            check_for_filter(self._industry, _industries_dict)
-            del _industries_dict
+            check_for_filter(self._industry, industries_dict)
+            del industries_dict
 
         if self._profile_language:
-            _profile_language_inps: webdriver.Chrome = get_elements_by_xpath(
+            profile_language_inps = get_elements_by_xpath(
                 "//input[starts-with(@id, 'advanced-filter-profileLanguage-')]")
-            _profile_language_labels: webdriver.Chrome = get_elements_by_xpath(
+            profile_language_labels = get_elements_by_xpath(
                 "//label[starts-with(@for, 'advanced-filter-profileLanguage-')]")
-            _profile_languages: List[str] = [label.find_element_by_tag_name(
-                "span").text for label in _profile_language_labels]
-            del _profile_language_labels
-            _profile_languages_dict: Dict[str, webdriver.Chrome]
-            for _profile_language, _profile_language_inp in zip(_profile_languages, _profile_language_inps):
-                _profile_languages_dict[_profile_language] = _profile_language_inp
-            del _profile_languages
-            del _profile_language_inps
+            profile_languages: List[str] = [label.find_element_by_tag_name("span").text
+                                            for label in profile_language_labels]
+            del profile_language_labels
+            profile_languages_dict: Dict[str, webdriver.Chrome]
+            for profile_language, profile_language_inp in zip(profile_languages, profile_language_inps):
+                profile_languages_dict[profile_language] = profile_language_inp
+            del profile_languages
+            del profile_language_inps
 
-            check_for_filter(self._profile_language, _profile_languages_dict)
-            del _profile_languages_dict
+            check_for_filter(self._profile_language, profile_languages_dict)
+            del profile_languages_dict
 
         if self._first_name:
-            _first_name_box: webdriver.Chrome = get_elements_by_xpath(
+            first_name_box = get_elements_by_xpath(
                 "//label[contains(text(), 'First name')]").find_element_by_tag_name("input")
-            _first_name_box.clear()
-            _first_name_box.send_keys(self._first_name)
-            del _first_name_box
+            first_name_box.clear()
+            first_name_box.send_keys(self._first_name)
+            del first_name_box
 
         if self._last_name:
-            _last_name_box: webdriver.Chrome = get_element_by_xpath(
+            last_name_box = get_element_by_xpath(
                 "//label[contains(text(), 'Last name')]").find_element_by_tag_name("input")
-            _last_name_box.clear()
-            _last_name_box.send_keys(self._last_name)
-            del _last_name_box
+            last_name_box.clear()
+            last_name_box.send_keys(self._last_name)
+            del last_name_box
 
         if self._title:
-            _title_box: webdriver.Chrome = get_element_by_xpath(
+            title_box = get_element_by_xpath(
                 "//label[contains(text(), 'Title')]").find_element_by_tag_name("input")
-            _title_box.clear()
-            _title_box.send_keys(self._title)
-            del _title_box
+            title_box.clear()
+            title_box.send_keys(self._title)
+            del title_box
 
         if self._current_company:
-            _company_box: webdriver.Chrome = get_element_by_xpath(
+            company_box = get_element_by_xpath(
                 "//label[contains(text(), 'Company')]").find_element_by_tag_name("input")
-            _company_box.clear()
-            _company_box.send_keys(self._current_company)
-            del _company_box
+            company_box.clear()
+            company_box.send_keys(self._current_company)
+            del company_box
 
         if self._school:
-            _school_box: webdriver.Chrome = get_element_by_xpath(
+            school_box = get_element_by_xpath(
                 "//label[contains(text(), 'School')]").find_element_by_tag_name("input")
-            _school_box.clear()
-            _school_box.send_keys(self._school)
-            del _school_box
+            school_box.clear()
+            school_box.send_keys(self._school)
+            del school_box
 
         if self._location or self._industry or self._profile_language or self._first_name or \
                 self._last_name or self._title or self._current_company or self._school:
-            _show_results_button: webdriver.Chrome = get_element_by_xpath(
+            show_results_button = get_element_by_xpath(
                 "//div[@id='artdeco-modal-outlet']//button[@aria-label='Apply current filters to show results']")
-            _show_results_button.click()
-            del _show_results_button
+            show_results_button.click()
+            del show_results_button
 
     def __send_invitation(self: LinkedInSearchConnect) -> None:
-        _start = time.time()
+        start = time.time()
 
-        _p = Person(self._driver)
-        _persons = _p.get_search_results_elements()
+        p = Person(self._driver)
+        persons = p.get_search_results_elements()
 
         while True:
-            for _person in _persons:
+            for person in persons:
                 if LinkedInSearchConnect.__INVITATION_SENT == self._limit:
                     break
-                if _person._connect_button.text == "Pending" or \
-                        _person._connect_button.get_attribute("aria-label") == "Follow":
+                if person._connect_button.text == "Pending" or \
+                        person._connect_button.get_attribute("aria-label") == "Follow":
                     continue
 
                 try:
                     ActionChains(self._driver).move_to_element(
-                        _person._connect_button).click().perform()
+                        person._connect_button).click().perform()
                     send_invite_modal = WebDriverWait(self._driver, LinkedInSearchConnect.WAIT).until(
                         EC.presence_of_element_located(
-                            (By.XPATH, "//div[@aria-labelledby='send-invite-modal']")
+                            (By.XPATH,
+                             "//div[@aria-labelledby='send-invite-modal']")
                         )
                     )
-                    send_now = send_invite_modal.find_element_by_xpath("//button[@aria-label='Send now']")
+                    send_now = send_invite_modal.find_element_by_xpath(
+                        "//button[@aria-label='Send now']")
                     ActionChains(self._driver).move_to_element(
                         send_now).click().perform()
-                    Invitation(name=_person._name,
-                               occupation=_person._occupation,
+                    Invitation(name=person._name,
+                               occupation=person._occupation,
                                status="sent",
-                               elapsed_time=time.time() - _start).status()
+                               elapsed_time=time.time() - start).status()
                     LinkedInSearchConnect.__INVITATION_SENT += 1
                 except (ElementNotInteractableException,
                         ElementClickInterceptedException) as exc:
                     if isinstance(exc, ElementClickInterceptedException):
                         break
-                    Invitation(name=_person._name,
-                               occupation=_person._occupation,
+                    Invitation(name=person._name,
+                               occupation=person._occupation,
                                status="failed",
-                               elapsed_time=time.time() - _start).status()
+                               elapsed_time=time.time() - start).status()
 
-            _next: webdriver.Chrome = self._driver.find_element_by_xpath(
+            next: webdriver.Chrome = self._driver.find_element_by_xpath(
                 "//main[@id='main']//button[@aria-label='Next']")
-            _next.click()
-
-            _persons = _p.get_search_results_elements()
+            next.click()
+            persons = p.get_search_results_elements()
 
     def run(self: LinkedInSearchConnect) -> None:
         """Method run() calls the send_invitation method, but first it assures that the object
