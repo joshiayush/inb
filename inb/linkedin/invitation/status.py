@@ -23,7 +23,6 @@
 """from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!"""
 from __future__ import annotations
 
-import os
 import time
 
 from . import SUCCESS_RATE
@@ -42,7 +41,7 @@ from console.print import inbprint
 
 
 class Invitation(object):
-
+    STATUS_NO: int = 0
     SLEEP_TIME_AFTER_LOGGING: int | float = 0.18
 
     def __init__(
@@ -53,48 +52,39 @@ class Invitation(object):
         elapsed_time: int | float = 0
     ) -> None:
         self._name = name
-
         if len(occupation) >= 50:
             self._occupation = occupation[0:50] + ' ' + '.'*3
         else:
             self._occupation = occupation
-
         self._success_rate = 0
         self._failure_rate = 0
-
         if status == "sent":
             self._status = f"[bold {GREEN_HEX}]" + SENT_STATUS_SYMBOL
-
             global SUCCESS_RATE
             SUCCESS_RATE += 1
             self._success_rate = SUCCESS_RATE
         elif status == "failed":
             self._status = f"[bold {RED_HEX}]" + FAILED_STATUS_SYMBOL
-
             global FAILURE_RATE
             FAILURE_RATE += 1
             self._failure_rate = FAILURE_RATE
         else:
             self._status = f"[bold {CYAN_HEX}]" + UNDEFINED_STATUS_SYMBOL
-
         try:
             self._elapsed_time = str(elapsed_time)[0:5] + "s"
         except IndexError:
             self._elapsed_time = elapsed_time
 
-    def __clear_screen(self: Invitation):
-        if os.name == "nt":
-            os.system("cls")
-        elif os.name == "posix":
-            os.system("clear")
-
     def status(self: Invitation):
-        self.__clear_screen()
-
+        if not Invitation.STATUS_NO == 0:
+            print("\033[F" * 8)
+        Invitation.STATUS_NO += 1
         inbprint()
         inbprint(f"""{self._status} [bold {YELLOW_HEX}]{self._name}\n\n"""
                  f"""[bold {LIGHT_GREEN_HEX}]{self._occupation}\n\n"""
                  f"""[bold blink {GREEN_HEX}]Success: {self._success_rate} [bold blink {RED_HEX}]Failed: {self._failure_rate} [bold blink {CYAN_HEX}]Elapsed: {self._elapsed_time}""")
         inbprint()
-
         time.sleep(self.SLEEP_TIME_AFTER_LOGGING)
+
+    def __delattr__(self: Invitation) -> None:
+        Invitation.STATUS_NO = 0
