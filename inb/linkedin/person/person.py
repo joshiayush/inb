@@ -39,6 +39,8 @@ from . import Person_Info
 from . import Path_To_Element_By
 from ..DOM.javascript import JS
 
+from lib import _type
+
 
 class Person(object):
     """Class Person to target the person element on the page."""
@@ -56,7 +58,6 @@ class Person(object):
         if not isinstance(driver, webdriver.Chrome):
             raise Exception("'%(driver_type)s' object is not a 'webdriver' object" % {
                             "driver_type": type(driver)})
-
         self._driver = driver
         self.__suggestion_box_element_count = 0
 
@@ -203,9 +204,12 @@ class Person(object):
                 entity_result_image_container = entity_result_item_container.find_element_by_css_selector(
                     "div[class='entity-result__image']")
 
-                entity_result_anchor_tag = entity_result_image_container.find_element_by_tag_name("a")
-                person_profile_url = entity_result_anchor_tag.get_attribute("href")
-                entity_result_img_tag = entity_result_image_container.find_element_by_xpath("//div/a/div[1]/div[1]/img[1]")
+                entity_result_anchor_tag = entity_result_image_container.find_element_by_tag_name(
+                    "a")
+                person_profile_url = entity_result_anchor_tag.get_attribute(
+                    "href")
+                entity_result_img_tag = entity_result_image_container.find_element_by_xpath(
+                    "//div/a/div[1]/div[1]/img[1]")
                 person_photo_url = entity_result_img_tag.get_attribute("src")
 
                 entity_result_content_container = entity_result_item_container.find_element_by_css_selector(
@@ -214,19 +218,20 @@ class Person(object):
                     person_occupation = entity_result_content_container.find_element_by_css_selector(
                         "div[class^='entity-result__primary-subtitle']").text
                 except NoSuchElementException:
-                    person_occupation = ''
+                    person_occupation = None
                 try:
                     person_location = entity_result_content_container.find_element_by_css_selector(
                         "div[class^='entity-result__secondary-subtitle']").text
                 except NoSuchElementException:
-                    person_location = ''
+                    person_location = None
                 try:
                     person_summary = entity_result_content_container.find_element_by_css_selector(
                         "p[class^='entity-result__summary']").text
                 except NoSuchElementException:
-                    person_summary = ''
+                    person_summary = None
 
-                entity_result_content_anchor_tag = entity_result_content_container.find_element_by_tag_name("a")
+                entity_result_content_anchor_tag = entity_result_content_container.find_element_by_tag_name(
+                    "a")
                 person_name = entity_result_content_anchor_tag.text
 
                 person_connect_button = entity_result_item_container.find_element_by_css_selector(
@@ -244,3 +249,27 @@ class Person(object):
             return person_infos
 
         return transform_to_object(get_search_results_person_lis())
+
+    def get_profile_element(self: Person) -> Person_Info:
+        person_info_container = self._driver.find_element_by_id(
+            "main").find_element_by_xpath("/div[1]/section[1]")
+        photo_url = person_info_container.find_element_by_xpath(
+            "/div[2]/div[1]/div[1]/div[1]/button[1]/img[1]").get_attribute("src")
+        person_name = person_info_container.find_element_by_xpath(
+            "/div[2]/div[2]/div[1]/div[1]/h1[1]").text
+        person_occupation = person_info_container.find_element_by_xpath(
+            "/div[2]/div[2]/div[1]/div[2]").text
+        try:
+            person_location = person_info_container.find_element_by_xpath(
+                "/div[2]/div[2]/div[1]/div[3]/span[1]").text
+        except NoSuchElementException:
+            person_location = None
+        person_connect_button = person_info_container.find_element_by_xpath(
+            "/div[3]/div[1]").find_element_by_xpath("//button[@aria-label='Connect with %(name)s']" % {
+                "name": person_name})
+
+        return Person_Info(name=person_name,
+                           occupation=person_occupation,
+                           photo_url=photo_url,
+                           person_location=person_location,
+                           connect_button=person_connect_button)

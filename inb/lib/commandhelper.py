@@ -46,6 +46,8 @@ class CommandAide(object):
     def __init__(self: CommandAide, namespace: argparse.Namespace) -> None:
         if namespace.which == "send":
             self.__send(namespace)
+        elif namespace.which == "connect":
+            self.__connect(namespace)
         elif namespace.which == "search":
             self.__search(namespace)
         elif namespace.which == "show":
@@ -58,8 +60,14 @@ class CommandAide(object):
             self.__developer(namespace)
 
     def __send(self: CommandAide, namespace: argparse.Namespace) -> None:
-        self.email: str = namespace.email
-        self.password: str = namespace.password
+        if namespace.email and not namespace.email.strip() == '':
+            self.email = namespace.email
+        else:
+            self.email = None
+        if namespace.password and not namespace.password.strip() == '':
+            self.password = namespace.password
+        else:
+            self.password = None
         self.cookies: bool = namespace.cookies
 
         if ((self.email == None or self.email.strip() == '') or (self.password == None or self.password.strip() == '')) \
@@ -103,7 +111,7 @@ class CommandAide(object):
             self.email = namespace.email
         else:
             self.email = None
-        if namespace.email and not namespace.password.strip() == '':
+        if namespace.password and not namespace.password.strip() == '':
             self.password = namespace.password
         else:
             self.password = None
@@ -191,6 +199,49 @@ class CommandAide(object):
                 self.profile_language = None
         self.limit = namespace.limit if type(
             namespace.limit) is int else int(namespace.limit) if type(namespace.limit) is str else 20
+        self.headless = namespace.headless
+        self.incognito = namespace.incognito
+        self.start_maximized = namespace.start_maximized
+
+    def __connect(self: CommandAide, namespace: argparse.Namespace) -> None:
+        if namespace.email and not namespace.email.strip() == '':
+            self.email = namespace.email
+        else:
+            self.email = None
+        if namespace.password and not namespace.password.strip() == '':
+            self.password = namespace.password
+        else:
+            self.password = None
+        self.cookies = namespace.cookies
+
+        def get_cookies() -> Any:
+            return Database(
+                database=SQL_DATABASE_PATH).read(NAME_COLUMN,
+                                                 EMAIL_COLUMN,
+                                                 PASSWORD_COLUMN,
+                                                 table=USERS_TABLE,
+                                                 rows="*")
+
+        def get_user_choice(rows: list) -> int:
+            Database(database=SQL_DATABASE_PATH).print(USERS_TABLE, rows=rows)
+            return inbinput("Enter your email: ", bold=True)
+
+        if self.cookies:
+            Cookies = get_cookies()
+
+            if len(Cookies) > 1:
+                self.email = get_user_choice(Cookies)
+                self.password = Database(
+                    database=SQL_DATABASE_PATH).read(EMAIL_COLUMN,
+                                                     PASSWORD_COLUMN,
+                                                     USERS_TABLE,
+                                                     rows=".",
+                                                     where="Email = '%s'" % (self.email))[PASSWORD_INDEX]
+            else:
+                self.email = Cookies[EMAIL_INDEX]
+                self.password = Cookies[PASSWORD_INDEX]
+
+        self.profileid = namespace.profileid
         self.headless = namespace.headless
         self.incognito = namespace.incognito
         self.start_maximized = namespace.start_maximized

@@ -28,6 +28,8 @@ import argparse
 
 from typing import List
 
+from selenium.common.exceptions import TimeoutException
+
 from console.print import inbprint
 
 from errors import EmptyResponseException
@@ -39,6 +41,7 @@ from lib import ping
 from linkedin import Driver
 from linkedin.linkedin import LinkedIn
 from linkedin.linkedinconnect import LinkedInConnect
+from linkedin.linkedinconnectviaid import LinkedInConnectViaId
 from linkedin.linkedinsearchconnect import LinkedInSearchConnect
 
 from . import DRIVER_PATH
@@ -97,6 +100,45 @@ class Command(CommandAide):
 
         logging.info("Starting sending invitation")
         linkedin_connection.run()
+
+    def connect(self: Command) -> None:
+        chrome_driver_options: List[str] = []
+
+        chrome_driver_options.append(Driver.INCOGNITO)
+        chrome_driver_options.append(Driver.IGNORE_CERTIFICATE_ERRORS)
+        if self.headless == True:
+            chrome_driver_options.append(Driver.HEADLESS)
+
+        linkedin = LinkedIn(user_email=self.email,
+                            user_password=self.password,
+                            driver_path=DRIVER_PATH,
+                            opt_chromedriver_options=chrome_driver_options)
+        logging.info("Connecting")
+        try:
+            logging.info("Sending GET request to login page")
+            linkedin.get_login_page()
+            logging.info("Connected to login page")
+        except DomainNameSystemNotResolveException as error:
+            logging.critical(error)
+            return
+        logging.info("Logging in LinkedIn account (user-id=%(user_id)s)" %
+                     {"user_id": self.email})
+        linkedin.login()
+        logging.info("Successfully connected")
+
+        logging.info("Instantiating connection object")
+        linkedin_connect_id = LinkedInConnectViaId(driver=linkedin.driver,
+                                                   person_id=self.personid)
+        try:
+            logging.info("Sending GET request to person's profile page")
+            linkedin_connect_id.get_person_profile()
+            logging.info("Person's profile page received")
+        except TimeoutException as exc:
+            logging.critical(exc)
+            return
+        logging.info("Starting sending invitation to person with profile id %(id)s" % {
+                     "id": self.profileid})
+        linkedin_connect_id.run()
 
     def search(self: Command) -> None:
         chrome_driver_options: list = []

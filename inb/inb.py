@@ -39,29 +39,30 @@ from errors import InternetNotConnectedException
 from errors import DomainNameSystemNotResolveException
 
 #
-# Usage: inb [-h] {send,search,config,show,delete,developer} ...
-#
-#  _       _
-# (_)_ __ | |__
-# | | '_ \| '_ \
+# Usage: inb [-h] {send,connect,search,config,show,delete,developer} ...
+# 
+#  _       _     
+# (_)_ __ | |__  
+# | | '_ \| '_ \ 
 # | | | | | |_) |
-# |_|_| |_|_.__/
-#
-#
+# |_|_| |_|_.__/ 
+#    
+# 
 # inb Bash, version 1.51.35(1)-release (inb-1.51.35)
 # These commands are defined internally. Type '--help' to see this list
 # Type (command) --help to know more about that command
-#
+# 
 # positional arguments:
-#   {send,search,config,show,delete,developer}
+#   {send,connect,search,config,show,delete,developer}
 #                         available actions
 #     send                sends invitation to people on linkedin.
+#     connect             connects you with the given profile.
 #     search              searches people on LinekdIn and then invites them.
 #     config              used to store user's credentials
 #     show                prints the information that is in the database
 #     delete              deletes the information stored in the database
 #     developer           prints the information about the author
-#
+# 
 # optional arguments:
 #   -h, --help            show this help message and exit
 #
@@ -116,12 +117,12 @@ send = subparsers.add_parser("send",
 
 send.add_argument("-e", "--email",
                   type=str,
-                  nargs=NARGS.OPTIONAL,
+                  nargs=1,
                   default=None,
                   help="User's email address")
 send.add_argument("-p", "--password",
                   type=str,
-                  nargs=NARGS.OPTIONAL,
+                  nargs=1,
                   default=None,
                   help="User's password")
 
@@ -188,6 +189,62 @@ send.set_defaults(which="send",
                   incognito=False,
                   start_maximized=False)
 
+# 
+# Usage: inb connect [-h] [-c] [-i] [-ngpu] [-m] profileid
+# 
+#  _       _     
+# (_)_ __ | |__  
+# | | '_ \| '_ \ 
+# | | | | | |_) |
+# |_|_| |_|_.__/ 
+#    
+# 
+# Connects you with the given profile.
+# 
+# positional arguments:
+#   profileid             Profile id of person to connect with.
+# 
+# optional arguments:
+#   -h, --help            show this help message and exit
+#   -c, --cookies         uses cookies for authentication
+#   -i, --incognito       set browser in incognito mode
+#   -ngpu, --headless     starts chrome in headless mode
+#   -m, --start-maximized
+#                         set browser in full screen
+# 
+
+connect = subparsers.add_parser("connect",
+                                description=(
+                                    f"""{CreateFigletString("inb")}\n"""
+                                    """Connects you with the given profile."""),
+                                formatter_class=RawDescriptionHelpFormatter,
+                                help=("""connects you with the given profile."""))
+
+connect.add_argument("profileid",
+                     type=str,
+                     nargs=1,
+                     default=None,
+                     help="Profile id of person to connect with.")
+
+connect.add_argument("-c", "--cookies",
+                     action=OPT_ARGS_ACTION.STORE_TRUE,
+                     help="uses cookies for authentication")
+connect.add_argument("-i", "--incognito",
+                     action=OPT_ARGS_ACTION.STORE_TRUE,
+                     help="set browser in incognito mode")
+connect.add_argument("-ngpu", "--headless",
+                     action=OPT_ARGS_ACTION.STORE_TRUE,
+                     help="starts chrome in headless mode")
+connect.add_argument("-m", "--start-maximized",
+                     action=OPT_ARGS_ACTION.STORE_TRUE,
+                     help="set browser in full screen")
+
+connect.set_defaults(which="connect",
+                     cookies=False,
+                     headless=False,
+                     incognito=False,
+                     start_maximized=False)
+
 #
 # Usage: inb search [-h] [-e [EMAIL]] [-p [PASSWORD]] [-k [KEYWORD]]
 #                   [-l [LOCATION]] [-t [TITLE]] [-fn [FIRST_NAME]]
@@ -249,17 +306,17 @@ search = subparsers.add_parser("search",
 
 search.add_argument("-e", "--email",
                     type=str,
-                    nargs=NARGS.OPTIONAL,
+                    nargs=1,
                     default=None,
                     help="User's email address")
 search.add_argument("-p", "--password",
                     type=str,
-                    nargs=NARGS.OPTIONAL,
+                    nargs=1,
                     default=None,
                     help="User's password")
 search.add_argument("-k", "--keyword",
                     type=str,
-                    nargs=NARGS.OPTIONAL,
+                    nargs=1,
                     default=None,
                     help="Keyword to search for")
 search.add_argument("-l", "--location",
@@ -409,12 +466,12 @@ config = subparsers.add_parser("config",
 
 config.add_argument("EMAIL",
                     type=str,
-                    nargs=NARGS.OPTIONAL,
+                    nargs=1,
                     default=None,
                     help="user's email address")
 config.add_argument("PASSWORD",
                     type=str,
-                    nargs=NARGS.OPTIONAL,
+                    nargs=1,
                     default=None,
                     help="user's password")
 
@@ -455,7 +512,7 @@ show = subparsers.add_parser("show",
 
 show.add_argument("keyword",
                   type=str,
-                  nargs=NARGS.OPTIONAL,
+                  nargs=1,
                   default=None)
 
 show.add_argument("-e", "--email",
