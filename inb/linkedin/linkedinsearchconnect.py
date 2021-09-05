@@ -125,8 +125,10 @@ class LinkedInSearchConnect(object):
     def __execute_cleaners(self: LinkedInSearchConnect) -> None:
         """Method execute_cleaners() scours the unwanted element from the page during the
         connect process.
+
         :Args:
             - self: {LinkedInConnectionsAuto}
+        
         :Returns:
             - {None}
         """
@@ -322,9 +324,9 @@ class LinkedInSearchConnect(object):
                                status="failed",
                                elapsed_time=time.time() - start).status()
 
-            next: webdriver.Chrome = self._driver.find_element_by_xpath(
+            _next: webdriver.Chrome = self._driver.find_element_by_xpath(
                 "//main[@id='main']//button[@aria-label='Next']")
-            next.click()
+            _next.click()
             persons = p.get_search_results_elements()
 
     def run(self: LinkedInSearchConnect) -> None:
