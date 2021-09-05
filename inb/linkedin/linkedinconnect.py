@@ -26,7 +26,8 @@ from __future__ import annotations
 import time
 from typing import Union
 
-from lib.utils.validator import InbValidator
+from lib import _type
+from lib import InbValidator
 
 from .person.person import Person
 from .DOM.cleaners import Cleaner
@@ -70,7 +71,7 @@ class LinkedInConnect(object):
         if not isinstance(driver, webdriver.Chrome):
             raise Exception(
                 "Object '%(driver)s' is not a 'webdriver.Chrome' object!" % {
-                    "driver": type(driver)})
+                    "driver": _type(driver)})
 
         self._driver = driver
 
