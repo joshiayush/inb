@@ -86,7 +86,7 @@ class Person_Info(object):
         :Returns:
             - {str} person id.
         """
-        _re = re.compile(r"([a-z]+-)+([a-zA-Z0-9]+)?", re.IGNORECASE)
+        _re = re.compile(r"([a-z]+-?)+([a-zA-Z0-9]+)?", re.IGNORECASE)
         return _re.search(self.profile_url)
 
     def freeze(
