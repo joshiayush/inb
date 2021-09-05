@@ -116,4 +116,19 @@ class TestValidator(unittest.TestCase):
         remove_execute_permissions(DRIVER_PATH)
         self.assertFalse(Validator(DRIVER_PATH).is_executable())
 
-        add_execute_permissions(DRIVER_PATH)
+        def add_permissions(path):
+            """Add write permissions from this path, while keeping all other 
+            permissions intact.
+
+            Params:
+                path:  The path whose permissions to alter.
+            """
+            ADD_USER_EXECUTE = stat.S_IXUSR | stat.S_IRUSR | stat.S_IWUSR
+            ADD_GROUP_EXECUTE = stat.S_IXGRP | stat.S_IRGRP | stat.S_IWGRP
+            ADD_OTHER_EXECUTE = stat.S_IXOTH | stat.S_IROTH | stat.S_IWOTH
+            ADD_PERMISSIONS = ADD_USER_EXECUTE | ADD_GROUP_EXECUTE | ADD_OTHER_EXECUTE
+
+            current_permissions = stat.S_IMODE(os.lstat(path).st_mode)
+            os.chmod(path, current_permissions | ADD_PERMISSIONS)
+
+        add_permissions(DRIVER_PATH)
