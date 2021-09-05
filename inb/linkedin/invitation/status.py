@@ -78,7 +78,8 @@ class Invitation(object):
     def status(self: Invitation):
         if not Invitation.STATUS_NO == 0:
             print("\033[F" * 8)
-        Invitation.STATUS_NO += 1
+        else:
+            Invitation.STATUS_NO += 1
         inbprint()
         inbprint(f"""{self._status} [bold {YELLOW_HEX}]{self._name}\n\n"""
                  f"""[bold {LIGHT_GREEN_HEX}]{self._occupation}\n\n"""
