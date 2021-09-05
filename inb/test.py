@@ -22,6 +22,7 @@
 
 import unittest
 
+from tests import TestValidator
 from tests import TestCustomTypeFunction
 
 if __name__ == "__main__":

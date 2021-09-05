@@ -20,4 +20,5 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-from .test_utils import TestCustomTypeFunction
+from .test_utils.test_type import TestCustomTypeFunction
+from .test_utils.test_validator import TestValidator 
