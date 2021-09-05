@@ -1,22 +1,23 @@
-"""Module tests to test linkedin-bot."""
-import colorama
+# MIT License
+#
+# Copyright (c) 2019 Creative Commons
+#
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the "Software"),
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions
+#
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+# OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
 
-
-passed = "✔"
-failed = "✘"
-
-__name__ = "tests"
-__package__ = "tests"
-
-
-def message(msg: str = '', color: str = '') -> str:
-    if color.lower() == 'r' or color.lower() == "red":
-        return f"""{colorama.Style.NORMAL}{colorama.Fore.RED}{msg}{colorama.Style.RESET_ALL}"""
-
-    if color.lower() == 'b' or color.lower() == "blue":
-        return f"""{colorama.Style.NORMAL}{colorama.Fore.BLUE}{msg}{colorama.Style.RESET_ALL}"""
-
-    if color.lower() == 'g' or color.lower() == "green":
-        return f"""{colorama.Style.NORMAL}{colorama.Fore.GREEN}{msg}{colorama.Style.RESET_ALL}"""
-
-    return f"""{msg}"""
+from .test_lib import TestCustomTypeFunction

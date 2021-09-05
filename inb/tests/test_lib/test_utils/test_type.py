@@ -20,13 +20,27 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-from typing import Any
+# from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!
+from __future__ import annotations
 
-import re
+import unittest
+
+from lib.utils.type import _type
 
 
-def _type(t: Any) -> str:
-    try:
-        return t.__name__
-    except AttributeError:
-        return None
+class TestCustomTypeFunction(unittest.TestCase):
+    def test_if_output_is_str(self: TestCustomTypeFunction) -> None:
+        self.assertIsInstance(_type(int), str)
+    
+    def test_if_output_is_none(self: TestCustomTypeFunction) -> None:
+        self.assertEqual(_type(None), None)
+
+    def test_if_ouput_is_correct(self: TestCustomTypeFunction) -> None:
+        self.assertEqual(_type(int), "int")
+        self.assertEqual(_type(str), "str")
+        self.assertEqual(_type(float), "float")
+        self.assertEqual(_type(set), "set")
+        self.assertEqual(_type(list), "list")
+        self.assertEqual(_type(dict), "dict")
+        self.assertEqual(_type(None), None)
+        self.assertEqual(_type(TestCustomTypeFunction), "TestCustomTypeFunction")

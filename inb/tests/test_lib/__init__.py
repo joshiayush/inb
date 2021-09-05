@@ -20,13 +20,4 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-from typing import Any
-
-import re
-
-
-def _type(t: Any) -> str:
-    try:
-        return t.__name__
-    except AttributeError:
-        return None
+from .test_utils import TestCustomTypeFunction
