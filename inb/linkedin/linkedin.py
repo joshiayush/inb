@@ -64,10 +64,10 @@ class LinkedIn(Driver):
         super(LinkedIn, self).__init__(driver_path=driver_path,
                                        options=opt_chromedriver_options)
 
-        if user_email.strip() == '':
+        if not user_email:
             raise CredentialsNotGivenException(
                 "ValueError: 'user_email' can not be empty!")
-        if user_password.strip() == '':
+        if not user_password:
             raise CredentialsNotGivenException(
                 "ValueError: 'user_password' can not be empty!")
 
