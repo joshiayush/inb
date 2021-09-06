@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-"""from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!"""
+# from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!
 from __future__ import annotations
 
 import sys
@@ -90,9 +90,7 @@ class _ArgumentParser(argparse.ArgumentParser):
         """
         if file is None:
             file = sys.stdout
-
-        message: str = self.format_usage()
-
+        message = self.format_usage()
         self._print_message(
             message[0].upper() + message[1:], file, self.__COLOR_DICT["YELLOW"])
 
@@ -109,9 +107,7 @@ class _ArgumentParser(argparse.ArgumentParser):
         """
         if file is None:
             file = sys.stdout
-
-        message: str = self.format_help()
-
+        message = self.format_help()
         self._print_message(
             message[0].upper() + message[1:], file, self.__COLOR_DICT["BLUE"])
 
@@ -133,17 +129,13 @@ class _ArgumentParser(argparse.ArgumentParser):
         :Returns:
             - {None}
         """
-        if not message:
-            return
-
         if file is None:
             file = sys.stderr
-
         if color is None:
             file.write(message)
-            return
-
-        file.write(color + message.strip() + self.__COLOR_DICT["RESET"] + '\n')
+        else:
+            file.write(color + message.strip() +
+                       self.__COLOR_DICT["RESET"] + '\n')
 
     def exit(
         self: _ArgumentParser,
