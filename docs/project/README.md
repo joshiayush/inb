@@ -16,3 +16,7 @@
 - Automatically removes people based on their name.
 - Automatically infers person profile quality using machine learning.
 - Automatically sends application for qualified jobs that are estimated through machine learning.
+
+**Want to be a contributor?**
+
+**Leave a note in discussion or open a feature request to let me know that you are working on any of the above features.**
