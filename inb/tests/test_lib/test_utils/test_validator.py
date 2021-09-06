@@ -31,23 +31,23 @@ from lib import DRIVER_PATH
 from lib.utils.validator import Validator
 
 
-class TestValidator(unittest.TestCase):
+class TestValidatorClass(unittest.TestCase):
 
-    def test_validator_error_code(self: TestValidator) -> None:
+    def test_validator_error_code(self: TestValidatorClass) -> None:
         self.assertEqual(Validator.ERROR_INVALID_NAME, 123)
 
-    def test_validator_constructor_exception(self: TestValidator) -> None:
+    def test_validator_constructor_exception(self: TestValidatorClass) -> None:
         different_types = [10, 10.19, [1, 2, 3, 4],
                            ["abc", "bcd", "cdb"], {"name": "ayush"}]
         for i in range(len(different_types)):
             with self.assertRaises(ValueError):
                 Validator(different_types[i])
 
-    def test_validator_constructor(self: TestValidator) -> None:
+    def test_validator_constructor(self: TestValidatorClass) -> None:
         validator = Validator("https://www.linkedin.com/")
         self.assertEqual(validator._field, "https://www.linkedin.com/")
 
-    def test_validator_is_url_method(self: TestValidator) -> None:
+    def test_validator_is_url_method(self: TestValidatorClass) -> None:
         self.assertTrue(Validator("http://www.linkedin.com/").is_url())
         self.assertTrue(Validator("https://www.linkedin.com/").is_url())
         self.assertTrue(Validator("ftp://www.linkedin.com/").is_url())
@@ -57,7 +57,7 @@ class TestValidator(unittest.TestCase):
         self.assertFalse(Validator("notavalidurl").is_url())
         self.assertFalse(Validator("/ornela-cerenishti-118400146/").is_url())
 
-    def test_validator_is_email_method(self: TestValidator) -> None:
+    def test_validator_is_email_method(self: TestValidatorClass) -> None:
         self.assertTrue(Validator("ayush854032@gmail.com").is_email())
         self.assertTrue(
             Validator("joshiayush.joshiayush@gmail.com").is_email())
@@ -74,12 +74,12 @@ class TestValidator(unittest.TestCase):
         self.assertFalse(Validator("@gmail.com").is_email())
         self.assertFalse(Validator(".com@gmail").is_email())
 
-    def test_validator_is_path_method(self: TestValidator) -> None:
+    def test_validator_is_path_method(self: TestValidatorClass) -> None:
         self.assertTrue(Validator(os.path.abspath(__file__)).is_path())
 
     @unittest.skipIf(not os.getuid() == 0,
                      "Cannot alter permissions without root!")
-    def test_validator_is_executable_method(self: TestValidator) -> None:
+    def test_validator_is_executable_method(self: TestValidatorClass) -> None:
         original_file_permissions = stat.S_IMODE(os.lstat(DRIVER_PATH).st_mode)
 
         def add_execute_permissions(path):
