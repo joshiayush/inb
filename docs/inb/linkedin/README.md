@@ -1,8 +1,8 @@
 # linkedin
 
-- ## [init][_init]
-- ## [linkedin][_linkedin]
-- ## [linkedinconnect][_linkedinconnect]
+- [init][_init]
+- [linkedin][_linkedin]
+- [linkedinconnect][_linkedinconnect]
 
 <!-- Definitions -->
 

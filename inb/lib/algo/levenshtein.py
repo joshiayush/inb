@@ -35,7 +35,7 @@ def levenshtein(string1: str, string2: str) -> int:
     optimal_solution_matrix: list = [
         [-1 for i in range(len(string2))] for j in range(len(string1))]
 
-    def levenshteiDistanceTopDown(string1Index: int, string2Index: int) -> int:
+    def levenshteinDistanceTopDown(string1Index: int, string2Index: int) -> int:
         """Function levenshteiDistanceTopDown() is the actual reccursive program to find the edit
         distance between two strings.
 
@@ -67,7 +67,7 @@ def levenshtein(string1: str, string2: str) -> int:
 
         if string1[string1Index] == string2[string2Index]:
             # Character match; no repair needs to take place no addition to distance
-            optimal_solution_matrix[string1Index][string2Index] = levenshteiDistanceTopDown(
+            optimal_solution_matrix[string1Index][string2Index] = levenshteinDistanceTopDown(
                 string1Index - 1, string2Index - 1)
 
             # Return the optimized solution
@@ -80,20 +80,20 @@ def levenshtein(string1: str, string2: str) -> int:
         # Deletion:
         #   Find levenshtein distance of string1[0...(i - 1)] => string2[0...j] i'th
         #   character of string1 is deleted
-        delete_cost: int = levenshteiDistanceTopDown(
+        delete_cost: int = levenshteinDistanceTopDown(
             string1Index - 1, string2Index)
 
         # Insertion:
         #   Find levenshtein distance of string1[0...j] => string2[0...(j - 1)] we then
         #   insert string2[j] into string2 to refain string2[0...j]
-        insert_cost: int = levenshteiDistanceTopDown(
+        insert_cost: int = levenshteinDistanceTopDown(
             string1Index, string2Index - 1)
 
         # Replace:
         #   Find levenshtein distance of string1[0...(i -1)] => string2[0...(j - 1)] we
         #   then insert string2[j] as i'th character of string1 effectively substituting
         #   it
-        replace_cost: int = levenshteiDistanceTopDown(
+        replace_cost: int = levenshteinDistanceTopDown(
             string1Index - 1, string2Index - 1)
 
         # We want to take the minimum of these three costs to fix the problem (we add 1
@@ -106,4 +106,4 @@ def levenshtein(string1: str, string2: str) -> int:
 
     # Commence the recurrence to ascertain the globally optimized solution to convert
     # string1 into string2
-    return levenshteiDistanceTopDown(len(string1) - 1, len(string2) - 1)
+    return levenshteinDistanceTopDown(len(string1) - 1, len(string2) - 1)
