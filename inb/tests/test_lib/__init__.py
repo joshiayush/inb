@@ -21,4 +21,5 @@
 # THE SOFTWARE.
 
 from .test_utils.test_type import TestCustomTypeFunction
-from .test_utils.test_validator import TestValidator 
+from .test_utils.test_validator import TestValidatorClass 
+from .test_utils.test_inbvalidator import TestInbValidatorClass
