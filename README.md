@@ -3,6 +3,16 @@
 This command line tool is very helpful to increase your connections on **LinkedIn**, you are going to achieve **500+** connections
 very easily.
 
+## Features
+
+- Automatically sends invitation to people based on your profile.
+- Automatically sends invitation to people based on their industry.
+- Automatically sends invitation to people based on their location.
+- Automatically sends invitation to people based on their name.
+- Automatically connects you with a person based on the profile id.
+
+Know more [here][_project].
+
 ## Installation
 
 ```shell
@@ -92,12 +102,12 @@ Usage: inb search [-h] [-e [EMAIL]] [-p [PASSWORD]] [-k [KEYWORD]]
                   [-ngpu] [-m]
                   {limit} ...
 
- _       _     
-(_)_ __ | |__  
-| | '_ \| '_ \ 
+ _       _
+(_)_ __ | |__
+| | '_ \| '_ \
 | | | | | |_) |
-|_|_| |_|_.__/ 
-               
+|_|_| |_|_.__/
+
 
 Searches people on LinkedIn and then invites them.
 
@@ -149,3 +159,4 @@ Look in the [docs][_docs] folder to know more about `inb` and how to use it.
 <!-- Definitions -->
 
 [_docs]: https://github.com/JoshiAyush/inb/tree/master/docs
+[_project]: https://github.com/joshiayush/inb/tree/master/docs/project/README.md
