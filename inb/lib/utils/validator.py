@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-"""from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!"""
+# from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!
 from __future__ import annotations
 
 import re
@@ -60,7 +60,7 @@ class Validator(object):
         # If this pathname is either not a string or is but is empty, this pathname
         # is invalid.
         try:
-            if not isinstance(self._field, str) or not self._field:
+            if not self._field or not isinstance(self._field, str):
                 return False
 
             # Strip this pathname's Windows-specific drive specifier (e.g., `C:\`)
@@ -146,12 +146,12 @@ class InbValidator(object):
         self.__validator = Validator(self._field)
 
     def is_url(self: InbValidator) -> bool:
-        _base_url: str = "https://www.linkedin.com"
-        if not self._field.startswith(_base_url):
-            return False
-        if not self.__validator.is_url():
-            return False
-        return True
+        base_url = ["http://www.linkedin.com", "https://www.linkedin.com"]
+        for url in base_url:
+            if self._field.startswith(url):
+                if self.__validator.is_url():
+                    return True
+        return False
 
     def is_email(self: InbValidator) -> bool:
         return self.__validator.is_email()
