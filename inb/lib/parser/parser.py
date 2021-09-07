@@ -162,7 +162,7 @@ class _ArgumentParser(argparse.ArgumentParser):
         message: str,
         usage: bool = True
     ) -> None:
-        """Method error() is an overrided version of the parent error() method. This method
+        """Method error() is an overrided version of the parent's error() method. This method
         provides formatting as well.
 
         :Args:
