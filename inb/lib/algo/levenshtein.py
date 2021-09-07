@@ -20,6 +20,9 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+from ..utils import _type
+
+
 def levenshtein(string1: str, string2: str) -> int:
     """Function levenshtein() returns the edit distance between the two given strings.
 
@@ -30,6 +33,13 @@ def levenshtein(string1: str, string2: str) -> int:
     :Returns:
         - {int} edit distance.
     """
+    if not isinstance(string1, str):
+        raise TypeError("levenshtein: %(type)s type object is a invalid argument, requires string!" % {
+                        "type": _type(string1)})
+    if not isinstance(string2, str):
+        raise TypeError("levenshtein: %(type)s type object is a invalid argument, requires string!" % {
+                        "type": _type(string2)})
+
     # Our optimal solution matrix that will hold the optimal solution
     # of converting one string into another
     optimal_solution_matrix: list = [
