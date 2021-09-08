@@ -8,6 +8,7 @@ This document contains the library methods we use for project **inb**.
   - [parser][_argparser]
 - [utils][_utils]
   - [figlet][_figlet]
+  - [net][_net]
 
 <!-- Definitions -->
 
@@ -17,3 +18,4 @@ This document contains the library methods we use for project **inb**.
 [_argparser]: https://github.com/joshiayush/inb/blob/master/docs/inb/lib/parser/parser.md
 [_utils]: https://github.com/joshiayush/inb/blob/master/docs/inb/lib/utils
 [_figlet]: https://github.com/joshiayush/inb/blob/master/docs/inb/lib/utils/figlet.md
+[_net]: https://github.com/joshiayush/inb/blob/master/docs/inb/lib/utils/net.md
