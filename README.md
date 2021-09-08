@@ -5,11 +5,11 @@ very easily.
 
 ## Features
 
-- Automatically sends invitation to people based on your profile.
-- Automatically sends invitation to people based on their industry.
-- Automatically sends invitation to people based on their location.
-- Automatically sends invitation to people based on their name.
-- Automatically connects you with a person based on the profile id.
+- [x] Automatically sends invitation to people based on your profile.
+- [x] Automatically sends invitation to people based on their industry.
+- [x] Automatically sends invitation to people based on their location.
+- [x] Automatically sends invitation to people based on their name.
+- [x] Automatically connects you with a person based on the profile id.
 
 Know more [here][_project].
 
