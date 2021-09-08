@@ -12,23 +12,23 @@ This document has the following sections:
 
 **LinkedInConnect Class:**
 
-```python
-class LinkedInConnect(object):
-```
-
+> ```python
+> class LinkedInConnect(object):
+> ```
+>
 > Class `LinkedInConnect` has a base class `object` which is the default base class of every class in python so there is nothing
 > much in that.
 
 **LinkedInConnect Constructor:**
 
-```python
-def __init__(
-    self: LinkedInConnect,
-    driver: webdriver.Chrome,
-    limit: int = 40
-) -> None:
-```
-
+> ```python
+> def __init__(
+>     self: LinkedInConnect,
+>     driver: webdriver.Chrome,
+>     limit: int = 40
+> ) -> None:
+> ```
+>
 > The constructor method intializes a `LinkedInConnect` instance this instance will have some methods on it to commence targetting
 > people from the suggestion box in your _mynetwork_ page.
 > <br><br>
@@ -43,10 +43,10 @@ def __init__(
 
 **LinkedInConnect Destructor:**
 
-```python
-def __del__(self: LinkedInConnect) -> None:
-```
-
+> ```python
+> def __del__(self: LinkedInConnect) -> None:
+> ```
+>
 > The destructor method sets the internal variable of `LinkedInConnect` class `(__INVITATION_SENT)` to `0` and it also calls the
 > `quit` method on the `webdriver` instance it was given during initialization.
 
@@ -54,13 +54,13 @@ def __del__(self: LinkedInConnect) -> None:
 
 - **Method get_my_network()**
 
-  ```python
-  def get_my_network(
-      self: LinkedInConnect,
-      url: Union[str, None] = None
-  ) -> None:
-  ```
-
+  > ```python
+  > def get_my_network(
+  >     self: LinkedInConnect,
+  >     url: Union[str, None] = None
+  > ) -> None:
+  > ```
+  >
   > This method takes you to the _mynetwork_ page in your **LinkedIn** account.
   > <br><br>
   > This method takes in an argument `url` (i.e., the url to your _mynetwork_ page). If the url is not given (means it is `None`)
@@ -72,10 +72,10 @@ def __del__(self: LinkedInConnect) -> None:
 
 - **Method run()**
 
-  ```python
-  def run(self: LinkedInConnect) -> None:
-  ```
-
+  > ```python
+  > def run(self: LinkedInConnect) -> None:
+  > ```
+  >
   > This method must be called after the successful execution of the above `get_my_network()` method, otherwise exceptions may
   > occur.
   > <br><br>
@@ -89,10 +89,10 @@ def __del__(self: LinkedInConnect) -> None:
 
 - **Method \_\_execute_cleaners()**
 
-  ```python
-  def __execute_cleaners(self: LinkedInConnect) -> None:
-  ```
-
+  > ```python
+  > def __execute_cleaners(self: LinkedInConnect) -> None:
+  > ```
+  >
   > This private method internally calls the `Cleaner` service to clean up certain elements from the page.
   > <br><br>
   > This time we remove the _message overlay_ that lies on the _mynetwork_ page. This _message overlay_ loads up dynamically so the
@@ -102,10 +102,10 @@ def __del__(self: LinkedInConnect) -> None:
 
 - **Method \_\_send_invitation()**
 
-  ```python
-  def __send_invitation(self: LinkedInConnect) -> None:
-  ```
-
+  > ```python
+  > def __send_invitation(self: LinkedInConnect) -> None:
+  > ```
+  >
   > This private method internally calls the `get_suggestion_box_element()` method of the `Person` service to get a person element
   > from the page.
   > <br><br>
