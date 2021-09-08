@@ -11,7 +11,7 @@ This document contains the following section:
 - **Method ping():**
 
   > ```python
-  > def ping(host: str) -> bool:
+  > def ping(host: str = None) -> bool:
   > ```
   >
   > This method pings the given host name and returns `True` if the host respond.

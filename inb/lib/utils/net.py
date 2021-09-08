@@ -26,7 +26,7 @@ import platform
 import subprocess
 
 
-def ping(host: str):
+def ping(host: str = None) -> bool:
     """Returns True if host (str) responds to a ping request.
 
     Remember that a host may not respond to a ping (ICMP) request even if the host 
@@ -41,6 +41,11 @@ def ping(host: str):
     :Returns:
         - {bool} True if server responds, false otherwise.
     """
-    _param: str = "-n" if platform.system().lower() == "windows" else "-c"
-    _command: List[str] = ["ping", _param, '1', host]
-    return subprocess.call(_command, stdout=subprocess.DEVNULL) == 0
+    if not host:
+        host = "google.com"
+    if platform.system().lower() == "windows":
+        param = "-n"
+    else:
+        param = "-c"
+    command: List[str] = ["ping", param, '1', host]
+    return subprocess.call(command, stdout=subprocess.DEVNULL) == 0
