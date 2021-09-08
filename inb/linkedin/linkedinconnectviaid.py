@@ -60,12 +60,12 @@ class LinkedInConnectViaId(object):
             self._driver.get(self.id_url)
         except TimeoutException:
             raise TimeoutException(
-                "LinkedInConnectViaId: Weak internet connection")
+                "ERR: Cannot get person profile page due to weak network!")
 
     def __execute_cleaners(self: LinkedInConnectViaId) -> None:
         """Method execute_cleaners() scours the unwanted element from the page during the
         connect process.
-        
+
         :Args:
             - self: {LinkedInConnectionsAuto}
 

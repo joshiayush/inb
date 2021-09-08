@@ -31,7 +31,6 @@ from selenium.webdriver.common.keys import Keys
 
 from errors import ValidationError
 from errors import CredentialsNotGivenException
-from errors import DomainNameSystemNotResolveException
 
 from lib.utils.validator import InbValidator
 
@@ -97,7 +96,7 @@ class LinkedIn(Driver):
         try:
             self.driver.get(url)
         except TimeoutException:
-            raise DomainNameSystemNotResolveException("ERR_DNS_PROBE_STARTED")
+            raise TimeoutException("ERR: Cannot log in due to weak network!")
 
     def __get_email_box(self: LinkedIn) -> webdriver.Chrome:
         """Method get_email_box() returns the input tag for entering email address.
@@ -198,5 +197,4 @@ class LinkedIn(Driver):
         :Returns:
             - {None}
         """
-        if isinstance(self.driver, webdriver.Chrome):
-            self.disable_webdriver_chrome()
+        self.disable_webdriver_chrome()

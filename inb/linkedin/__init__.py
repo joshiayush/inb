@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-"""from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!"""
+# from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!
 from __future__ import annotations
 
 from selenium import webdriver
@@ -104,6 +104,4 @@ class Driver(object):
 
     def __del__(self: Driver) -> None:
         Driver.__SESSION_ALREADY_EXISTS = False
-
-        if isinstance(self.driver, webdriver.Chrome):
-            self.driver.quit()
+        self.driver.quit()

@@ -27,29 +27,6 @@ from typing import Any
 from typing import Tuple
 
 from lib.utils import _type
-from lib.utils.validator import Validator
-
-
-class EmptyResponseException(Exception):
-    """Thrown when recieved an empty response."""
-
-    def __init__(self: EmptyResponseException, *args: Tuple[Any]) -> None:
-        super(EmptyResponseException, self).__init__(*args)
-        if args:
-            if isinstance(args[0], str):
-                self.message = args[0]
-            else:
-                raise Exception(
-                    "EmptyResponseException: Constructor's first argument must be of type 'str' not '%(type)s'" % {
-                        "type": _type(args[0])})
-        else:
-            self.message = None
-
-    def __str__(self: EmptyResponseException) -> str:
-        if self.message:
-            return "EmptyResponseException: %(message)s" % {"message": self.message}
-        else:
-            return "EmptyResponseException has been raised!"
 
 
 class FailedLoadingResourceException(Exception):
@@ -94,44 +71,6 @@ class LinkedInBlockException(Exception):
             return "LinkedInBlockException: %(message)s" % {"message": self.message}
         else:
             return "LinkedInBlockException has been raised!"
-
-
-class DomainNameSystemNotResolveException(Exception):
-    """Thrown when DNS could not be resolved."""
-
-    def __init__(self: DomainNameSystemNotResolveException, *args: Tuple[Any]) -> None:
-        super(DomainNameSystemNotResolveException, self).__init__(*args)
-        if args:
-            if isinstance(args[0], str):
-                self.message = args[0]
-            else:
-                raise Exception(
-                    "DomainNameSystemNotResolveException: Constructor's first argument must be of type 'str' not '%(type)s'" % {
-                        "type": _type(args[0])})
-            if len(args) > 1:
-                if isinstance(args[1], str):
-                    if Validator(args[1]).is_url():
-                        self.url = args[1]
-                    else:
-                        raise ValidationError("DomainNameSystemNotResolveException: [URL] (%(url)s) is not a valid url!" % {
-                            "url": args[1]})
-                else:
-                    raise Exception(
-                        "DomainNameSystemNotResolveException: Constructor's second argument"
-                        " (url) must be of type 'str' not '%(type)s'" % {
-                            "type": _type(args[1])})
-        else:
-            self.message = None
-            self.url = None
-
-    def __str__(self: DomainNameSystemNotResolveException) -> str:
-        if self.message and self.url:
-            return "DomainNameSystemNotResolveException: %(message)s\n[URL] %(url)s" % {
-                "message": self.message, "url": self.url}
-        elif self.message:
-            return "DomainNameSystemNotResolveException: %(message)s" % {"message": self.message}
-        else:
-            return "DomainNameSystemNotResolveException has been raised!"
 
 
 class WebDriverPathNotGivenException(Exception):

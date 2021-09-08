@@ -34,7 +34,6 @@ from .DOM.cleaners import Cleaner
 from .invitation.status import Invitation
 
 from errors import ValidationError
-from errors import EmptyResponseException
 from errors import ConnectionLimitExceededException
 
 from selenium import webdriver
@@ -106,7 +105,8 @@ class LinkedInConnect(object):
         try:
             self._driver.get(url)
         except TimeoutException:
-            raise EmptyResponseException("ERR_EMPTY_RESPONSE")
+            raise TimeoutException(
+                "ERR: Cannot get mynetwork page due to weak network!")
 
     def __send_invitation(self: LinkedInConnect) -> None:
         """Method send_invitation() starts sending invitation to people on linkedin.
@@ -180,6 +180,4 @@ class LinkedInConnect(object):
             - {None}
         """
         LinkedInConnect.__INVITATION_SENT = 0
-
-        if isinstance(self._driver, webdriver.Chrome):
-            self._driver.quit()
+        self._driver.quit()

@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-"""from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!"""
+# from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!
 from __future__ import annotations
 
 import time
@@ -354,6 +354,4 @@ class LinkedInSearchConnect(object):
             - {None}
         """
         LinkedInSearchConnect.__INVITATION_SENT = 0
-
-        if isinstance(self._driver, webdriver.Chrome):
-            self._driver.quit()
+        self._driver.quit()
