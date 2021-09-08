@@ -69,7 +69,7 @@ def levenshtein(string1: str, string2: str) -> int:
 
         if string2Index < 0:
             # If string2 is NULL, it is all insertion to get string2 to string1
-            return string1Index
+            return string1Index + 1
 
         if not optimal_solution_matrix[string1Index][string2Index] == -1:
             # Return the globally optimized solution if we already have one
