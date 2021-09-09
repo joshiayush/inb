@@ -35,6 +35,19 @@ class Validator(object):
     ERROR_INVALID_NAME = 123
 
     def __init__(self: Validator, field: str) -> None:
+        """Constructor method initializes the field attribute. It also checks if the field
+        given is an instance of string or not.
+
+        :Args:
+            - self: {Validator} self.
+            - field: {str} Field to validate.
+
+        :Returns:
+            - {None}
+
+        :Raises:
+            - {ValueError} If the field is not an string instance.
+        """
         if isinstance(field, str):
             self._field = field
         else:
@@ -42,6 +55,14 @@ class Validator(object):
                 "Value %(field)s is not a valid value for Validator instance!" % {"field": field})
 
     def is_url(self: Validator) -> bool:
+        """Method is_url() checks if the field given is a valid url or not using regex.
+
+        :Args:
+            - self: {Validator} self.
+
+        :Returns:
+            - {bool} True if the field is valid, otherwise False.
+        """
         _regex = re.compile(
             r"^(?:http|ftp)s?://"
             r"(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+(?:[A-Z]{2,6}\.?|[A-Z0-9-]{2,}\.?)|"
@@ -52,11 +73,27 @@ class Validator(object):
         return re.match(_regex, self._field) is not None
 
     def is_email(self: Validator) -> bool:
+        """Method is_email() checks if the field given is a valid email or not using regex.
+
+        :Args:
+            - self: {Validator} self.
+
+        :Returns:
+            - {bool} True if the field is valid, otherwise False.
+        """
         _regex = re.compile(
             r"(^[a-zA-Z0-9_.+-]+@[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+$)", re.IGNORECASE)
         return re.match(_regex, self._field) is not None
 
     def is_path(self: Validator) -> bool:
+        """Method is_path() checks if the field given is a valid file system path or not.
+
+        :Args:
+            - self: {Validator} self.
+
+        :Returns:
+            - {bool} True if the field is valid, otherwise False.
+        """
         # If this pathname is either not a string or is but is empty, this pathname
         # is invalid.
         try:
@@ -72,20 +109,22 @@ class Validator(object):
             # Directory guaranteed to exist. If the current OS is Windows, this is
             # the drive to which Windows was installed (e.g., the "%HOMEDRIVE%"
             # environment variable); else, the typical root directory.
-            _root_dirname = os.environ.get("HOMEDRIVE", "C:") \
-                if sys.platform == "win32" else os.path.sep
+            if sys.platform == "win32":
+                root_dirname = os.environ.get("HOMEDRIVE", "C:")
+            else:
+                root_dirname = os.path.sep
 
             # ...Murphy and her ironclad Law
-            assert os.path.isdir(_root_dirname)
+            assert os.path.isdir(root_dirname)
 
             # Append a path separator to this directory if needed.
-            _root_dirname = _root_dirname.rstrip(os.path.sep) + os.path.sep
+            root_dirname = root_dirname.rstrip(os.path.sep) + os.path.sep
 
             # Test whether each path component split from this pathname is valid or
             # not, ignoring non-existent and non-readable path components.
             for pathname_part in self._field.split(os.path.sep):
                 try:
-                    os.lstat(_root_dirname + pathname_part)
+                    os.lstat(root_dirname + pathname_part)
                 except OSError as exc:
                     # If an OS-specific exception is raised, its error code indicates
                     # whether this pathname is valid or not. Unless this is the case,
@@ -121,23 +160,55 @@ class Validator(object):
         # (e.g., a bug). Permit this exception to unwind the call stack.
 
     def is_executable(self: Validator) -> bool:
-        def is_exe(fpath):
+        """Method is_executable() checks if the executable bit of a path is on or not.
+
+        :Args:
+            - self: {Validator} self.
+
+        :Returns:
+            - {bool} True if the executable bit is on, False otherwise.
+        """
+        def is_exe(fpath: str) -> bool:
+            """Function is_exe() checks if the given path is valid and executable.
+
+            :Args:
+                - fpath: {str} File path.
+
+            :Returns:
+                - {bool} True if the file path is valid and executable, False otherwise.
+            """
             return self.is_path() and os.access(fpath, os.X_OK)
 
-        _fpath, _ = os.path.split(self._field)
-        if _fpath:
+        fpath, _ = os.path.split(self._field)
+        if fpath:
             if is_exe(self._field):
                 return True
         else:
             for path in os.environ["PATH"].split(os.pathsep):
-                _exe_file = os.path.join(path, self._field)
-                if is_exe(_exe_file):
+                exe_file = os.path.join(path, self._field)
+                if is_exe(exe_file):
                     return True
         return False
 
 
 class InbValidator(object):
     def __init__(self: InbValidator, field: str) -> None:
+        """Constructor method initializes the field attribute. It also checks if the field
+        given is an instance of string or not.
+
+        This constructor method also creates an instance of the Validator class to use for
+        validating emails and urls.
+
+        :Args:
+            - self: {Validator} self.
+            - field: {str} Field to validate.
+
+        :Returns:
+            - {None}
+
+        :Raises:
+            - {ValueError} If the field is not an string instance.
+        """
         if isinstance(field, str):
             self._field = field
         else:
@@ -146,6 +217,17 @@ class InbValidator(object):
         self.__validator = Validator(self._field)
 
     def is_url(self: InbValidator) -> bool:
+        """Method is_url() checks if the given field is a LinkedIn url or not.
+
+        This method takes help of the Validator::is_url() method to validate the url once
+        it is confirmed that this url connects us with the LinkedIn server.
+
+        :Args:
+            - self: {InbValidator} self.
+
+        :Returns:
+            - {bool} True if the url is valid, False otherwise.
+        """
         base_url = ["http://www.linkedin.com", "https://www.linkedin.com"]
         for url in base_url:
             if self._field.startswith(url):
@@ -154,4 +236,12 @@ class InbValidator(object):
         return False
 
     def is_email(self: InbValidator) -> bool:
+        """Method is_email() checks if the field given is a valid email or not using regex.
+
+        :Args:
+            - self: {InbValidator} self.
+
+        :Returns:
+            - {bool} True if the field is valid, otherwise False.
+        """
         return self.__validator.is_email()
