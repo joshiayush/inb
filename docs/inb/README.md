@@ -9,6 +9,7 @@
     - [figlet][_figlet]
     - [net][_net]
     - [type][_type]
+    - [validator][_validator]
 
 - [linkedin][_linkedin]
   - [init][_init]
@@ -35,3 +36,4 @@
 [_figlet]: https://github.com/joshiayush/inb/blob/master/docs/inb/lib/utils/figlet.md
 [_net]: https://github.com/joshiayush/inb/blob/master/docs/inb/lib/utils/net.md
 [_type]: https://github.com/joshiayush/inb/blob/master/docs/inb/lib/utils/type.md
+[_validator]: https://github.com/joshiayush/inb/blob/master/docs/inb/lib/utils/validator.md
