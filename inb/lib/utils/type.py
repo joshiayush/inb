@@ -22,8 +22,6 @@
 
 from typing import Any
 
-import re
-
 
 def _type(t: Any) -> str:
     try:
