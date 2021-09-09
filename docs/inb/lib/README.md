@@ -9,6 +9,7 @@ This document contains the library methods we use for project **inb**.
 - [utils][_utils]
   - [figlet][_figlet]
   - [net][_net]
+  - [type][_type]
 
 <!-- Definitions -->
 
@@ -19,3 +20,4 @@ This document contains the library methods we use for project **inb**.
 [_utils]: https://github.com/joshiayush/inb/blob/master/docs/inb/lib/utils
 [_figlet]: https://github.com/joshiayush/inb/blob/master/docs/inb/lib/utils/figlet.md
 [_net]: https://github.com/joshiayush/inb/blob/master/docs/inb/lib/utils/net.md
+[_type]: https://github.com/joshiayush/inb/blob/master/docs/inb/lib/utils/type.md
