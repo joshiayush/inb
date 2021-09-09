@@ -1,3 +1,4 @@
+altgraph==0.17
 autopep8==1.5.7
 CacheControl==0.12.6
 cachetools==4.2.2
@@ -25,6 +26,7 @@ googleapis-common-protos==1.53.0
 grpcio==1.38.1
 httplib2==0.19.1
 idna==2.10
+importlib-metadata==4.5.0
 msgpack==1.0.2
 packaging==20.9
 proto-plus==1.18.1
@@ -36,6 +38,8 @@ pycodestyle==2.7.0
 pycparser==2.20
 pyfiglet==0.8.post1
 Pygments==2.9.0
+pyinstaller==4.3
+pyinstaller-hooks-contrib==2021.2
 pyparsing==2.4.7
 python-dateutil==2.8.1
 pytz==2021.1
@@ -50,3 +54,4 @@ uritemplate==3.0.1
 urllib3==1.26.5
 validator==0.7.0
 webdriver-manager==3.2.2
+zipp==3.4.1
