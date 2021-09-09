@@ -24,6 +24,14 @@ from typing import Any
 
 
 def _type(t: Any) -> str:
+    """Function _type() returns the class name of the object given.
+
+    :Args:
+        - t: {Any} Object we need to find the class name for.
+
+    :Returns:
+        - {str} Class name if __name__ attribute is present otherwise None.
+    """
     try:
         return t.__name__
     except AttributeError:
