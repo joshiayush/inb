@@ -12,6 +12,7 @@ This document contains the library methods we use for project **inb**.
   - [net][_net]
   - [type][_type]
   - [validator][_validator]
+  - [window][_window]
 
 <!-- Definitions -->
 
@@ -24,3 +25,4 @@ This document contains the library methods we use for project **inb**.
 [_net]: https://github.com/joshiayush/inb/blob/master/docs/inb/lib/utils/net.md
 [_type]: https://github.com/joshiayush/inb/blob/master/docs/inb/lib/utils/type.md
 [_validator]: https://github.com/joshiayush/inb/blob/master/docs/inb/lib/utils/validator.md
+[_window]: https://github.com/joshiayush/inb/blob/master/docs/inb/lib/utils/window.md

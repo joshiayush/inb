@@ -18,6 +18,7 @@
     - [net][_net]
     - [type][_type]
     - [validator][_validator]
+    - [window][_window]
 
 - [linkedin][_linkedin]
   - [init][_init]
@@ -50,3 +51,4 @@
 [_net]: https://github.com/joshiayush/inb/blob/master/docs/inb/lib/utils/net.md
 [_type]: https://github.com/joshiayush/inb/blob/master/docs/inb/lib/utils/type.md
 [_validator]: https://github.com/joshiayush/inb/blob/master/docs/inb/lib/utils/validator.md
+[_window]: https://github.com/joshiayush/inb/blob/master/docs/inb/lib/utils/window.md

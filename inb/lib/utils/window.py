@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-"""from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!"""
+# from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!
 from __future__ import annotations
 
 import re
@@ -48,8 +48,9 @@ class Terminal(object):
         :Returns:
             - {None}
         """
-        if not file == None:
-            file.write("%c[%d;%df" % (0x1B, y, x))
+        if file == None:
+            file = sys.stdout
+        file.write("%c[%d;%df" % (0x1B, y, x))
 
     def getcursorposition(self: Terminal) -> tuple:
         """Method getcursorposition() returns row and the column number at which the cursor is
@@ -61,29 +62,27 @@ class Terminal(object):
         :Returns:
             - {tuple} (row, column)
         """
-        _buffer: str = ''
-        _stdin: int = sys.stdin.fileno()
-        _tattr: list = termios.tcgetattr(_stdin)
+        buffer: str = ''
+        stdin: int = sys.stdin.fileno()
+        tattr: list = termios.tcgetattr(stdin)
 
         try:
-            tty.setcbreak(_stdin, termios.TCSANOW)
+            tty.setcbreak(stdin, termios.TCSANOW)
             sys.stdout.write("\x1b[6n")
             sys.stdout.flush()
-
             while True:
-                _buffer += sys.stdin.read(1)
-
-                if _buffer[-1] == 'R':
+                buffer += sys.stdin.read(1)
+                if buffer[-1] == 'R':
                     break
         finally:
-            termios.tcsetattr(_stdin, termios.TCSANOW, _tattr)
+            termios.tcsetattr(stdin, termios.TCSANOW, tattr)
 
         # reading the actual values, but what if a keystroke appears while reading
         # from stdin? As dirty work around, getcursorposition() returns if this fails: None
         try:
-            _matches = re.match(r"^\x1b\[(\d*);(\d*)R", _buffer)
-            _groups = _matches.groups()
+            matches = re.match(r"^\x1b\[(\d*);(\d*)R", buffer)
+            groups = matches.groups()
         except AttributeError:
             return None
 
-        return (int(_groups[0]), int(_groups[1]))
+        return (int(groups[0]), int(groups[1]))
