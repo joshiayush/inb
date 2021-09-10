@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-"""from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!"""
+# from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!
 from __future__ import annotations
 
 import time
@@ -43,7 +43,6 @@ from lib import _type
 
 
 class Person(object):
-    """Class Person to target the person element on the page."""
 
     def __init__(self: Person, driver: webdriver.Chrome) -> None:
         """Constructor method to initialize the driver instance and element count.
@@ -57,7 +56,7 @@ class Person(object):
         """
         if not isinstance(driver, webdriver.Chrome):
             raise Exception("'%(driver_type)s' object is not a 'webdriver' object" % {
-                            "driver_type": type(driver)})
+                            "driver_type": _type(driver)})
         self._driver = driver
         self.__suggestion_box_element_count = 0
 
@@ -71,10 +70,8 @@ class Person(object):
             - {None}
         """
         js = JS(self._driver)
-
         old_page_offset = js.get_page_y_offset()
         new_page_offset = js.get_page_y_offset()
-
         while old_page_offset == new_page_offset:
             js.scroll_bottom()
             time.sleep(1)
@@ -100,20 +97,17 @@ class Person(object):
             :Return:
                 - {webdriver.Chrome} element that wraps the person.
             """
-            # Using parent function 'self' variable
             nonlocal self
-
-            # Traget the element using its root xpath
-            xpath: str = Path_To_Element_By.SUGGESTION_BOX_ELEMENT_XPATH
-            # Update the xpath every time the function is called to target the next element
+            # target the element using its root xpath
+            xpath = Path_To_Element_By.SUGGESTION_BOX_ELEMENT_XPATH
+            # update the xpath every time the function is called to target the next element
             xpath = xpath[:-3] + '[' + \
                 str(self.__suggestion_box_element_count + 1) + ']'
 
             if self.__suggestion_box_element_count == 0:
                 self.__load_page()
-
-            self.__suggestion_box_element_count += 1
-
+            else:
+                self.__suggestion_box_element_count += 1
             while True:
                 try:
                     return WebDriverWait(self._driver, 60).until(
@@ -168,18 +162,14 @@ class Person(object):
 
     def get_search_results_elements(self: Person) -> List[Person_Info]:
         def get_search_results_person_lis() -> List[webdriver.Chrome]:
-            # Using parent function 'self' variable
             nonlocal self
-
-            target: int = 1
-
-            # Traget the element using its relative xpath
-            xpath: str = Path_To_Element_By.SEARCH_RESULTS_PEOPLE_XPATH
-
+            # set a counter for elements that we are going to target
+            target = 1
+            # targetting elements using their relative xpath
+            xpath = Path_To_Element_By.SEARCH_RESULTS_PEOPLE_XPATH
             search_results_person_lis: List[webdriver.Chrome] = []
-
             while True:
-                # Update the xpath in each iteration
+                # update the xpath using the value of target to target the next element
                 xpath = xpath[:-3] + '[' + str(target) + ']'
                 try:
                     search_results_person_lis.append(WebDriverWait(self._driver, 0.5).until(
