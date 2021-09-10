@@ -46,9 +46,9 @@ from errors import ConnectionLimitExceededException
 from lib.algo import levenshtein
 from lib.utils import _type
 
-from .DOM import Cleaner
-from .person.person import Person
-from .invitation.status import Invitation
+from ..DOM import Cleaner
+from ..person.person import Person
+from ..invitation.status import Invitation
 
 
 class LinkedInSearchConnect(object):
@@ -128,7 +128,7 @@ class LinkedInSearchConnect(object):
 
         :Args:
             - self: {LinkedInConnectionsAuto}
-        
+
         :Returns:
             - {None}
         """
@@ -171,7 +171,8 @@ class LinkedInSearchConnect(object):
                 for fltr in filter_dict.keys():
                     levenshtein_dis = levenshtein(filter, fltr)
                     total_str_len = (len(filter) + len(fltr))
-                    levenshtein_dis_percent = ((total_str_len - levenshtein_dis) / total_str_len) * 100
+                    levenshtein_dis_percent = (
+                        (total_str_len - levenshtein_dis) / total_str_len) * 100
                     if levenshtein_dis_percent >= threshold:
                         filter_dict[fltr].click()
                 return
@@ -185,7 +186,8 @@ class LinkedInSearchConnect(object):
                     for _fltr in filters_present:
                         levenshtein_dis = levenshtein(fltr, _fltr)
                         total_str_len = (len(fltr) + len(_fltr))
-                        levenshtein_dis_percent = ((total_str_len - levenshtein_dis) / total_str_len) * 100
+                        levenshtein_dis_percent = (
+                            (total_str_len - levenshtein_dis) / total_str_len) * 100
                         if levenshtein_dis_percent >= threshold:
                             filter_dict[_fltr].click()
                 return

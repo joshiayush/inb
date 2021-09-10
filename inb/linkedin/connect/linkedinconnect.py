@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-"""from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!"""
+# from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!
 from __future__ import annotations
 
 import time
@@ -29,9 +29,9 @@ from typing import Union
 from lib import _type
 from lib import InbValidator
 
-from .person.person import Person
-from .DOM.cleaners import Cleaner
-from .invitation.status import Invitation
+from ..person.person import Person
+from ..DOM.cleaners import Cleaner
+from ..invitation.status import Invitation
 
 from errors import ValidationError
 from errors import ConnectionLimitExceededException

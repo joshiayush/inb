@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-"""from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!"""
+# from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!
 from __future__ import annotations
 
 import re
@@ -33,9 +33,9 @@ from selenium.common.exceptions import ElementClickInterceptedException
 
 from lib import _type
 
-from .DOM import Cleaner
-from .person.person import Person
-from .invitation.status import Invitation
+from ..DOM import Cleaner
+from ..person.person import Person
+from ..invitation.status import Invitation
 
 
 class LinkedInConnectViaId(object):

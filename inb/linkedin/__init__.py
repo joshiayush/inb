@@ -30,7 +30,7 @@ from errors import WebDriverNotExecutableException
 
 from lib.utils.validator import Validator
 
-__version__: str = "1.51.35"
+__version__: str = "3.109.59"
 
 
 class Driver(object):
@@ -48,25 +48,20 @@ class Driver(object):
     DISABLE_SETUID_SANDBOX: str = "--disable-setuid-sandbox"
     IGNORE_CERTIFICATE_ERRORS: str = "--ignore-certificate-errors"
 
-    def __init__(self: Driver, driver_path: str, options: list = []) -> None:
+    def __init__(self: Driver, driver_path: str = None, options: list = []) -> None:
         if isinstance(driver_path, str):
-            if driver_path.strip() == '':
-                raise WebDriverPathNotGivenException(
-                    "User did not provide chromedriver's path!")
             if not Validator(driver_path).is_executable():
                 raise WebDriverNotExecutableException(
                     "%(path)s is not executable!" % {"path": driver_path})
         else:
             raise WebDriverPathNotGivenException(
                 "User did not provide chromedriver's path!")
-
         self._driver_path = driver_path
         self._options = webdriver.ChromeOptions()
 
         if not len(options) == 0:
             for arg in options:
                 self._options.add_argument(arg)
-
         self.enable_webdriver_chrome()
 
     def enable_webdriver_chrome(self: Driver) -> None:
@@ -83,9 +78,7 @@ class Driver(object):
         """
         if Driver.__SESSION_ALREADY_EXISTS:
             return
-
         Driver.__SESSION_ALREADY_EXISTS = True
-
         self.driver = webdriver.Chrome(self._driver_path,
                                        options=self._options)
 
