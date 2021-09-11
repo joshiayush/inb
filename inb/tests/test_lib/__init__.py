@@ -21,7 +21,8 @@
 # THE SOFTWARE.
 
 from .test_utils import TestPingFunction
-from .test_utils import TestCustomTypeFunction
+from .test_utils import TestTerminalClass 
 from .test_utils import TestValidatorClass
 from .test_utils import TestInbValidatorClass
+from .test_utils import TestCustomTypeFunction
 from .test_utils import TestCreateFigletFunction

@@ -22,6 +22,7 @@
 
 from .test_net import TestPingFunction
 from .test_type import TestCustomTypeFunction
+from .test_window import TestTerminalClass
 from .test_figlet import TestCreateFigletFunction
 from .test_validator import TestValidatorClass
 from .test_inbvalidator import TestInbValidatorClass

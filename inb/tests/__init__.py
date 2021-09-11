@@ -20,6 +20,9 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+from .test_lib import TestPingFunction
+from .test_lib import TestTerminalClass
 from .test_lib import TestValidatorClass
 from .test_lib import TestInbValidatorClass
 from .test_lib import TestCustomTypeFunction
+from .test_lib import TestCreateFigletFunction

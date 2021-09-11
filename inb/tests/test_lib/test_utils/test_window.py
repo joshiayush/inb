@@ -20,14 +20,28 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+# from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!
+from __future__ import annotations
+
 import unittest
 
-from tests import TestPingFunction
-from tests import TestTerminalClass
-from tests import TestValidatorClass
-from tests import TestInbValidatorClass
-from tests import TestCustomTypeFunction
-from tests import TestCreateFigletFunction
+from unittest.mock import Mock
+from unittest.mock import patch
 
-if __name__ == "__main__":
-    unittest.main()
+from lib import Terminal
+
+
+class TestTerminalClass(unittest.TestCase):
+
+    def setUp(self: TestTerminalClass) -> None:
+        self.t = Terminal()
+
+    @patch("sys.stdout.write")
+    def test_setcursorposition_method_with_valid_x_and_y(self: TestTerminalClass, mock_stdout_write: Mock) -> None:
+        self.t.setcursorposition(10, 10)
+        mock_stdout_write.assert_called_with("%c[%d;%df" % (0x1B, 10, 10))
+
+    def test_getcursorposition_method(self: TestTerminalClass) -> None:
+        (x, y) = self.t.getcursorposition()
+        self.assertIsInstance(x, int)
+        self.assertIsInstance(y, int)
