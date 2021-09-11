@@ -114,18 +114,17 @@ class LinkedInSearchConnect(object):
         self._profile_language = profile_language
 
     def _get_search_results_page(function_: function) -> function:
-        def run(self: LinkedInSearchConnect, *args: List[Any], **kwargs: Dict[Any, Any]) -> None:
+        def wrapper(self: LinkedInSearchConnect, *args: List[Any], **kwargs: Dict[Any, Any]) -> None:
             nonlocal function_
             search_box: webdriver.Chrome = WebDriverWait(self._driver, 60).until(
                 EC.presence_of_element_located(
                     (By.XPATH, """//*[@id="global-nav-typeahead"]/input"""))
             )
-    
             search_box.clear()
             search_box.send_keys(self._keyword)
             search_box.send_keys(Keys.RETURN)
             function_(self, *args, **kwargs)
-        return run
+        return wrapper
 
     def __execute_cleaners(self: LinkedInSearchConnect) -> None:
         """Method execute_cleaners() scours the unwanted element from the page during the

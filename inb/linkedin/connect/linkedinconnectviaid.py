@@ -60,15 +60,16 @@ class LinkedInConnectViaId(object):
         self.id_url = self.BASE_URL + person_id + "/"
 
     def _get_person_profile(function_: function) -> function:
-        def run(self: LinkedInConnectViaId, *args: List[Any], **kwargs: Dict[Any, Any]) -> None:
+        def wrapper(self: LinkedInConnectViaId, *args: List[Any], **kwargs: Dict[Any, Any]) -> None:
             nonlocal function_
             try:
                 self._driver.get(self.id_url)
             except TimeoutException:
                 raise TimeoutException(
                     "ERR: Cannot get person profile page due to weak network!")
-            function_(self, *args, **kwargs)
-        return run
+            else:
+                function_(self, *args, **kwargs)
+        return wrapper
 
     def __execute_cleaners(self: LinkedInConnectViaId) -> None:
         """Method execute_cleaners() scours the unwanted element from the page during the

@@ -67,11 +67,10 @@ class LinkedIn(Driver):
         if not user_email:
             raise CredentialsNotGivenException(
                 "ValueError: 'user_email' can not be empty!")
+        self.__user_email = user_email
         if not user_password:
             raise CredentialsNotGivenException(
                 "ValueError: 'user_password' can not be empty!")
-
-        self.__user_email = user_email
         self.__user_password = user_password
 
     def _get_login_page(function_: function) -> function:
@@ -88,15 +87,16 @@ class LinkedIn(Driver):
         :Raises:
             - DomainNameSystemNotResolveException if there's a TimeourException
         """
-        def login(self: LinkedIn, *args: List[Any], **kwargs: Dict[Any, Any]):
+        def wrapper(self: LinkedIn, *args: List[Any], **kwargs: Dict[Any, Any]):
             nonlocal function_
             try:
                 self.driver.get(LinkedIn.LOGIN_PAGE_URL)
             except TimeoutException:
                 raise TimeoutException(
                     "ERR: Cannot log in due to weak network!")
-            function_(self, *args, **kwargs)
-        return login
+            else:
+                function_(self, *args, **kwargs)
+        return wrapper
 
     def __get_email_box(self: LinkedIn) -> webdriver.Chrome:
         """Method get_email_box() returns the input tag for entering email address.
@@ -125,11 +125,8 @@ class LinkedIn(Driver):
         email_box = self.__get_email_box()
         email_box.clear()
         email_box.send_keys(self.__user_email)
-
-        if not _return:
-            return
-
-        email_box.send_keys(Keys.RETURN)
+        if _return == True:
+            email_box.send_keys(Keys.RETURN)
 
     def __get_password_box(self: LinkedIn) -> webdriver.Chrome:
         """Method get_password_box() returns the input tag for entering password.
@@ -158,11 +155,8 @@ class LinkedIn(Driver):
         password_box = self.__get_password_box()
         password_box.clear()
         password_box.send_keys(self.__user_password)
-
-        if not _return:
-            return
-
-        password_box.send_keys(Keys.RETURN)
+        if _return == True:
+            password_box.send_keys(Keys.RETURN)
 
     def __fill_credentials(self: LinkedIn) -> None:
         """Method fill_credentials() fills the user credentials in the specified fields.

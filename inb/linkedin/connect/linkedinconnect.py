@@ -94,15 +94,16 @@ class LinkedInConnect(object):
         :Raises:
             - EmptyResponseException if there is a TimeoutException
         """
-        def run(self: LinkedInConnect, *args: List[Any], **kwargs: Dict[Any, Any]) -> None:
+        def wrapper(self: LinkedInConnect, *args: List[Any], **kwargs: Dict[Any, Any]) -> None:
             nonlocal function_
             try:
                 self._driver.get(LinkedInConnect.MY_NETWORK_PAGE)
             except TimeoutException:
                 raise TimeoutException(
                     "ERR: Cannot get mynetwork page due to weak network!")
-            function_(self, *args, **kwargs)
-        return run
+            else:
+                function_(self, *args, **kwargs)
+        return wrapper
 
     def __send_invitation(self: LinkedInConnect) -> None:
         """Method send_invitation() starts sending invitation to people on linkedin.
