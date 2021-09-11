@@ -24,6 +24,7 @@
 from __future__ import annotations
 
 import time
+import functools
 
 from typing import Any
 from typing import List
@@ -114,6 +115,7 @@ class LinkedInSearchConnect(object):
         self._profile_language = profile_language
 
     def _get_search_results_page(function_: function) -> function:
+        @functools.wraps(function_)
         def wrapper(self: LinkedInSearchConnect, *args: List[Any], **kwargs: Dict[Any, Any]) -> None:
             nonlocal function_
             search_box: webdriver.Chrome = WebDriverWait(self._driver, 60).until(

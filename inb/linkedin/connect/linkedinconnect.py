@@ -24,6 +24,7 @@
 from __future__ import annotations
 
 import time
+import functools
 
 from typing import Any
 from typing import List
@@ -94,6 +95,7 @@ class LinkedInConnect(object):
         :Raises:
             - EmptyResponseException if there is a TimeoutException
         """
+        @functools.wraps(function_)
         def wrapper(self: LinkedInConnect, *args: List[Any], **kwargs: Dict[Any, Any]) -> None:
             nonlocal function_
             try:

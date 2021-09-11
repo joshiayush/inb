@@ -24,6 +24,7 @@
 from __future__ import annotations
 
 import re
+import functools
 
 from typing import Any
 from typing import List
@@ -60,6 +61,7 @@ class LinkedInConnectViaId(object):
         self.id_url = self.BASE_URL + person_id + "/"
 
     def _get_person_profile(function_: function) -> function:
+        @functools.wraps(function_)
         def wrapper(self: LinkedInConnectViaId, *args: List[Any], **kwargs: Dict[Any, Any]) -> None:
             nonlocal function_
             try:

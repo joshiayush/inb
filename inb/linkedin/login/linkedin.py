@@ -23,6 +23,8 @@
 # from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!
 from __future__ import annotations
 
+import functools
+
 from typing import Any
 from typing import Dict
 from typing import List
@@ -87,6 +89,7 @@ class LinkedIn(Driver):
         :Raises:
             - DomainNameSystemNotResolveException if there's a TimeourException
         """
+        @functools.wraps(function_)
         def wrapper(self: LinkedIn, *args: List[Any], **kwargs: Dict[Any, Any]):
             nonlocal function_
             try:
