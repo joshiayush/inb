@@ -20,13 +20,35 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+# from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!
+from __future__ import annotations
+
 import unittest
 
-from tests import TestPingFunction
-from tests import TestValidatorClass
-from tests import TestInbValidatorClass
-from tests import TestCustomTypeFunction
-from tests import TestCreateFigletFunction
+from unittest.mock import Mock
+from unittest.mock import patch
 
-if __name__ == "__main__":
-    unittest.main()
+from lib.utils.figlet import CreateFigletString
+
+
+class TestCreateFigletFunction(unittest.TestCase):
+
+    @patch("pyfiglet.figlet_format")
+    def test_createfigletstring_function_with_one_parameter(
+            self: TestCreateFigletFunction,
+            mock_figlet_format: Mock
+    ) -> None:
+        kwargs = {}
+        CreateFigletString("inb")
+        mock_figlet_format.assert_called_with(
+            text="inb", font="standard", **kwargs)
+
+    @patch("pyfiglet.figlet_format")
+    def test_createfigletstring_function_with_two_parameters(
+            self: TestCreateFigletFunction,
+            mock_figlet_format: Mock
+    ) -> None:
+        kwargs = {}
+        CreateFigletString("inb", font="slant")
+        mock_figlet_format.assert_called_with(
+            text="inb", font="slant", **kwargs)
