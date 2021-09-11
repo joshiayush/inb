@@ -25,6 +25,10 @@ from __future__ import annotations
 
 import re
 
+from typing import Any
+from typing import List
+from typing import Dict
+
 from selenium import webdriver
 from selenium.webdriver import ActionChains
 from selenium.common.exceptions import TimeoutException
@@ -55,12 +59,16 @@ class LinkedInConnectViaId(object):
                 "LinkedInConnectViaId: Parameter provided is not a valid person id!")
         self.id_url = self.BASE_URL + person_id + "/"
 
-    def get_person_profile(self: LinkedInConnectViaId) -> None:
-        try:
-            self._driver.get(self.id_url)
-        except TimeoutException:
-            raise TimeoutException(
-                "ERR: Cannot get person profile page due to weak network!")
+    def _get_person_profile(function_: function) -> function:
+        def run(self: LinkedInConnectViaId, *args: List[Any], **kwargs: Dict[Any, Any]) -> None:
+            nonlocal function_
+            try:
+                self._driver.get(self.id_url)
+            except TimeoutException:
+                raise TimeoutException(
+                    "ERR: Cannot get person profile page due to weak network!")
+            function_(self, *args, **kwargs)
+        return run
 
     def __execute_cleaners(self: LinkedInConnectViaId) -> None:
         """Method execute_cleaners() scours the unwanted element from the page during the
@@ -92,6 +100,7 @@ class LinkedInConnectViaId(object):
                        occupation=person.occupation,
                        status="failed").status()
 
+    @_get_person_profile
     def run(self: LinkedInConnectViaId) -> None:
         self.__execute_cleaners()
         self.__send_invitation()

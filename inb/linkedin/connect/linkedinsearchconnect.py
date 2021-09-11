@@ -25,6 +25,7 @@ from __future__ import annotations
 
 import time
 
+from typing import Any
 from typing import List
 from typing import Dict
 from typing import Optional
@@ -112,15 +113,19 @@ class LinkedInSearchConnect(object):
         self._current_company = current_company
         self._profile_language = profile_language
 
-    def __get_search_results_page(self: LinkedInSearchConnect) -> None:
-        search_box: webdriver.Chrome = WebDriverWait(self._driver, 60).until(
-            EC.presence_of_element_located(
-                (By.XPATH, """//*[@id="global-nav-typeahead"]/input"""))
-        )
-
-        search_box.clear()
-        search_box.send_keys(self._keyword)
-        search_box.send_keys(Keys.RETURN)
+    def _get_search_results_page(function_: function) -> function:
+        def run(self: LinkedInSearchConnect, *args: List[Any], **kwargs: Dict[Any, Any]) -> None:
+            nonlocal function_
+            search_box: webdriver.Chrome = WebDriverWait(self._driver, 60).until(
+                EC.presence_of_element_located(
+                    (By.XPATH, """//*[@id="global-nav-typeahead"]/input"""))
+            )
+    
+            search_box.clear()
+            search_box.send_keys(self._keyword)
+            search_box.send_keys(Keys.RETURN)
+            function_(self, *args, **kwargs)
+        return run
 
     def __execute_cleaners(self: LinkedInSearchConnect) -> None:
         """Method execute_cleaners() scours the unwanted element from the page during the
@@ -331,6 +336,7 @@ class LinkedInSearchConnect(object):
             _next.click()
             persons = p.get_search_results_elements()
 
+    @_get_search_results_page
     def run(self: LinkedInSearchConnect) -> None:
         """Method run() calls the send_invitation method, but first it assures that the object
         self has driver property in it.
@@ -341,7 +347,6 @@ class LinkedInSearchConnect(object):
         :Returns:
             - {None}
         """
-        self.__get_search_results_page()
         self.__apply_filters()
         self.__execute_cleaners()
         self.__send_invitation()

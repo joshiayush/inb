@@ -24,16 +24,17 @@
 from __future__ import annotations
 
 import time
-from typing import Union
+
+from typing import Any
+from typing import List
+from typing import Dict
 
 from lib import _type
-from lib import InbValidator
 
 from ..person.person import Person
 from ..DOM.cleaners import Cleaner
 from ..invitation.status import Invitation
 
-from errors import ValidationError
 from errors import ConnectionLimitExceededException
 
 from selenium import webdriver
@@ -80,10 +81,7 @@ class LinkedInConnect(object):
 
         self._limit = limit
 
-    def get_my_network(
-        self: LinkedInConnect,
-        url: Union[str, None] = None
-    ) -> None:
+    def _get_mynetwork(function_: function) -> None:
         """Method get_my_network() sends a GET request to the network page of LinkedIn.
 
         :Args:
@@ -96,17 +94,15 @@ class LinkedInConnect(object):
         :Raises:
             - EmptyResponseException if there is a TimeoutException
         """
-        if url == None:
-            url = LinkedInConnect.MY_NETWORK_PAGE
-        elif isinstance(url, str):
-            if not InbValidator(url).is_url():
-                ValidationError(
-                    "LinkedInConnect: [URL] (%(url)s) is not a valid url!" % {"url": url})
-        try:
-            self._driver.get(url)
-        except TimeoutException:
-            raise TimeoutException(
-                "ERR: Cannot get mynetwork page due to weak network!")
+        def run(self: LinkedInConnect, *args: List[Any], **kwargs: Dict[Any, Any]) -> None:
+            nonlocal function_
+            try:
+                self._driver.get(LinkedInConnect.MY_NETWORK_PAGE)
+            except TimeoutException:
+                raise TimeoutException(
+                    "ERR: Cannot get mynetwork page due to weak network!")
+            function_(self, *args, **kwargs)
+        return run
 
     def __send_invitation(self: LinkedInConnect) -> None:
         """Method send_invitation() starts sending invitation to people on linkedin.
@@ -157,6 +153,7 @@ class LinkedInConnect(object):
         """
         Cleaner(self._driver).clear_message_overlay()
 
+    @_get_mynetwork
     def run(self: LinkedInConnect) -> None:
         """Method run() calls the send_invitation method, but first it assures that the object
         self has driver property in it.

@@ -23,16 +23,17 @@
 # from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!
 from __future__ import annotations
 
+from typing import Any
+from typing import Dict
+from typing import List
+
 from .. import Driver
 
 from selenium import webdriver
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.keys import Keys
 
-from errors import ValidationError
 from errors import CredentialsNotGivenException
-
-from lib.utils.validator import InbValidator
 
 
 class LinkedIn(Driver):
@@ -73,7 +74,7 @@ class LinkedIn(Driver):
         self.__user_email = user_email
         self.__user_password = user_password
 
-    def get_login_page(self: LinkedIn, url: str = None) -> None:
+    def _get_login_page(function_: function) -> function:
         """Method get_login_page() takes you to the LinkedIn login page by executing 
         function 'get()' on the webdriver object.
 
@@ -87,16 +88,15 @@ class LinkedIn(Driver):
         :Raises:
             - DomainNameSystemNotResolveException if there's a TimeourException
         """
-        if url == None:
-            url = LinkedIn.LOGIN_PAGE_URL
-        elif isinstance(url, str):
-            if not InbValidator(url).is_url():
-                ValidationError(
-                    "LinkedIn: [URL] (%(url)s) is not a valid url!" % {"url": url})
-        try:
-            self.driver.get(url)
-        except TimeoutException:
-            raise TimeoutException("ERR: Cannot log in due to weak network!")
+        def login(self: LinkedIn, *args: List[Any], **kwargs: Dict[Any, Any]):
+            nonlocal function_
+            try:
+                self.driver.get(LinkedIn.LOGIN_PAGE_URL)
+            except TimeoutException:
+                raise TimeoutException(
+                    "ERR: Cannot log in due to weak network!")
+            function_(self, *args, **kwargs)
+        return login
 
     def __get_email_box(self: LinkedIn) -> webdriver.Chrome:
         """Method get_email_box() returns the input tag for entering email address.
@@ -176,6 +176,7 @@ class LinkedIn(Driver):
         self.__enter_email()
         self.__enter_password()
 
+    @_get_login_page
     def login(self: LinkedIn) -> None:
         """Method login() logs into your personal LinkedIn profile.
 
