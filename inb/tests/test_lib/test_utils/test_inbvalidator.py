@@ -48,8 +48,7 @@ class TestInbValidatorClass(unittest.TestCase):
     def test_inbvalidator_is_url_method(self: TestInbValidatorClass) -> None:
         self.assertTrue(InbValidator("http://www.linkedin.com/").is_url())
         self.assertTrue(InbValidator("https://www.linkedin.com/").is_url())
-        self.assertTrue(
-            InbValidator("https://www.linkedin.com/in/ornela-cerenishti-118400146/").is_url())
+        self.assertTrue(InbValidator("https://www.linkedin.com/in/ornela-cerenishti-118400146/").is_url())
         self.assertFalse(InbValidator("https://www.google.com").is_url())
         self.assertFalse(InbValidator("ftp://www.linkedin.com/").is_url())
         self.assertFalse(InbValidator("ftps://www.linkedin.com/").is_url())
@@ -59,17 +58,11 @@ class TestInbValidatorClass(unittest.TestCase):
 
     def test_inbvalidator_is_email_method(self: TestInbValidatorClass) -> None:
         self.assertTrue(InbValidator("ayush854032@gmail.com").is_email())
-        self.assertTrue(
-            InbValidator("joshiayush.joshiayush@gmail.com").is_email())
-        self.assertTrue(
-            InbValidator("joshiayush.joshiayush@yahoo.com").is_email())
-        self.assertTrue(
-            InbValidator("joshiayush.joshiayush@apple.com").is_email())
-        self.assertTrue(
-            InbValidator("joshiayush.joshiayush@joshiayush.com").is_email())
-        self.assertTrue(
-            InbValidator("joshiayush.joshiayush@microsoft.com").is_email())
-        self.assertTrue(
-            InbValidator("joshiayush.joshiayush@google.com").is_email())
+        self.assertTrue(InbValidator("joshiayush.joshiayush@gmail.com").is_email())
+        self.assertTrue(InbValidator("joshiayush.joshiayush@yahoo.com").is_email())
+        self.assertTrue(InbValidator("joshiayush.joshiayush@apple.com").is_email())
+        self.assertTrue(InbValidator("joshiayush.joshiayush@joshiayush.com").is_email())
+        self.assertTrue(InbValidator("joshiayush.joshiayush@microsoft.com").is_email())
+        self.assertTrue(InbValidator("joshiayush.joshiayush@google.com").is_email())
         self.assertFalse(InbValidator("@gmail.com").is_email())
         self.assertFalse(InbValidator(".com@gmail").is_email())

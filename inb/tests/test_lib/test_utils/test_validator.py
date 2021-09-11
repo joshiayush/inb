@@ -52,25 +52,18 @@ class TestValidatorClass(unittest.TestCase):
         self.assertTrue(Validator("https://www.linkedin.com/").is_url())
         self.assertTrue(Validator("ftp://www.linkedin.com/").is_url())
         self.assertTrue(Validator("ftps://www.linkedin.com/").is_url())
-        self.assertTrue(
-            Validator("https://www.linkedin.com/in/ornela-cerenishti-118400146/").is_url())
+        self.assertTrue(Validator("https://www.linkedin.com/in/ornela-cerenishti-118400146/").is_url())
         self.assertFalse(Validator("notavalidurl").is_url())
         self.assertFalse(Validator("/ornela-cerenishti-118400146/").is_url())
 
     def test_validator_is_email_method(self: TestValidatorClass) -> None:
         self.assertTrue(Validator("ayush854032@gmail.com").is_email())
-        self.assertTrue(
-            Validator("joshiayush.joshiayush@gmail.com").is_email())
-        self.assertTrue(
-            Validator("joshiayush.joshiayush@yahoo.com").is_email())
-        self.assertTrue(
-            Validator("joshiayush.joshiayush@apple.com").is_email())
-        self.assertTrue(
-            Validator("joshiayush.joshiayush@joshiayush.com").is_email())
-        self.assertTrue(
-            Validator("joshiayush.joshiayush@microsoft.com").is_email())
-        self.assertTrue(
-            Validator("joshiayush.joshiayush@google.com").is_email())
+        self.assertTrue(Validator("joshiayush.joshiayush@gmail.com").is_email())
+        self.assertTrue(Validator("joshiayush.joshiayush@yahoo.com").is_email())
+        self.assertTrue(Validator("joshiayush.joshiayush@apple.com").is_email())
+        self.assertTrue(Validator("joshiayush.joshiayush@joshiayush.com").is_email())
+        self.assertTrue(Validator("joshiayush.joshiayush@microsoft.com").is_email())
+        self.assertTrue(Validator("joshiayush.joshiayush@google.com").is_email())
         self.assertFalse(Validator("@gmail.com").is_email())
         self.assertFalse(Validator(".com@gmail").is_email())
 
