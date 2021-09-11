@@ -42,6 +42,9 @@ from linkedin.connect import LinkedInSearchConnect
 from . import DRIVER_PATH
 from .commandhelper import CommandAide
 
+# disable urllib3 log messages except for the CRTICAL one
+logging.getLogger("urllib3").setLevel(logging.CRITICAL)
+
 
 class Command(CommandAide):
 
@@ -50,7 +53,7 @@ class Command(CommandAide):
 
         logging.basicConfig(
             format="%(levelname)s:%(message)s", level=logging.INFO)
-        self.logger = logging.getLogger("inb")
+        self.logger = logging.getLogger(__name__)
         self.logger.setLevel(logging.DEBUG)
 
         self.logger.info("Checking networ status")
