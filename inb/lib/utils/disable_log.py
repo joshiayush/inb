@@ -20,29 +20,9 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-import os
-
-from .algo import levenshtein
-
-from .parser import NARGS
-from .parser import ArgumentParser
-from .parser import OPT_ARGS_ACTION
-
-from .utils import ping
-from .utils import _type
-from .utils import Terminal
-from .utils import Validator
-from .utils import disable_log
-from .utils import InbValidator
-from .utils import CreateFigletString
-
-__all__ = ["DRIVER_PATH"]
+import logging
 
 
-def chromedriver_abs_path() -> str:
-    _dir_path: str = os.path.dirname(os.path.abspath(__file__))
-    _last_inb_indx: int = _dir_path.rfind("inb")
-    return os.path.join(_dir_path[:_last_inb_indx], "driver/chromedriver")
-
-
-DRIVER_PATH = chromedriver_abs_path()
+def disable_log(name: str, level: int) -> None:
+    assert isinstance(name, str), "disable_log: argument name must be a str!"
+    logging.getLogger(name).setLevel(level)

@@ -26,3 +26,4 @@ from .window import Terminal
 from .figlet import CreateFigletString
 from .validator import Validator
 from .validator import InbValidator
+from .disable_log import disable_log

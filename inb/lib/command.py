@@ -31,6 +31,7 @@ from typing import List
 from selenium.common.exceptions import TimeoutException
 
 from lib import ping
+from lib import disable_log
 from errors import InternetNotConnectedException
 
 from linkedin import Driver
@@ -42,21 +43,19 @@ from linkedin.connect import LinkedInSearchConnect
 from . import DRIVER_PATH
 from .commandhelper import CommandAide
 
-# disable urllib3 log messages except for the CRTICAL one
-logging.getLogger("urllib3").setLevel(logging.CRITICAL)
-
 
 class Command(CommandAide):
 
     def __init__(self: Command, namespace: argparse.Namespace) -> None:
         super().__init__(namespace=namespace)
 
+        disable_log("urllib3", logging.CRITICAL)
         logging.basicConfig(
             format="%(levelname)s:%(message)s", level=logging.INFO)
         self.logger = logging.getLogger(__name__)
         self.logger.setLevel(logging.DEBUG)
 
-        self.logger.info("Checking networ status")
+        self.logger.info("Checking network status")
         if not ping("linkedin.com"):
             raise InternetNotConnectedException("Weak network found")
         self.logger.info("Internet is connected")
