@@ -21,7 +21,7 @@
 # THE SOFTWARE.
 
 
-"""from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!"""
+# from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!
 from __future__ import annotations
 
 import argparse
@@ -39,11 +39,13 @@ from database.sql.sql import PASSWORD_COLUMN
 from database.sql.sql import EMAIL_INDEX
 from database.sql.sql import PASSWORD_INDEX
 
+from lib import Validator
+
 from errors import CredentialsNotGivenException
 
 
-class CommandAide(object):
-    def __init__(self: CommandAide, namespace: argparse.Namespace) -> None:
+class CommandValueParser(object):
+    def __init__(self: CommandValueParser, namespace: argparse.Namespace) -> None:
         if namespace.which == "send":
             self.__send(namespace)
         elif namespace.which == "connect":
@@ -59,19 +61,25 @@ class CommandAide(object):
         elif namespace.which == "developer":
             self.__developer(namespace)
 
-    def __send(self: CommandAide, namespace: argparse.Namespace) -> None:
-        if namespace.email and not namespace.email.strip() == '':
-            self.email = namespace.email
+    def __send(self: CommandValueParser, namespace: argparse.Namespace) -> None:
+        is_creds_given: bool = True
+        if namespace.email:
+            if Validator(namespace.email).is_email():
+                self.email = namespace.email
+            else:
+                raise CredentialsNotGivenException("Email %(email)s is not a valid email" % {
+                    "email": namespace.email})
         else:
             self.email = None
+            is_creds_given = False
         if namespace.password and not namespace.password.strip() == '':
             self.password = namespace.password
         else:
             self.password = None
+            is_creds_given = False
         self.cookies: bool = namespace.cookies
 
-        if ((self.email == None or self.email.strip() == '') or (self.password == None or self.password.strip() == '')) \
-                and not self.cookies:
+        if not is_creds_given and not self.cookies:
             raise CredentialsNotGivenException(
                 "User did not provide credentials!")
 
@@ -106,16 +114,27 @@ class CommandAide(object):
         self.incognito = namespace.incognito
         self.start_maximized = namespace.start_maximized
 
-    def __search(self: CommandAide, namespace: argparse.Namespace) -> None:
-        if namespace.email and not namespace.email.strip() == '':
-            self.email = namespace.email
+    def __search(self: CommandValueParser, namespace: argparse.Namespace) -> None:
+        is_creds_given: bool = True
+        if namespace.email:
+            if Validator(namespace.email).is_email():
+                self.email = namespace.email
+            else:
+                raise CredentialsNotGivenException("Email %(email)s is not a valid email" % {
+                    "email": namespace.email})
         else:
             self.email = None
+            is_creds_given = False
         if namespace.password and not namespace.password.strip() == '':
             self.password = namespace.password
         else:
             self.password = None
-        self.cookies = namespace.cookies
+            is_creds_given = False
+        self.cookies: bool = namespace.cookies
+
+        if not is_creds_given and not self.cookies:
+            raise CredentialsNotGivenException(
+                "User did not provide credentials!")
 
         def get_cookies() -> Any:
             return Database(database=SQL_DATABASE_PATH).read(NAME_COLUMN,
@@ -203,16 +222,27 @@ class CommandAide(object):
         self.incognito = namespace.incognito
         self.start_maximized = namespace.start_maximized
 
-    def __connect(self: CommandAide, namespace: argparse.Namespace) -> None:
-        if namespace.email and not namespace.email.strip() == '':
-            self.email = namespace.email
+    def __connect(self: CommandValueParser, namespace: argparse.Namespace) -> None:
+        is_creds_given: bool = True
+        if namespace.email:
+            if Validator(namespace.email).is_email():
+                self.email = namespace.email
+            else:
+                raise CredentialsNotGivenException("Email %(email)s is not a valid email" % {
+                    "email": namespace.email})
         else:
             self.email = None
+            is_creds_given = False
         if namespace.password and not namespace.password.strip() == '':
             self.password = namespace.password
         else:
             self.password = None
-        self.cookies = namespace.cookies
+            is_creds_given = False
+        self.cookies: bool = namespace.cookies
+
+        if not is_creds_given and not self.cookies:
+            raise CredentialsNotGivenException(
+                "User did not provide credentials!")
 
         def get_cookies() -> Any:
             return Database(
@@ -246,14 +276,14 @@ class CommandAide(object):
         self.incognito = namespace.incognito
         self.start_maximized = namespace.start_maximized
 
-    def __show(self: CommandAide) -> None:
+    def __show(self: CommandValueParser, namespace: argparse.Namespace) -> None:
         pass
 
-    def __delete(self: CommandAide) -> None:
+    def __delete(self: CommandValueParser, namespace: argparse.Namespace) -> None:
         pass
 
-    def __config(self: CommandAide) -> None:
+    def __config(self: CommandValueParser, namespace: argparse.Namespace) -> None:
         pass
 
-    def __developer(self: CommandAide) -> None:
+    def __developer(self: CommandValueParser, namespace: argparse.Namespace) -> None:
         pass
