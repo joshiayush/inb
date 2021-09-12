@@ -141,6 +141,8 @@ class CredentialsNotGivenException(Exception):
                         "CredentialsNotGivenException: Constructor's second argument"
                         " (credentials dictionary) must be of type 'dict' not '%(type)s'" % {
                             "type": _type(args[0])})
+            else:
+                self.credentials_dict = None
         else:
             self.message = None
             self.credentials_dict = None
