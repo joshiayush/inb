@@ -25,6 +25,7 @@
 from __future__ import annotations
 
 import argparse
+import functools
 
 from typing import Any
 
@@ -61,106 +62,79 @@ class CommandValueParser(object):
         elif namespace.which == "developer":
             self.__developer(namespace)
 
+    def _parse_creds(function_: function) -> function:
+        @functools.wraps(function_)
+        def wrapper(self: CommandValueParser, *args, **kwargs) -> None:
+            nonlocal function_
+            is_creds_given: bool = True
+            if args[0].email:
+                if Validator(args[0].email).is_email():
+                    self.email = args[0].email
+                else:
+                    raise CredentialsNotGivenException("Email is not valid!", {
+                        "user_email": args[0].email,
+                        "user_password": args[0].password})
+            else:
+                self.email = None
+                is_creds_given = False
+            if args[0].password and not args[0].password.strip() == '':
+                self.password = args[0].password
+            else:
+                self.password = None
+                is_creds_given = False
+            self.cookies: bool = args[0].cookies
+
+            if not is_creds_given and not self.cookies:
+                raise CredentialsNotGivenException(
+                    "User did not provide credentials!")
+
+            def get_cookies() -> Any:
+                return Database(database=SQL_DATABASE_PATH).read(NAME_COLUMN,
+                                                                 EMAIL_COLUMN,
+                                                                 PASSWORD_COLUMN,
+                                                                 table=USERS_TABLE,
+                                                                 rows="*")
+
+            def get_user_choice(rows: list) -> int:
+                Database(database=SQL_DATABASE_PATH).print(
+                    USERS_TABLE, rows=rows)
+                return inbinput("Enter your email: ", bold=True)
+
+            if self.cookies:
+                Cookies = get_cookies()
+
+                if len(Cookies) > 1:
+                    self.email = get_user_choice(Cookies)
+                    self.password = Database(database=SQL_DATABASE_PATH).read(EMAIL_COLUMN,
+                                                                              PASSWORD_COLUMN,
+                                                                              USERS_TABLE,
+                                                                              rows=".",
+                                                                              where="Email = '%s'" % (self.email))[PASSWORD_INDEX]
+                else:
+                    self.email = Cookies[EMAIL_INDEX]
+                    self.password = Cookies[PASSWORD_INDEX]
+            function_(self, *args, **kwargs)
+        return wrapper
+
+    def _parse_inb_opt_params(function_: function) -> function:
+        @functools.wraps(function_)
+        def wrapper(self: CommandValueParser, *args, **kwargs) -> None:
+            nonlocal function_
+            self.headless = args[0].headless
+            self.incognito = args[0].incognito
+            self.start_maximized = args[0].start_maximized
+            function_(self, *args, **kwargs)
+        return wrapper
+
+    @_parse_creds
+    @_parse_inb_opt_params
     def __send(self: CommandValueParser, namespace: argparse.Namespace) -> None:
-        is_creds_given: bool = True
-        if namespace.email:
-            if Validator(namespace.email).is_email():
-                self.email = namespace.email
-            else:
-                raise CredentialsNotGivenException("Email %(email)s is not a valid email" % {
-                    "email": namespace.email})
-        else:
-            self.email = None
-            is_creds_given = False
-        if namespace.password and not namespace.password.strip() == '':
-            self.password = namespace.password
-        else:
-            self.password = None
-            is_creds_given = False
-        self.cookies: bool = namespace.cookies
-
-        if not is_creds_given and not self.cookies:
-            raise CredentialsNotGivenException(
-                "User did not provide credentials!")
-
-        def get_cookies() -> Any:
-            return Database(database=SQL_DATABASE_PATH).read(NAME_COLUMN,
-                                                             EMAIL_COLUMN,
-                                                             PASSWORD_COLUMN,
-                                                             table=USERS_TABLE,
-                                                             rows="*")
-
-        def get_user_choice(rows: list) -> int:
-            Database(database=SQL_DATABASE_PATH).print(USERS_TABLE, rows=rows)
-            return inbinput("Enter your email: ", bold=True)
-
-        if self.cookies:
-            Cookies = get_cookies()
-
-            if len(Cookies) > 1:
-                self.email = get_user_choice(Cookies)
-                self.password = Database(database=SQL_DATABASE_PATH).read(EMAIL_COLUMN,
-                                                                          PASSWORD_COLUMN,
-                                                                          USERS_TABLE,
-                                                                          rows=".",
-                                                                          where="Email = '%s'" % (self.email))[PASSWORD_INDEX]
-            else:
-                self.email = Cookies[EMAIL_INDEX]
-                self.password = Cookies[PASSWORD_INDEX]
-
         self.limit = namespace.limit if type(
             namespace.limit) is int else int(namespace.limit) if type(namespace.limit) is str else 20
-        self.headless = namespace.headless
-        self.incognito = namespace.incognito
-        self.start_maximized = namespace.start_maximized
 
+    @_parse_creds
+    @_parse_inb_opt_params
     def __search(self: CommandValueParser, namespace: argparse.Namespace) -> None:
-        is_creds_given: bool = True
-        if namespace.email:
-            if Validator(namespace.email).is_email():
-                self.email = namespace.email
-            else:
-                raise CredentialsNotGivenException("Email %(email)s is not a valid email" % {
-                    "email": namespace.email})
-        else:
-            self.email = None
-            is_creds_given = False
-        if namespace.password and not namespace.password.strip() == '':
-            self.password = namespace.password
-        else:
-            self.password = None
-            is_creds_given = False
-        self.cookies: bool = namespace.cookies
-
-        if not is_creds_given and not self.cookies:
-            raise CredentialsNotGivenException(
-                "User did not provide credentials!")
-
-        def get_cookies() -> Any:
-            return Database(database=SQL_DATABASE_PATH).read(NAME_COLUMN,
-                                                             EMAIL_COLUMN,
-                                                             PASSWORD_COLUMN,
-                                                             table=USERS_TABLE,
-                                                             rows="*")
-
-        def get_user_choice(rows: list) -> int:
-            Database(database=SQL_DATABASE_PATH).print(USERS_TABLE, rows=rows)
-            return inbinput("Enter your email: ", bold=True)
-
-        if self.cookies:
-            Cookies = get_cookies()
-
-            if len(Cookies) > 1:
-                self.email = get_user_choice(Cookies)
-                self.password = Database(database=SQL_DATABASE_PATH).read(EMAIL_COLUMN,
-                                                                          PASSWORD_COLUMN,
-                                                                          USERS_TABLE,
-                                                                          rows=".",
-                                                                          where="Email = '%s'" % (self.email))[PASSWORD_INDEX]
-            else:
-                self.email = Cookies[EMAIL_INDEX]
-                self.password = Cookies[PASSWORD_INDEX]
-
         if namespace.keyword and not namespace.keyword.strip() == '':
             self.keyword = namespace.keyword
         else:
@@ -222,59 +196,10 @@ class CommandValueParser(object):
         self.incognito = namespace.incognito
         self.start_maximized = namespace.start_maximized
 
+    @_parse_creds
+    @_parse_inb_opt_params
     def __connect(self: CommandValueParser, namespace: argparse.Namespace) -> None:
-        is_creds_given: bool = True
-        if namespace.email:
-            if Validator(namespace.email).is_email():
-                self.email = namespace.email
-            else:
-                raise CredentialsNotGivenException("Email %(email)s is not a valid email" % {
-                    "email": namespace.email})
-        else:
-            self.email = None
-            is_creds_given = False
-        if namespace.password and not namespace.password.strip() == '':
-            self.password = namespace.password
-        else:
-            self.password = None
-            is_creds_given = False
-        self.cookies: bool = namespace.cookies
-
-        if not is_creds_given and not self.cookies:
-            raise CredentialsNotGivenException(
-                "User did not provide credentials!")
-
-        def get_cookies() -> Any:
-            return Database(
-                database=SQL_DATABASE_PATH).read(NAME_COLUMN,
-                                                 EMAIL_COLUMN,
-                                                 PASSWORD_COLUMN,
-                                                 table=USERS_TABLE,
-                                                 rows="*")
-
-        def get_user_choice(rows: list) -> int:
-            Database(database=SQL_DATABASE_PATH).print(USERS_TABLE, rows=rows)
-            return inbinput("Enter your email: ", bold=True)
-
-        if self.cookies:
-            Cookies = get_cookies()
-
-            if len(Cookies) > 1:
-                self.email = get_user_choice(Cookies)
-                self.password = Database(
-                    database=SQL_DATABASE_PATH).read(EMAIL_COLUMN,
-                                                     PASSWORD_COLUMN,
-                                                     USERS_TABLE,
-                                                     rows=".",
-                                                     where="Email = '%s'" % (self.email))[PASSWORD_INDEX]
-            else:
-                self.email = Cookies[EMAIL_INDEX]
-                self.password = Cookies[PASSWORD_INDEX]
-
         self.profileid = namespace.profileid
-        self.headless = namespace.headless
-        self.incognito = namespace.incognito
-        self.start_maximized = namespace.start_maximized
 
     def __show(self: CommandValueParser, namespace: argparse.Namespace) -> None:
         pass

@@ -25,8 +25,11 @@ from __future__ import annotations
 
 import logging
 import argparse
+import functools
 
+from typing import Any
 from typing import List
+from typing import Dict
 
 from selenium.common.exceptions import TimeoutException
 
@@ -41,10 +44,10 @@ from linkedin.connect import LinkedInConnectViaId
 from linkedin.connect import LinkedInSearchConnect
 
 from . import DRIVER_PATH
-from .commandhelper import CommandAide
+from .commandvalueparser import CommandValueParser
 
 
-class Command(CommandAide):
+class Command(CommandValueParser):
 
     def __init__(self: Command, namespace: argparse.Namespace) -> None:
         super().__init__(namespace=namespace)
@@ -55,37 +58,51 @@ class Command(CommandAide):
         self.logger = logging.getLogger(__name__)
         self.logger.setLevel(logging.DEBUG)
 
-        self.logger.info("Checking network status")
-        if not ping("linkedin.com"):
-            raise InternetNotConnectedException("Weak network found")
-        self.logger.info("Internet is connected")
+    def _check_net_stat(function_: function) -> function:
+        @functools.wraps(function_)
+        def wrapper(self: Command, *args: List[Any], **kwargs: Dict[Any, Any]) -> None:
+            nonlocal function_
+            self.logger.info("Checking network status")
+            if not ping("linkedin.com"):
+                raise InternetNotConnectedException("Weak network found")
+            self.logger.info("Internet is connected")
+            function_(self, *args, **kwargs)
+        return wrapper
 
+    def _login(function_: function) -> function:
+        @functools.wraps(function_)
+        def wrapper(self: Command, *args: List[Any], **kwargs: Dict[Any, Any]) -> None:
+            nonlocal function_
+            chrome_driver_options: List[str] = []
+            chrome_driver_options.append(Driver.INCOGNITO)
+            chrome_driver_options.append(Driver.IGNORE_CERTIFICATE_ERRORS)
+            if self.headless == True:
+                chrome_driver_options.append(Driver.HEADLESS)
+
+            self.linkedin = LinkedIn(user_email=self.email,
+                                     user_password=self.password,
+                                     driver_path=DRIVER_PATH,
+                                     opt_chromedriver_options=chrome_driver_options)
+
+            self.logger.info("Connecting")
+            self.logger.info("Sending GET request to login page")
+            self.logger.info("Logging in LinkedIn account (user-id=%(user_id)s)" %
+                             {"user_id": self.email})
+            try:
+                self.linkedin.login()
+            except TimeoutException as error:
+                self.logger.critical(error)
+                return
+            else:
+                self.logger.info("Successfully connected")
+            function_(self, *args, **kwargs)
+        return wrapper
+
+    @_check_net_stat
+    @_login
     def send(self: Command) -> None:
-        chrome_driver_options: List[str] = []
-        chrome_driver_options.append(Driver.INCOGNITO)
-        chrome_driver_options.append(Driver.IGNORE_CERTIFICATE_ERRORS)
-        if self.headless == True:
-            chrome_driver_options.append(Driver.HEADLESS)
-
-        linkedin = LinkedIn(user_email=self.email,
-                            user_password=self.password,
-                            driver_path=DRIVER_PATH,
-                            opt_chromedriver_options=chrome_driver_options)
-
-        self.logger.info("Connecting")
-        self.logger.info("Sending GET request to login page")
-        self.logger.info("Logging in LinkedIn account (user-id=%(user_id)s)" %
-                         {"user_id": self.email})
-        try:
-            linkedin.login()
-        except TimeoutException as error:
-            self.logger.critical(error)
-            return
-        else:
-            self.logger.info("Successfully connected")
-
         self.logger.info("Instantiating connection object")
-        linkedin_connection = LinkedInConnect(driver=linkedin.driver,
+        linkedin_connection = LinkedInConnect(driver=self.linkedin.driver,
                                               limit=self.limit)
         self.logger.info("Sending GET request to mynetwork page")
         try:
@@ -94,31 +111,11 @@ class Command(CommandAide):
             self.logger.critical(error)
             return
 
+    @_check_net_stat
+    @_login
     def connect(self: Command) -> None:
-        chrome_driver_options: List[str] = []
-        chrome_driver_options.append(Driver.INCOGNITO)
-        chrome_driver_options.append(Driver.IGNORE_CERTIFICATE_ERRORS)
-        if self.headless == True:
-            chrome_driver_options.append(Driver.HEADLESS)
-
-        linkedin = LinkedIn(user_email=self.email,
-                            user_password=self.password,
-                            driver_path=DRIVER_PATH,
-                            opt_chromedriver_options=chrome_driver_options)
-        self.logger.info("Connecting")
-        self.logger.info("Sending GET request to login page")
-        self.logger.info("Logging in LinkedIn account (user-id=%(user_id)s)" %
-                         {"user_id": self.email})
-        try:
-            linkedin.login()
-        except TimeoutException as error:
-            self.logger.critical(error)
-            return
-        else:
-            self.logger.info("Successfully connected")
-
         self.logger.info("Instantiating connection object")
-        linkedin_connect_id = LinkedInConnectViaId(driver=linkedin.driver,
+        linkedin_connect_id = LinkedInConnectViaId(driver=self.linkedin.driver,
                                                    person_id=self.personid)
         self.logger.info("Sending GET request to person's profile page")
         try:
@@ -127,42 +124,22 @@ class Command(CommandAide):
             self.logger.critical(exc)
             return
 
+    @_check_net_stat
+    @_login
     def search(self: Command) -> None:
-        chrome_driver_options: List[str] = []
-        chrome_driver_options.append(Driver.INCOGNITO)
-        chrome_driver_options.append(Driver.IGNORE_CERTIFICATE_ERRORS)
-        if self.headless == True:
-            chrome_driver_options.append(Driver.HEADLESS)
-
-        linkedin = LinkedIn(user_email=self.email,
-                            user_password=self.password,
-                            driver_path=DRIVER_PATH,
-                            opt_chromedriver_options=chrome_driver_options)
-
-        self.logger.info("Connecting")
-        self.logger.info("Sending GET request to login page")
-        self.logger.info("Logging in LinkedIn account (user-id=%(user_id)s)" %
-                         {"user_id": self.email})
-        try:
-            linkedin.login()
-        except TimeoutException as error:
-            self.logger.critical(error)
-            return
-        else:
-            self.logger.info("Successfully connected")
-
         self.logger.info("Instantiating connection object")
-        linkedin_search_connect = LinkedInSearchConnect(driver=linkedin.driver,
-                                                        keyword=self.keyword,
-                                                        location=self.location,
-                                                        title=self.title,
-                                                        first_name=self.first_name,
-                                                        last_name=self.last_name,
-                                                        school=self.school,
-                                                        industry=self.industry,
-                                                        current_company=self.current_company,
-                                                        profile_language=self.profile_language,
-                                                        limit=self.limit)
+        linkedin_search_connect = LinkedInSearchConnect(
+            driver=self.linkedin.driver,
+            keyword=self.keyword,
+            location=self.location,
+            title=self.title,
+            first_name=self.first_name,
+            last_name=self.last_name,
+            school=self.school,
+            industry=self.industry,
+            current_company=self.current_company,
+            profile_language=self.profile_language,
+            limit=self.limit)
         self.logger.info("Sending GET request to search results page")
         linkedin_search_connect.run()
 
