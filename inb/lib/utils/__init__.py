@@ -22,6 +22,11 @@
 
 from .net import ping
 from .type import _type
+from .type import is_int
+from .type import is_str
+from .type import is_none
+from .type import is_empty
+from .type import is_present
 from .window import Terminal
 from .figlet import CreateFigletString
 from .validator import Validator

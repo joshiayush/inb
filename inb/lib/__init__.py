@@ -30,6 +30,11 @@ from .parser import OPT_ARGS_ACTION
 
 from .utils import ping
 from .utils import _type
+from .utils import is_int
+from .utils import is_str
+from .utils import is_none
+from .utils import is_empty
+from .utils import is_present
 from .utils import Terminal
 from .utils import Validator
 from .utils import disable_log
@@ -40,8 +45,8 @@ __all__ = ["DRIVER_PATH"]
 
 
 def chromedriver_abs_path() -> str:
-    _dir_path: str = os.path.dirname(os.path.abspath(__file__))
-    _last_inb_indx: int = _dir_path.rfind("inb")
+    _dir_path = os.path.dirname(os.path.abspath(__file__))
+    _last_inb_indx = _dir_path.rfind("inb")
     return os.path.join(_dir_path[:_last_inb_indx], "driver/chromedriver")
 
 
