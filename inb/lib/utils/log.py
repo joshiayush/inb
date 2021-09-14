@@ -41,12 +41,12 @@ def _set_logging_level(name: Union[str, list], level: Union[int, str, list]) -> 
     """
     if is_str(name):
         if not is_str(level) and not is_int(level):
-            raise ValueError(
+            raise TypeError(
                 "_set_logging_level: argument level must either be an str or an int when name is str")
         logging.getLogger(name).setLevel(level)
     elif is_list(name):
         if not is_str(level) and not is_int(level) and not is_list(level):
-            raise ValueError(
+            raise TypeError(
                 "_set_logging_level: argument level must either be an str or an int or a list when name is list")
         elif is_list(level):
             assert len(name) == len(
