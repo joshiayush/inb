@@ -106,8 +106,7 @@ class Person(object):
 
             if self.__suggestion_box_element_count == 0:
                 self.__load_page()
-            else:
-                self.__suggestion_box_element_count += 1
+            self.__suggestion_box_element_count += 1
             while True:
                 try:
                     return WebDriverWait(self._driver, 60).until(
