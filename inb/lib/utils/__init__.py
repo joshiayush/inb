@@ -21,6 +21,7 @@
 # THE SOFTWARE.
 
 from .net import ping
+from .log import disable_logging
 from .type import _type
 from .type import is_int
 from .type import is_str
@@ -31,4 +32,3 @@ from .window import Terminal
 from .figlet import CreateFigletString
 from .validator import Validator
 from .validator import InbValidator
-from .disable_log import disable_log
