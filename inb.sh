@@ -23,7 +23,7 @@ function _dcache() {
 # function _allow_premissions changes the filemodes of the files in the project root 
 # directory while setting the git core.filemode option to false 
 # 
-function _allow_permissions() {
+function _allow_permission() {
   # 
   # change file mode of the files/directories and sub-directories
   #   
@@ -117,7 +117,7 @@ function main() {
     elif [[ $arg == "line" ]]; then
         _get_code_lines
     elif [[ $arg == "rwx" ]]; then
-        _allow_permissions
+        _allow_permission
     fi
 }
 
