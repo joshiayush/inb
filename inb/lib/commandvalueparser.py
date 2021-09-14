@@ -52,19 +52,19 @@ from errors import CredentialsNotGivenException
 class CommandValueParser(object):
     def __init__(self: CommandValueParser, namespace: argparse.Namespace) -> None:
         if namespace.which == "send":
-            self.__send(namespace)
+            self._send(namespace)
         elif namespace.which == "connect":
-            self.__connect(namespace)
+            self._connect(namespace)
         elif namespace.which == "search":
-            self.__search(namespace)
+            self._search(namespace)
         elif namespace.which == "show":
-            self.__show(namespace)
+            self._show(namespace)
         elif namespace.which == "config":
-            self.__config(namespace)
+            self._config(namespace)
         elif namespace.which == "delete":
-            self.__delete(namespace)
+            self._delete(namespace)
         elif namespace.which == "developer":
-            self.__developer(namespace)
+            self._developer(namespace)
 
     def _parse_creds(function_: function) -> function:
         @functools.wraps(function_)
@@ -136,16 +136,16 @@ class CommandValueParser(object):
         @functools.wraps(function_)
         def wrapper(self: CommandValueParser, *args, **kwargs) -> None:
             nonlocal function_
+            function_(self, *args, **kwargs)
             namespace = args[0]
             self.headless = namespace.headless
             self.incognito = namespace.incognito
             self.start_maximized = namespace.start_maximized
-            function_(self, *args, **kwargs)
         return wrapper
 
     @_parse_creds
     @_parse_inb_opt_params
-    def __send(self: CommandValueParser, namespace: argparse.Namespace) -> None:
+    def _send(self: CommandValueParser, namespace: argparse.Namespace) -> None:
         # parse the limit given, we want to set the limit to 20 if the limit is
         # a string and cannot be converted into an integer with base 10
         if is_int(namespace.limit):
@@ -162,7 +162,7 @@ class CommandValueParser(object):
 
     @_parse_creds
     @_parse_inb_opt_params
-    def __search(self: CommandValueParser, namespace: argparse.Namespace) -> None:
+    def _search(self: CommandValueParser, namespace: argparse.Namespace) -> None:
         # parse the keyword given, we want to set the keyword to NoneType object
         # if the keyword is empty, moreover we only go inside of the clause once
         # we have confirmed that the keyword is not a NoneType object
@@ -284,21 +284,21 @@ class CommandValueParser(object):
 
     @_parse_creds
     @_parse_inb_opt_params
-    def __connect(self: CommandValueParser, namespace: argparse.Namespace) -> None:
+    def _connect(self: CommandValueParser, namespace: argparse.Namespace) -> None:
         if namespace.profileid:
             if not is_empty(namespace.profileid):
                 self.profileid = namespace.profileid
             else:
                 self.profileid = None
 
-    def __show(self: CommandValueParser, namespace: argparse.Namespace) -> None:
+    def _show(self: CommandValueParser, namespace: argparse.Namespace) -> None:
         pass
 
-    def __delete(self: CommandValueParser, namespace: argparse.Namespace) -> None:
+    def _delete(self: CommandValueParser, namespace: argparse.Namespace) -> None:
         pass
 
-    def __config(self: CommandValueParser, namespace: argparse.Namespace) -> None:
+    def _config(self: CommandValueParser, namespace: argparse.Namespace) -> None:
         pass
 
-    def __developer(self: CommandValueParser, namespace: argparse.Namespace) -> None:
+    def _developer(self: CommandValueParser, namespace: argparse.Namespace) -> None:
         pass
