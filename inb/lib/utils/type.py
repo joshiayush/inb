@@ -58,6 +58,16 @@ is_int: function = lambda field: isinstance(field, int)
 """
 is_str: function = lambda field: isinstance(field, str)
 
+"""Function is_list() returns True if the instance given is an list.
+
+:Args:
+    - field: {Any} Instance.
+
+:Returns:
+    - {bool} True if the instance is an list otherwise False.
+"""
+is_list: function = lambda field: isinstance(field, list)
+
 """Function is_none() returns True if the instance given is None.
 
 :Args:
