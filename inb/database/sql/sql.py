@@ -8,7 +8,7 @@ from rich.console import Console
 
 from . import SQL
 
-from errors.error import DatabaseDoesNotExistException
+from errors import DatabaseDoesNotExistException
 
 __all__ = ["NAME_INDEX",
            "EMAIL_INDEX",

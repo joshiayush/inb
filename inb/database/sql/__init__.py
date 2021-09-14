@@ -5,7 +5,7 @@ import sqlite3
 
 from urllib.request import pathname2url
 
-from errors.error import DatabaseDoesNotExistException
+from errors import DatabaseDoesNotExistException
 
 __all__ = ["SQL"]
 
