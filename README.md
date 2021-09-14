@@ -25,7 +25,7 @@ so that `git` doesn't track the filemode's if the project is in someone else's c
 `inb` otherwise for just using `inb` you don't really need to do that).
 
 ```shell
-$ sudo ./scripts/rwx.sh
+$ sudo ./inb.sh --rwx
 ```
 
 Execute the above command from the project's root directory to change the filemodes.
@@ -41,7 +41,7 @@ $ python3 -m pip install requirements.txt
 Alternatively,
 
 ```shell
-$ ./scripts/ipackages.sh
+$ ./inb.sh --install
 ```
 
 ## inb
