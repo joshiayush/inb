@@ -20,50 +20,90 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+# from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!
+from __future__ import annotations
+
+import logging
 import argparse
 
+from . import _type
 from .command import Command
 
 
-def Handler(namespace: argparse.Namespace) -> None:
-    if namespace.which == "send":
-        try:
-            Command(namespace).send()
-        except Exception as e:
-            raise e
-        return
+class Handler(object):
+    def __init__(self: Handler, namespace: argparse.Namespace) -> None:
+        """Constructor method initializes the logging object and the namespace object.
 
-    if namespace.which == "search":
-        try:
-            Command(namespace).search()
-        except Exception as exc:
-            raise exc
-        return
+        :Args:
+            - self: {Handler} self.
+            - namespace: {argparse.Namespace} Argparse namespace.
 
-    if namespace.which == "show":
-        try:
-            Command(namespace).show()
-        except Exception as e:
-            raise e
-        return
+        :Returns:
+            - {None}
 
-    if namespace.which == "config":
-        try:
-            Command(namespace).config()
-        except Exception as e:
-            raise e
-        return
+        :Raises:
+            - {ValueError} If namespace given is None.
+        """
+        self.logger = logging.getLogger("inb")
+        logging.basicConfig(
+            format="%(levelname)s:%(message)s", level=logging.INFO)
+        self.logger.setLevel(logging.DEBUG)
 
-    if namespace.which == "delete":
-        try:
-            Command(namespace).delete()
-        except Exception as e:
-            raise e
-        return
+        if namespace:
+            self.logger.debug("Handler: namespace OK")
+            self.namespace = namespace
+        else:
+            raise ValueError("Handler: Namespace is a %(type)s object" % {
+                             "type": _type(namespace)})
 
-    if namespace.which == "developer":
-        try:
-            Command(namespace).developer()
-        except Exception as e:
-            raise e
-        return
+    def handle_command(self: Handler) -> None:
+        """Method handle_command() handles the commands given by the user.
+
+        :Args:
+            - self: {Handler} self.
+
+        :Returns:
+            - {None}
+        """
+        if self.namespace.which == "send":
+            try:
+                Command(self.namespace).send()
+            except Exception as e:
+                self.logger.error(e)
+                raise e
+            return
+
+        if self.namespace.which == "search":
+            try:
+                Command(self.namespace).search()
+            except Exception as exc:
+                raise exc
+            return
+
+        if self.namespace.which == "show":
+            try:
+                Command(self.namespace).show()
+            except Exception as e:
+                raise e
+            return
+
+        if self.namespace.which == "config":
+            try:
+                Command(self.namespace).config()
+            except Exception as e:
+                raise e
+            return
+
+        if self.namespace.which == "delete":
+            try:
+                Command(self.namespace).delete()
+            except Exception as e:
+                raise e
+            return
+
+        if self.namespace.which == "developer":
+            try:
+                Command(self.namespace).developer()
+            except Exception as e:
+                raise e
+            return

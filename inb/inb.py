@@ -21,6 +21,7 @@
 # THE SOFTWARE.
 
 import sys
+import logging
 
 from argparse import RawDescriptionHelpFormatter
 
@@ -29,29 +30,33 @@ from linkedin import __version__
 from lib import NARGS
 from lib import ArgumentParser
 from lib import OPT_ARGS_ACTION
-from lib.utils import CreateFigletString
+from lib import disable_logging
+from lib import CreateFigletString
 from lib.handler import Handler
 
 from errors import EmtpyDatabaseException
 from errors import CredentialsNotGivenException
 from errors import DatabaseDoesNotExistException
 from errors import InternetNotConnectedException
-from errors import DomainNameSystemNotResolveException
+
+
+disable_logging("urllib3", logging.CRITICAL)
+
 
 #
 # Usage: inb [-h] {send,connect,search,config,show,delete,developer} ...
-# 
-#  _       _     
-# (_)_ __ | |__  
-# | | '_ \| '_ \ 
+#
+#  _       _
+# (_)_ __ | |__
+# | | '_ \| '_ \
 # | | | | | |_) |
-# |_|_| |_|_.__/ 
-#    
-# 
+# |_|_| |_|_.__/
+#
+#
 # inb Bash, version 1.51.35(1)-release (inb-1.51.35)
 # These commands are defined internally. Type '--help' to see this list
 # Type (command) --help to know more about that command
-# 
+#
 # positional arguments:
 #   {send,connect,search,config,show,delete,developer}
 #                         available actions
@@ -62,7 +67,7 @@ from errors import DomainNameSystemNotResolveException
 #     show                prints the information that is in the database
 #     delete              deletes the information stored in the database
 #     developer           prints the information about the author
-# 
+#
 # optional arguments:
 #   -h, --help            show this help message and exit
 #
@@ -117,12 +122,12 @@ send = subparsers.add_parser("send",
 
 send.add_argument("-e", "--email",
                   type=str,
-                  nargs=1,
+                  nargs="?",
                   default=None,
                   help="User's email address")
 send.add_argument("-p", "--password",
                   type=str,
-                  nargs=1,
+                  nargs="?",
                   default=None,
                   help="User's password")
 
@@ -189,21 +194,21 @@ send.set_defaults(which="send",
                   incognito=False,
                   start_maximized=False)
 
-# 
+#
 # Usage: inb connect [-h] [-c] [-i] [-ngpu] [-m] profileid
-# 
-#  _       _     
-# (_)_ __ | |__  
-# | | '_ \| '_ \ 
+#
+#  _       _
+# (_)_ __ | |__
+# | | '_ \| '_ \
 # | | | | | |_) |
-# |_|_| |_|_.__/ 
-#    
-# 
+# |_|_| |_|_.__/
+#
+#
 # Connects you with the given profile.
-# 
+#
 # positional arguments:
 #   profileid             Profile id of person to connect with.
-# 
+#
 # optional arguments:
 #   -h, --help            show this help message and exit
 #   -c, --cookies         uses cookies for authentication
@@ -211,7 +216,7 @@ send.set_defaults(which="send",
 #   -ngpu, --headless     starts chrome in headless mode
 #   -m, --start-maximized
 #                         set browser in full screen
-# 
+#
 
 connect = subparsers.add_parser("connect",
                                 description=(
@@ -626,10 +631,9 @@ if len(sys.argv) <= 1:
 exceptions = tuple([EmtpyDatabaseException,
                     CredentialsNotGivenException,
                     DatabaseDoesNotExistException,
-                    InternetNotConnectedException,
-                    DomainNameSystemNotResolveException])
+                    InternetNotConnectedException])
 
 try:
-    Handler(parser.parse_args())
-except exceptions as e:
-    parser.error(e, usage=False)
+    Handler(parser.parse_args()).handle_command()
+except exceptions as exc:
+    parser.error(exc, usage=False)

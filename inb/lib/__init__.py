@@ -37,7 +37,7 @@ from .utils import is_empty
 from .utils import is_present
 from .utils import Terminal
 from .utils import Validator
-from .utils import disable_log
+from .utils import disable_logging
 from .utils import InbValidator
 from .utils import CreateFigletString
 

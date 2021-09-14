@@ -34,7 +34,6 @@ from typing import Dict
 from selenium.common.exceptions import TimeoutException
 
 from lib import ping
-from lib import disable_log
 from errors import InternetNotConnectedException
 
 from linkedin import Driver
@@ -52,7 +51,6 @@ class Command(CommandValueParser):
     def __init__(self: Command, namespace: argparse.Namespace) -> None:
         super().__init__(namespace=namespace)
 
-        disable_log("urllib3", logging.CRITICAL)
         logging.basicConfig(
             format="%(levelname)s:%(message)s", level=logging.INFO)
         self.logger = logging.getLogger(__name__)
