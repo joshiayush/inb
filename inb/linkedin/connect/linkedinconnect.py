@@ -73,13 +73,11 @@ class LinkedInConnect(object):
             raise Exception(
                 "Object '%(driver)s' is not a 'webdriver.Chrome' object!" % {
                     "driver": _type(driver)})
-
         self._driver = driver
 
         if limit > 80:
             raise ConnectionLimitExceededException(
                 "Daily invitation limit can't be greater than 80, we recommend 40!")
-
         self._limit = limit
 
     def _get_mynetwork(function_: function) -> None:
@@ -107,7 +105,7 @@ class LinkedInConnect(object):
                 function_(self, *args, **kwargs)
         return wrapper
 
-    def __send_invitation(self: LinkedInConnect) -> None:
+    def _send_invitation(self: LinkedInConnect) -> None:
         """Method send_invitation() starts sending invitation to people on linkedin.
 
         :Args:
@@ -144,7 +142,7 @@ class LinkedInConnect(object):
 
             person = p.get_suggestion_box_element()
 
-    def __execute_cleaners(self: LinkedInConnect) -> None:
+    def _execute_cleaners(self: LinkedInConnect) -> None:
         """Method execute_cleaners() scours the unwanted element from the page during the
         connect process.
 
@@ -167,8 +165,8 @@ class LinkedInConnect(object):
         :Returns:
             - {None}
         """
-        self.__execute_cleaners()
-        self.__send_invitation()
+        self._execute_cleaners()
+        self._send_invitation()
 
     def __del__(self: LinkedInConnect) -> None:
         """LinkedInConnectionsAuto destructor to de-initialise LinkedInConnectionsAuto object.
