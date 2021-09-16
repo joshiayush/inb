@@ -46,23 +46,36 @@ class TestInbValidatorClass(unittest.TestCase):
                 InbValidator(_type)
 
     def test_inbvalidator_is_url_method(self: TestInbValidatorClass) -> None:
-        self.assertTrue(InbValidator("http://www.linkedin.com/").is_url())
-        self.assertTrue(InbValidator("https://www.linkedin.com/").is_url())
-        self.assertTrue(InbValidator("https://www.linkedin.com/in/ornela-cerenishti-118400146/").is_url())
-        self.assertFalse(InbValidator("https://www.google.com").is_url())
-        self.assertFalse(InbValidator("ftp://www.linkedin.com/").is_url())
-        self.assertFalse(InbValidator("ftps://www.linkedin.com/").is_url())
-        self.assertFalse(InbValidator("notavalidurl").is_url())
-        self.assertFalse(InbValidator(
-            "/ornela-cerenishti-118400146/").is_url())
+        formed_urls = ["http://www.linkedin.com/", "https://www.linkedin.com/",
+                       "https://www.linkedin.com/in/ornela-cerenishti-118400146/"]
+
+        def assert_true(for_):
+            nonlocal self
+            self.assertTrue(for_)
+        map(assert_true, formed_urls)
+
+        malformed_urls = ["https://www.google.com", "ftp://www.linkedin.com/",
+                          "ftps://www.linkedin.com/", "notavalidurl", "/ornela-cerenishti-118400146/"]
+
+        def assert_false(for_):
+            nonlocal self
+            self.assertFalse(for_)
+        map(assert_false, malformed_urls)
 
     def test_inbvalidator_is_email_method(self: TestInbValidatorClass) -> None:
-        self.assertTrue(InbValidator("ayush854032@gmail.com").is_email())
-        self.assertTrue(InbValidator("joshiayush.joshiayush@gmail.com").is_email())
-        self.assertTrue(InbValidator("joshiayush.joshiayush@yahoo.com").is_email())
-        self.assertTrue(InbValidator("joshiayush.joshiayush@apple.com").is_email())
-        self.assertTrue(InbValidator("joshiayush.joshiayush@joshiayush.com").is_email())
-        self.assertTrue(InbValidator("joshiayush.joshiayush@microsoft.com").is_email())
-        self.assertTrue(InbValidator("joshiayush.joshiayush@google.com").is_email())
-        self.assertFalse(InbValidator("@gmail.com").is_email())
-        self.assertFalse(InbValidator(".com@gmail").is_email())
+        formed_emails = ["ayush854032@gmail.com", "joshiayush.joshiayush@gmail.com",
+                         "joshiayush.joshiayush@yahoo.com", "joshiayush.joshiayush@apple.com",
+                         "joshiayush.joshiayush@joshiayush.com", "joshiayush.joshiayush@microsoft.com",
+                         "joshiayush.joshiayush@google.com"]
+
+        def assert_true(for_):
+            nonlocal self
+            self.assertTrue(for_)
+        map(assert_true, formed_emails)
+
+        malformed_emails = ["@gmail.com", ".com@gmail"]
+
+        def assert_false(for_):
+            nonlocal self
+            self.assertFalse(for_)
+        map(assert_false, malformed_emails)
