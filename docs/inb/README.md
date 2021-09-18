@@ -1,5 +1,9 @@
 # inb
 
+- [errors][errors_]
+
+  - [init][init_]
+
 - [lib][_lib]
 
   - [algo][_algo]
@@ -21,6 +25,11 @@
     - [linkedinconnect][_linkedinconnect]
 
 <!-- Definitions -->
+
+<!-- errors pointers -->
+
+[errors_]: https://github.com/joshiayush/inb/blob/master/docs/inb/errors
+[init_]: https://github.com/joshiayush/inb/blob/master/docs/inb/errors/init.md
 
 <!-- linkedin pointers -->
 

@@ -20,57 +20,13 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-"""from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!"""
+# from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!
 from __future__ import annotations
 
 from typing import Any
 from typing import Tuple
 
 from lib.utils import _type
-
-
-class FailedLoadingResourceException(Exception):
-    """Thrown when failed loading the resources properly."""
-
-    def __init__(self: FailedLoadingResourceException, *args: Tuple[Any]) -> None:
-        super(FailedLoadingResourceException, self).__init__(*args)
-        if args:
-            if isinstance(args[0], str):
-                self.message = args[0]
-            else:
-                raise Exception(
-                    "FailedLoadingResourceException: Constructor's first argument must be of type 'str' not '%(type)s'" % {
-                        "type": _type(args[0])})
-        else:
-            self.message = None
-
-    def __str__(self: FailedLoadingResourceException) -> str:
-        if self.message:
-            return "FailedLoadingResourceException: %(message)s" % {"message": self.message}
-        else:
-            return "FailedLoadingResourceException has been raised!"
-
-
-class LinkedInBlockException(Exception):
-    """Thrown when LinkedIn blocks."""
-
-    def __init__(self: LinkedInBlockException, *args: Tuple[Any]) -> None:
-        super(LinkedInBlockException, self).__init__(*args)
-        if args:
-            if isinstance(args[0], str):
-                self.message = args[0]
-            else:
-                raise Exception(
-                    "LinkedInBlockException: Constructor's first argument must be of type 'str' not '%(type)s'" % {
-                        "type": _type(args[0])})
-        else:
-            self.message = None
-
-    def __str__(self: LinkedInBlockException) -> str:
-        if self.message:
-            return "LinkedInBlockException: %(message)s" % {"message": self.message}
-        else:
-            return "LinkedInBlockException has been raised!"
 
 
 class WebDriverPathNotGivenException(Exception):
@@ -96,7 +52,7 @@ class WebDriverPathNotGivenException(Exception):
 
 
 class WebDriverNotExecutableException(Exception):
-    """Thrown when chrome driver's path is not given."""
+    """Thrown when chrome driver's is not executable."""
 
     def __init__(self: WebDriverNotExecutableException, *args: Tuple[Any]) -> None:
         super(WebDriverNotExecutableException, self).__init__(*args)
@@ -160,7 +116,7 @@ class CredentialsNotGivenException(Exception):
 
 
 class ConnectionLimitExceededException(Exception):
-    """Thrown when connections limit given by the user exceeds."""
+    """Thrown when connections limit given by the user exceeds by the default LinkedIn connection limit."""
 
     def __init__(self: ConnectionLimitExceededException, *args: Tuple[Any]) -> None:
         super(ConnectionLimitExceededException, self).__init__(*args)
@@ -250,6 +206,8 @@ class EmtpyDatabaseException(Exception):
 
 
 class ValidationError(Exception):
+    """Thrown when there is a validation error."""
+
     def __init__(self: ValidationError, *args: Tuple[Any]) -> None:
         super(ValidationError, self).__init__(*args)
         if args:
@@ -270,6 +228,8 @@ class ValidationError(Exception):
 
 
 class InternetNotConnectedException(Exception):
+    """Thrown when internet is not connected."""
+
     def __init__(self: InternetNotConnectedException, *args: Tuple[Any]) -> None:
         super(InternetNotConnectedException, self).__init__(*args)
         if args:
