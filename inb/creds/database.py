@@ -1,11 +1,33 @@
+# MIT License
+#
+# Copyright (c) 2019 Creative Commons
+#
+# Permission is hereby granted, free of charge, to any person obtaining a
+# copy of this software and associated documentation files (the "Software"),
+# to deal in the Software without restriction, including without limitation
+# the rights to use, copy, modify, merge, publish, distribute, sublicense,
+# and/or sell copies of the Software, and to permit persons to whom the
+# Software is furnished to do so, subject to the following conditions
+#
+# The above copyright notice and this permission notice shall be included
+# in all copies or substantial portions of the Software.
+#
+# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
+# OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+# THE SOFTWARE.
+
+# from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!
 from __future__ import annotations
 
 from database.sql.sql import Database
 
 from creds.cipher import Cipher
 
-from errors.error import UserCacheNotFoundException
-from errors.error import DatabaseDoesNotExistException
+from errors import DatabaseDoesNotExistException
 
 
 class CipherDatabase(Cipher):
@@ -46,16 +68,16 @@ class CipherDatabase(Cipher):
             - self: {} object from which 'data' property is to be accessed.
 
         :Raises:
-            - {UserCacheNotFoundException} if user's credentials are not found.
+            - {DatabaseDoesNotExistException} if user's credentials are not found.
 
         :Returns:
             - {None}
         """
         try:
             _database = Database(database=self.get_database_path(), mode="rw")
-        except DatabaseDoesNotExistException:
-            raise UserCacheNotFoundException(
-                "Database doesn't have any cache stored")
+        except DatabaseDoesNotExistException as exc:
+            raise DatabaseDoesNotExistException(
+                "Database doesn't have any cache stored") from exc
 
         row = _database.read("Email", "Password", table="Users", rows=".")
 
@@ -72,8 +94,8 @@ class CipherDatabase(Cipher):
         """
         try:
             _database = Database(database=self.get_database_path(), mode="rw")
-        except DatabaseDoesNotExistException:
+        except DatabaseDoesNotExistException as exc:
             raise DatabaseDoesNotExistException(
-                "Database doesn't exist!\n Can't perform delete operation!")
+                "Database doesn't exist!\n Can't perform delete operation!") from exc
 
         _database.delete("Users")
