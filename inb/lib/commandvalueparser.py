@@ -20,7 +20,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-
 # from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!
 from __future__ import annotations
 
@@ -28,8 +27,6 @@ import argparse
 import functools
 
 from typing import Any
-
-from console.input import inbinput
 
 from database import SQL_DATABASE_PATH
 from database.sql.sql import Database
@@ -113,7 +110,7 @@ class CommandValueParser(object):
                 Database(database=SQL_DATABASE_PATH).print(
                     USERS_TABLE,
                     rows=rows)
-                return inbinput("Enter your email: ", bold=True)
+                return input("Enter your email: ", bold=True)
 
             if self.cookies:
                 Cookies = get_cookies()
