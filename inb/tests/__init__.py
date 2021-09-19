@@ -20,11 +20,22 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
+# ################################
+# testing classes for utils module
+# ################################
 from .test_lib import TestPingFunction
 from .test_lib import TestTerminalClass
 from .test_lib import TestValidatorClass
 from .test_lib import TestInbValidatorClass
 from .test_lib import TestCustomTypeFunction
-from .test_lib import TestLevenshteinFunction
 from .test_lib import TestCreateFigletFunction
+
+# ###############################
+# testing classes for algo module
+# ###############################
+from .test_lib import TestLevenshteinFunction
+
+# ###################################
+# testing classes for argparse module
+# ###################################
 from .test_lib import TestOverridedVersionOfArgumentParserClass

@@ -22,13 +22,24 @@
 
 import unittest
 
+# ################################
+# testing classes for utils module
+# ################################
 from tests import TestPingFunction
 from tests import TestTerminalClass
 from tests import TestValidatorClass
 from tests import TestInbValidatorClass
 from tests import TestCustomTypeFunction
-from tests import TestLevenshteinFunction
 from tests import TestCreateFigletFunction
+
+# ###############################
+# testing classes for algo module
+# ###############################
+from tests import TestLevenshteinFunction
+
+# ###################################
+# testing classes for argparse module
+# ###################################
 from tests import TestOverridedVersionOfArgumentParserClass
 
 if __name__ == "__main__":
