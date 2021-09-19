@@ -25,4 +25,5 @@ from .test_lib import TestTerminalClass
 from .test_lib import TestValidatorClass
 from .test_lib import TestInbValidatorClass
 from .test_lib import TestCustomTypeFunction
+from .test_lib import TestLevenshteinFunction
 from .test_lib import TestCreateFigletFunction

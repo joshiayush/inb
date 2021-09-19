@@ -49,7 +49,7 @@ class TestPingFunction(unittest.TestCase):
             param = "-c"
         command: List[str] = ["ping", param, '1', host]
         mock_subproc_call.assert_called_with(
-            command, stdout=subprocess.DEVNULL)
+            command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
     @patch("subprocess.call")
     def test_ping_method_with_malformed_host(self: TestPingFunction, mock_subproc_call: Mock) -> None:
@@ -61,4 +61,4 @@ class TestPingFunction(unittest.TestCase):
             param = "-c"
         command: List[str] = ["ping", param, '1', host]
         mock_subproc_call.assert_called_with(
-            command, stdout=subprocess.DEVNULL)
+            command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)

@@ -27,6 +27,7 @@ from tests import TestTerminalClass
 from tests import TestValidatorClass
 from tests import TestInbValidatorClass
 from tests import TestCustomTypeFunction
+from tests import TestLevenshteinFunction
 from tests import TestCreateFigletFunction
 
 if __name__ == "__main__":
