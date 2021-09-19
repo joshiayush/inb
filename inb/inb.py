@@ -311,17 +311,17 @@ search = subparsers.add_parser("search",
 
 search.add_argument("-e", "--email",
                     type=str,
-                    nargs=1,
+                    nargs=NARGS.OPTIONAL,
                     default=None,
                     help="User's email address")
 search.add_argument("-p", "--password",
                     type=str,
-                    nargs=1,
+                    nargs=NARGS.OPTIONAL,
                     default=None,
                     help="User's password")
 search.add_argument("-k", "--keyword",
                     type=str,
-                    nargs=1,
+                    nargs=NARGS.OPTIONAL,
                     default=None,
                     help="Keyword to search for")
 search.add_argument("-l", "--location",

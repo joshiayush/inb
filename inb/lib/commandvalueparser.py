@@ -145,6 +145,7 @@ class CommandValueParser(object):
     def _send(self: CommandValueParser, namespace: argparse.Namespace) -> None:
         # parse the limit given, we want to set the limit to 20 if the limit is
         # a string and cannot be converted into an integer with base 10
+        self.limit = 20
         if is_int(namespace.limit):
             self.limit = namespace.limit
         else:
@@ -163,6 +164,7 @@ class CommandValueParser(object):
         # parse the keyword given, we want to set the keyword to NoneType object
         # if the keyword is empty, moreover we only go inside of the clause once
         # we have confirmed that the keyword is not a NoneType object
+        self.keyword = None
         if namespace.keyword:
             if not is_empty(namespace.keyword):
                 self.keyword = namespace.keyword
@@ -172,6 +174,7 @@ class CommandValueParser(object):
         # parse the location given, we want to set the location to NoneType object
         # if the location is empty, moreover we only go inside of the clause once
         # we have confirmed that the location is not a NoneType object
+        self.location = None
         if namespace.location:
             # if ':' is present in the location string it means that the user gave us
             # more than one location separated by ':' and we want to convert the location
@@ -189,6 +192,7 @@ class CommandValueParser(object):
         # parse the title given, we want to set the title to NoneType object
         # if the title is empty, moreover we only go inside of the clause once
         # we have confirmed that the title is not a NoneType object
+        self.title = None
         if namespace.title:
             if is_empty(namespace.title):
                 self.title = namespace.title
@@ -198,6 +202,7 @@ class CommandValueParser(object):
         # parse the first_name given, we want to set the first_name to NoneType object
         # if the first_name is empty, moreover we only go inside of the clause once
         # we have confirmed that the first_name is not a NoneType object
+        self.first_name = None
         if namespace.first_name:
             if not is_empty(namespace.first_name):
                 self.first_name = namespace.first_name
@@ -207,6 +212,7 @@ class CommandValueParser(object):
         # parse the last_name given, we want to set the last_name to NoneType object
         # if the last_name is empty, moreover we only go inside of the clause once
         # we have confirmed that the last_name is not a NoneType object
+        self.last_name = None
         if namespace.last_name:
             if not is_empty(namespace.last_name):
                 self.last_name = namespace.last_name
@@ -216,6 +222,7 @@ class CommandValueParser(object):
         # parse the school given, we want to set the school to NoneType object
         # if the school is empty, moreover we only go inside of the clause once
         # we have confirmed that the school is not a NoneType object
+        self.school = None
         if namespace.school:
             if not is_empty(namespace.school):
                 self.school = namespace.school
@@ -225,6 +232,7 @@ class CommandValueParser(object):
         # parse the industry given, we want to set the industry to NoneType object
         # if the industry is empty, moreover we only go inside of the clause once
         # we have confirmed that the industry is not a NoneType object
+        self.industry = None
         if namespace.industry:
             # if ':' is present in the industry string it means that the user gave us
             # more than one industry separated by ':' and we want to convert the industry
@@ -242,6 +250,7 @@ class CommandValueParser(object):
         # parse the current_company given, we want to set the current_company to NoneType object
         # if the current_company is empty, moreover we only go inside of the clause once
         # we have confirmed that the current_company is not a NoneType object
+        self.current_company = None
         if namespace.current_company:
             if not is_empty(namespace.current_company):
                 self.current_company = namespace.current_company
@@ -251,6 +260,7 @@ class CommandValueParser(object):
         # parse the profile_language given, we want to set the profile_language to NoneType object
         # if the profile_language is empty, moreover we only go inside of the clause once
         # we have confirmed that the profile_language is not a NoneType object
+        self.profile_language = None
         if namespace.profile_language:
             # if ':' is present in the profile language string it means that the user gave us
             # more than one profile language separated by ':' and we want to convert the profile language
@@ -267,6 +277,7 @@ class CommandValueParser(object):
 
         # parse the limit given, we want to set the limit to 20 if the limit is
         # a string and cannot be converted into an integer with base 10
+        self.limit = 20
         if is_int(namespace.limit):
             self.limit = namespace.limit
         else:
@@ -282,6 +293,7 @@ class CommandValueParser(object):
     @_parse_creds
     @_parse_inb_opt_params
     def _connect(self: CommandValueParser, namespace: argparse.Namespace) -> None:
+        self.profileid = None
         if namespace.profileid:
             if not is_empty(namespace.profileid):
                 self.profileid = namespace.profileid

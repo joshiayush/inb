@@ -25,6 +25,9 @@ from __future__ import annotations
 
 import time
 
+from typing import Any
+from typing import Dict
+
 from . import SUCCESS_RATE
 from . import FAILURE_RATE
 from . import SENT_STATUS_SYMBOL
@@ -36,13 +39,14 @@ class Invitation(object):
     STATUS_NO: int = 0
     SLEEP_TIME_AFTER_LOGGING: int | float = 0.18
 
-    def __init__(
-        self: Invitation,
-        name: str,
-        occupation: str,
-        status: str = '',
-        elapsed_time: int | float = 0
-    ) -> None:
+    def __init__(self: Invitation, **kwargs: Dict[Any, Any]) -> None:
+        self.set_invitation_fields(**kwargs)
+
+    def set_invitation_fields(self: Invitation,
+                              name: str = '',
+                              occupation: str = '',
+                              status: str = '',
+                              elapsed_time: int | float = 0) -> None:
         self._name = name
         if len(occupation) >= 50:
             self._occupation = occupation[0:50] + ' ' + '.'*3
@@ -67,9 +71,9 @@ class Invitation(object):
         except IndexError:
             self._elapsed_time = elapsed_time
 
-    def status(self: Invitation) -> None:
-        if not Invitation.STATUS_NO == 0:
-            print("\033[F" * 8)
+    def status(self: Invitation, come_back_by: int = 8) -> None:
+        if Invitation.STATUS_NO > 0:
+            print("\033[F" * come_back_by)
         else:
             Invitation.STATUS_NO += 1
         print()

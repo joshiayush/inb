@@ -33,7 +33,7 @@ from typing import Optional
 
 from selenium import webdriver
 
-from selenium.common.exceptions import ElementNotInteractableException
+from selenium.common.exceptions import ElementNotInteractableException, NoSuchElementException
 from selenium.common.exceptions import ElementClickInterceptedException
 
 from selenium.webdriver.common.by import By
@@ -49,6 +49,7 @@ from lib.algo import levenshtein
 from lib.utils import _type
 
 from ..DOM import Cleaner
+from ..DOM.javascript import JS
 from ..person.person import Person
 from ..invitation.status import Invitation
 
@@ -113,6 +114,23 @@ class LinkedInSearchConnect(object):
         self._industry = industry
         self._current_company = current_company
         self._profile_language = profile_language
+
+    def _scroll(self: LinkedInSearchConnect) -> None:
+        """Private method _scroll() scrolls the page.
+
+        :Args:
+            - self: {LinkedInSearchConnect} self
+
+        :Returns:
+            - {None}
+        """
+        js = JS(self._driver)
+        old_page_offset = js.get_page_y_offset()
+        new_page_offset = js.get_page_y_offset()
+        while old_page_offset == new_page_offset:
+            js.scroll_bottom()
+            time.sleep(1)
+            new_page_offset = js.get_page_y_offset()
 
     def _get_search_results_page(function_: function) -> function:
         @functools.wraps(function_)
@@ -297,17 +315,18 @@ class LinkedInSearchConnect(object):
         p = Person(self._driver)
         persons = p.get_search_results_elements()
 
+        invitation = Invitation()
         while True:
             for person in persons:
                 if LinkedInSearchConnect.__INVITATION_SENT == self._limit:
                     break
-                if person._connect_button.text == "Pending" or \
-                        person._connect_button.get_attribute("aria-label") == "Follow":
+                if person.connect_button.text == "Pending" or \
+                        person.connect_button.get_attribute("aria-label") == "Follow":
                     continue
 
                 try:
                     ActionChains(self._driver).move_to_element(
-                        person._connect_button).click().perform()
+                        person.connect_button).click().perform()
                     send_invite_modal = WebDriverWait(self._driver, LinkedInSearchConnect.WAIT).until(
                         EC.presence_of_element_located(
                             (By.XPATH,
@@ -318,23 +337,32 @@ class LinkedInSearchConnect(object):
                         "//button[@aria-label='Send now']")
                     ActionChains(self._driver).move_to_element(
                         send_now).click().perform()
-                    Invitation(name=person._name,
-                               occupation=person._occupation,
-                               status="sent",
-                               elapsed_time=time.time() - start).status()
+                    invitation.set_invitation_fields(name=person.name,
+                                                     occupation=person.occupation,
+                                                     status="sent",
+                                                     elapsed_time=time.time() - start)
+                    invitation.status(come_back_by=9)
                     LinkedInSearchConnect.__INVITATION_SENT += 1
                 except (ElementNotInteractableException,
                         ElementClickInterceptedException) as exc:
                     if isinstance(exc, ElementClickInterceptedException):
                         break
-                    Invitation(name=person._name,
-                               occupation=person._occupation,
-                               status="failed",
-                               elapsed_time=time.time() - start).status()
+                    invitation.set_invitation_fields(name=person.name,
+                                                     occupation=person.occupation,
+                                                     status="failed",
+                                                     elapsed_time=time.time() - start)
+                    invitation.status(come_back_by=9)
 
-            _next: webdriver.Chrome = self._driver.find_element_by_xpath(
-                "//main[@id='main']//button[@aria-label='Next']")
-            _next.click()
+            def next_() -> None:
+                next_: webdriver.Chrome = self._driver.find_element_by_xpath(
+                    "//main[@id='main']//button[@aria-label='Next']")
+                next_.click()
+
+            try:
+                next_()
+            except NoSuchElementException:
+                self._scroll()
+                next_()
             persons = p.get_search_results_elements()
 
     @_get_search_results_page
