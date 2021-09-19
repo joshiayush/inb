@@ -27,3 +27,4 @@ from .test_lib import TestInbValidatorClass
 from .test_lib import TestCustomTypeFunction
 from .test_lib import TestLevenshteinFunction
 from .test_lib import TestCreateFigletFunction
+from .test_lib import TestOverridedVersionOfArgumentParserClass

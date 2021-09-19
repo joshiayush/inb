@@ -130,9 +130,9 @@ class _ArgumentParser(argparse.ArgumentParser):
             - {None}
         """
         if file is None:
-            file = sys.stderr
+            file = sys.stdout
         if color is None:
-            file.write(message)
+            file.write(message + '\n')
         else:
             file.write(color + message.strip() +
                        self.__COLOR_DICT["RESET"] + '\n')
@@ -173,7 +173,7 @@ class _ArgumentParser(argparse.ArgumentParser):
         :Returns:
             - {None}
         """
-        if usage:
+        if usage == True:
             self.print_usage(sys.stderr)
         self.exit(2, _("%(prog)s: Error: %(message)s\n") %
                   {"prog": self.prog, "message": message})

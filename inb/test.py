@@ -29,6 +29,7 @@ from tests import TestInbValidatorClass
 from tests import TestCustomTypeFunction
 from tests import TestLevenshteinFunction
 from tests import TestCreateFigletFunction
+from tests import TestOverridedVersionOfArgumentParserClass
 
 if __name__ == "__main__":
     unittest.main()
