@@ -28,3 +28,5 @@ from .test_utils import TestInbValidatorClass
 from .test_utils import TestCustomTypeFunction
 from .test_utils import TestCreateFigletFunction
 from .test_parser import TestOverridedVersionOfArgumentParserClass
+
+from .test_commandvalueparser import TestCommandValueParserClass
