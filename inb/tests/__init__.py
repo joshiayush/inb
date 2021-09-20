@@ -39,3 +39,8 @@ from .test_lib import TestLevenshteinFunction
 # testing classes for argparse module
 # ###################################
 from .test_lib import TestOverridedVersionOfArgumentParserClass
+
+# ############################################
+# testing classes for command handling modules
+# ############################################
+from .test_lib import TestCommandValueParserClass

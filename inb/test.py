@@ -42,5 +42,10 @@ from tests import TestLevenshteinFunction
 # ###################################
 from tests import TestOverridedVersionOfArgumentParserClass
 
+# ############################################
+# testing classes for command handling modules
+# ############################################
+from tests import TestCommandValueParserClass
+
 if __name__ == "__main__":
     unittest.main()

@@ -73,6 +73,7 @@ class CommandValueParser(object):
             # parse the email given, we want to set the email to NoneType object
             # if the email is empty, moreover we only go inside of the clause once
             # we have confirmed that the email is not a NoneType object
+            self.email = None
             if namespace.email:
                 if Validator(namespace.email).is_email():
                     self.email = namespace.email
@@ -85,6 +86,7 @@ class CommandValueParser(object):
             # parse the password given, we want to set the password to NoneType object
             # if the password is empty, moreover we only go inside of the clause once
             # we have confirmed that the password is not a NoneType object
+            self.password = None
             if namespace.password:
                 if not is_empty(namespace.password):
                     self.password = namespace.password
@@ -92,6 +94,7 @@ class CommandValueParser(object):
                     self.password = None
             else:
                 is_creds_given = False
+
             self.cookies: bool = namespace.cookies
             if not is_creds_given and not self.cookies:
                 raise CredentialsNotGivenException(
