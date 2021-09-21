@@ -177,14 +177,22 @@ class Validator(object):
             :Returns:
                 - {bool} True if the file path is valid and executable, False otherwise.
             """
-            return self.is_path() and os.access(fpath, os.X_OK)
+            return self.is_path() and os.access(fpath, os.X_OK)  # check if the x bit is OK
 
+        # split the path in a tuple containing (head, tail)
         fpath, _ = os.path.split(self._field)
         if fpath:
+            # if we successfully obtained a head, check if the given field
+            # is a path
             if is_exe(self._field):
                 return True
         else:
-            for path in os.environ["PATH"].split(os.pathsep):
+            # if we didn't obtain a head then we want to seek into the system
+            # binary path for the executable
+            sys_bin_path = os.environ["PATH"].split(os.pathsep)
+            for path in sys_bin_path:
+                # join the executable with the system environment path and check
+                # if the x bit is OK
                 exe_file = os.path.join(path, self._field)
                 if is_exe(exe_file):
                     return True
