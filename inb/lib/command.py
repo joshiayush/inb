@@ -77,10 +77,8 @@ class Command(CommandValueParser):
             if self.headless == True:
                 chrome_driver_options.append(Driver.HEADLESS)
 
-            self.linkedin = LinkedIn(user_email=self.email,
-                                     user_password=self.password,
-                                     driver_path=DRIVER_PATH,
-                                     opt_chromedriver_options=chrome_driver_options)
+            self.linkedin = LinkedIn(user_email=self.email, user_password=self.password,
+                                     driver_path=DRIVER_PATH, opt_chromedriver_options=chrome_driver_options)
 
             self.logger.info("Connecting")
             self.logger.info("Sending GET request to login page")
@@ -126,18 +124,11 @@ class Command(CommandValueParser):
     @_login
     def search(self: Command) -> None:
         self.logger.info("Instantiating connection object")
-        linkedin_search_connect = LinkedInSearchConnect(
-            driver=self.linkedin.driver,
-            keyword=self.keyword,
-            location=self.location,
-            title=self.title,
-            first_name=self.first_name,
-            last_name=self.last_name,
-            school=self.school,
-            industry=self.industry,
-            current_company=self.current_company,
-            profile_language=self.profile_language,
-            limit=self.limit)
+        linkedin_search_connect = LinkedInSearchConnect(driver=self.linkedin.driver, keyword=self.keyword, location=self.location,
+                                                        title=self.title, first_name=self.first_name, last_name=self.last_name,
+                                                        school=self.school, industry=self.industry,
+                                                        current_company=self.current_company,
+                                                        profile_language=self.profile_language, limit=self.limit)
         self.logger.info("Sending GET request to search results page")
         linkedin_search_connect.run()
 
