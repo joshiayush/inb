@@ -44,3 +44,6 @@ from .test_lib import TestOverridedVersionOfArgumentParserClass
 # testing classes for command handling modules
 # ############################################
 from .test_lib import TestCommandValueParserClass
+
+
+from .test_linkedin import TestDriverClass

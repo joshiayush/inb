@@ -93,8 +93,12 @@ class Driver(object):
             - {None}
         """
         Driver.__SESSION_ALREADY_EXISTS = False
-        self.driver.quit()
+        if hasattr(self, "driver"):
+            if isinstance(self.driver, webdriver.Chrome):
+                self.driver.quit()
 
     def __del__(self: Driver) -> None:
         Driver.__SESSION_ALREADY_EXISTS = False
-        self.driver.quit()
+        if hasattr(self, "driver"):
+            if isinstance(self.driver, webdriver.Chrome):
+                self.driver.quit()

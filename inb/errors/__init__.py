@@ -33,7 +33,7 @@ class WebDriverPathNotGivenException(Exception):
     """Thrown when chrome driver's path is not given."""
 
     def __init__(self: WebDriverPathNotGivenException, *args: Tuple[Any]) -> None:
-        super(WebDriverNotExecutableException, self).__init__(*args)
+        super(WebDriverPathNotGivenException, self).__init__(*args)
         if args:
             if isinstance(args[0], str):
                 self.message = args[0]
@@ -44,7 +44,7 @@ class WebDriverPathNotGivenException(Exception):
         else:
             self.message = None
 
-    def __str__(self: WebDriverNotExecutableException) -> str:
+    def __str__(self: WebDriverPathNotGivenException) -> str:
         if self.message:
             return "WebDriverNotExecutableException: %(message)s" % {"message": self.message}
         else:

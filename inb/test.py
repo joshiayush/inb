@@ -47,5 +47,7 @@ from tests import TestOverridedVersionOfArgumentParserClass
 # ############################################
 from tests import TestCommandValueParserClass
 
+from tests import TestDriverClass
+
 if __name__ == "__main__":
     unittest.main()
