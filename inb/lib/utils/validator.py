@@ -28,6 +28,10 @@ import os
 import sys
 import errno
 
+from .type import is_str
+from .type import is_none
+from .type import is_empty
+
 
 class Validator(object):
     # Windows-specific error code indicating an invalid pathname.
@@ -48,7 +52,7 @@ class Validator(object):
         :Raises:
             - {ValueError} If the field is not an string instance.
         """
-        if isinstance(field, str):
+        if is_str(field):
             self._field = field
         else:
             raise ValueError(
@@ -97,7 +101,7 @@ class Validator(object):
         # If this pathname is either not a string or is but is empty, this pathname
         # is invalid.
         try:
-            if not self._field or not isinstance(self._field, str):
+            if is_none(self._field) or not is_str(self._field) or is_empty(self._field):
                 return False
 
             # Strip this pathname's Windows-specific drive specifier (e.g., `C:\`)
@@ -217,7 +221,7 @@ class InbValidator(object):
         :Raises:
             - {ValueError} If the field is not an string instance.
         """
-        if isinstance(field, str):
+        if is_str(field):
             self._field = field
         else:
             raise ValueError(
