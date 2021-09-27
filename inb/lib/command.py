@@ -121,7 +121,8 @@ class Command(CommandValueParser):
     def send(self: Command) -> None:
         self.logger.info("Instantiating connection object")
         linkedin_connection = LinkedInConnect(driver=self.linkedin.driver,
-                                              limit=self.limit)
+                                              limit=self.limit,
+                                              debug=self.debug)
         self.logger.info("Sending GET request to mynetwork page")
         try:
             linkedin_connection.run()
