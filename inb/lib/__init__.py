@@ -51,3 +51,4 @@ def chromedriver_abs_path() -> str:
 
 
 DRIVER_PATH = chromedriver_abs_path()
+__project_name__ = "inb"

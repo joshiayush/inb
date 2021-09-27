@@ -191,7 +191,7 @@ class Validator(object):
             if is_exe(self._field):
                 return True
         else:
-            # if we didn't obtain a head then we want to seek into the system
+            # if we didn't obtain a head then we want to seek into the system's
             # binary path for the executable
             sys_bin_path = os.environ["PATH"].split(os.pathsep)
             for path in sys_bin_path:

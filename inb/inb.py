@@ -184,12 +184,16 @@ send.add_argument("-ngpu", "--headless",
 send.add_argument("-m", "--start-maximized",
                   action=OPT_ARGS_ACTION.STORE_TRUE,
                   help="set browser in full screen")
+send.add_argument("-idb", "--debug",
+                  action=OPT_ARGS_ACTION.STORE_TRUE,
+                  help="logs debug info when given")
 
 send.set_defaults(which="send",
                   email=None,
                   password=None,
                   headless=False,
                   limit=20,
+                  debug=False,
                   cookies=False,
                   incognito=False,
                   start_maximized=False)
@@ -243,11 +247,15 @@ connect.add_argument("-ngpu", "--headless",
 connect.add_argument("-m", "--start-maximized",
                      action=OPT_ARGS_ACTION.STORE_TRUE,
                      help="set browser in full screen")
+connect.add_argument("-idb", "--debug",
+                     action=OPT_ARGS_ACTION.STORE_TRUE,
+                     help="logs debug info when given")
 
 connect.set_defaults(which="connect",
                      cookies=False,
                      headless=False,
                      incognito=False,
+                     debug=False,
                      start_maximized=False)
 
 #
@@ -417,6 +425,9 @@ search.add_argument("-ngpu", "--headless",
 search.add_argument("-m", "--start-maximized",
                     action=OPT_ARGS_ACTION.STORE_TRUE,
                     help="set browser in full screen")
+search.add_argument("-idb", "--debug",
+                    action=OPT_ARGS_ACTION.STORE_TRUE,
+                    help="logs debug info when given")
 
 search.set_defaults(which="search",
                     email=None,
@@ -432,6 +443,7 @@ search.set_defaults(which="search",
                     profile_language=None,
                     headless=False,
                     limit=20,
+                    debug=False,
                     cookies=False,
                     incognito=False,
                     start_maximized=False)
@@ -479,10 +491,14 @@ config.add_argument("PASSWORD",
                     nargs=1,
                     default=None,
                     help="user's password")
+config.add_argument("-idb", "--debug",
+                    action=OPT_ARGS_ACTION.STORE_TRUE,
+                    help="logs debug info when given")
 
 config.set_defaults(which="config",
                     EMAIL=None,
-                    PASSWORD=None)
+                    PASSWORD=None,
+                    debug=False)
 
 #
 # Usage: inb show [-h] [-e] [-p] [-d] [keyword]
@@ -529,11 +545,15 @@ show.add_argument("-p", "--password",
 show.add_argument("-d", "--decrypt",
                   action=OPT_ARGS_ACTION.STORE_TRUE,
                   help="print information in decrypt form")
+show.add_argument("-idb", "--debug",
+                  action=OPT_ARGS_ACTION.STORE_TRUE,
+                  help="logs debug info when given")
 
 show.set_defaults(which="show",
                   keyword=None,
                   email=None,
-                  password=None)
+                  password=None,
+                  debug=False)
 
 #
 # Usage: inb delete [-h] keyword
@@ -565,9 +585,13 @@ delete = subparsers.add_parser("delete",
 
 delete.add_argument("keyword",
                     type=str)
+delete.add_argument("-idb", "--debug",
+                    action=OPT_ARGS_ACTION.STORE_TRUE,
+                    help="logs debug info when given")
 
 delete.set_defaults(which="delete",
-                    keyword=None)
+                    keyword=None,
+                    debug=False)
 
 #
 # Usage: inb developer [-h] [-n] [-l] [-g] [-m] [-e]
@@ -612,13 +636,17 @@ developer.add_argument("-m", "--mobile",
 developer.add_argument("-e", "--email",
                        action=OPT_ARGS_ACTION.STORE_TRUE,
                        help="print developer email address")
+developer.add_argument("-idb", "--debug",
+                       action=OPT_ARGS_ACTION.STORE_TRUE,
+                       help="logs debug info when given")
 
 developer.set_defaults(which="developer",
                        name=False,
                        linkedin=False,
                        github=False,
                        mobile=False,
-                       email=False)
+                       email=False,
+                       debug=False)
 
 if len(sys.argv) <= 1:
     exit()

@@ -23,7 +23,6 @@
 # from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!
 from __future__ import annotations
 
-import logging
 import argparse
 
 from . import _type
@@ -44,13 +43,7 @@ class Handler(object):
         :Raises:
             - {TypeError} If namespace given is None.
         """
-        self.logger = logging.getLogger("inb")
-        logging.basicConfig(
-            format="%(levelname)s:%(message)s", level=logging.INFO)
-        self.logger.setLevel(logging.DEBUG)
-
         if namespace and isinstance(namespace, argparse.Namespace):
-            self.logger.debug("Handler: namespace OK")
             self.namespace = namespace
         else:
             raise TypeError("Handler: Namespace is a %(type)s object" % {

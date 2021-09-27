@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-"""from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!"""
+# from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!
 from __future__ import annotations
 
 from selenium import webdriver
@@ -50,7 +50,6 @@ class Cleaner(object):
         if not isinstance(driver, webdriver.Chrome):
             raise Exception("'%(driver_type)s' object is not a 'webdriver' object" % {
                             "driver_type": type(driver)})
-
         self._driver = driver
 
     def clear_message_overlay(self: Cleaner, wait: int = 60) -> None:

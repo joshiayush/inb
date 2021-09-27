@@ -138,6 +138,7 @@ class CommandValueParser(object):
             nonlocal function_
             function_(self, *args, **kwargs)
             namespace = args[0]
+            self.debug = namespace.debug
             self.headless = namespace.headless
             self.incognito = namespace.incognito
             self.start_maximized = namespace.start_maximized
