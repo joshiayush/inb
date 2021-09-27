@@ -35,6 +35,7 @@ from typing import Union
 from selenium.common.exceptions import TimeoutException
 
 from lib import ping
+from lib import _type
 from errors import InternetNotConnectedException
 
 from linkedin import Driver
@@ -78,22 +79,26 @@ class Command(CommandValueParser):
             if self.debug:
                 self._set_log_level(logging.DEBUG)
             chrome_driver_options: List[str] = []
-            self.logger.debug("Initial value of chrome_driver_options list %(ls)s" % {
+            self.logger.debug("Command._login -> chrome_driver_options: %(ls)s" % {
                               "ls": chrome_driver_options})
             chrome_driver_options.append(Driver.INCOGNITO)
-            self.logger.debug("Append INCOGNITO option to chromedriver")
+            self.logger.debug("Command._login -> chrome_driver_options.append(%(option)s)" % {
+                              "option": Driver.INCOGNITO})
             chrome_driver_options.append(Driver.IGNORE_CERTIFICATE_ERRORS)
-            self.logger.debug(
-                "Append IGNORE_CERTIFICATE_ERRORS option to chromedriver")
+            self.logger.debug("Command._login -> chrome_driver_options.append(%(option)s)" % {
+                              "option": Driver.IGNORE_CERTIFICATE_ERRORS})
             if self.headless == True:
                 chrome_driver_options.append(Driver.HEADLESS)
-                self.logger.debug("Append HEADLESS option to chromedriver")
-            self.logger.debug("Final value of chrome_driver_options list %(ls)s" % {
+                self.logger.debug("Command._login -> chrome_driver_options.append(%(option)s)" % {
+                    "option": Driver.HEADLESS})
+            self.logger.debug("Command._login -> chrome_driver_options: %(ls)s" % {
                               "ls": chrome_driver_options})
 
-            self.logger.debug("User Email: %(ue)s" % {"ue": self.email})
-            self.logger.debug("User Password: %(up)s" % {"up": self.password})
-            self.logger.debug("Chrome Driver Executable Path: %(cdep)s" % {
+            self.logger.debug("Command._login -> email: %(ue)s" %
+                              {"ue": self.email})
+            self.logger.debug("Command._login -> password: %(up)s" %
+                              {"up": self.password})
+            self.logger.debug("Command._login -> DRIVER_PATH: %(cdep)s" % {
                               "cdep": DRIVER_PATH})
             self.logger.debug("Chrome Driver Options: %(cdo)s" %
                               {"cdo": chrome_driver_options})
@@ -111,8 +116,8 @@ class Command(CommandValueParser):
                 return
             else:
                 self.logger.info("Successfully connected")
-            self.logger.debug("Calling decorated method with args %(args)s and kwargs %(kwargs)s" % {
-                              "args": [*args], "kwargs": {**kwargs}})
+            self.logger.debug("Command._login -> function_(%(self)s, %(args)s, %(kwargs)s)" % {
+                              "self": _type(self), "args": [*args], "kwargs": {**kwargs}})
             function_(self, *args, **kwargs)
         return wrapper
 

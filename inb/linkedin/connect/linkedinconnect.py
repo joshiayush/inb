@@ -84,14 +84,14 @@ class LinkedInConnect(object):
                 "Object '%(driver)s' is not a 'webdriver.Chrome' object!" % {
                     "driver": _type(driver)})
         self._driver = driver
-        self.logger.debug("Private driver instance: %(driver)s" %
-                          {"driver": self._driver})
+        self.logger.debug("LinkedInConnect.__init__() -> type(self._driver) = %(driver)s" %
+                          {"driver": _type(self._driver)})
 
         if limit > 80:
             raise ConnectionLimitExceededException(
                 "Daily invitation limit can't be greater than 80, we recommend 40!")
         self._limit = limit
-        self.logger.debug("Private limit variable: %(limit)s" %
+        self.logger.debug("LinkedInConnect.__init__() -> self._limit = %(limit)s" %
                           {"limit": self._limit})
 
     def _set_logger(self: LinkedInConnect, level: Union[int, str] = logging.INFO) -> None:
@@ -119,15 +119,15 @@ class LinkedInConnect(object):
         def wrapper(self: LinkedInConnect, *args: List[Any], **kwargs: Dict[Any, Any]) -> None:
             nonlocal function_
             try:
-                self.logger.debug("Calling chromedriver.get() method with url: %(url)s" % {
+                self.logger.debug("LinkedInConnect._get_mynetwork() -> wrapper() -> self._driver.get(%(url)s)" % {
                                   "url": LinkedInConnect.MY_NETWORK_PAGE})
                 self._driver.get(LinkedInConnect.MY_NETWORK_PAGE)
             except TimeoutException:
                 raise TimeoutException(
                     "ERR: Cannot get mynetwork page due to weak network!")
             else:
-                self.logger.debug("Calling decorated method with args %(args)s and kwargs %(kwargs)s" % {
-                                  "args": [*args], "kwargs": {**kwargs}})
+                self.logger.debug("LinkedInConnect._get_mynetwork() -> function_(%(self)s , %(args)s, %(kwargs)s)" % {
+                                  "self": _type(self), "args": [*args], "kwargs": {**kwargs}})
                 function_(self, *args, **kwargs)
         return wrapper
 
@@ -142,16 +142,16 @@ class LinkedInConnect(object):
         """
         start = time.time()
         self.logger.debug(
-            "Method send invitation starting at %(time)s" % {"time": start})
+            "LinkedInConnect._send_invitation() starting at %(time)s" % {"time": start})
 
         p = Person(self._driver)
         person = p.get_suggestion_box_element()
-        self.logger.debug("Initial value of Person object: %(obj)s" % {
+        self.logger.debug("LinkedInConnect._send_invitation() Person object: %(obj)s" % {
                           "obj": {"name": person.name, "occupation": person.occupation,
                                   "connect_button": person.connect_button}})
 
         while person:
-            self.logger.debug("LinkedInConnect.__INVITATION_SENT: %(num)s" % {
+            self.logger.debug("LinkedInConnect._send_invitation() LinkedInConnect.__INVITATION_SENT: %(num)s" % {
                               "num": LinkedInConnect.__INVITATION_SENT})
             if LinkedInConnect.__INVITATION_SENT == self._limit:
                 break
@@ -174,7 +174,7 @@ class LinkedInConnect(object):
                            elapsed_time=time.time() - start).status()
 
             person = p.get_suggestion_box_element()
-            self.logger.debug("Next value of Person object: %(obj)s" % {
+            self.logger.debug("LinkedInConnect._send_invitation() Person object: %(obj)s" % {
                 "obj": {"name": person.name, "occupation": person.occupation,
                         "connect_button": person.connect_button}})
 
@@ -188,8 +188,9 @@ class LinkedInConnect(object):
         :Returns:
             - {None}
         """
-        self.logger.debug("Calling Cleaner's clear_message_overlay method")
         Cleaner(self._driver).clear_message_overlay()
+        self.logger.debug(
+            "LinkedInConnect._execute_cleaners() -> clear_message_overlay()")
 
     @_get_mynetwork
     def run(self: LinkedInConnect) -> None:
@@ -215,7 +216,8 @@ class LinkedInConnect(object):
             - {None}
         """
         LinkedInConnect.__INVITATION_SENT = 0
-        self.logger.debug("LinkedInConnect.__INVITATION_SENT on __del__: %(num)s" % {
+        self.logger.debug("LinkedInConnect.__del__() -> LinkedInConnect.__INVITATION_SENT: %(num)s" % {
                           "num": LinkedInConnect.__INVITATION_SENT})
         self._driver.quit()
-        self.logger.debug("Successfully called quit method on driver instance")
+        self.logger.debug(
+            "LinkedInConnect.__del__() -> self._driver.quit()")
