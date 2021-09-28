@@ -27,7 +27,8 @@ import time
 import logging
 import functools
 
-from typing import Any, Union
+from typing import Any
+from typing import Union
 from typing import List
 from typing import Dict
 

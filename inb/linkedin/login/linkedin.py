@@ -35,6 +35,7 @@ from selenium import webdriver
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.keys import Keys
 
+from lib import __project_name__
 from errors import CredentialsNotGivenException
 
 
