@@ -30,12 +30,10 @@ import functools
 from typing import Any
 from typing import List
 from typing import Dict
-from typing import Union
 
 from selenium.common.exceptions import TimeoutException
 
 from lib import ping
-from lib import _type
 from errors import InternetNotConnectedException
 
 from linkedin import Driver
@@ -58,9 +56,6 @@ class Command(CommandValueParser):
         self.logger = logging.getLogger(__project_name__)
         self.logger.setLevel(logging.INFO)
 
-    def _set_log_level(self: Command, level: Union[int, str] = logging.DEBUG) -> None:
-        self.logger.setLevel(level)
-
     def _check_net_stat(function_: function) -> function:
         @functools.wraps(function_)
         def wrapper(self: Command, *args: List[Any], **kwargs: Dict[Any, Any]) -> None:
@@ -76,34 +71,15 @@ class Command(CommandValueParser):
         @functools.wraps(function_)
         def wrapper(self: Command, *args: List[Any], **kwargs: Dict[Any, Any]) -> None:
             nonlocal function_
-            if self.debug:
-                self._set_log_level(logging.DEBUG)
             chrome_driver_options: List[str] = []
-            self.logger.debug("Command._login -> chrome_driver_options: %(ls)s" % {
-                              "ls": chrome_driver_options})
             chrome_driver_options.append(Driver.INCOGNITO)
-            self.logger.debug("Command._login -> chrome_driver_options.append(%(option)s)" % {
-                              "option": Driver.INCOGNITO})
             chrome_driver_options.append(Driver.IGNORE_CERTIFICATE_ERRORS)
-            self.logger.debug("Command._login -> chrome_driver_options.append(%(option)s)" % {
-                              "option": Driver.IGNORE_CERTIFICATE_ERRORS})
             if self.headless == True:
                 chrome_driver_options.append(Driver.HEADLESS)
-                self.logger.debug("Command._login -> chrome_driver_options.append(%(option)s)" % {
-                    "option": Driver.HEADLESS})
-            self.logger.debug("Command._login -> chrome_driver_options: %(ls)s" % {
-                              "ls": chrome_driver_options})
 
-            self.logger.debug("Command._login -> email: %(ue)s" %
-                              {"ue": self.email})
-            self.logger.debug("Command._login -> password: %(up)s" %
-                              {"up": self.password})
-            self.logger.debug("Command._login -> DRIVER_PATH: %(cdep)s" % {
-                              "cdep": DRIVER_PATH})
-            self.logger.debug("Chrome Driver Options: %(cdo)s" %
-                              {"cdo": chrome_driver_options})
             self.linkedin = LinkedIn(user_email=self.email, user_password=self.password,
-                                     driver_path=DRIVER_PATH, opt_chromedriver_options=chrome_driver_options)
+                                     driver_path=DRIVER_PATH, opt_chromedriver_options=chrome_driver_options,
+                                     debug=self.debug)
 
             self.logger.info("Connecting")
             self.logger.info("Sending GET request to login page")
@@ -116,8 +92,6 @@ class Command(CommandValueParser):
                 return
             else:
                 self.logger.info("Successfully connected")
-            self.logger.debug("Command._login -> function_(%(self)s, %(args)s, %(kwargs)s)" % {
-                              "self": _type(self), "args": [*args], "kwargs": {**kwargs}})
             function_(self, *args, **kwargs)
         return wrapper
 
