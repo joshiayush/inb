@@ -47,3 +47,5 @@ from .test_lib import TestCommandValueParserClass
 
 
 from .test_linkedin import TestDriverClass
+
+from .test_linkedin import TestLinkedInSearchConnectClass

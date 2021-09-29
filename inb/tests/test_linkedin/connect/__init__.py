@@ -20,36 +20,4 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-import unittest
-
-# ################################
-# testing classes for utils module
-# ################################
-from tests import TestPingFunction
-from tests import TestTerminalClass
-from tests import TestValidatorClass
-from tests import TestInbValidatorClass
-from tests import TestCustomTypeFunction
-from tests import TestCreateFigletFunction
-
-# ###############################
-# testing classes for algo module
-# ###############################
-from tests import TestLevenshteinFunction
-
-# ###################################
-# testing classes for argparse module
-# ###################################
-from tests import TestOverridedVersionOfArgumentParserClass
-
-# ############################################
-# testing classes for command handling modules
-# ############################################
-from tests import TestCommandValueParserClass
-
-from tests import TestDriverClass
-
-from tests import TestLinkedInSearchConnectClass
-
-if __name__ == "__main__":
-    unittest.main()
+from .test_linkedinsearchconnect import TestLinkedInSearchConnectClass

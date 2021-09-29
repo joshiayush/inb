@@ -40,7 +40,6 @@ class JS(object):
         if not isinstance(driver, webdriver.Chrome):
             raise Exception("'%(driver_type)s' object is not a 'webdriver' object" % {
                             "driver_type": type(driver)})
-
         self._driver = driver
 
     def get_page_y_offset(self: JS) -> int:
