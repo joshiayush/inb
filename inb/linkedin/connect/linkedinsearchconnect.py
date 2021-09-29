@@ -33,7 +33,7 @@ from typing import Optional
 
 from selenium import webdriver
 
-from selenium.common.exceptions import ElementNotInteractableException, NoSuchElementException
+from selenium.common.exceptions import ElementNotInteractableException, InvalidElementStateException, NoSuchElementException
 from selenium.common.exceptions import ElementClickInterceptedException
 
 from selenium.webdriver.common.by import By
@@ -140,13 +140,16 @@ class LinkedInSearchConnect(object):
                 EC.presence_of_element_located(
                     (By.XPATH, """//*[@id="global-nav-typeahead"]/input"""))
             )
-            search_box.clear()
+            try:
+                search_box.clear()
+            except InvalidElementStateException:  # don't do anything if the element is in read-only state
+                pass
             search_box.send_keys(self._keyword)
             search_box.send_keys(Keys.RETURN)
             function_(self, *args, **kwargs)
         return wrapper
 
-    def __execute_cleaners(self: LinkedInSearchConnect) -> None:
+    def _execute_cleaners(self: LinkedInSearchConnect) -> None:
         """Method execute_cleaners() scours the unwanted element from the page during the
         connect process.
 
@@ -158,7 +161,7 @@ class LinkedInSearchConnect(object):
         """
         Cleaner(self._driver).clear_message_overlay()
 
-    def __apply_filters(self: LinkedInSearchConnect):
+    def _apply_filters(self: LinkedInSearchConnect):
         def get_element_by_xpath(xpath: str, wait: int = None) -> webdriver.Chrome:
             if wait == None:
                 wait = LinkedInSearchConnect.WAIT
@@ -309,7 +312,7 @@ class LinkedInSearchConnect(object):
             show_results_button.click()
             del show_results_button
 
-    def __send_invitation(self: LinkedInSearchConnect) -> None:
+    def _send_invitation(self: LinkedInSearchConnect) -> None:
         start = time.time()
 
         p = Person(self._driver)
@@ -318,8 +321,6 @@ class LinkedInSearchConnect(object):
         invitation = Invitation()
         while True:
             for person in persons:
-                if LinkedInSearchConnect.__INVITATION_SENT == self._limit:
-                    break
                 if person.connect_button.text == "Pending" or \
                         person.connect_button.get_attribute("aria-label") == "Follow":
                     continue
@@ -353,6 +354,9 @@ class LinkedInSearchConnect(object):
                                                      elapsed_time=time.time() - start)
                     invitation.status(come_back_by=9)
 
+                if LinkedInSearchConnect.__INVITATION_SENT == self._limit:
+                    break
+
             def next_() -> None:
                 next_: webdriver.Chrome = self._driver.find_element_by_xpath(
                     "//main[@id='main']//button[@aria-label='Next']")
@@ -376,9 +380,9 @@ class LinkedInSearchConnect(object):
         :Returns:
             - {None}
         """
-        self.__apply_filters()
-        self.__execute_cleaners()
-        self.__send_invitation()
+        self._apply_filters()
+        self._execute_cleaners()
+        self._send_invitation()
 
     def __del__(self: LinkedInSearchConnect) -> None:
         """LinkedInConnectionsAuto destructor to de-initialise LinkedInConnectionsAuto object.

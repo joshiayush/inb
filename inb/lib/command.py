@@ -76,10 +76,11 @@ class Command(CommandValueParser):
             chrome_driver_options.append(Driver.IGNORE_CERTIFICATE_ERRORS)
             if self.headless == True:
                 chrome_driver_options.append(Driver.HEADLESS)
+                chrome_driver_options.append(
+                    Driver.DEFAULT_HEADLESS_WINDOW_SIZE)
 
             self.linkedin = LinkedIn(user_email=self.email, user_password=self.password,
-                                     driver_path=DRIVER_PATH, opt_chromedriver_options=chrome_driver_options,
-                                     debug=self.debug)
+                                     driver_path=DRIVER_PATH, opt_chromedriver_options=chrome_driver_options)
 
             self.logger.info("Connecting")
             self.logger.info("Sending GET request to login page")
@@ -100,8 +101,7 @@ class Command(CommandValueParser):
     def send(self: Command) -> None:
         self.logger.info("Instantiating connection object")
         linkedin_connection = LinkedInConnect(driver=self.linkedin.driver,
-                                              limit=self.limit,
-                                              debug=self.debug)
+                                              limit=self.limit)
         self.logger.info("Sending GET request to mynetwork page")
         try:
             linkedin_connection.run()

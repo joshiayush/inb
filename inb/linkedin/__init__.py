@@ -47,6 +47,7 @@ class Driver(object):
     DISABLE_NOTIFICATIONS: str = "--disable-notifications"
     DISABLE_SETUID_SANDBOX: str = "--disable-setuid-sandbox"
     IGNORE_CERTIFICATE_ERRORS: str = "--ignore-certificate-errors"
+    DEFAULT_HEADLESS_WINDOW_SIZE: str = "window-size=1200,1100"
 
     def __init__(self: Driver, driver_path: str = None, options: list = []) -> None:
         if isinstance(driver_path, str):

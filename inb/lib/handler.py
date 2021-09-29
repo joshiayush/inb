@@ -62,7 +62,6 @@ class Handler(object):
             try:
                 Command(self.namespace).send()
             except Exception as e:
-                self.logger.error(e)
                 raise e
             return
 
