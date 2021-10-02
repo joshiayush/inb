@@ -194,10 +194,29 @@ class LinkedInSearchConnect(object):
         def check_for_filter(filter: str,
                              filter_dict: Dict[str, webdriver.Chrome],
                              threshold: float = 80.0) -> None:
+            """Nested function check_for_filter() checks if the filter option is present or not.
+
+            This function also does some sort of magic using the levenshtein distance algorithm
+            to predict the filter option in case the filter given is not present on the filters
+            page.
+
+            :Args:
+                - filter: {str} Filter option to search for.
+                - filter_dict: {Dict[str, webdriver.Chrome]} Hash-map containing filter one side and
+                    the element to click on, on the other side.
+                - threshold: {float} Threshold used by levenshtein distance algorithm to predict for
+                    a match in case the filter option is not directly present on the filters page.
+            """
             nonlocal self
             filters_present: List[str] = filter_dict.keys()
 
             def click_overlapped_element(element: webdriver.Chrome) -> None:
+                """Nested function click_overlapped_element() fixes the WebdriverException:
+                Element is not clickable at point (..., ...).
+
+                :Args:
+                    - element: {webdriver.Chrome} Element.
+                """
                 nonlocal self
                 # @TODO: Validate if the current version of this function is efficient
                 self._driver.execute_script("arguments[0].click();", element)
@@ -248,7 +267,7 @@ class LinkedInSearchConnect(object):
             del location_inps
 
             check_for_filter(self._location, locations_dict)
-            # location_dic again uses a lot of memory so free it after using it
+            # location_dict again uses a lot of memory so free it after using it
             del locations_dict
 
         if self._industry:
@@ -258,14 +277,19 @@ class LinkedInSearchConnect(object):
                 "//label[starts-with(@for, 'advanced-filter-industry-')]")
             industries: List[str] = [label.find_element_by_tag_name("span").text
                                      for label in industry_labels]
+            # delete industry_labels list as soon as we found the industry names
+            # these objects uses a lot of memory so free them after using them
             del industry_labels
             industries_dict: Dict[str, webdriver.Chrome] = {}
             for industry, industry_inp in zip(industries, industry_inps):
                 industries_dict[industry] = industry_inp
+            # our primary goal here is to create the industries_dict object; once
+            # it is created delete the other objects left behind
             del industries
             del industry_inps
 
             check_for_filter(self._industry, industries_dict)
+            # industries_dict again uses a lot of memory so free it after using it
             del industries_dict
 
         if self._profile_language:
@@ -275,14 +299,19 @@ class LinkedInSearchConnect(object):
                 "//label[starts-with(@for, 'advanced-filter-profileLanguage-')]")
             profile_languages: List[str] = [label.find_element_by_tag_name("span").text
                                             for label in profile_language_labels]
+            # delete profile_language_labels list as soon as we found the industry names
+            # these objects uses a lot of memory so free them after using them
             del profile_language_labels
             profile_languages_dict: Dict[str, webdriver.Chrome] = {}
             for profile_language, profile_language_inp in zip(profile_languages, profile_language_inps):
                 profile_languages_dict[profile_language] = profile_language_inp
+            # our primary goal here is to create the profile_languages_dict object; once
+            # it is created delete the other objects left behind
             del profile_languages
             del profile_language_inps
 
             check_for_filter(self._profile_language, profile_languages_dict)
+            # profile_languages_dict again uses a lot of memory so free it after using it
             del profile_languages_dict
 
         if self._first_name:
@@ -290,6 +319,8 @@ class LinkedInSearchConnect(object):
                 "//label[contains(text(), 'First name')]").find_element_by_tag_name("input")
             first_name_box.clear()
             first_name_box.send_keys(self._first_name)
+            # first_name_box element uses a lot of memory as it is a webdriver.Chrome object
+            # so delete it
             del first_name_box
 
         if self._last_name:
@@ -297,6 +328,8 @@ class LinkedInSearchConnect(object):
                 "//label[contains(text(), 'Last name')]").find_element_by_tag_name("input")
             last_name_box.clear()
             last_name_box.send_keys(self._last_name)
+            # last_name_box element uses a lot of memory as it is a webdriver.Chrome object
+            # so delete it
             del last_name_box
 
         if self._title:
@@ -304,6 +337,8 @@ class LinkedInSearchConnect(object):
                 "//label[contains(text(), 'Title')]").find_element_by_tag_name("input")
             title_box.clear()
             title_box.send_keys(self._title)
+            # title_box element uses a lot of memory as it is a webdriver.Chrome object
+            # so delete it
             del title_box
 
         if self._current_company:
@@ -311,6 +346,8 @@ class LinkedInSearchConnect(object):
                 "//label[contains(text(), 'Company')]").find_element_by_tag_name("input")
             company_box.clear()
             company_box.send_keys(self._current_company)
+            # company_box element uses a lot of memory as it is a webdriver.Chrome object
+            # so delete it
             del company_box
 
         if self._school:
@@ -318,6 +355,8 @@ class LinkedInSearchConnect(object):
                 "//label[contains(text(), 'School')]").find_element_by_tag_name("input")
             school_box.clear()
             school_box.send_keys(self._school)
+            # school_box element uses a lot of memory as it is a webdriver.Chrome object
+            # so delete it
             del school_box
 
         if self._location or self._industry or self._profile_language or self._first_name or \
@@ -325,6 +364,8 @@ class LinkedInSearchConnect(object):
             show_results_button = get_element_by_xpath(
                 "//div[@id='artdeco-modal-outlet']//button[@aria-label='Apply current filters to show results']")
             show_results_button.click()
+            # show_results_button element uses a lot of memory as it is a webdriver.Chrome object
+            # so delete it
             del show_results_button
 
     def _send_invitation(self: LinkedInSearchConnect) -> None:
@@ -337,7 +378,7 @@ class LinkedInSearchConnect(object):
         while True:
             for person in persons:
                 if person.connect_button.text == "Pending" or \
-                        person.connect_button.get_attribute("aria-label") == "Follow":
+                        person.connect_button.get_attribute("aria-label") in ("Follow", "Message"):
                     continue
 
                 try:
