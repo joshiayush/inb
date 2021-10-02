@@ -242,8 +242,6 @@ The above command will start sending invitation to people who belong to _Softwar
 The flags applicable in `send` command are also applicable here in `search` command you can use any of those flags. You can also 
 specify the `limit` with search command as you did while using the `send` command.
 
-**Note: I have not given you the usage for the `location`, `title`, `first-name`, `last-name`, `school`, `industry`, `current-company` and `profile-language` flags because those flags are not fully tested yet.**
-
 <!-- Definitions -->
 
 [_installation]: https://github.com/JoshiAyush/inb/blob/master/docs/commence/installation.md

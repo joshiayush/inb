@@ -188,7 +188,7 @@ class CommandValueParser(object):
                 self.location = filter(
                     lambda location: not is_empty(location), self.location)
             else:
-                if is_empty(namespace.location):
+                if not is_empty(namespace.location):
                     self.location = namespace.location
                 else:
                     self.location = None
@@ -198,7 +198,7 @@ class CommandValueParser(object):
         # we have confirmed that the title is not a NoneType object
         self.title = None
         if namespace.title:
-            if is_empty(namespace.title):
+            if not is_empty(namespace.title):
                 self.title = namespace.title
             else:
                 self.title = None
