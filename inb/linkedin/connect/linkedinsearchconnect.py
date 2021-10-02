@@ -66,6 +66,7 @@ class LinkedInSearchConnect(object):
     def __init__(
         self: LinkedInSearchConnect,
         driver: webdriver.Chrome,
+        *,
         keyword: str = None,
         location: str = None,
         title: Optional[str] = None,
@@ -193,24 +194,31 @@ class LinkedInSearchConnect(object):
         def check_for_filter(filter: str,
                              filter_dict: Dict[str, webdriver.Chrome],
                              threshold: float = 80.0) -> None:
+            nonlocal self
+            filters_present: List[str] = filter_dict.keys()
+
+            def click_overlapped_element(element: webdriver.Chrome) -> None:
+                nonlocal self
+                # @TODO: Validate if the current version of this function is efficient
+                self._driver.execute_script("arguments[0].click();", element)
+
             if isinstance(filter, str):
-                if filter in filter_dict:
-                    filter_dict[filter].click()
+                if filter in filters_present:
+                    click_overlapped_element(filter_dict[filter])
                     return
-                for fltr in filter_dict.keys():
+                for fltr in filters_present:
                     levenshtein_dis = levenshtein(filter, fltr)
                     total_str_len = (len(filter) + len(fltr))
                     levenshtein_dis_percent = (
                         (total_str_len - levenshtein_dis) / total_str_len) * 100
                     if levenshtein_dis_percent >= threshold:
-                        filter_dict[fltr].click()
+                        click_overlapped_element(filter_dict[fltr])
                 return
 
             if isinstance(filter, list):
-                filters_present: List[str] = filter_dict.keys()
                 for fltr in filter:
                     if fltr in filters_present:
-                        filter_dict[fltr].click()
+                        click_overlapped_element(filter_dict[fltr])
                         continue
                     for _fltr in filters_present:
                         levenshtein_dis = levenshtein(fltr, _fltr)
@@ -218,7 +226,7 @@ class LinkedInSearchConnect(object):
                         levenshtein_dis_percent = (
                             (total_str_len - levenshtein_dis) / total_str_len) * 100
                         if levenshtein_dis_percent >= threshold:
-                            filter_dict[_fltr].click()
+                            click_overlapped_element(filter_dict[_fltr])
                 return
 
         if self._location:
@@ -228,14 +236,19 @@ class LinkedInSearchConnect(object):
                 "//label[starts-with(@for, 'advanced-filter-geoUrn-')]")
             locations: List[str] = [label.find_element_by_tag_name("span").text
                                     for label in location_labels]
+            # delete location_labels list as soon as we found the location names
+            # these objects uses a lot of memory so free them after using them
             del location_labels
-            locations_dict: Dict[str, webdriver.Chrome]
+            locations_dict: Dict[str, webdriver.Chrome] = {}
             for location, location_inp in zip(locations, location_inps):
                 locations_dict[location] = location_inp
+            # our primary goal here is to create the location_dict object; once
+            # it is created delete the other objects left behind
             del locations
             del location_inps
 
             check_for_filter(self._location, locations_dict)
+            # location_dic again uses a lot of memory so free it after using it
             del locations_dict
 
         if self._industry:
@@ -246,7 +259,7 @@ class LinkedInSearchConnect(object):
             industries: List[str] = [label.find_element_by_tag_name("span").text
                                      for label in industry_labels]
             del industry_labels
-            industries_dict: Dict[str, webdriver.Chrome]
+            industries_dict: Dict[str, webdriver.Chrome] = {}
             for industry, industry_inp in zip(industries, industry_inps):
                 industries_dict[industry] = industry_inp
             del industries
@@ -263,7 +276,7 @@ class LinkedInSearchConnect(object):
             profile_languages: List[str] = [label.find_element_by_tag_name("span").text
                                             for label in profile_language_labels]
             del profile_language_labels
-            profile_languages_dict: Dict[str, webdriver.Chrome]
+            profile_languages_dict: Dict[str, webdriver.Chrome] = {}
             for profile_language, profile_language_inp in zip(profile_languages, profile_language_inps):
                 profile_languages_dict[profile_language] = profile_language_inp
             del profile_languages
