@@ -119,6 +119,7 @@ class LinkedInConnect(object):
         p = Person(self._driver)
         person = p.get_suggestion_box_element()
 
+        invitation = Invitation()
         while person:
             if LinkedInConnect.__INVITATION_SENT == self._limit:
                 break
@@ -126,19 +127,21 @@ class LinkedInConnect(object):
             try:
                 ActionChains(self._driver).move_to_element(
                     person.connect_button).click().perform()
-                Invitation(name=person.name,
-                           occupation=person.occupation,
-                           status="sent",
-                           elapsed_time=time.time() - start).status()
+                invitation.set_invitation_fields(name=person.name,
+                                                 occupation=person.occupation,
+                                                 status="sent",
+                                                 elapsed_time=time.time() - start)
+                invitation.status(come_back_by=8)
                 LinkedInConnect.__INVITATION_SENT += 1
             except (ElementNotInteractableException,
                     ElementClickInterceptedException) as error:
                 if isinstance(error, ElementClickInterceptedException):
                     break
-                Invitation(name=person.name,
-                           occupation=person.occupation,
-                           status="failed",
-                           elapsed_time=time.time() - start).status()
+                invitation.set_invitation_fields(name=person.name,
+                                                 occupation=person.occupation,
+                                                 status="sent",
+                                                 elapsed_time=time.time() - start)
+                invitation.status(come_back_by=8)
 
             person = p.get_suggestion_box_element()
 
