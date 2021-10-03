@@ -450,5 +450,9 @@ class LinkedInSearchConnect(object):
             - {None}
         """
         LinkedInSearchConnect.__INVITATION_SENT = 0
-        if hasattr(self, "_driver") and isinstance(self._driver, webdriver.Chrome):
+        try:
             self._driver.quit()
+        except AttributeError:
+            # this mean that the above code produces some error while running and
+            # driver instance died
+            pass
