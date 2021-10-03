@@ -181,4 +181,9 @@ class LinkedInConnect(object):
             - {None}
         """
         LinkedInConnect.__INVITATION_SENT = 0
-        self._driver.quit()
+        try:
+            self._driver.quit()
+        except AttributeError:
+            # this mean that the above code produces some error while running and
+            # driver instance died
+            pass
