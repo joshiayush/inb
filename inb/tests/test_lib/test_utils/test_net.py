@@ -39,26 +39,28 @@ from lib import ping
                      "Domain Name System Not Resolved")
 class TestPingFunction(unittest.TestCase):
 
-    @patch("subprocess.call")
-    def test_ping_method_with_valid_host(self: TestPingFunction, mock_subproc_call: Mock) -> None:
-        host = "google.com"
-        self.assertTrue(ping(host))
-        if platform.system().lower() == "windows":
-            param = "-n"
-        else:
-            param = "-c"
-        command: List[str] = ["ping", param, '1', host]
-        mock_subproc_call.assert_called_with(
-            command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+  @patch("subprocess.call")
+  def test_ping_method_with_valid_host(
+          self: TestPingFunction, mock_subproc_call: Mock) -> None:
+    host = "google.com"
+    self.assertTrue(ping(host))
+    if platform.system().lower() == "windows":
+      param = "-n"
+    else:
+      param = "-c"
+    command: List[str] = ["ping", param, '1', host]
+    mock_subproc_call.assert_called_with(
+        command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
 
-    @patch("subprocess.call")
-    def test_ping_method_with_malformed_host(self: TestPingFunction, mock_subproc_call: Mock) -> None:
-        host = "name@yahoo.com"
-        self.assertFalse(ping(host))
-        if platform.system().lower() == "windows":
-            param = "-n"
-        else:
-            param = "-c"
-        command: List[str] = ["ping", param, '1', host]
-        mock_subproc_call.assert_called_with(
-            command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+  @patch("subprocess.call")
+  def test_ping_method_with_malformed_host(
+          self: TestPingFunction, mock_subproc_call: Mock) -> None:
+    host = "name@yahoo.com"
+    self.assertFalse(ping(host))
+    if platform.system().lower() == "windows":
+      param = "-n"
+    else:
+      param = "-c"
+    command: List[str] = ["ping", param, '1', host]
+    mock_subproc_call.assert_called_with(
+        command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)

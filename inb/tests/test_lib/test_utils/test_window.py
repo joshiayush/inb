@@ -33,15 +33,16 @@ from lib import Terminal
 
 class TestTerminalClass(unittest.TestCase):
 
-    def setUp(self: TestTerminalClass) -> None:
-        self.t = Terminal()
+  def setUp(self: TestTerminalClass) -> None:
+    self.t = Terminal()
 
-    @patch("sys.stdout.write")
-    def test_setcursorposition_method_with_valid_x_and_y(self: TestTerminalClass, mock_stdout_write: Mock) -> None:
-        self.t.setcursorposition(10, 10)
-        mock_stdout_write.assert_called_with("%c[%d;%df" % (0x1B, 10, 10))
+  @patch("sys.stdout.write")
+  def test_setcursorposition_method_with_valid_x_and_y(
+          self: TestTerminalClass, mock_stdout_write: Mock) -> None:
+    self.t.setcursorposition(10, 10)
+    mock_stdout_write.assert_called_with("%c[%d;%df" % (0x1B, 10, 10))
 
-    def test_getcursorposition_method(self: TestTerminalClass) -> None:
-        (x, y) = self.t.getcursorposition()
-        self.assertIsInstance(x, int)
-        self.assertIsInstance(y, int)
+  def test_getcursorposition_method(self: TestTerminalClass) -> None:
+    (x, y) = self.t.getcursorposition()
+    self.assertIsInstance(x, int)
+    self.assertIsInstance(y, int)

@@ -27,18 +27,18 @@ from typing import Any
 
 
 def _type(t: Any) -> str:
-    """Function _type() returns the class name of the object given.
+  """Function _type() returns the class name of the object given.
 
-    :Args:
-        - t: {Any} Object we need to find the class name for.
+  :Args:
+      - t: {Any} Object we need to find the class name for.
 
-    :Returns:
-        - {str} Class name if __name__ attribute is present otherwise None.
-    """
-    try:
-        return t.__name__
-    except AttributeError:
-        return None
+  :Returns:
+      - {str} Class name if __name__ attribute is present otherwise None.
+  """
+  try:
+    return t.__name__
+  except AttributeError:
+    return None
 
 
 """Function is_int() returns True if the instance given is an int.
@@ -83,29 +83,29 @@ is_none: function = lambda field: field is None
 
 
 def is_empty(field: str) -> bool:
-    """Function is_empty() returns True if the instance given is empty.
+  """Function is_empty() returns True if the instance given is empty.
 
-    :Args:
-        - field: {str} Instance.
+  :Args:
+      - field: {str} Instance.
 
-    :Returns:
-        - {bool} True if the given instance is empty otherwise False.
-    """
-    if is_str(field):
-        return field.strip() == ''
-    return False
+  :Returns:
+      - {bool} True if the given instance is empty otherwise False.
+  """
+  if is_str(field):
+    return field.strip() == ''
+  return False
 
 
 def is_present(obj: Any, field: Any) -> bool:
-    """Function is_present() returns True if the instance given contains the obj.
+  """Function is_present() returns True if the instance given contains the obj.
 
-    :Args:
-        - field: {Any} Instance.
-        - obj: {Any} Instance to find.
+  :Args:
+      - field: {Any} Instance.
+      - obj: {Any} Instance to find.
 
-    :Returns:
-        - {bool} True if the instance given contains obj otherwise False.
-    """
-    if not is_int(field):
-        return obj in field
-    return False
+  :Returns:
+      - {bool} True if the instance given contains obj otherwise False.
+  """
+  if not is_int(field):
+    return obj in field
+  return False

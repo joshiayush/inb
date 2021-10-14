@@ -23,32 +23,23 @@
 # from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!
 from __future__ import annotations
 
-import unittest
-
-from lib import levenshtein
+import git
 
 
-class TestLevenshteinFunction(unittest.TestCase):
+class inb(object):
+  INB_GIT_REPO_HTTP_URL: str = "https://github.com/joshiayush/inb.git"
 
-  def test_levenshtein_function_with_invalid_argument_type(
-          self: TestLevenshteinFunction):
-    invalid_types = [(1, 1), ([1, 2, 3], [1, 2, 3]), ({
-        "levenshtein": "distance"}, {"levenshtein": "distance"})]
-    for type_ in invalid_types:
-      with self.assertRaises(TypeError):
-        levenshtein(*type_)
+  def __init__(self: inb, path: str) -> None:
+    try:
+      self.git_dir = git.Repo(
+          path=path).git_dir
+      self.repo = git.Repo(
+          path=path)
+    except git.exc.InvalidGitRepositoryError:
+      self.git_dir = None
 
-  def test_levenshtein_function_with_indentical_strings(
-          self: TestLevenshteinFunction):
-    str1 = "test_levenshtein_function_with_indentical_strings"
-    str2 = "test_levenshtein_function_with_indentical_strings"
-    self.assertEqual(levenshtein(
-        str1, str2), 0, "ERR: Levenshtein distance does not equal to 0 for string %(s1)s and %(s2)s" %
-        {"s1": str1, "s2": str2})
-
-  def test_levenshtein_function_with_strings_with_minimum_edit_distance_of_3(self: TestLevenshteinFunction):
-    str2 = "kitten"
-    str1 = "sitting"
-    self.assertEqual(levenshtein(
-        str1, str2), 3, "ERR: Levenshtein distance does not equal to 3 for string %(s1)s and %(s2)s" %
-        {"s1": str1, "s2": str2})
+  def upgrade(self: inb) -> None:
+    if self.git_dir:
+      origin = self.repo.remotes.origin
+      origin.pull()
+      return

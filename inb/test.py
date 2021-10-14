@@ -52,4 +52,4 @@ from tests import TestDriverClass
 from tests import TestLinkedInSearchConnectClass
 
 if __name__ == "__main__":
-    unittest.main()
+  unittest.main()

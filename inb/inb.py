@@ -72,13 +72,14 @@ disable_logging("urllib3", logging.CRITICAL)
 #   -h, --help            show this help message and exit
 #
 
-parser = ArgumentParser(prog="inb",
-                        description=(
-                             f"""{CreateFigletString("inb")}\n"""
-                             f"""inb Bash, version {__version__}(1)-release (inb-{__version__})\n"""
-                             f"""These commands are defined internally. Type '--help' to see this list\n"""
-                             f"""Type (command) --help to know more about that command"""),
-                        formatter_class=RawDescriptionHelpFormatter)
+parser = ArgumentParser(
+    prog="inb",
+    description=(
+        f"""{CreateFigletString("inb")}\n"""
+        f"""inb Bash, version {__version__}(1)-release (inb-{__version__})\n"""
+        f"""These commands are defined internally. Type '--help' to see this list\n"""
+        f"""Type (command) --help to know more about that command"""),
+    formatter_class=RawDescriptionHelpFormatter)
 
 subparsers = parser.add_subparsers(help="available actions",
                                    metavar=None)
@@ -113,12 +114,13 @@ subparsers = parser.add_subparsers(help="available actions",
 #                         set browser in full screen
 #
 
-send = subparsers.add_parser("send",
-                             description=(
-                                 f"""{CreateFigletString("inb")}\n"""
-                                 """Sends invitation to people on linkedin."""),
-                             formatter_class=RawDescriptionHelpFormatter,
-                             help=("""sends invitation to people on linkedin."""))
+send = subparsers.add_parser(
+    "send",
+    description=(
+        f"""{CreateFigletString("inb")}\n"""
+        """Sends invitation to people on linkedin."""),
+    formatter_class=RawDescriptionHelpFormatter,
+    help=("""sends invitation to people on linkedin."""))
 
 send.add_argument("-e", "--email",
                   type=str,
@@ -155,14 +157,15 @@ send.add_argument("-p", "--password",
 limit_subparsers = send.add_subparsers(help="available actions",
                                        metavar=None)
 
-limit = limit_subparsers.add_parser("limit",
-                                    description=(
-                                        f"""{CreateFigletString("inb")}\n"""
-                                        """It is used to set the daily invitation limit\n"""
-                                        """Limit must not exceed by 80 otherwise you'll be blocked for a entire\n"""
-                                        """week"""),
-                                    formatter_class=RawDescriptionHelpFormatter,
-                                    help=("""sets the daily invitation limit"""))
+limit = limit_subparsers.add_parser(
+    "limit",
+    description=(
+        f"""{CreateFigletString("inb")}\n"""
+        """It is used to set the daily invitation limit\n"""
+        """Limit must not exceed by 80 otherwise you'll be blocked for a entire\n"""
+        """week"""),
+    formatter_class=RawDescriptionHelpFormatter,
+    help=("""sets the daily invitation limit"""))
 
 limit.add_argument("limit",
                    type=int,
@@ -222,12 +225,13 @@ send.set_defaults(which="send",
 #                         set browser in full screen
 #
 
-connect = subparsers.add_parser("connect",
-                                description=(
-                                    f"""{CreateFigletString("inb")}\n"""
-                                    """Connects you with the given profile."""),
-                                formatter_class=RawDescriptionHelpFormatter,
-                                help=("""connects you with the given profile."""))
+connect = subparsers.add_parser(
+    "connect",
+    description=(
+        f"""{CreateFigletString("inb")}\n"""
+        """Connects you with the given profile."""),
+    formatter_class=RawDescriptionHelpFormatter,
+    help=("""connects you with the given profile."""))
 
 connect.add_argument("profileid",
                      type=str,
@@ -310,12 +314,13 @@ connect.set_defaults(which="connect",
 #                         set browser in full screen
 #
 
-search = subparsers.add_parser("search",
-                               description=(
-                                   f"""{CreateFigletString("inb")}\n"""
-                                   """Searches people on LinkedIn and then invites them."""),
-                               formatter_class=RawDescriptionHelpFormatter,
-                               help=("""searches people on LinekdIn and then invites them."""))
+search = subparsers.add_parser(
+    "search",
+    description=(
+        f"""{CreateFigletString("inb")}\n"""
+        """Searches people on LinkedIn and then invites them."""),
+    formatter_class=RawDescriptionHelpFormatter,
+    help=("""searches people on LinekdIn and then invites them."""))
 
 search.add_argument("-e", "--email",
                     type=str,
@@ -332,11 +337,9 @@ search.add_argument("-k", "--keyword",
                     nargs=NARGS.OPTIONAL,
                     default=None,
                     help="Keyword to search for")
-search.add_argument("-l", "--location",
-                    type=str,
-                    nargs=NARGS.OPTIONAL,
-                    default=None,
-                    help="Location(s) to search in (separated by (:) colon)")
+search.add_argument(
+    "-l", "--location", type=str, nargs=NARGS.OPTIONAL, default=None,
+    help="Location(s) to search in (separated by (:) colon)")
 search.add_argument("-t", "--title",
                     type=str,
                     nargs=NARGS.OPTIONAL,
@@ -357,11 +360,10 @@ search.add_argument("-s", "--school",
                     nargs=NARGS.OPTIONAL,
                     default=None,
                     help="Person's school")
-search.add_argument("-inds", "--industry",
-                    type=str,
-                    nargs=NARGS.OPTIONAL,
-                    default=None,
-                    help="Industry(ies) to search in (separated by (:) colon)")
+search.add_argument(
+    "-inds", "--industry", type=str, nargs=NARGS.OPTIONAL,
+    default=None,
+    help="Industry(ies) to search in (separated by (:) colon)")
 search.add_argument("-cc", "--current-company",
                     type=str,
                     nargs=NARGS.OPTIONAL,
@@ -397,14 +399,15 @@ search.add_argument("-pl", "--profile-language",
 limit_subparsers = search.add_subparsers(help="available actions",
                                          metavar=None)
 
-limit = limit_subparsers.add_parser("limit",
-                                    description=(
-                                        f"""{CreateFigletString("inb")}\n"""
-                                        """It is used to set the daily invitation limit\n"""
-                                        """Limit must not exceed by 80 otherwise you'll be blocked for a entire\n"""
-                                        """week"""),
-                                    formatter_class=RawDescriptionHelpFormatter,
-                                    help=("""sets the daily invitation limit"""))
+limit = limit_subparsers.add_parser(
+    "limit",
+    description=(
+        f"""{CreateFigletString("inb")}\n"""
+        """It is used to set the daily invitation limit\n"""
+        """Limit must not exceed by 80 otherwise you'll be blocked for a entire\n"""
+        """week"""),
+    formatter_class=RawDescriptionHelpFormatter,
+    help=("""sets the daily invitation limit"""))
 
 limit.add_argument("limit",
                    type=int,
@@ -471,15 +474,16 @@ search.set_defaults(which="search",
 #   -h, --help  show this help message and exit
 #
 
-config = subparsers.add_parser("config",
-                               description=(
-                                   f"""{CreateFigletString("inb")}\n"""
-                                   """It is used to add user's credentials to the database\n"""
-                                   """Adding user's credentials to the database for ever or until user deletes\n"""
-                                   """them makes it feasible for user to send invitations without entering the\n"""
-                                   """fields again and again"""),
-                               formatter_class=RawDescriptionHelpFormatter,
-                               help=("""used to store user's credentials"""))
+config = subparsers.add_parser(
+    "config",
+    description=(
+        f"""{CreateFigletString("inb")}\n"""
+        """It is used to add user's credentials to the database\n"""
+        """Adding user's credentials to the database for ever or until user deletes\n"""
+        """them makes it feasible for user to send invitations without entering the\n"""
+        """fields again and again"""),
+    formatter_class=RawDescriptionHelpFormatter,
+    help=("""used to store user's credentials"""))
 
 config.add_argument("EMAIL",
                     type=str,
@@ -523,13 +527,14 @@ config.set_defaults(which="config",
 #   -d, --decrypt   print information in decrypt form
 #
 
-show = subparsers.add_parser("show",
-                             description=(
-                                 f"""{CreateFigletString("inb")}\n"""
-                                 """It prints the information stored in the database\n"""
-                                 """For example -> email, password ..."""),
-                             formatter_class=RawDescriptionHelpFormatter,
-                             help=("""prints the information that is in the database"""))
+show = subparsers.add_parser(
+    "show",
+    description=(
+        f"""{CreateFigletString("inb")}\n"""
+        """It prints the information stored in the database\n"""
+        """For example -> email, password ..."""),
+    formatter_class=RawDescriptionHelpFormatter,
+    help=("""prints the information that is in the database"""))
 
 show.add_argument("keyword",
                   type=str,
@@ -575,13 +580,14 @@ show.set_defaults(which="show",
 #   -h, --help  show this help message and exit
 #
 
-delete = subparsers.add_parser("delete",
-                               description=(
-                                   f"""{CreateFigletString("inb")}\n"""
-                                   """It deletes the information stored in the database\n"""
-                                   """'delete' deletes information like 'key', 'cookies' ..."""),
-                               formatter_class=RawDescriptionHelpFormatter,
-                               help=("""deletes the information stored in the database"""))
+delete = subparsers.add_parser(
+    "delete",
+    description=(
+        f"""{CreateFigletString("inb")}\n"""
+        """It deletes the information stored in the database\n"""
+        """'delete' deletes information like 'key', 'cookies' ..."""),
+    formatter_class=RawDescriptionHelpFormatter,
+    help=("""deletes the information stored in the database"""))
 
 delete.add_argument("keyword",
                     type=str)
@@ -614,12 +620,13 @@ delete.set_defaults(which="delete",
 #   -e, --email     print developer email address
 #
 
-developer = subparsers.add_parser("developer",
-                                  description=(
-                                      f"""{CreateFigletString("inb")}\n"""
-                                      """It prints the information about the author"""),
-                                  formatter_class=RawDescriptionHelpFormatter,
-                                  help=("""prints the information about the author"""))
+developer = subparsers.add_parser(
+    "developer",
+    description=(
+        f"""{CreateFigletString("inb")}\n"""
+        """It prints the information about the author"""),
+    formatter_class=RawDescriptionHelpFormatter,
+    help=("""prints the information about the author"""))
 
 developer.add_argument("-n", "--name",
                        action=OPT_ARGS_ACTION.STORE_TRUE,
@@ -649,7 +656,7 @@ developer.set_defaults(which="developer",
                        debug=False)
 
 if len(sys.argv) <= 1:
-    exit()
+  exit()
 
 # Exceptions that are not in this tuple will be printed with their stacktrace.
 #
@@ -662,6 +669,6 @@ exceptions = tuple([EmtpyDatabaseException,
                     InternetNotConnectedException])
 
 try:
-    Handler(parser.parse_args()).handle_command()
+  Handler(parser.parse_args()).handle_command()
 except exceptions as exc:
-    parser.error(exc, usage=False)
+  parser.error(exc, usage=False)

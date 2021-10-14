@@ -48,142 +48,142 @@ from selenium.webdriver.common.action_chains import ActionChains
 
 
 class LinkedInConnect(object):
-    __INVITATION_SENT: int = 0
-    MY_NETWORK_PAGE: str = "https://www.linkedin.com/mynetwork/"
+  __INVITATION_SENT: int = 0
+  MY_NETWORK_PAGE: str = "https://www.linkedin.com/mynetwork/"
 
-    def __init__(
-        self: LinkedInConnect,
-        driver: webdriver.Chrome,
-        limit: int = 40
-    ) -> None:
-        """LinkedInConnectionsAuto class constructor to initialise LinkedInConnectionsAuto object.
+  def __init__(
+      self: LinkedInConnect,
+      driver: webdriver.Chrome,
+      limit: int = 40
+  ) -> None:
+    """LinkedInConnectionsAuto class constructor to initialise LinkedInConnectionsAuto object.
 
-        :Args:
-            - self: {LinkedInConnectionsAuto} object
-            - driver: {webdriver.Chrome} chromedriver instance
-            - limit: {int} daily invitation limit
+    :Args:
+        - self: {LinkedInConnectionsAuto} object
+        - driver: {webdriver.Chrome} chromedriver instance
+        - limit: {int} daily invitation limit
 
-        :Returns:
-            - {LinkedInConnectionsAuto} LinkedInConnectionsAuto object
+    :Returns:
+        - {LinkedInConnectionsAuto} LinkedInConnectionsAuto object
 
-        :Raises:
-            - ConnectionLimitExceededException if user gives a connection limit that exceeds 80
-        """
-        if not isinstance(driver, webdriver.Chrome):
-            raise Exception(
-                "Object '%(driver)s' is not a 'webdriver.Chrome' object!" % {
-                    "driver": _type(driver)})
-        self._driver = driver
+    :Raises:
+        - ConnectionLimitExceededException if user gives a connection limit that exceeds 80
+    """
+    if not isinstance(driver, webdriver.Chrome):
+      raise Exception(
+          "Object '%(driver)s' is not a 'webdriver.Chrome' object!" %
+          {"driver": _type(driver)})
+    self._driver = driver
 
-        if limit > 80:
-            raise ConnectionLimitExceededException(
-                "Daily invitation limit can't be greater than 80, we recommend 40!")
-        self._limit = limit
+    if limit > 80:
+      raise ConnectionLimitExceededException(
+          "Daily invitation limit can't be greater than 80, we recommend 40!")
+    self._limit = limit
 
-    def _get_mynetwork(function_: function) -> None:
-        """Method get_my_network() sends a GET request to the network page of LinkedIn.
+  def _get_mynetwork(function_: function) -> None:
+    """Method get_my_network() sends a GET request to the network page of LinkedIn.
 
-        :Args:
-            - self: {LinkedInConnectionsAuto} object
-            - _url: {str} url to send GET request to
+    :Args:
+        - self: {LinkedInConnectionsAuto} object
+        - _url: {str} url to send GET request to
 
-        :Returns:
-            - {None}
+    :Returns:
+        - {None}
 
-        :Raises:
-            - EmptyResponseException if there is a TimeoutException
-        """
-        @functools.wraps(function_)
-        def wrapper(self: LinkedInConnect, *args: List[Any], **kwargs: Dict[Any, Any]) -> None:
-            nonlocal function_
-            try:
-                self._driver.get(LinkedInConnect.MY_NETWORK_PAGE)
-            except TimeoutException:
-                raise TimeoutException(
-                    "ERR: Cannot get mynetwork page due to weak network!")
-            else:
-                function_(self, *args, **kwargs)
-        return wrapper
+    :Raises:
+        - EmptyResponseException if there is a TimeoutException
+    """
+    @functools.wraps(function_)
+    def wrapper(
+            self: LinkedInConnect, *args: List[Any],
+            **kwargs: Dict[Any, Any]) -> None:
+      nonlocal function_
+      try:
+        self._driver.get(LinkedInConnect.MY_NETWORK_PAGE)
+      except TimeoutException:
+        raise TimeoutException(
+            "ERR: Cannot get mynetwork page due to weak network!")
+      else:
+        function_(self, *args, **kwargs)
+    return wrapper
 
-    def _send_invitation(self: LinkedInConnect) -> None:
-        """Method send_invitation() starts sending invitation to people on linkedin.
+  def _send_invitation(self: LinkedInConnect) -> None:
+    """Method send_invitation() starts sending invitation to people on linkedin.
 
-        :Args:
-            - self: {LinkedInConnectionsAuto} object
+    :Args:
+        - self: {LinkedInConnectionsAuto} object
 
-        :Returns:
-            - {None}
-        """
-        start = time.time()
+    :Returns:
+        - {None}
+    """
+    start = time.time()
 
-        p = Person(self._driver)
-        person = p.get_suggestion_box_element()
+    p = Person(self._driver)
+    person = p.get_suggestion_box_element()
 
-        invitation = Invitation()
-        while person:
-            if LinkedInConnect.__INVITATION_SENT == self._limit:
-                break
+    invitation = Invitation()
+    while person:
+      if LinkedInConnect.__INVITATION_SENT == self._limit:
+        break
 
-            try:
-                ActionChains(self._driver).move_to_element(
-                    person.connect_button).click().perform()
-                invitation.set_invitation_fields(name=person.name,
-                                                 occupation=person.occupation,
-                                                 status="sent",
-                                                 elapsed_time=time.time() - start)
-                invitation.status(come_back_by=8)
-                LinkedInConnect.__INVITATION_SENT += 1
-            except (ElementNotInteractableException,
-                    ElementClickInterceptedException) as error:
-                if isinstance(error, ElementClickInterceptedException):
-                    break
-                invitation.set_invitation_fields(name=person.name,
-                                                 occupation=person.occupation,
-                                                 status="sent",
-                                                 elapsed_time=time.time() - start)
-                invitation.status(come_back_by=8)
+      try:
+        ActionChains(self._driver).move_to_element(
+            person.connect_button).click().perform()
+        invitation.set_invitation_fields(
+            name=person.name, occupation=person.occupation,
+            status="sent", elapsed_time=time.time() - start)
+        invitation.status(come_back_by=8)
+        LinkedInConnect.__INVITATION_SENT += 1
+      except (ElementNotInteractableException,
+              ElementClickInterceptedException) as error:
+        if isinstance(error, ElementClickInterceptedException):
+          break
+        invitation.set_invitation_fields(
+            name=person.name, occupation=person.occupation,
+            status="sent", elapsed_time=time.time() - start)
+        invitation.status(come_back_by=8)
 
-            person = p.get_suggestion_box_element()
+      person = p.get_suggestion_box_element()
 
-    def _execute_cleaners(self: LinkedInConnect) -> None:
-        """Method execute_cleaners() scours the unwanted element from the page during the
-        connect process.
+  def _execute_cleaners(self: LinkedInConnect) -> None:
+    """Method execute_cleaners() scours the unwanted element from the page during the
+    connect process.
 
-        :Args:
-            - self: {LinkedInConnectionsAuto}
+    :Args:
+        - self: {LinkedInConnectionsAuto}
 
-        :Returns:
-            - {None}
-        """
-        Cleaner(self._driver).clear_message_overlay()
+    :Returns:
+        - {None}
+    """
+    Cleaner(self._driver).clear_message_overlay()
 
-    @_get_mynetwork
-    def run(self: LinkedInConnect) -> None:
-        """Method run() calls the send_invitation method, but first it assures that the object
-        self has driver property in it.
+  @_get_mynetwork
+  def run(self: LinkedInConnect) -> None:
+    """Method run() calls the send_invitation method, but first it assures that the object
+    self has driver property in it.
 
-        :Args:
-            - self: {LinkedInConnectionsAuto} object
+    :Args:
+        - self: {LinkedInConnectionsAuto} object
 
-        :Returns:
-            - {None}
-        """
-        self._execute_cleaners()
-        self._send_invitation()
+    :Returns:
+        - {None}
+    """
+    self._execute_cleaners()
+    self._send_invitation()
 
-    def __del__(self: LinkedInConnect) -> None:
-        """LinkedInConnectionsAuto destructor to de-initialise LinkedInConnectionsAuto object.
+  def __del__(self: LinkedInConnect) -> None:
+    """LinkedInConnectionsAuto destructor to de-initialise LinkedInConnectionsAuto object.
 
-        :Args:
-            - self: {LinkedInConnectionsAuto} object
+    :Args:
+        - self: {LinkedInConnectionsAuto} object
 
-        :Returns:
-            - {None}
-        """
-        LinkedInConnect.__INVITATION_SENT = 0
-        try:
-            self._driver.quit()
-        except AttributeError:
-            # this mean that the above code produces some error while running and
-            # driver instance died
-            pass
+    :Returns:
+        - {None}
+    """
+    LinkedInConnect.__INVITATION_SENT = 0
+    try:
+      self._driver.quit()
+    except AttributeError:
+      # this mean that the above code produces some error while running and
+      # driver instance died
+      pass

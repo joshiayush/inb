@@ -29,62 +29,66 @@ from .type import is_str
 from .type import is_list
 
 
-def _set_logging_level(name: Union[str, list], level: Union[int, str, list]) -> None:
-    """Private function _set_logging_level() sets the logging level of the given module.
+def _set_logging_level(
+        name: Union[str, list],
+        level: Union[int, str, list]) -> None:
+  """Private function _set_logging_level() sets the logging level of the given module.
 
-    :Args:
-        - name: {Union[str, list]} Name or names.
-        - level: {Union[int, str, list]} Level or levels.
+  :Args:
+      - name: {Union[str, list]} Name or names.
+      - level: {Union[int, str, list]} Level or levels.
 
-    :Returns:
-        - {None}
-    """
-    if is_str(name):
-        if not is_str(level) and not is_int(level):
-            raise TypeError(
-                "_set_logging_level: argument level must either be an str or an int when name is str")
-        logging.getLogger(name).setLevel(level)
-    elif is_list(name):
-        if not is_str(level) and not is_int(level) and not is_list(level):
-            raise TypeError(
-                "_set_logging_level: argument level must either be an str or an int or a list when name is list")
-        elif is_list(level):
-            assert len(name) == len(
-                level), "_set_logging_level: name list and level list are not equal"
-            for name_, level_ in zip(name, level):
-                logging.getLogger(name_).setLevel(level_)
-        else:
-            for name_ in name:
-                logging.getLogger(name_) .setLevel(level)
-
-
-def disable_logging(name: str, level: Union[int, str] = logging.CRITICAL) -> None:
-    """Function disable_logging() disables the logging of the given module.
-
-    It disables the logging of the given module by setting the logging level to the highest
-    value as possible. It may also get a level value explicitly.
-
-    :Args:
-        - name: {str} Module name.
-        - level: {Union[int, str]} Level.
-
-    :Returns:
-        - {None}
-    """
-    _set_logging_level(name, level)
+  :Returns:
+      - {None}
+  """
+  if is_str(name):
+    if not is_str(level) and not is_int(level):
+      raise TypeError(
+          "_set_logging_level: argument level must either be an str or an int when name is str")
+    logging.getLogger(name).setLevel(level)
+  elif is_list(name):
+    if not is_str(level) and not is_int(level) and not is_list(level):
+      raise TypeError(
+          "_set_logging_level: argument level must either be an str or an int or a list when name is list")
+    elif is_list(level):
+      assert len(name) == len(
+          level), "_set_logging_level: name list and level list are not equal"
+      for name_, level_ in zip(name, level):
+        logging.getLogger(name_).setLevel(level_)
+    else:
+      for name_ in name:
+        logging.getLogger(name_) .setLevel(level)
 
 
-def enable_logging(name: str, level: Union[int, str] = logging.DEBUG) -> None:
-    """Function enable_logging() enables the logging of the given module.
+def disable_logging(
+        name: str, level: Union[int, str] = logging.CRITICAL) -> None:
+  """Function disable_logging() disables the logging of the given module.
 
-    It enables the logging of the given module by setting the logging level to the lowest
-    value as possible. It may also get a level value explicitly.
+  It disables the logging of the given module by setting the logging level to the highest
+  value as possible. It may also get a level value explicitly.
 
-    :Args:
-        - name: {str} Module name.
-        - level: {Union[int, str]} Level.
+  :Args:
+      - name: {str} Module name.
+      - level: {Union[int, str]} Level.
 
-    :Returns:
-        - {None}
-    """
-    _set_logging_level(name, level)
+  :Returns:
+      - {None}
+  """
+  _set_logging_level(name, level)
+
+
+def enable_logging(
+        name: str, level: Union[int, str] = logging.DEBUG) -> None:
+  """Function enable_logging() enables the logging of the given module.
+
+  It enables the logging of the given module by setting the logging level to the lowest
+  value as possible. It may also get a level value explicitly.
+
+  :Args:
+      - name: {str} Module name.
+      - level: {Union[int, str]} Level.
+
+  :Returns:
+      - {None}
+  """
+  _set_logging_level(name, level)

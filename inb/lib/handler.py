@@ -30,72 +30,72 @@ from .command import Command
 
 
 class Handler(object):
-    def __init__(self: Handler, namespace: argparse.Namespace) -> None:
-        """Constructor method initializes the logging object and the namespace object.
+  def __init__(self: Handler, namespace: argparse.Namespace) -> None:
+    """Constructor method initializes the logging object and the namespace object.
 
-        :Args:
-            - self: {Handler} self.
-            - namespace: {argparse.Namespace} Argparse namespace.
+    :Args:
+        - self: {Handler} self.
+        - namespace: {argparse.Namespace} Argparse namespace.
 
-        :Returns:
-            - {None}
+    :Returns:
+        - {None}
 
-        :Raises:
-            - {TypeError} If namespace given is None.
-        """
-        if namespace and isinstance(namespace, argparse.Namespace):
-            self.namespace = namespace
-        else:
-            raise TypeError("Handler: Namespace is a %(type)s object" % {
-                "type": _type(namespace)})
+    :Raises:
+        - {TypeError} If namespace given is None.
+    """
+    if namespace and isinstance(namespace, argparse.Namespace):
+      self.namespace = namespace
+    else:
+      raise TypeError("Handler: Namespace is a %(type)s object" % {
+          "type": _type(namespace)})
 
-    def handle_command(self: Handler) -> None:
-        """Method handle_command() handles the commands given by the user.
+  def handle_command(self: Handler) -> None:
+    """Method handle_command() handles the commands given by the user.
 
-        :Args:
-            - self: {Handler} self.
+    :Args:
+        - self: {Handler} self.
 
-        :Returns:
-            - {None}
-        """
-        if self.namespace.which == "send":
-            try:
-                Command(self.namespace).send()
-            except Exception as e:
-                raise e
-            return
+    :Returns:
+        - {None}
+    """
+    if self.namespace.which == "send":
+      try:
+        Command(self.namespace).send()
+      except Exception as e:
+        raise e
+      return
 
-        if self.namespace.which == "search":
-            try:
-                Command(self.namespace).search()
-            except Exception as exc:
-                raise exc
-            return
+    if self.namespace.which == "search":
+      try:
+        Command(self.namespace).search()
+      except Exception as exc:
+        raise exc
+      return
 
-        if self.namespace.which == "show":
-            try:
-                Command(self.namespace).show()
-            except Exception as e:
-                raise e
-            return
+    if self.namespace.which == "show":
+      try:
+        Command(self.namespace).show()
+      except Exception as e:
+        raise e
+      return
 
-        if self.namespace.which == "config":
-            try:
-                Command(self.namespace).config()
-            except Exception as e:
-                raise e
-            return
+    if self.namespace.which == "config":
+      try:
+        Command(self.namespace).config()
+      except Exception as e:
+        raise e
+      return
 
-        if self.namespace.which == "delete":
-            try:
-                Command(self.namespace).delete()
-            except Exception as e:
-                raise e
-            return
+    if self.namespace.which == "delete":
+      try:
+        Command(self.namespace).delete()
+      except Exception as e:
+        raise e
+      return
 
-        if self.namespace.which == "developer":
-            try:
-                Command(self.namespace).developer()
-            except Exception as e:
-                raise e
-            return
+    if self.namespace.which == "developer":
+      try:
+        Command(self.namespace).developer()
+      except Exception as e:
+        raise e
+      return

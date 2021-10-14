@@ -44,69 +44,73 @@ from ..invitation.status import Invitation
 
 
 class LinkedInConnectViaId(object):
-    WAIT: int = 60
-    BASE_URL: str = "https://www.linkedin.com/in/"
+  WAIT: int = 60
+  BASE_URL: str = "https://www.linkedin.com/in/"
 
-    def __init__(self: LinkedInConnectViaId, driver: webdriver.Chrome, person_id: str) -> None:
-        if not isinstance(driver, webdriver.Chrome):
-            raise Exception(
-                "Object '%(driver)s' is not a 'webdriver.Chrome' object!" % {
-                    "driver": _type(driver)})
-        self._driver = driver
+  def __init__(
+          self: LinkedInConnectViaId, driver: webdriver.Chrome,
+          person_id: str) -> None:
+    if not isinstance(driver, webdriver.Chrome):
+      raise Exception(
+          "Object '%(driver)s' is not a 'webdriver.Chrome' object!" %
+          {"driver": _type(driver)})
+    self._driver = driver
 
-        _re = re.compile(r"([a-z]+-?)+([a-zA-Z0-9]+)?", re.IGNORECASE)
-        if not _re.search(person_id).group(0):
-            raise Exception(
-                "LinkedInConnectViaId: Parameter provided is not a valid person id!")
-        self.id_url = self.BASE_URL + person_id + "/"
+    _re = re.compile(r"([a-z]+-?)+([a-zA-Z0-9]+)?", re.IGNORECASE)
+    if not _re.search(person_id).group(0):
+      raise Exception(
+          "LinkedInConnectViaId: Parameter provided is not a valid person id!")
+    self.id_url = self.BASE_URL + person_id + "/"
 
-    def _get_person_profile(function_: function) -> function:
-        @functools.wraps(function_)
-        def wrapper(self: LinkedInConnectViaId, *args: List[Any], **kwargs: Dict[Any, Any]) -> None:
-            nonlocal function_
-            try:
-                self._driver.get(self.id_url)
-            except TimeoutException:
-                raise TimeoutException(
-                    "ERR: Cannot get person profile page due to weak network!")
-            else:
-                function_(self, *args, **kwargs)
-        return wrapper
+  def _get_person_profile(function_: function) -> function:
+    @functools.wraps(function_)
+    def wrapper(
+            self: LinkedInConnectViaId, *args: List[Any],
+            **kwargs: Dict[Any, Any]) -> None:
+      nonlocal function_
+      try:
+        self._driver.get(self.id_url)
+      except TimeoutException:
+        raise TimeoutException(
+            "ERR: Cannot get person profile page due to weak network!")
+      else:
+        function_(self, *args, **kwargs)
+    return wrapper
 
-    def __execute_cleaners(self: LinkedInConnectViaId) -> None:
-        """Method execute_cleaners() scours the unwanted element from the page during the
-        connect process.
+  def __execute_cleaners(self: LinkedInConnectViaId) -> None:
+    """Method execute_cleaners() scours the unwanted element from the page during the
+    connect process.
 
-        :Args:
-            - self: {LinkedInConnectionsAuto}
+    :Args:
+        - self: {LinkedInConnectionsAuto}
 
-        :Returns:
-            - {None}
-        """
-        Cleaner(self._driver).clear_message_overlay()
+    :Returns:
+        - {None}
+    """
+    Cleaner(self._driver).clear_message_overlay()
 
-    def __send_invitation(self: LinkedInConnectViaId) -> None:
-        p = Person(self._driver)
-        person = p.get_profile_element()
+  def __send_invitation(self: LinkedInConnectViaId) -> None:
+    p = Person(self._driver)
+    person = p.get_profile_element()
 
-        try:
-            ActionChains(self._driver).move_to_element(
-                person.connect_button).click().perform()
-            Invitation(name=person.name,
-                       occupation=person.occupation,
-                       status="sent").status()
-        except (ElementNotInteractableException,
-                ElementClickInterceptedException) as exc:
-            if isinstance(exc, ElementClickInterceptedException):
-                return
-            Invitation(name=person.name,
-                       occupation=person.occupation,
-                       status="failed").status()
+    try:
+      ActionChains(self._driver).move_to_element(
+          person.connect_button).click().perform()
+      Invitation(name=person.name,
+                 occupation=person.occupation,
+                 status="sent").status()
+    except (ElementNotInteractableException,
+            ElementClickInterceptedException) as exc:
+      if isinstance(exc, ElementClickInterceptedException):
+        return
+      Invitation(name=person.name,
+                 occupation=person.occupation,
+                 status="failed").status()
 
-    @_get_person_profile
-    def run(self: LinkedInConnectViaId) -> None:
-        self.__execute_cleaners()
-        self.__send_invitation()
+  @_get_person_profile
+  def run(self: LinkedInConnectViaId) -> None:
+    self.__execute_cleaners()
+    self.__send_invitation()
 
-    def __del__(self: LinkedInConnectViaId) -> None:
-        self._driver.quit()
+  def __del__(self: LinkedInConnectViaId) -> None:
+    self._driver.quit()

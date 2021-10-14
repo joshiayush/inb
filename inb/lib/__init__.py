@@ -45,9 +45,11 @@ __all__ = ["DRIVER_PATH"]
 
 
 def chromedriver_abs_path() -> str:
-    _dir_path = os.path.dirname(os.path.abspath(__file__))
-    _last_inb_indx = _dir_path.rfind("inb")
-    return os.path.join(_dir_path[:_last_inb_indx], "driver/chromedriver")
+  _dir_path = os.path.dirname(os.path.abspath(__file__))
+  _last_inb_indx = _dir_path.rfind("inb")
+  return os.path.join(
+      _dir_path[: _last_inb_indx],
+      "driver/chromedriver")
 
 
 DRIVER_PATH = chromedriver_abs_path()

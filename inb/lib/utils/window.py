@@ -32,57 +32,57 @@ from typing import TextIO
 
 
 class Terminal(object):
-    def setcursorposition(
-        self: Terminal,
-        x: int,
-        y: int,
-        file: TextIO = sys.stdout
-    ) -> None:
-        """Method setcursorposition() sets the console cursor position.
+  def setcursorposition(
+      self: Terminal,
+      x: int,
+      y: int,
+      file: TextIO = sys.stdout
+  ) -> None:
+    """Method setcursorposition() sets the console cursor position.
 
-        :Args:
-            - self: {Terminal}
-            - x: {int} column number for the cursor
-            - y: {int} row number for the cursor
+    :Args:
+        - self: {Terminal}
+        - x: {int} column number for the cursor
+        - y: {int} row number for the cursor
 
-        :Returns:
-            - {None}
-        """
-        if file == None:
-            file = sys.stdout
-        file.write("%c[%d;%df" % (0x1B, y, x))
+    :Returns:
+        - {None}
+    """
+    if file == None:
+      file = sys.stdout
+    file.write("%c[%d;%df" % (0x1B, y, x))
 
-    def getcursorposition(self: Terminal) -> tuple:
-        """Method getcursorposition() returns row and the column number at which the cursor is
-        currently located.
+  def getcursorposition(self: Terminal) -> tuple:
+    """Method getcursorposition() returns row and the column number at which the cursor is
+    currently located.
 
-        :Args:
-            - self: {Terminal}
+    :Args:
+        - self: {Terminal}
 
-        :Returns:
-            - {tuple} (row, column)
-        """
-        buffer: str = ''
-        stdin: int = sys.stdin.fileno()
-        tattr: list = termios.tcgetattr(stdin)
+    :Returns:
+        - {tuple} (row, column)
+    """
+    buffer: str = ''
+    stdin: int = sys.stdin.fileno()
+    tattr: list = termios.tcgetattr(stdin)
 
-        try:
-            tty.setcbreak(stdin, termios.TCSANOW)
-            sys.stdout.write("\x1b[6n")
-            sys.stdout.flush()
-            while True:
-                buffer += sys.stdin.read(1)
-                if buffer[-1] == 'R':
-                    break
-        finally:
-            termios.tcsetattr(stdin, termios.TCSANOW, tattr)
+    try:
+      tty.setcbreak(stdin, termios.TCSANOW)
+      sys.stdout.write("\x1b[6n")
+      sys.stdout.flush()
+      while True:
+        buffer += sys.stdin.read(1)
+        if buffer[-1] == 'R':
+          break
+    finally:
+      termios.tcsetattr(stdin, termios.TCSANOW, tattr)
 
-        # reading the actual values, but what if a keystroke appears while reading
-        # from stdin? As dirty work around, getcursorposition() returns if this fails: None
-        try:
-            matches = re.match(r"^\x1b\[(\d*);(\d*)R", buffer)
-            groups = matches.groups()
-        except AttributeError:
-            return None
+    # reading the actual values, but what if a keystroke appears while reading
+    # from stdin? As dirty work around, getcursorposition() returns if this fails: None
+    try:
+      matches = re.match(r"^\x1b\[(\d*);(\d*)R", buffer)
+      groups = matches.groups()
+    except AttributeError:
+      return None
 
-        return (int(groups[0]), int(groups[1]))
+    return (int(groups[0]), int(groups[1]))

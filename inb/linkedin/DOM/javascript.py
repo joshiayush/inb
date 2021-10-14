@@ -27,48 +27,49 @@ from selenium import webdriver
 
 
 class JS(object):
-    def __init__(self: JS, driver: webdriver.Chrome) -> None:
-        """Constructor method to initialize a Cleaner object.
+  def __init__(self: JS, driver: webdriver.Chrome) -> None:
+    """Constructor method to initialize a Cleaner object.
 
-        :Args:
-            - self: {Cleaner} self.
-            - driver: {webdriver} Chromedriver
+    :Args:
+        - self: {Cleaner} self.
+        - driver: {webdriver} Chromedriver
 
-        :Raises:
-            - {Exception} if 'driver' object is not a 'webdriver' instance.
-        """
-        if not isinstance(driver, webdriver.Chrome):
-            raise Exception("'%(driver_type)s' object is not a 'webdriver' object" % {
-                            "driver_type": type(driver)})
-        self._driver = driver
+    :Raises:
+        - {Exception} if 'driver' object is not a 'webdriver' instance.
+    """
+    if not isinstance(driver, webdriver.Chrome):
+      raise Exception(
+          "'%(driver_type)s' object is not a 'webdriver' object" %
+          {"driver_type": type(driver)})
+    self._driver = driver
 
-    def get_page_y_offset(self: JS) -> int:
-        """Method get_page_y_offset() returns the window.pageYOffset of the webpage, 
-        we need that so we can keep on scrolling untill the page offset becomes constant.
+  def get_page_y_offset(self: JS) -> int:
+    """Method get_page_y_offset() returns the window.pageYOffset of the webpage, 
+    we need that so we can keep on scrolling untill the page offset becomes constant.
 
-        :Args:
-            - self: {object} object from which '_driver' property is to be accessed.
+    :Args:
+        - self: {object} object from which '_driver' property is to be accessed.
 
-        :Returns:
-            - {int} window.pageYOffset
-        """
-        return self._driver.execute_script((
-            "return (window.pageYOffset !== undefined)"
-            "       ? window.pageYOffset"
-            "       : (document.documentElement || document.body.parentNode || document.body);"
-        ))
+    :Returns:
+        - {int} window.pageYOffset
+    """
+    return self._driver.execute_script((
+        "return (window.pageYOffset !== undefined)"
+        "       ? window.pageYOffset"
+        "       : (document.documentElement || document.body.parentNode || document.body);"
+    ))
 
-    def scroll_bottom(self: JS) -> None:
-        """Method scroll_bottom() scrolls the web page to the very bottom of it using 
-        the 'document.scrollingElement.scrollTop' property.
+  def scroll_bottom(self: JS) -> None:
+    """Method scroll_bottom() scrolls the web page to the very bottom of it using 
+    the 'document.scrollingElement.scrollTop' property.
 
-        :Args:
-            - self: {JS} object from which '_driver' property is to be accessed.
+    :Args:
+        - self: {JS} object from which '_driver' property is to be accessed.
 
-        :Returns:
-            - {None}
-        """
-        self._driver.execute_script((
-            "var scrollingElement = (document.scrollingElement || document.body);"
-            "scrollingElement.scrollTop = scrollingElement.scrollHeight;"
-        ))
+    :Returns:
+        - {None}
+    """
+    self._driver.execute_script((
+        "var scrollingElement = (document.scrollingElement || document.body);"
+        "scrollingElement.scrollTop = scrollingElement.scrollHeight;"
+    ))

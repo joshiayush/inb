@@ -40,52 +40,61 @@ from errors import WebDriverNotExecutableException
 
 class TestDriverClass(unittest.TestCase):
 
-    @unittest.skipIf(not os.getuid() == 0, "Requires root privileges!")
-    def test_constructor_method_with_invalid_executable_path(self: TestDriverClass) -> None:
-        paths = [1, (1, 2, 3), [1, 2, 3], {1: 1, 2: 2}]
-        for path in paths:
-            with self.assertRaises(WebDriverPathNotGivenException):
-                driver = Driver(path)
+  @unittest.skipIf(not os.getuid() == 0, "Requires root privileges!")
+  def test_constructor_method_with_invalid_executable_path(
+          self: TestDriverClass) -> None:
+    paths = [1, (1, 2, 3), [1, 2, 3], {1: 1, 2: 2}]
+    for path in paths:
+      with self.assertRaises(WebDriverPathNotGivenException):
+        driver = Driver(path)
 
-        original_file_permissions = stat.S_IMODE(os.lstat(DRIVER_PATH).st_mode)
+    original_file_permissions = stat.S_IMODE(
+        os.lstat(DRIVER_PATH).st_mode)
 
-        def remove_execute_permissions(path):
-            """Remove write permissions from this path, while keeping all other 
-            permissions intact.
+    def remove_execute_permissions(path):
+      """Remove write permissions from this path, while keeping all other 
+      permissions intact.
 
-            Params:
-                path:  The path whose permissions to alter.
-            """
-            NO_USER_EXECUTE = ~stat.S_IXUSR
-            NO_GROUP_EXECUTE = ~stat.S_IXGRP
-            NO_OTHER_EXECUTE = ~stat.S_IXOTH
-            NO_EXECUTE = NO_USER_EXECUTE & NO_GROUP_EXECUTE & NO_OTHER_EXECUTE
+      Params:
+          path:  The path whose permissions to alter.
+      """
+      NO_USER_EXECUTE = ~stat.S_IXUSR
+      NO_GROUP_EXECUTE = ~stat.S_IXGRP
+      NO_OTHER_EXECUTE = ~stat.S_IXOTH
+      NO_EXECUTE = NO_USER_EXECUTE & NO_GROUP_EXECUTE & NO_OTHER_EXECUTE
 
-            current_permissions = stat.S_IMODE(os.lstat(path).st_mode)
-            os.chmod(path, current_permissions & NO_EXECUTE)
+      current_permissions = stat.S_IMODE(os.lstat(path).st_mode)
+      os.chmod(path, current_permissions & NO_EXECUTE)
 
-        remove_execute_permissions(DRIVER_PATH)
-        with self.assertRaises(WebDriverNotExecutableException):
-            driver = Driver(driver_path=DRIVER_PATH)
+    remove_execute_permissions(DRIVER_PATH)
+    with self.assertRaises(WebDriverNotExecutableException):
+      driver = Driver(driver_path=DRIVER_PATH)
 
-        # place the original file permissions back
-        os.chmod(DRIVER_PATH, original_file_permissions)
+    # place the original file permissions back
+    os.chmod(DRIVER_PATH, original_file_permissions)
 
-    @patch("linkedin.Driver.enable_webdriver_chrome")
-    def test_constructor_method_with_valid_chromedriver_path(self: TestDriverClass, mock_enable_webdriver_chrome: Mock) -> None:
-        driver = Driver(driver_path=DRIVER_PATH)
-        mock_enable_webdriver_chrome.assert_called()
+  @patch("linkedin.Driver.enable_webdriver_chrome")
+  def test_constructor_method_with_valid_chromedriver_path(self: TestDriverClass, mock_enable_webdriver_chrome: Mock) -> None:
+    driver = Driver(driver_path=DRIVER_PATH)
+    mock_enable_webdriver_chrome.assert_called()
 
-    @patch("selenium.webdriver.ChromeOptions.add_argument")
-    def test_constructor_method_add_argument_internal_calls(self: TestDriverClass, mock_add_argument: Mock) -> None:
-        calls = [call(Driver.HEADLESS), call(Driver.INCOGNITO), call(Driver.NO_SANDBOX), call(Driver.DISABLE_GPU),
-                 call(Driver.START_MAXIMIZED), call(
-                     Driver.DISABLE_INFOBARS), call(Driver.ENABLE_AUTOMATION),
-                 call(Driver.DISABLE_EXTENSIONS), call(
-                     Driver.DISABLE_NOTIFICATIONS), call(Driver.DISABLE_SETUID_SANDBOX),
-                 call(Driver.IGNORE_CERTIFICATE_ERRORS)]
-        driver = Driver(driver_path=DRIVER_PATH, options=[
-                        Driver.HEADLESS, Driver.INCOGNITO, Driver.NO_SANDBOX, Driver.DISABLE_GPU, Driver.START_MAXIMIZED,
-                        Driver.DISABLE_INFOBARS, Driver.ENABLE_AUTOMATION, Driver.DISABLE_EXTENSIONS, Driver.DISABLE_NOTIFICATIONS,
-                        Driver.DISABLE_SETUID_SANDBOX, Driver.IGNORE_CERTIFICATE_ERRORS])
-        mock_add_argument.assert_has_calls(calls)
+  @patch("selenium.webdriver.ChromeOptions.add_argument")
+  def test_constructor_method_add_argument_internal_calls(
+          self: TestDriverClass, mock_add_argument: Mock) -> None:
+    calls = [
+        call(Driver.HEADLESS),
+        call(Driver.INCOGNITO),
+        call(Driver.NO_SANDBOX),
+        call(Driver.DISABLE_GPU),
+        call(Driver.START_MAXIMIZED),
+        call(Driver.DISABLE_INFOBARS),
+        call(Driver.ENABLE_AUTOMATION),
+        call(Driver.DISABLE_EXTENSIONS),
+        call(Driver.DISABLE_NOTIFICATIONS),
+        call(Driver.DISABLE_SETUID_SANDBOX),
+        call(Driver.IGNORE_CERTIFICATE_ERRORS)]
+    driver = Driver(driver_path=DRIVER_PATH, options=[
+                    Driver.HEADLESS, Driver.INCOGNITO, Driver.NO_SANDBOX, Driver.DISABLE_GPU, Driver.START_MAXIMIZED,
+                    Driver.DISABLE_INFOBARS, Driver.ENABLE_AUTOMATION, Driver.DISABLE_EXTENSIONS, Driver.DISABLE_NOTIFICATIONS,
+                    Driver.DISABLE_SETUID_SANDBOX, Driver.IGNORE_CERTIFICATE_ERRORS])
+    mock_add_argument.assert_has_calls(calls)

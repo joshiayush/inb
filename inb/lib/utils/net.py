@@ -27,25 +27,26 @@ import subprocess
 
 
 def ping(host: str = None) -> bool:
-    """Returns True if host (str) responds to a ping request.
+  """Returns True if host (str) responds to a ping request.
 
-    Remember that a host may not respond to a ping (ICMP) request even if the host 
-    name is valid.
+  Remember that a host may not respond to a ping (ICMP) request even if the host 
+  name is valid.
 
-    We avoid 'os.system' calls with 'subprocess.call' to avoid shell injection 
-    vulnerability.
+  We avoid 'os.system' calls with 'subprocess.call' to avoid shell injection 
+  vulnerability.
 
-    :Args:
-        - host: {str} Hostname.
+  :Args:
+      - host: {str} Hostname.
 
-    :Returns:
-        - {bool} True if server responds, false otherwise.
-    """
-    if not host:
-        host = "google.com"
-    if platform.system().lower() == "windows":
-        param = "-n"
-    else:
-        param = "-c"
-    command: List[str] = ["ping", param, '1', host]
-    return subprocess.call(command, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL) == 0
+  :Returns:
+      - {bool} True if server responds, false otherwise.
+  """
+  if not host:
+    host = "google.com"
+  if platform.system().lower() == "windows":
+    param = "-n"
+  else:
+    param = "-c"
+  command: List[str] = ["ping", param, '1', host]
+  return subprocess.call(command, stdout=subprocess.DEVNULL,
+                         stderr=subprocess.DEVNULL) == 0

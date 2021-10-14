@@ -34,72 +34,72 @@ __version__: str = "3.109.59"
 
 
 class Driver(object):
-    __SESSION_ALREADY_EXISTS: bool = False
+  __SESSION_ALREADY_EXISTS: bool = False
 
-    HEADLESS: str = "--headless"
-    INCOGNITO: str = "--incognito"
-    NO_SANDBOX: str = "--no-sandbox"
-    DISABLE_GPU: str = "--disable-gpu"
-    START_MAXIMIZED: str = "--start-maximized"
-    DISABLE_INFOBARS: str = "--disable-infobars"
-    ENABLE_AUTOMATION: str = "--enable-automation"
-    DISABLE_EXTENSIONS: str = "--disable-extensions"
-    DISABLE_NOTIFICATIONS: str = "--disable-notifications"
-    DISABLE_SETUID_SANDBOX: str = "--disable-setuid-sandbox"
-    IGNORE_CERTIFICATE_ERRORS: str = "--ignore-certificate-errors"
-    DEFAULT_HEADLESS_WINDOW_SIZE: str = "window-size=1200,1100"
+  HEADLESS: str = "--headless"
+  INCOGNITO: str = "--incognito"
+  NO_SANDBOX: str = "--no-sandbox"
+  DISABLE_GPU: str = "--disable-gpu"
+  START_MAXIMIZED: str = "--start-maximized"
+  DISABLE_INFOBARS: str = "--disable-infobars"
+  ENABLE_AUTOMATION: str = "--enable-automation"
+  DISABLE_EXTENSIONS: str = "--disable-extensions"
+  DISABLE_NOTIFICATIONS: str = "--disable-notifications"
+  DISABLE_SETUID_SANDBOX: str = "--disable-setuid-sandbox"
+  IGNORE_CERTIFICATE_ERRORS: str = "--ignore-certificate-errors"
+  DEFAULT_HEADLESS_WINDOW_SIZE: str = "window-size=1200,1100"
 
-    def __init__(self: Driver, driver_path: str = None, options: list = []) -> None:
-        if isinstance(driver_path, str):
-            if not Validator(driver_path).is_executable():
-                raise WebDriverNotExecutableException(
-                    "%(path)s is not executable!" % {"path": driver_path})
-        else:
-            raise WebDriverPathNotGivenException(
-                "User did not provide chromedriver's path!")
-        self._driver_path = driver_path
-        self._options = webdriver.ChromeOptions()
+  def __init__(self: Driver, driver_path: str = None, options: list = []) -> None:
+    if isinstance(driver_path, str):
+      if not Validator(driver_path).is_executable():
+        raise WebDriverNotExecutableException(
+            "%(path)s is not executable!" % {"path": driver_path})
+    else:
+      raise WebDriverPathNotGivenException(
+          "User did not provide chromedriver's path!")
+    self._driver_path = driver_path
+    self._options = webdriver.ChromeOptions()
 
-        if not len(options) == 0:
-            for arg in options:
-                self._options.add_argument(arg)
-        self.enable_webdriver_chrome()
+    if not len(options) == 0:
+      for arg in options:
+        self._options.add_argument(arg)
+    self.enable_webdriver_chrome()
 
-    def enable_webdriver_chrome(self: Driver) -> None:
-        """Method enable_web_driver() makes a webdriver object called by calling 
-        'webdriver.Chrome()' constructor.
+  def enable_webdriver_chrome(self: Driver) -> None:
+    """Method enable_web_driver() makes a webdriver object called by calling 
+    'webdriver.Chrome()' constructor.
 
-        :Args:
-            - self: {LinkedIn} object
-            - _options: {Options} to pass to webdriver.Chrome() constructor
+    :Args:
+        - self: {LinkedIn} object
+        - _options: {Options} to pass to webdriver.Chrome() constructor
 
-        :Returns:
-            - {None}
+    :Returns:
+        - {None}
 
-        """
-        if Driver.__SESSION_ALREADY_EXISTS:
-            return
-        Driver.__SESSION_ALREADY_EXISTS = True
-        self.driver = webdriver.Chrome(self._driver_path,
-                                       options=self._options)
+    """
+    if Driver.__SESSION_ALREADY_EXISTS:
+      return
+    Driver.__SESSION_ALREADY_EXISTS = True
+    self.driver = webdriver.Chrome(self._driver_path,
+                                   options=self._options)
 
-    def disable_webdriver_chrome(self: Driver) -> None:
-        """Method disable_webdriver_chrome() closes the webdriver session by 
-        executing a function called 'close()' on webdriver object.
+  def disable_webdriver_chrome(self: Driver) -> None:
+    """Method disable_webdriver_chrome() closes the webdriver session by 
+    executing a function called 'close()' on webdriver object.
 
-        :Args:
-            - self: {LinkedIn} object
+    :Args:
+        - self: {LinkedIn} object
 
-        :Returns:
-            - {None}
-        """
-        Driver.__SESSION_ALREADY_EXISTS = False
-        if hasattr(self, "driver"):
-            if isinstance(self.driver, webdriver.Chrome):
-                self.driver.quit()
+    :Returns:
+        - {None}
+    """
+    Driver.__SESSION_ALREADY_EXISTS = False
+    if hasattr(self, "driver"):
+      if isinstance(self.driver, webdriver.Chrome):
+        self.driver.quit()
 
-    def __del__(self: Driver) -> None:
-        Driver.__SESSION_ALREADY_EXISTS = False
-        if hasattr(self, "driver"):
-            if isinstance(self.driver, webdriver.Chrome):
-                self.driver.quit()
+  def __del__(self: Driver) -> None:
+    Driver.__SESSION_ALREADY_EXISTS = False
+    if hasattr(self, "driver"):
+      if isinstance(self.driver, webdriver.Chrome):
+        self.driver.quit()
