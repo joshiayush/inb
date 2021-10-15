@@ -89,7 +89,7 @@ You can use the `-h` or `--help` flag with any of the above positional arguments
 The `search` command is used to send invitations to people belong to a specific industry.
 
 ```shell
-$ python3 inb/inb.py -h
+$ python3 inb/inb.py search -h
 ```
 
 The above command will give the following output:
@@ -149,7 +149,7 @@ optional arguments:
 You target a specific industry by using the `--keyword` flag of `search` command.
 
 ```shell
-$ python3 inb/inb.py send --email "ayush854032@gmail.com" --password "F:(:);GVlk\`" --keyword "Software Developer"
+$ python3 inb/inb.py search --email "ayush854032@gmail.com" --password "F:(:);GVlk\`" --keyword "Software Developer"
 ```
 
 The above command will start sending invitation to people who belong to _Software Developer_ industry.
