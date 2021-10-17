@@ -1,3 +1,10 @@
+"""This module provides a `Driver` class to instantiate a chromedriver object 
+for our `inb` program. This currently only supports `chromedriver` but there are
+future plans to add support for `Tor` browser to stay annonymous while scraping
+through tons of webpages just to gather information about a certain `company` or
+`person`.
+"""
+
 # MIT License
 #
 # Copyright (c) 2019 Creative Commons
@@ -23,6 +30,8 @@
 # from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!
 from __future__ import annotations
 
+import json
+
 from selenium import webdriver
 
 from errors import WebDriverPathNotGivenException
@@ -34,72 +43,148 @@ __version__: str = "3.109.59"
 
 
 class Driver(object):
-  __SESSION_ALREADY_EXISTS: bool = False
-
-  HEADLESS: str = "--headless"
-  INCOGNITO: str = "--incognito"
-  NO_SANDBOX: str = "--no-sandbox"
-  DISABLE_GPU: str = "--disable-gpu"
-  START_MAXIMIZED: str = "--start-maximized"
-  DISABLE_INFOBARS: str = "--disable-infobars"
-  ENABLE_AUTOMATION: str = "--enable-automation"
-  DISABLE_EXTENSIONS: str = "--disable-extensions"
-  DISABLE_NOTIFICATIONS: str = "--disable-notifications"
-  DISABLE_SETUID_SANDBOX: str = "--disable-setuid-sandbox"
-  IGNORE_CERTIFICATE_ERRORS: str = "--ignore-certificate-errors"
-  DEFAULT_HEADLESS_WINDOW_SIZE: str = "window-size=1200,1100"
+  HEADLESS = "--headless"
+  INCOGNITO = "--incognito"
+  NO_SANDBOX = "--no-sandbox"
+  DISABLE_GPU = "--disable-gpu"
+  START_MAXIMIZED = "--start-maximized"
+  DISABLE_INFOBARS = "--disable-infobars"
+  ENABLE_AUTOMATION = "--enable-automation"
+  DISABLE_EXTENSIONS = "--disable-extensions"
+  DISABLE_NOTIFICATIONS = "--disable-notifications"
+  DISABLE_SETUID_SANDBOX = "--disable-setuid-sandbox"
+  IGNORE_CERTIFICATE_ERRORS = "--ignore-certificate-errors"
+  DEFAULT_HEADLESS_WINDOW_SIZE = "window-size=1200,1100"
 
   def __init__(self: Driver, driver_path: str = None, options: list = []) -> None:
-    if isinstance(driver_path, str):
+    """Constructor method constructs a `Driver` instance to communicate with
+    chromedriver.
+
+    Optionally it takes in chromedriver's command-line arguments to activate
+    or deactivate chromedriver's features that are not required for the session. 
+
+    Args:
+      self: (Driver) Self.
+      driver_path: (str) Chromedriver's path.
+      options: (list) Chromedriver's command-line options.
+
+    Raises:
+      WebDriverNotExecutableException: In case the `driver_path` given is not a 
+        valid path or the chromedriver's binary is not executable.
+      WebDriverPathNotGivenException: In case `driver_path` is `None`.
+
+    Example:
+    >>> from linkedin import Driver
+    >>> from lib import chromedriver_abs_path
+
+    >>> # Instantiate chromedriver without options
+    >>> chromedriver = Driver(chromedriver_abs_path())
+    >>> chromedriver.enable_webdriver_chrome()
+    >>> print(chromedriver)
+
+    <selenium.webdriver.chrome.webdriver.WebDriver (session="b15ea4e4ed12d09201bc2b3771918ff9") 
+      (driver_path="/Python/inb/driver/chromedriver")>
+
+    >>> # Instantiate chromedriver with options
+    >>> chromedriver = Driver(chromedriver_abs_path(), [Driver.HEADLESS, Driver.INCOGNITO, ...])
+    >>> chromedriver.enable_webdriver_chrome()
+    >>> print(chromedriver)
+
+    <selenium.webdriver.chrome.webdriver.WebDriver (session="b15ea4e4ed12d09201bc2b3771918ff9") 
+      (driver_path="/Python/inb/driver/chromedriver") (options="[--headless, --incognito, ...]")>
+    """
+    if driver_path:
       if not Validator(driver_path).is_executable():
         raise WebDriverNotExecutableException(
-            "%(path)s is not executable!" % {"path": driver_path})
+            '%(path)s is not executable!' % {'path': driver_path})
     else:
       raise WebDriverPathNotGivenException(
-          "User did not provide chromedriver's path!")
+          "User did not provide chromedriver's path!\n" +
+          "Currently 'Driver' class does not support instantiation without chromedriver's binary path!")
     self._driver_path = driver_path
     self._options = webdriver.ChromeOptions()
 
-    if not len(options) == 0:
+    if len(options) > 0:
       for arg in options:
         self._options.add_argument(arg)
     self.enable_webdriver_chrome()
 
-  def enable_webdriver_chrome(self: Driver) -> None:
-    """Method enable_web_driver() makes a webdriver object called by calling 
-    'webdriver.Chrome()' constructor.
+  def __repr__(self: Driver) -> str:
+    """Method `__repr__()` returns a formatted string containing the session,
+    driver path and options' (if given) information of the current `Driver` instance.
 
-    :Args:
-        - self: {LinkedIn} object
-        - _options: {Options} to pass to webdriver.Chrome() constructor
+    Args:
+      self: (Driver) Self.
 
-    :Returns:
-        - {None}
+    Returns:
+      Formatted string containing the session, driver path and options' (if given) 
+        information of the current `Driver` instance.
 
+    Example:
+    >>> from linkedin import Driver
+    >>> from lib import chromedriver_abs_path
+
+    >>> chromedriver = Driver(chromedriver_abs_path())
+    >>> chromedriver.enable_webdriver_chrome()
+    >>> print(chromedriver)
+
+    <selenium.webdriver.chrome.webdriver.WebDriver (session="b15ea4e4ed12d09201bc2b3771918ff9") 
+      (driver_path="/Python/inb/driver/chromedriver")>
     """
-    if Driver.__SESSION_ALREADY_EXISTS:
-      return
-    Driver.__SESSION_ALREADY_EXISTS = True
-    self.driver = webdriver.Chrome(self._driver_path,
-                                   options=self._options)
+    if len(self._options.arguments) == 0:
+      return '<{0.__module__}.{0.__name__} (session="{1}") (driver_path="{2}")>'.format(
+          type(self), self.driver.session_id, self._driver_path)
+    else:
+      return '<{0.__module__}.{0.__name__} (session="{1}") (driver_path="{2}") (options="{3}")>'.format(
+          type(self), self.driver.session_id, self._driver_path, json.dumps(self._options.arguments, separators=(', ', ':')))
+
+  def enable_webdriver_chrome(self: Driver) -> None:
+    """Method `enable_web_driver()` creates a driver instance by calling the `Chrome`
+    constructor.
+
+    Args:
+      self: (Driver) Self.
+
+    Example:
+    >>> from linkedin import Driver
+    >>> from lib import chromedriver_abs_path
+
+    >>> chromedriver = Driver(chromedriver_abs_path())
+    >>> chromedriver.enable_webdriver_chrome()
+    """
+    self.driver = webdriver.Chrome(
+        self._driver_path, options=self._options)
 
   def disable_webdriver_chrome(self: Driver) -> None:
-    """Method disable_webdriver_chrome() closes the webdriver session by 
-    executing a function called 'close()' on webdriver object.
+    """Method `disable_webdriver_chrome()` closes the webdriver session by
+    invoking the destructor on itself.
 
-    :Args:
-        - self: {LinkedIn} object
+    Args:
+      self: (Driver) Self.
 
-    :Returns:
-        - {None}
+    Example:
+    >>> from linkedin import Driver
+    >>> from lib import chromedriver_abs_path
+
+    >>> chromedriver = Driver(chromedriver_abs_path())
+    >>> chromedriver.enable_webdriver_chrome()
+    >>> chromedriver.disable_webdriver_chrome()
     """
-    Driver.__SESSION_ALREADY_EXISTS = False
-    if hasattr(self, "driver"):
-      if isinstance(self.driver, webdriver.Chrome):
-        self.driver.quit()
+    del self
 
   def __del__(self: Driver) -> None:
-    Driver.__SESSION_ALREADY_EXISTS = False
-    if hasattr(self, "driver"):
-      if isinstance(self.driver, webdriver.Chrome):
-        self.driver.quit()
+    """Destructor method deletes the current `driver` instance.
+
+    Args:
+      self: (Driver) Self.
+
+    Example:
+    >>> from linkedin import Driver
+    >>> from lib import chromedriver_abs_path
+
+    >>> chromedriver = Driver(chromedriver_abs_path())
+    >>> chromedriver.enable_webdriver_chrome()
+    >>> # Delete 'chromedriver' instance
+    >>> del chromedriver
+    """
+    self.driver.quit()
