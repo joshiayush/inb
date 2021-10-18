@@ -1,8 +1,13 @@
-"""This module provides a `Driver` class to instantiate a chromedriver object 
-for our `inb` program. This currently only supports `chromedriver` but there are
-future plans to add support for `Tor` browser to stay annonymous while scraping
-through tons of webpages just to gather information about a certain `company` or
-`person`.
+"""
+This module provides a `Driver` class to instantiate a chromedriver object 
+for our `inb` program. 
+
+This currently only supports `chromedriver` but there are future plans to add
+support for `Tor` browser to stay annonymous while scraping through tons of
+webpages just to gather information about a certain `company` or `person`.
+
+  :copyright: Copyright (c) 2019 Creative Commons.
+  :license: MIT License, see license for details.
 """
 
 # MIT License
