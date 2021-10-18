@@ -1,3 +1,10 @@
+"""
+This module provides service to communicate with LinkedIn's login form.
+
+  :copyright: Copyright (c) 2019 Creative Commons.
+  :license: MIT License, see license for details.
+"""
+
 # MIT License
 #
 # Copyright (c) 2019 Creative Commons
@@ -25,13 +32,12 @@ from __future__ import annotations
 
 import functools
 
-from typing import Any
-from typing import Dict
-from typing import List
+from typing import (
+    Any, Dict, List
+)
 
 from .. import Driver
 
-from selenium import webdriver
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.keys import Keys
 
@@ -40,55 +46,92 @@ from errors import CredentialsNotGivenException
 
 
 class LinkedIn(Driver):
-  LOGIN_PAGE_URL: str = "https://www.linkedin.com/login"
+  LOGIN_PAGE_URL = "https://www.linkedin.com/login"
 
-  def __init__(
-      self: LinkedIn,
-      user_email: str = '',
-      user_password: str = '',
-      driver_path: str = '',
-      opt_chromedriver_options: list = []
-  ) -> None:
+  def __init__(self: LinkedIn, user_email: str,
+               user_password: str, driver_path: str,
+               opt_chromedriver_options: list = []) -> None:
     """LinkedIn class constructor to initialise LinkedIn object.
 
-    :Args:
-        - self: {LinkedIn} object
-        - credentials: {dist} user's credentails in form of dictionary
-        - driver_path: {str} chrome driver path
-        - opt_chromedriver_options: {list} chromedriver options if any (optional)
+    This instance will help to log into LinkedIn account.
 
-    :Returns: 
-        - {LinkedIn}
+    Args:
+      self: (LinkedIn) Self
+      user_email: (str) User email.
+      user_password: (str) User password.
+      driver_path: (str) Chrome driver path.
+      opt_chromedriver_options: (list) Chromedriver options if any (optional).
 
-    :Raises:
-        - KeyError if 'user_email' or 'user_password' keys are not present in the dictionary
-            credentials
+    Returns: 
+      `None`
+
+    Raises:
+      CredentialsNotGivenException: If either of `user_email` or `user_password` field is
+        empty.
+
+    Example:
+    >>> from lib import chromedriver_abs_path
+    >>> from linkedin import Driver
+    >>> from linkedin.login import LinkedIn
+    >>>
+    >>> chromedriver_options = [Driver.HEADLESS, Driver.INCOGNITO, ...]
+    >>> linkedin = LinkedIn('ayush854032@gmail.com', 'xxx-xxx-xxx', 
+    ...              chromedriver_abs_path(), chromedriver_options)
     """
-    super(LinkedIn, self).__init__(driver_path=driver_path,
-                                   options=opt_chromedriver_options)
+    super(
+        LinkedIn, self).__init__(
+        driver_path=driver_path, options=opt_chromedriver_options)
 
-    if not user_email:
+    if user_email:
+      self._user_email = user_email
+    else:
       raise CredentialsNotGivenException(
-          "ValueError: 'user_email' can not be empty!")
-    self.__user_email = user_email
-    if not user_password:
+          "'user_email' can not be empty!")
+    if user_password:
+      self._user_password = user_password
+    else:
       raise CredentialsNotGivenException(
-          "ValueError: 'user_password' can not be empty!")
-    self.__user_password = user_password
+          "'user_password' can not be empty!")
+
+  @classmethod
+  def set_login_page_url(cls: LinkedIn, url: str) -> None:
+    """Class method `set_login_page_url()` sets the value of static variable
+    `LOGIN_PAGE_URL` to the given value in case the user wants to provide an
+    explicit value for the url.
+
+    Args:
+      cls: (LinkedIn) Class.
+      url: (str) Url.
+
+    Example:
+    >>> from linkedin.login import LinkedIn
+    >>> LinkedIn.set_login_page_url('https://custom.url.com')
+    """
+    cls.LOGIN_PAGE_URL = url
 
   def _get_login_page(function_: function) -> function:
-    """Method get_login_page() takes you to the LinkedIn login page by executing 
-    function 'get()' on the webdriver object.
+    """Decorator `get_login_page()` adds a `wrapper` around a function. This `wrapper`
+    then takes you to the LinkedIn login page before executing the function given to it.
 
-    :Args:
-        - self: {LinkedIn} object
-        - _url: {str} website url
+    Args:
+      function_: (function) Function to decorate.
 
-    :Returns:
-        - {None}
+    Returns:
+      `function`
 
-    :Raises:
-        - DomainNameSystemNotResolveException if there's a TimeourException
+    Raises:
+      TimeoutException: If weak network is found.
+
+    Example:
+    >>> class LinkedIn(Driver):
+    ...   @_get_login_page
+    ...   def login(self: LinkedIn) -> None:
+    ...     '''Method login() logs into your personal LinkedIn profile.
+    ...
+    ...     Args:
+    ...       self: (LinkedIn) Self. 
+    ...     '''
+    ...     # Your login code here
     """
     @functools.wraps(function_)
     def wrapper(
@@ -104,98 +147,78 @@ class LinkedIn(Driver):
         function_(self, *args, **kwargs)
     return wrapper
 
-  def __get_email_box(self: LinkedIn) -> webdriver.Chrome:
-    """Method get_email_box() returns the input tag for entering email address.
+  def _enter_email(self: LinkedIn, return_: bool = False) -> None:
+    """Method `_enter_email()` enters the email in the email input field.
 
-    :Args:
-        - self: {LinkedIn} object
+    Args:
+      self: (LinkedIn) Self.
+      return_: (bool) Whether to send return key or not.
 
-    :Returns:
-        - {WebElement} input tag
-
-    :Raises:
-        - NoSuchElementException if the element wasn't found
+    Example:
+    >>> class LinkedIn(Driver):
+    ...   def foo(self: Driver) -> Any:
+    ...     self._enter_email('ayush854032@gmail.com')
     """
-    return self.driver.find_element_by_name("session_key")
-
-  def __enter_email(self: LinkedIn, _return: bool = False) -> None:
-    """Method enter_email() enters the email in the email input field.
-
-    :Args:
-        - self: {LinkedIn} object
-        - hit_return: {bool} if to send return key or not
-
-    :Returns: 
-        - {None}
-    """
-    email_box = self.__get_email_box()
+    email_box = self.driver.find_element_by_name("session_key")
     email_box.clear()
-    email_box.send_keys(self.__user_email)
-    if _return == True:
+    email_box.send_keys(self._user_email)
+    if return_ == True:
       email_box.send_keys(Keys.RETURN)
 
-  def __get_password_box(self: LinkedIn) -> webdriver.Chrome:
-    """Method get_password_box() returns the input tag for entering password.
+  def _enter_passwd(self: LinkedIn, return_: bool = True) -> None:
+    """Method `_enter_passwd()` enters the password in the password input field.
 
-    :Args:
-        - self: {LinkedIn} object
+    Args:
+      self: (LinkedIn) Self.
+      return_: (bool) Whether to send return key or not.
 
-    :Returns:
-        - {WebElement} input tag
-
-    :Raises:
-        - NoSuchElementException if the element wasn't found
+    Example:
+    >>> class LinkedIn(Driver):
+    ...   def foo(self: Driver) -> Any:
+    ...     self._enter_password('xxx-xxx-xxx')
     """
-    return self.driver.find_element_by_name("session_password")
-
-  def __enter_password(self: LinkedIn, _return: bool = True) -> None:
-    """Method enter_password() enters the password in the password input field.
-
-    :Args:
-        - self: {LinkedIn} object
-        - hit_return: {bool} if to send return key or not
-
-    :Returns:
-        - {None}
-    """
-    password_box = self.__get_password_box()
+    password_box = self.driver.find_element_by_name(
+        "session_password")
     password_box.clear()
-    password_box.send_keys(self.__user_password)
-    if _return == True:
+    password_box.send_keys(self._user_password)
+    if return_ == True:
       password_box.send_keys(Keys.RETURN)
-
-  def __fill_credentials(self: LinkedIn) -> None:
-    """Method fill_credentials() fills the user credentials in the specified fields.
-
-    :Args:
-        - self: {LinkedIn} object
-
-    :Returns:
-        - {None}
-    """
-    self.__enter_email()
-    self.__enter_password()
 
   @_get_login_page
   def login(self: LinkedIn) -> None:
-    """Method login() logs into your personal LinkedIn profile.
+    """Method `login()` logs into your personal LinkedIn profile.
 
-    :Args:
-        - self: {LinkedIn} object 
-        - credentials: {dict} user's credentials in the form of dictionary
+    Args:
+      self: (LinkedIn) Self. 
 
-    :Returns:
-        - {None}
+    Example:
+    >>> from lib import chromedriver_abs_path
+    >>> from linkedin import Driver
+    >>> from linkedin.login import LinkedIn
+    >>>
+    >>> chromedriver_options = [Driver.HEADLESS, Driver.INCOGNITO, ...]
+    >>> linkedin = LinkedIn('ayush854032@gmail.com', 'xxx-xxx-xxx', 
+    ...              chromedriver_abs_path(), chromedriver_options)
+    >>> linkedin.login()
     """
-    self.__fill_credentials()
+    self._enter_email()
+    self._enter_passwd()
 
   def __del__(self: LinkedIn) -> None:
-    """LinkedIn class destructor to de-initialise LinkedIn object.
+    """LinkedIn class `destructor` to delete the instance.
 
-    :Args:
-        - self: {LinkedIn} object
+    Args:
+      self: (LinkedIn) Self.
 
-    :Returns:
-        - {None}
+    Example:
+    >>> from lib import chromedriver_abs_path
+    >>> from linkedin import Driver
+    >>> from linkedin.login import LinkedIn
+    >>>
+    >>> chromedriver_options = [Driver.HEADLESS, Driver.INCOGNITO, ...]
+    >>> linkedin = LinkedIn('ayush854032@gmail.com', 'xxx-xxx-xxx', 
+    ...              chromedriver_abs_path(), chromedriver_options)
+    >>> linkedin.login()
+    >>> del linkedin
     """
     self.disable_webdriver_chrome()
