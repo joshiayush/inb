@@ -176,13 +176,15 @@ class Command(InbArgParser):
 
       # Initialise driver options object
       chrome_driver_options: List[str] = []
-      chrome_driver_options.append(Driver.INCOGNITO)
-      chrome_driver_options.append(Driver.IGNORE_CERTIFICATE_ERRORS)
+      chrome_driver_options.append(Driver.OPTIONS['incognito'])
+      chrome_driver_options.append(
+        Driver.OPTIONS['ignore-certificate-errors'])
       if self.headless == True:
-        chrome_driver_options.append(Driver.HEADLESS)
+        chrome_driver_options.append(Driver.OPTIONS['headless'])
         chrome_driver_options.append(
-            Driver.DEFAULT_HEADLESS_WINDOW_SIZE)
-        chrome_driver_options.append(Driver.START_MAXIMIZED)
+            Driver.OPTIONS['default-headless-window-size'])
+        chrome_driver_options.append(
+          Driver.OPTIONS['start-maximized'])
 
       # Instantiate LinkedIn login API
       self.linkedin = LinkedIn(
