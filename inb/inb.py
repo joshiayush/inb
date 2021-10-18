@@ -27,17 +27,22 @@ from argparse import RawDescriptionHelpFormatter
 
 from linkedin import __version__
 
-from lib import NARGS
-from lib import ArgumentParser
-from lib import OPT_ARGS_ACTION
-from lib import disable_logging
-from lib import CreateFigletString
-from lib.handler import Handler
+from lib import (
+    NARGS,
+    ArgumentParser,
+    OPT_ARGS_ACTION,
+    disable_logging,
+    CreateFigletString,
+)
 
-from errors import EmtpyDatabaseException
-from errors import CredentialsNotGivenException
-from errors import DatabaseDoesNotExistException
-from errors import InternetNotConnectedException
+from inbparser import Parser
+
+from errors import (
+    EmtpyDatabaseException,
+    CredentialsNotGivenException,
+    DatabaseDoesNotExistException,
+    InternetNotConnectedException,
+)
 
 
 disable_logging("urllib3", logging.CRITICAL)
@@ -239,6 +244,17 @@ connect.add_argument("profileid",
                      default=None,
                      help="Profile id of person to connect with.")
 
+connect.add_argument("-e", "--email",
+                     type=str,
+                     nargs=NARGS.OPTIONAL,
+                     default=None,
+                     help="User's email address")
+connect.add_argument("-p", "--password",
+                     type=str,
+                     nargs=NARGS.OPTIONAL,
+                     default=None,
+                     help="User's password")
+
 connect.add_argument("-c", "--cookies",
                      action=OPT_ARGS_ACTION.STORE_TRUE,
                      help="uses cookies for authentication")
@@ -256,6 +272,9 @@ connect.add_argument("-idb", "--debug",
                      help="logs debug info when given")
 
 connect.set_defaults(which="connect",
+                     email=None,
+                     password=None,
+                     profileid=None,
                      cookies=False,
                      headless=False,
                      incognito=False,
@@ -669,6 +688,6 @@ exceptions = tuple([EmtpyDatabaseException,
                     InternetNotConnectedException])
 
 try:
-  Handler(parser.parse_args()).handle_command()
+  Parser(parser.parse_args()).parse()
 except exceptions as exc:
   parser.error(exc, usage=False)

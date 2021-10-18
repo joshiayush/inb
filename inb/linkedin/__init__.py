@@ -6,6 +6,7 @@ This currently only supports `chromedriver` but there are future plans to add
 support for `Tor` browser to stay annonymous while scraping through tons of
 webpages just to gather information about a certain `company` or `person`.
 
+  :author: Ayush Joshi, ayush854032@gmail.com
   :copyright: Copyright (c) 2019 Creative Commons.
   :license: MIT License, see license for details.
 """
