@@ -1,8 +1,9 @@
 """
 This module provides service to communicate with LinkedIn's login form.
 
-  :copyright: Copyright (c) 2019 Creative Commons.
-  :license: MIT License, see license for details.
+  :author: Ayush Joshi, ayush854032@gmail.com
+  :copyright: Copyright (c) 2019 Creative Commons
+  :license: MIT License, see license for details
 """
 
 # MIT License
