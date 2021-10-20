@@ -1,3 +1,11 @@
+"""
+This module provides APIs to work with document's page y offsets.
+
+  :author: Ayush Joshi, ayush854032@gmail.com
+  :copyright: Copyright (c) 2019 Creative Commons.
+  :license: MIT License, see license for details.
+"""
+
 # MIT License
 #
 # Copyright (c) 2019 Creative Commons
@@ -20,56 +28,73 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-"""from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!"""
+# from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!
 from __future__ import annotations
 
 from selenium import webdriver
 
 
-class JS(object):
+class JS:
   def __init__(self: JS, driver: webdriver.Chrome) -> None:
     """Constructor method to initialize a Cleaner object.
 
-    :Args:
-        - self: {Cleaner} self.
-        - driver: {webdriver} Chromedriver
+    Args:
+      self: (JS) Self.
+      driver: (webdriver) Chromedriver
 
-    :Raises:
-        - {Exception} if 'driver' object is not a 'webdriver' instance.
+    Raises:
+      Exception: If driver is not given.
+
+    Example:
+    >>> from DOM import JS
+    >>> from selenium import webdriver
+    >>>
+    >>> js = JS(webdriver.Chrome())
+    >>> page_offset = js.get_page_y_offset()
     """
-    if not isinstance(driver, webdriver.Chrome):
-      raise Exception(
-          "'%(driver_type)s' object is not a 'webdriver' object" %
-          {"driver_type": type(driver)})
+    if not driver:
+      raise Exception('webdriver.Chrome instance is not given!')
     self._driver = driver
 
   def get_page_y_offset(self: JS) -> int:
-    """Method get_page_y_offset() returns the window.pageYOffset of the webpage, 
-    we need that so we can keep on scrolling untill the page offset becomes constant.
+    """Method `get_page_y_offset()` returns the `window.pageYOffset` of the
+    webpage, we need that so we can keep on scrolling untill the page offset
+    becomes constant.
 
-    :Args:
-        - self: {object} object from which '_driver' property is to be accessed.
+    Args:
+      self: (object) Self.
 
-    :Returns:
-        - {int} window.pageYOffset
+    Returns:
+      window.pageYOffset
+
+    Example:
+    >>> from DOM import JS
+    >>> from selenium import webdriver
+    >>>
+    >>> js = JS(webdriver.Chrome())
+    >>> page_offset = js.get_page_y_offset()
     """
     return self._driver.execute_script((
-        "return (window.pageYOffset !== undefined)"
-        "       ? window.pageYOffset"
-        "       : (document.documentElement || document.body.parentNode || document.body);"
+      "return (window.pageYOffset !== undefined)"
+      "  ? window.pageYOffset"
+      "  : (document.documentElement || document.body.parentNode || document.body);"
     ))
 
   def scroll_bottom(self: JS) -> None:
-    """Method scroll_bottom() scrolls the web page to the very bottom of it using 
-    the 'document.scrollingElement.scrollTop' property.
+    """Method `scroll_bottom()` scrolls the web page to the very bottom of
+    it using the `document.scrollingElement.scrollTop` property.
 
-    :Args:
-        - self: {JS} object from which '_driver' property is to be accessed.
+    Args:
+      self: (JS) Self.
 
-    :Returns:
-        - {None}
+    Example:
+    >>> from DOM import JS
+    >>> from selenium import webdriver
+    >>>
+    >>> js = JS(webdriver.Chrome())
+    >>> js.scroll_bottom()
     """
     self._driver.execute_script((
-        "var scrollingElement = (document.scrollingElement || document.body);"
-        "scrollingElement.scrollTop = scrollingElement.scrollHeight;"
+      "var scrollingElement = (document.scrollingElement || document.body);"
+      "scrollingElement.scrollTop = scrollingElement.scrollHeight;"
     ))
