@@ -40,8 +40,10 @@ import json
 
 from selenium import webdriver
 
-from errors import WebDriverPathNotGivenException
-from errors import WebDriverNotExecutableException
+from errors import (
+    WebDriverPathNotGivenException,
+    WebDriverNotExecutableException,
+)
 
 from lib.utils.validator import Validator
 
@@ -86,7 +88,8 @@ class Driver(object):
     'ignore-certificate-errors': '--ignore-certificate-errors',
     # set this flag if running chromedriver in headless mode otherwise
     # many elements will fall beyond the current page view
-    'default-headless-window-size': 'window-size=1200,1100'
+    'default-headless-window-size': 'window-size=1200,1100',
+    # add useful arguments here...
   }
 
   def __init__(self: Driver, driver_path: str = None, options: list = []) -> None:

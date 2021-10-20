@@ -24,57 +24,72 @@
 from __future__ import annotations
 
 from selenium import webdriver
-from selenium.webdriver.common.by import By
-
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait
-
-from selenium.common.exceptions import TimeoutException
-from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.common.by import (
+  By,
+)
+from selenium.webdriver.support import (
+  expected_conditions as EC,
+)
+from selenium.webdriver.support.ui import (
+  WebDriverWait,
+)
+from selenium.common.exceptions import (
+  TimeoutException,
+  NoSuchElementException,
+)
 
 
 class Cleaner(object):
-  WAIT: int = 60
-  MSG_OVERLAY_XPATH: str = "//*[@id='msg-overlay']"
+  WAIT = 60
+  MSG_OVERLAY_XPATH = "//*[@id='msg-overlay']"
 
   def __init__(self: Cleaner, driver: webdriver.Chrome) -> None:
     """Constructor method to initialize a Cleaner object.
 
-    :Args:
-        - self: {Cleaner} self.
-        - driver: {webdriver} Chromedriver
+    Args:
+      self: (Cleaner) Self.
+      driver: (webdriver.Chrome) Chromedriver.
 
-    :Raises:
-        - {Exception} if 'driver' object is not a 'webdriver' instance.
+    Raises:
+      Exception: If 'driver' not given.
+
+    Example:
+    >>> from DOM import Cleaner
+    >>> from selenium import webdriver
+    >>>
+    >>> chrome = webdriver.Chrome('your/chromedriver/path')
+    >>> cleaner = Cleaner(chrome)
     """
-    if not isinstance(driver, webdriver.Chrome):
-      raise Exception(
-          "'%(driver_type)s' object is not a 'webdriver' object" %
-          {"driver_type": type(driver)})
+    if not driver:
+      raise Exception('webdriver.Chrome instance is not given!')
     self._driver = driver
 
-  def clear_message_overlay(self: Cleaner, wait: int = 60) -> None:
-    """Function clear_msg_overlay() clears the message overlay that gets on the top of the
-    network page.
+  def clear_message_overlay(self: Cleaner, wait: int = None) -> None:
+    """Method `clear_message_overlay()` clears the message overlay that overlaps the
+    page. This is important as while sending invitation `selenium` will throw `exception`
+    incase any element is overlapping the `invite` buttons.
 
-    :Args:
-        - self: {Cleaner} object from which 'driver' property has to accessed.
-        - wait: {int} timeout
+    Args:
+      self: (Cleaner) Self.
+      wait: (int) Timeout.
 
-    :Returns:
-        - {None}
+    Example:
+    >>> from DOM import Cleaner
+    >>> from selenium import webdriver
+    >>>
+    >>> chrome = webdriver.Chrome('your/chromedriver/path')
+    >>> cleaner = Cleaner(chrome)
+    >>> cleaner.clear_message_overlay() # this will clear the message overlay lying of the screen
     """
-    if not isinstance(wait, int):
+    if not wait:
       wait = Cleaner.WAIT
-
     try:
       WebDriverWait(
           self._driver, wait).until(
           EC.presence_of_element_located(
               (By.CSS_SELECTOR,
                "div[class^='msg-overlay-list-bubble']")))
-      self._driver.execute_script(
-          """
+      self._driver.execute_script("""
                 function getElementByXpath(path) {
                   return document.evaluate(
                       path, 
@@ -84,7 +99,7 @@ class Cleaner(object):
                       null
                     ).singleNodeValue;
                 }
-                getElementByXpath("%(msg_overlay_xpath)s").style = "display: none;";
-                """ % {"msg_overlay_xpath": Cleaner.MSG_OVERLAY_XPATH})
+                getElementByXpath('%(msg_overlay_xpath)s').style = "display: none;";
+                """ % {'msg_overlay_xpath': Cleaner.MSG_OVERLAY_XPATH})
     except (NoSuchElementException, TimeoutException):
       return
