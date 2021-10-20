@@ -79,6 +79,7 @@ class LinkedInConnect(object):
       raise ConnectionLimitExceededException(
           "Daily invitation limit can't be greater than 80, we recommend 40!")
     self._limit = limit
+    self.cleaner = Cleaner(self._driver)
 
   def _get_mynetwork(function_: function) -> None:
     """Method get_my_network() sends a GET request to the network page of LinkedIn.
@@ -155,7 +156,7 @@ class LinkedInConnect(object):
     :Returns:
         - {None}
     """
-    Cleaner(self._driver).clear_message_overlay()
+    self.cleaner.clear_message_overlay()
 
   @_get_mynetwork
   def run(self: LinkedInConnect) -> None:

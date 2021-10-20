@@ -117,6 +117,7 @@ class LinkedInSearchConnect(object):
     self._industry = industry
     self._current_company = current_company
     self._profile_language = profile_language
+    self.cleaner = Cleaner(self._driver)
 
   def _scroll(self: LinkedInSearchConnect) -> None:
     """Private method _scroll() scrolls the page.
@@ -165,7 +166,7 @@ class LinkedInSearchConnect(object):
     :Returns:
         - {None}
     """
-    Cleaner(self._driver).clear_message_overlay()
+    self.cleaner.clear_message_overlay()
 
   def _apply_filters(self: LinkedInSearchConnect):
     def get_element_by_xpath(
