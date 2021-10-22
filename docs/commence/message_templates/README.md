@@ -37,6 +37,7 @@ This document has the following content available:
 - [Webinar Invitation](#webinar-invitation)
 - [Common Connection Request Messages](#common-connection-request-messages)
 - [How you can add your own?](#how-you-can-add-your-own)
+- [What's interesting?](#whats-interesting)
 
 ## Personalized Templates
 
@@ -258,4 +259,25 @@ You can also add your messages over the command line without making an extra fil
 python3 inb/inb.py search --email "ayush854032@gmail.com" --password "F:(:);GVlk\`" --location "Australia" --title "Director"  --keyword "People Management" message "Hi {{name}}! Would you like to connect?"
 ```
 
-**Note: You must avoid writing multi-line text messages directly over command line what you should do instead is make a separate file for that.**
+**Note: You must avoid writing multi-line text messages directly over command line what you should do instead is make a separate
+file for that.**
+
+## What's interesting?
+
+The interesting part about this feature is that the template are then rectified by [language_tool_python][_language_tool_python] in
+case their is any spelling or grammar mistake or the template doesn't fit with the variables' values. This
+[language_tool_python][_language_tool_python] API is not applied on person name as names does not honor english grammar thus, this
+API seems to produce unexpected results when used with names.
+
+In case you don't want your template to be altered by [language_tool_python][_language_tool_python] you use the flag `--force` with
+the `message` subparser. For example,
+
+```shell
+python3 inb/inb.py search --email "ayush854032@gmail.com" --password "F:(:);GVlk\`" --location "Australia" --title "Director"  --keyword "People Management" message "message.txt" --force
+```
+
+This way your template will not be rectified by [language_tool_python][_language_tool_python].
+
+<!-- Definitions -->
+
+[_language_tool_python]: https://languagetool.org/
