@@ -88,52 +88,22 @@ class Template:
   def set_data(self: Template, data: Dict[str, str]) -> None:
     self.data = {}
     self.data = {**self.data, **{'{{name}}': data.pop('name', None)}}
-    self.data = {
-        **self.data, **
-        {'{{first_name}}': data.pop('first_name', None)}}
-    self.data = {
-        **self.data, **
-        {'{{last_name}}': data.pop('last_name', None)}}
-    self.data = {**self.data, **
-                 {'{{my_name}}': data.pop('my_name', None)}}
-    self.data = {
-        **self.data, **
-        {'{{my_first_name}}': data.pop('my_first_name', None)}}
-    self.data = {
-        **self.data, **
-        {'{{my_last_name}}': data.pop('my_last_name', None)}}
-    self.data = {**self.data, **
-                 {'{{keyword}}': data.pop('keyword', None)}}
-    self.data = {
-        **self.data, **
-        {'{{location}}': data.pop('location', None)}}
-    self.data = {
-        **self.data, **
-        {'{{industry}}': data.pop('industry', None)}}
-    self.data = {**self.data, **
-                 {'{{title}}': data.pop('title', None)}}
-    self.data = {**self.data, **
-                 {'{{school}}': data.pop('school', None)}}
-    self.data = {
-        **self.data, **
-        {'{{current_company}}': data.pop('current_company', None)}}
-    self.data = {
-        **self.data, **
-        {'{{profile_language}}': data.pop(
-            'profile_language', None)}}
-    self.data = {
-        **self.data, **
-        {'{{my_position}}': data.pop('my_position', None)}}
-    self.data = {
-        **self.data, **
-        {'{{my_company_name}}': data.pop('my_company_name', None)}}
-    self.data = {
-        **self.data, **
-        {'{{position}}': data.pop('position', None)}}
-    self.data = {
-        **self.data, **
-        {'{{year}}': data.pop(
-            'year', str(datetime.datetime.now().year))}}
+    self.data = {**self.data, **{'{{first_name}}': data.pop('first_name', None)}}
+    self.data = {**self.data, **{'{{last_name}}': data.pop('last_name', None)}}
+    self.data = {**self.data, **{'{{my_name}}': data.pop('my_name', None)}}
+    self.data = {**self.data, **{'{{my_first_name}}': data.pop('my_first_name', None)}}
+    self.data = {**self.data, **{'{{my_last_name}}': data.pop('my_last_name', None)}}
+    self.data = {**self.data, **{'{{keyword}}': data.pop('keyword', None)}}
+    self.data = {**self.data, **{'{{location}}': data.pop('location', None)}}
+    self.data = {**self.data, **{'{{industry}}': data.pop('industry', None)}}
+    self.data = {**self.data, **{'{{title}}': data.pop('title', None)}}
+    self.data = {**self.data, **{'{{school}}': data.pop('school', None)}}
+    self.data = {**self.data, **{'{{current_company}}': data.pop('current_company', None)}}
+    self.data = {**self.data, **{'{{profile_language}}': data.pop('profile_language', None)}}
+    self.data = {**self.data, **{'{{my_position}}': data.pop('my_position', None)}}
+    self.data = {**self.data, **{'{{my_company_name}}': data.pop('my_company_name', None)}}
+    self.data = {**self.data, **{'{{position}}': data.pop('position', None)}}
+    self.data = {**self.data, **{'{{year}}': data.pop('year', str(datetime.datetime.now().year))}}
 
   @staticmethod
   def load_message(path: str) -> str:
