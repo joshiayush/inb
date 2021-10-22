@@ -45,6 +45,8 @@ from __future__ import annotations
 from typing import Dict
 
 import os
+import json
+import random
 import datetime
 import language_tool_python
 
@@ -70,40 +72,36 @@ DEFAULT_LANG = 'en-US'
 
 class Template:
   def __init__(
-          self: Template, data: Dict[str, str],
-          message: str, *, grammar_check: bool = True) -> None:
-    if data:
-      self.set_data(data)
+          self: Template, message_template: str,
+          *, grammar_check: bool = True) -> None:
+    if os.path.isfile(message_template):
+      self._message_template = self.load_message(message_template)
     else:
-      Exception("Argument 'data' cannot be a NoneType object!")
-    if os.path.isfile(message):
-      self._message = self.load_message(message)
-    else:
-      self._message = message
+      self._message_template = message_template
     self._enable_language_tool = grammar_check
     if self._enable_language_tool:
       self._language_tool = language_tool_python.LanguageTool(
           language=DEFAULT_LANG)
 
   def set_data(self: Template, data: Dict[str, str]) -> None:
-    self.data = {}
-    self.data = {**self.data, **{'{{name}}': data.pop('name', None)}}
-    self.data = {**self.data, **{'{{first_name}}': data.pop('first_name', None)}}
-    self.data = {**self.data, **{'{{last_name}}': data.pop('last_name', None)}}
-    self.data = {**self.data, **{'{{my_name}}': data.pop('my_name', None)}}
-    self.data = {**self.data, **{'{{my_first_name}}': data.pop('my_first_name', None)}}
-    self.data = {**self.data, **{'{{my_last_name}}': data.pop('my_last_name', None)}}
-    self.data = {**self.data, **{'{{keyword}}': data.pop('keyword', None)}}
-    self.data = {**self.data, **{'{{location}}': data.pop('location', None)}}
-    self.data = {**self.data, **{'{{industry}}': data.pop('industry', None)}}
-    self.data = {**self.data, **{'{{title}}': data.pop('title', None)}}
-    self.data = {**self.data, **{'{{school}}': data.pop('school', None)}}
-    self.data = {**self.data, **{'{{current_company}}': data.pop('current_company', None)}}
-    self.data = {**self.data, **{'{{profile_language}}': data.pop('profile_language', None)}}
-    self.data = {**self.data, **{'{{my_position}}': data.pop('my_position', None)}}
-    self.data = {**self.data, **{'{{my_company_name}}': data.pop('my_company_name', None)}}
-    self.data = {**self.data, **{'{{position}}': data.pop('position', None)}}
-    self.data = {**self.data, **{'{{year}}': data.pop('year', str(datetime.datetime.now().year))}}
+    self._data = {}
+    self._data = {**self._data, **{'{{name}}': data.pop('name', None)}}
+    self._data = {**self._data, **{'{{first_name}}': data.pop('first_name', None)}}
+    self._data = {**self._data, **{'{{last_name}}': data.pop('last_name', None)}}
+    self._data = {**self._data, **{'{{my_name}}': data.pop('my_name', None)}}
+    self._data = {**self._data, **{'{{my_first_name}}': data.pop('my_first_name', None)}}
+    self._data = {**self._data, **{'{{my_last_name}}': data.pop('my_last_name', None)}}
+    self._data = {**self._data, **{'{{keyword}}': data.pop('keyword', None)}}
+    self._data = {**self._data, **{'{{location}}': data.pop('location', None)}}
+    self._data = {**self._data, **{'{{industry}}': data.pop('industry', None)}}
+    self._data = {**self._data, **{'{{title}}': data.pop('title', None)}}
+    self._data = {**self._data, **{'{{school}}': data.pop('school', None)}}
+    self._data = {**self._data, **{'{{current_company}}': data.pop('current_company', None)}}
+    self._data = {**self._data, **{'{{profile_language}}': data.pop('profile_language', None)}}
+    self._data = {**self._data, **{'{{my_position}}': data.pop('my_position', None)}}
+    self._data = {**self._data, **{'{{my_company_name}}': data.pop('my_company_name', None)}}
+    self._data = {**self._data, **{'{{position}}': data.pop('position', None)}}
+    self._data = {**self._data, **{'{{year}}': data.pop('year', str(datetime.datetime.now().year))}}
 
   @staticmethod
   def load_message(path: str) -> str:
@@ -122,20 +120,35 @@ class Template:
     return message
 
   def parse(self: Template) -> str:
+    def common_connection_request_random_choice() -> str:
+      abspath_ = os.path.abspath(__file__)
+      with open(os.path.join(abspath_[:abspath_.find(__file__):], 'templates.json')) as file:
+        data = json.dump(file)
+        message = random.choice(data['template_common_connection_request'])
+      return message
+    def check_if_templ_variable_missing(var: str) -> bool:
+      nonlocal self
+      return self._data[var] is None and self._message_template.find(var) > -1
     for var in OTHERS:
-      if self.data[var]:
-        self._message = self._message.replace(var, self.data[var])
+      if self._data[var]:
+        self._message_template = self._message_template.replace(var, self._data[var])
+      elif check_if_templ_variable_missing(var):
+        self._message_template = common_connection_request_random_choice()
+        return self.parse()
     if self._enable_language_tool:
-      self._message = self._language_tool.correct(self._message)
+      self._message_template = self._language_tool.correct(self._message_template)
     for var in NAMES:
-      if self.data[var]:
-        self._message = self._message.replace(var, self.data[var])
-    return self._message
+      if self._data[var]:
+        self._message_template = self._message_template.replace(var, self._data[var])
+      elif check_if_templ_variable_missing(var):
+        self._message_template = common_connection_request_random_choice()
+        return self.parse()
+    return self._message_template
 
   def read(self: Template) -> str:
     message = self.parse()
-    if len(self._message) > 300:
+    if len(self._message_template) > 300:
       raise TemplateMessageLengthExceededException(
           'Personalized message length cannot exceed by 300, you gave %(characters)s characters'
-          % {'characters': len(self._message)})
+          % {'characters': len(self._message_template)})
     return message
