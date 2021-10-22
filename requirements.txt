@@ -13,6 +13,8 @@ cryptography==3.4.7
 fernet==1.0.1
 firebase==3.0.1
 firebase-admin==5.0.1
+gitdb==4.0.7
+GitPython==3.1.24
 google-api-core==1.30.0
 google-api-python-client==2.10.0
 google-auth==1.32.0
@@ -27,6 +29,7 @@ grpcio==1.38.1
 httplib2==0.19.1
 idna==2.10
 importlib-metadata==4.5.0
+language-tool-python==2.6.1
 msgpack==1.0.2
 packaging==20.9
 proto-plus==1.18.1
@@ -48,7 +51,9 @@ rich==10.10.0
 rsa==4.7.2
 selenium==3.141.0
 six==1.16.0
+smmap==4.0.0
 toml==0.10.2
+tqdm==4.62.3
 typing-extensions==3.10.0.0
 uritemplate==3.0.1
 urllib3==1.26.5
