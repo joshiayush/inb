@@ -71,7 +71,7 @@ DEFAULT_LANG = 'en-US'
 class Template:
   def __init__(
           self: Template, data: Dict[str, str],
-          message: str) -> None:
+          message: str, *, grammar_check: bool = True) -> None:
     if data:
       self.set_data(data)
     else:
@@ -80,8 +80,10 @@ class Template:
       self._message = self.load_message(message)
     else:
       self._message = message
-    self._language_tool = language_tool_python.LanguageTool(
-        language=DEFAULT_LANG)
+    self._enable_language_tool = grammar_check
+    if self._enable_language_tool:
+      self._language_tool = language_tool_python.LanguageTool(
+          language=DEFAULT_LANG)
 
   def set_data(self: Template, data: Dict[str, str]) -> None:
     self.data = {}
@@ -135,13 +137,16 @@ class Template:
 
   @staticmethod
   def load_message(path: str) -> str:
+    unmatched_temp_files_count = 0
     for ext in SUPPORTED_TEMP_FILES:
       if not path.endswith(ext):
-        raise TemplateFileNotSupportedException(
-            'Template file %(file)s is not supported!' %
-            {'file': path})
+        unmatched_temp_files_count += 1
       else:
         break
+    if unmatched_temp_files_count == len(SUPPORTED_TEMP_FILES):
+      raise TemplateFileNotSupportedException(
+          'Template file %(file)s is not supported!' %
+          {'file': path})
     with open(path, 'r') as template_file:
       message = template_file.read()
     return message
@@ -150,7 +155,8 @@ class Template:
     for var in OTHERS:
       if self.data[var]:
         self._message = self._message.replace(var, self.data[var])
-    self._message = self._language_tool.correct(self._message)
+    if self._enable_language_tool:
+      self._message = self._language_tool.correct(self._message)
     for var in NAMES:
       if self.data[var]:
         self._message = self._message.replace(var, self.data[var])
