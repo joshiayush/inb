@@ -26,36 +26,37 @@ from __future__ import annotations
 import time
 import functools
 
-from typing import Any
-from typing import List
-from typing import Dict
+from typing import (
+  Any,
+  List,
+  Dict,
+)
 
-from lib import _type
-
-from ..person.person import Person
 from ..DOM.cleaners import Cleaner
+from ..person.person import Person
 from ..invitation.status import Invitation
 
-from errors import ConnectionLimitExceededException
+from errors import (
+  ConnectionLimitExceededException,
+)
 
 from selenium import webdriver
 
-from selenium.common.exceptions import TimeoutException
-from selenium.common.exceptions import ElementNotInteractableException
-from selenium.common.exceptions import ElementClickInterceptedException
+from selenium.common.exceptions import (
+  TimeoutException,
+  ElementNotInteractableException,
+  ElementClickInterceptedException,
+)
 
 from selenium.webdriver.common.action_chains import ActionChains
 
 
 class LinkedInConnect(object):
-  __INVITATION_SENT: int = 0
-  MY_NETWORK_PAGE: str = "https://www.linkedin.com/mynetwork/"
+  _INVITATION_SENT = 0
+  MY_NETWORK_PAGE = "https://www.linkedin.com/mynetwork/"
 
-  def __init__(
-      self: LinkedInConnect,
-      driver: webdriver.Chrome,
-      limit: int = 40
-  ) -> None:
+  def __init__(self: LinkedInConnect, driver: webdriver.Chrome,
+               limit: int = 40) -> None:
     """LinkedInConnectionsAuto class constructor to initialise LinkedInConnectionsAuto object.
 
     :Args:
@@ -69,17 +70,16 @@ class LinkedInConnect(object):
     :Raises:
         - ConnectionLimitExceededException if user gives a connection limit that exceeds 80
     """
-    if not isinstance(driver, webdriver.Chrome):
+    if driver:
+      self._driver = driver
+    else:
       raise Exception(
-          "Object '%(driver)s' is not a 'webdriver.Chrome' object!" %
-          {"driver": _type(driver)})
-    self._driver = driver
-
+        "Expected 'webdriver.Chrome' but NoneType object recieved!")
     if limit > 80:
       raise ConnectionLimitExceededException(
           "Daily invitation limit can't be greater than 80, we recommend 40!")
     self._limit = limit
-    self.cleaner = Cleaner(self._driver)
+    self._cleaner = Cleaner(self._driver)
 
   def _get_mynetwork(function_: function) -> None:
     """Method get_my_network() sends a GET request to the network page of LinkedIn.
@@ -124,7 +124,7 @@ class LinkedInConnect(object):
 
     invitation = Invitation()
     while person:
-      if LinkedInConnect.__INVITATION_SENT == self._limit:
+      if LinkedInConnect._INVITATION_SENT == self._limit:
         break
 
       try:
@@ -134,7 +134,7 @@ class LinkedInConnect(object):
             name=person.name, occupation=person.occupation,
             status="sent", elapsed_time=time.time() - start)
         invitation.status(come_back_by=8)
-        LinkedInConnect.__INVITATION_SENT += 1
+        LinkedInConnect._INVITATION_SENT += 1
       except (ElementNotInteractableException,
               ElementClickInterceptedException) as error:
         if isinstance(error, ElementClickInterceptedException):
@@ -156,7 +156,7 @@ class LinkedInConnect(object):
     :Returns:
         - {None}
     """
-    self.cleaner.clear_message_overlay()
+    self._cleaner.clear_message_overlay()
 
   @_get_mynetwork
   def run(self: LinkedInConnect) -> None:
@@ -181,7 +181,7 @@ class LinkedInConnect(object):
     :Returns:
         - {None}
     """
-    LinkedInConnect.__INVITATION_SENT = 0
+    LinkedInConnect._INVITATION_SENT = 0
     try:
       self._driver.quit()
     except AttributeError:

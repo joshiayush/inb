@@ -79,20 +79,19 @@ class LinkedIn(Driver):
     >>> linkedin = LinkedIn('ayush854032@gmail.com', 'xxx-xxx-xxx', 
     ...              chromedriver_abs_path(), chromedriver_options)
     """
-    super(
-        LinkedIn, self).__init__(
+    super(LinkedIn, self).__init__(
         driver_path=driver_path, options=opt_chromedriver_options)
 
-    if user_email:
+    if user_email is None:
+      raise CredentialsNotGivenException(
+          "Expected 'str' object, received 'NoneType'")
+    else:
       self._user_email = user_email
-    else:
+    if user_password is None:
       raise CredentialsNotGivenException(
-          "'user_email' can not be empty!")
-    if user_password:
+          "Expected 'str' object, received 'NoneType'")
+    else:
       self._user_password = user_password
-    else:
-      raise CredentialsNotGivenException(
-          "'user_password' can not be empty!")
 
   @classmethod
   def set_login_page_url(cls: LinkedIn, url: str) -> None:
