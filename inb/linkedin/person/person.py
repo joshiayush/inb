@@ -44,8 +44,6 @@ from . import (
 
 from ..DOM.javascript import JS
 
-from lib import _type
-
 
 class Person(object):
 
@@ -217,6 +215,7 @@ class Person(object):
 
         entity_result_content_anchor_tag = entity_result_content_container.find_element_by_tag_name("a")
         person_name = entity_result_content_anchor_tag.text
+        person_name = person_name.split('\n')[0]
 
         person_connect_button = entity_result_item_container.find_element_by_css_selector("div[class^='entity-result__actions']").find_element_by_tag_name("button")
 

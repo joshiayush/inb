@@ -39,6 +39,8 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
+from urllib3.exceptions import MaxRetryError
+
 from selenium.common.exceptions import (
   TimeoutException,
   NoSuchElementException,
@@ -167,13 +169,16 @@ class Cleaner(object):
     >>> # this will set the message overlay item to its original state
     >>> del cleaner
     """
-    for element in self.elements_marked_none:
-      if element['method'] == 'xpath':
-        self._driver.execute_script(f"""
-          {FUNC_GET_ELEMENT_BY_XPATH}
-          getElementByXpath(`{element['selector']}`).style = "display: {element['original_display_value']};";
-        """)
-      elif element['method'] == 'css':
-        self._driver.execute_script(f"""
-          document.querySelector(`{element['selector']}`).style = "display: {element['original_display_value']}"
+    try:
+      for element in self.elements_marked_none:
+        if element['method'] == 'xpath':
+          self._driver.execute_script(f"""
+            {FUNC_GET_ELEMENT_BY_XPATH}
+            getElementByXpath(`{element['selector']}`).style = "display: {element['original_display_value']};";
           """)
+        elif element['method'] == 'css':
+          self._driver.execute_script(f"""
+            document.querySelector(`{element['selector']}`).style = "display: {element['original_display_value']}"
+            """)
+    except MaxRetryError:
+      pass

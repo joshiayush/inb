@@ -338,6 +338,42 @@ class InbArgParser:
     else:
       self.profile_language = None
 
+    if namespace.message:
+      self.message = namespace.message
+    else:
+      self.message = None
+
+    if namespace.template_business:
+      self.use_template = 'template_business'
+    elif namespace.template_sales:
+      self.use_template = 'template_sales'
+    elif namespace.template_real_estate:
+      self.use_template = 'template_real_estate'
+    elif namespace.template_creative_industry:
+      self.use_template = 'template_creative_industry'
+    elif namespace.template_hr:
+      self.use_template = 'template_hr'
+    elif namespace.template_include_industry:
+      self.use_template = 'template_include_industry'
+    elif namespace.template_ben_franklin:
+      self.use_template = 'template_ben_franklin'
+    elif namespace.template_virtual_coffee:
+      self.use_template = 'template_virtual_coffee'
+    elif namespace.template_common_connection_request:
+      self.use_template = 'template_common_connection_request'
+    else:
+      self.use_template = None
+
+    if namespace.force:
+      self.grammar_check = False
+    else:
+      self.grammar_check = True
+
+    if namespace.var:
+      self.var_template = namespace.var
+    else:
+      self.var_template = None
+
     # parse the limit given, we want to set the limit to 20 if the limit is
     # a string and cannot be converted into an integer with base 10
     if namespace.limit:

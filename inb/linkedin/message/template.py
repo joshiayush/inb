@@ -77,24 +77,47 @@ VAR_END_BLK = 'VARIABLE END;'
 TEMPL_BEGN_BLK = 'TEMPLATE BEGIN:'
 TEMPL_END_BLK = 'TEMPLATE END;'
 
+TEMPL_AVAIL = [
+    'template_business', 'template_sales', 'template_real_estate', 
+    'template_creative_industry', 'template_hr', 'template_include_industry',
+    'template_ben_franklin', 'template_virtual_coffee', 
+    'template_common_connection_request', ]
+
+TEMPL_FILE_PATH = os.path.join(os.path.abspath(__file__)[0:os.path.abspath(__file__).find('template.py'):], 'templates.json')
+
 
 class Template:
   def __init__(
           self: Template, message_template: str,
-          *, var_tamplate: str, grammar_check: bool = True) -> None:
-    if os.path.isfile(message_template):
+          *, var_template: str, grammar_check: bool = True,
+          use_template: str = None) -> None:
+    if message_template is None:
+      if use_template is None:
+        return
+      else:
+          self._message_template = self.get_template_by_name(use_template)
+          if use_template == 'template_common_connection_request':
+            self._message_template = random.choice(self._message_template)
+    elif os.path.isfile(message_template):
       self._message_template = self.load_message(message_template)
     else:
       self._message_template = message_template
-    if os.path.isfile(var_tamplate):
-      self.var_template = var_tamplate
-    else:
-      self.var_template = None
+    self.var_template = var_template
     self._enable_language_tool = grammar_check
     if self._enable_language_tool:
       import language_tool_python
       self._language_tool = language_tool_python.LanguageTool(
           language=DEFAULT_LANG)
+
+  @staticmethod
+  def get_template_by_name(name: str) -> str:
+    if not name in TEMPL_AVAIL:
+      raise TemplateFileException(
+        f"Invalid template! Use any of these {TEMPL_AVAIL}")
+    else:
+      with open(TEMPL_FILE_PATH, 'r') as templ_file:
+        data = json.load(templ_file)
+      return data[name]
 
   def set_data(self: Template, data: Dict[str, str]) -> None:
     self._data = {}
@@ -110,6 +133,9 @@ class Template:
     self._data = {**self._data, **{'{{profile_language}}': data.pop('profile_language', None)}}
     self._data = {**self._data, **{'{{position}}': data.pop('position', None)}}
     self._data = {**self._data, **{'{{year}}': data.pop('year', str(datetime.datetime.now().year))}}
+
+    if os.path.isfile(self.var_template):
+      self.load_variable(self.var_template)
 
   @staticmethod
   def check_if_file_is_supported(path: str) -> bool:
@@ -143,26 +169,27 @@ class Template:
     variables = variables[variables.find(VAR_BEGN_BLK)+len(VAR_BEGN_BLK):variables.find(VAR_END_BLK):]
     variables = variables.split('\n')
     for var in variables:
+      if var == '':
+        continue
       var_, val = var.split('=')
-      var_ = var.strip()
+      var_ = var_.strip()
       if var_ in MY_NAMES:
         self._data = {**self._data, **{var_: val.strip()}}
       else:
         raise TemplateFileException(
-          f"Variables other than {MY_NAMES} are not currently supported!")
+          f"Variables other than {MY_NAMES} are not currently supported, you gave {var_}!")
 
   def parse(self: Template) -> str:
     def common_connection_request_random_choice() -> str:
-      abspath_ = os.path.abspath(__file__)
-      with open(os.path.join(abspath_[:abspath_.find(__file__):], 'templates.json')) as file:
-        data = json.dump(file)
+      with open(TEMPL_FILE_PATH, 'r') as file:
+        data = json.load(file)
         message = random.choice(data['template_common_connection_request'])
       return message
     def check_if_templ_variable_missing(var: str) -> bool:
       nonlocal self
-      return self._data[var] is None and self._message_template.find(var) > -1
+      return var in self._data and self._data[var] is None and self._message_template.find(var) > -1
     for var in OTHERS:
-      if self._data[var]:
+      if var in self._data and self._data[var]:
         self._message_template = self._message_template.replace(var, self._data[var])
       elif check_if_templ_variable_missing(var):
         self._message_template = common_connection_request_random_choice()
@@ -170,7 +197,7 @@ class Template:
     if self._enable_language_tool:
       self._message_template = self._language_tool.correct(self._message_template)
     for var in NAMES:
-      if self._data[var]:
+      if var in self._data and self._data[var]:
         self._message_template = self._message_template.replace(var, self._data[var])
       elif check_if_templ_variable_missing(var):
         self._message_template = common_connection_request_random_choice()
@@ -179,8 +206,8 @@ class Template:
 
   def read(self: Template) -> str:
     message = self.parse()
-    if len(self._message_template) > 300:
+    if len(message) > 300:
       raise TemplateMessageLengthExceededException(
           'Personalized message length cannot exceed by 300, you gave %(characters)s characters'
-          % {'characters': len(self._message_template)})
+          % {'characters': len(message)})
     return message

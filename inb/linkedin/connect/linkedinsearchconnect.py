@@ -26,17 +26,21 @@ from __future__ import annotations
 import time
 import functools
 
-from typing import Any
-from typing import List
-from typing import Dict
-from typing import Optional
+from typing import (
+  Any,
+  List,
+  Dict,
+  Optional,
+)
 
 from selenium import webdriver
 
-from selenium.common.exceptions import NoSuchElementException
-from selenium.common.exceptions import InvalidElementStateException
-from selenium.common.exceptions import ElementNotInteractableException
-from selenium.common.exceptions import ElementClickInterceptedException
+from selenium.common.exceptions import (
+  NoSuchElementException,
+  InvalidElementStateException,
+  ElementNotInteractableException,
+  ElementClickInterceptedException,
+)
 
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
@@ -45,14 +49,17 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
-from errors import ConnectionLimitExceededException
+from errors import (
+  ConnectionLimitExceededException,
+  TemplateMessageLengthExceededException,
+)
 
 from lib.algo import levenshtein
-from lib.utils import _type
 
 from ..DOM import Cleaner
-from ..DOM.javascript import JS
+from ..message import Template
 from ..person.person import Person
+from ..DOM.javascript import JS
 from ..invitation.status import Invitation
 
 
@@ -64,20 +71,15 @@ class LinkedInSearchConnect(object):
   __INVITATION_SENT: int = 0
 
   def __init__(
-      self: LinkedInSearchConnect,
-      driver: webdriver.Chrome,
-      *,
-      keyword: str = None,
-      location: str = None,
-      title: Optional[str] = None,
-      first_name: Optional[str] = None,
-      last_name: Optional[str] = None,
-      school: Optional[str] = None,
-      industry: Optional[str] = None,
-      current_company: Optional[str] = None,
-      profile_language: Optional[str] = None,
-      limit: int = 40
-  ) -> None:
+          self: LinkedInSearchConnect, driver: webdriver.Chrome, *,
+          keyword: str, location: Optional[str] = None,
+          title: Optional[str] = None, first_name: Optional[str] = None,
+          last_name: Optional[str] = None, school: Optional[str] = None,
+          industry: Optional[str] = None,
+          current_company: Optional[str] = None,
+          profile_language: Optional[str] = None,
+          message_template: str = None, use_template: str = None,
+          var_template: str = None, grammar_check: bool = True, limit: int = 40) -> None:
     """Constructor method to initialize LinkedInSearchConnect instance.
 
     :Args:
@@ -97,18 +99,20 @@ class LinkedInSearchConnect(object):
         - {Exception}
         - {ConnectionLimitExceededException}
     """
-    if not isinstance(driver, webdriver.Chrome):
-      raise TypeError(
-          "Object '%(driver)s' is not a 'webdriver.Chrome' object!" %
-          {"driver": _type(driver)})
-    self._driver = driver
-
+    if driver is None:
+      raise Exception(
+        "Expected 'webdriver.Chrome' but received 'NoneType'")
+    else:
+      self._driver = driver
     if limit > 80:
       raise ConnectionLimitExceededException(
           "Daily invitation limit can't be greater than 80, we recommend 40!")
-    self._limit = limit
-
-    self._keyword = keyword
+    else:
+      self._limit = limit
+    if keyword is None:
+      raise Exception("Expected 'str' but received 'NoneType'")
+    else:
+      self._keyword = keyword
     self._location = location
     self._title = title
     self._first_name = first_name
@@ -117,6 +121,10 @@ class LinkedInSearchConnect(object):
     self._industry = industry
     self._current_company = current_company
     self._profile_language = profile_language
+    self._message_template = message_template
+    self._use_template = use_template
+    self._grammar_check = grammar_check
+    self._var_template = var_template
     self.cleaner = Cleaner(self._driver)
 
   def _scroll(self: LinkedInSearchConnect) -> None:
@@ -384,6 +392,12 @@ class LinkedInSearchConnect(object):
     p = Person(self._driver)
     persons = p.get_search_results_elements()
 
+    if self._message_template is not None or self._use_template:
+      template = Template(self._message_template,
+                          use_template=self._use_template,
+                          var_template=self._var_template,
+                          grammar_check=self._grammar_check)
+
     invitation = Invitation()
     while True:
       for person in persons:
@@ -392,17 +406,56 @@ class LinkedInSearchConnect(object):
           continue
 
         try:
-          ActionChains(self._driver).move_to_element(
-              person.connect_button).click().perform()
-          send_invite_modal = WebDriverWait(
-              self._driver, LinkedInSearchConnect.WAIT).until(
-              EC.presence_of_element_located(
-                  (By.XPATH,
-                   "//div[@aria-labelledby='send-invite-modal']")))
-          send_now = send_invite_modal.find_element_by_xpath(
-              "//button[@aria-label='Send now']")
-          ActionChains(self._driver).move_to_element(
-              send_now).click().perform()
+          if self._message_template is None and self._use_template is None:
+            ActionChains(self._driver).move_to_element(
+                person.connect_button).click().perform()
+            send_invite_modal = WebDriverWait(
+                self._driver, LinkedInSearchConnect.WAIT).until(
+                EC.presence_of_element_located(
+                    (By.XPATH,
+                     "//div[@aria-labelledby='send-invite-modal']")))
+            send_now = send_invite_modal.find_element_by_xpath(
+                "//button[@aria-label='Send now']")
+            ActionChains(self._driver).move_to_element(
+                send_now).click().perform()
+          else:
+            data = {'name': person.name,
+                    'first_name': person.first_name,
+                    'last_name': person.last_name,
+                    'keyword': self._keyword,
+                    'location': person.location,
+                    'industry': person.summary, 'title': self._title,
+                    'school': self._school,
+                    'current_company': self._current_company,
+                    'profile_language': self._profile_language,
+                    'position': self._title}
+            template.set_data(data)
+            try:
+              message = template.read()
+            except TemplateMessageLengthExceededException:
+              message = "Hi there,\nI'm in a personal mission of expanding my network with professionals\nLet's connect"
+            ActionChains(self._driver).move_to_element(
+                person.connect_button).click().perform()
+            send_invite_modal = WebDriverWait(
+                self._driver, LinkedInSearchConnect.WAIT).until(
+                EC.presence_of_element_located(
+                    (By.XPATH,
+                     "//div[@aria-labelledby='send-invite-modal']")))
+            add_note = send_invite_modal.find_element_by_xpath(
+                "//button[@aria-label='Add a note']")
+            ActionChains(self._driver).move_to_element(
+              add_note).click().perform()
+            custom_message = send_invite_modal.find_element_by_xpath(
+                "//textarea[@id='custom-message']")
+            try:
+              custom_message.clear()
+            except InvalidElementStateException:  # don't do anything if the element is in read-only state
+              pass
+            custom_message.send_keys(message)
+            send_now = send_invite_modal.find_element_by_xpath(
+                "//button[@aria-label='Send now']")
+            ActionChains(self._driver).move_to_element(
+                send_now).click().perform()
           invitation.set_invitation_fields(
               name=person.name, occupation=person.occupation,
               status="sent", elapsed_time=time.time() - start)
@@ -423,7 +476,8 @@ class LinkedInSearchConnect(object):
       def next_() -> None:
         next_: webdriver.Chrome = self._driver.find_element_by_xpath(
             "//main[@id='main']//button[@aria-label='Next']")
-        next_.click()
+        ActionChains(self._driver).move_to_element(
+          next_).click().perform()
 
       try:
         next_()
