@@ -36,6 +36,7 @@ This document has the following content available:
 - [Templates with Subtle Pitch](#templates-with-subtle-pitch)
 - [Webinar Invitation](#webinar-invitation)
 - [Common Connection Request Messages](#common-connection-request-messages)
+- [Important](#important)
 - [How you can add your own?](#how-you-can-add-your-own)
 - [What's interesting?](#whats-interesting)
 
@@ -44,12 +45,14 @@ This document has the following content available:
 - Assumes that the person owns some business.
 
   ```text
+  TEMPLATE BEGIN:
   Hi {{name}},
 
   I'm looking to expand my network with fellow business owners and professionals. I would love to learn about what you do and see
   if there's any way we can support each other.
 
   Cheers!
+  TEMPLATE END;
   ```
 
   Example:
@@ -61,11 +64,13 @@ This document has the following content available:
 - Assumes that the person belong to a sales job.
 
   ```text
+  TEMPLATE BEGIN:
   Hi {{name}},
 
   I'm looking to connect with like-minded professionals specifically who are on the revenue generating side of things.
 
   Let's connect!
+  TEMPLATE END;
   ```
 
   Example:
@@ -77,12 +82,14 @@ This document has the following content available:
 - Assumes that the person works in real estate.
 
   ```text
+  TEMPLATE BEGIN:
   Hey {{name}},
 
   Came across your profile and saw your work in real estate. I'm reaching out to connect with other like-minded people. Would be
   happy to make your acquaintance.
 
   Have a good day!
+  TEMPLATE END;
   ```
 
   Example:
@@ -94,12 +101,14 @@ This document has the following content available:
 - Assumes that you and the person both are in the creative industry.
 
   ```text
+  TEMPLATE BEGIN:
   Hi {{name}},
 
   LinkedIn showed me your profile multiple times now, so I checked what you do. I really like your work and as we are both in the
   creative industy - I thought I'll reach out. It's always great to be connected with like-minded individuals, isn't it?
 
   {{my_name}}
+  TEMPLATE END;
   ```
 
   Example:
@@ -111,11 +120,13 @@ This document has the following content available:
 - Assumes that the person and you both work in the HR field.
 
   ```text
+  TEMPLATE BEGIN:
   Hey {{name}},
 
   I hope your week is off to a great start, I noticed we both work in the HR/Employee Experience field together.
 
   I would love to connect with you.
+  TEMPLATE END;
   ```
 
   Example:
@@ -127,12 +138,14 @@ This document has the following content available:
 - Includes industry.
 
   ```text
+  TEMPLATE BEGIN:
   Hi {{name}},
 
   I hope you're doing great! I'm on a personal mission to grow my connections on LinkedIn, especially in the field of {{industry}}.
   So even though we're practically strangers, I'd love to connect with you.
 
   Have a great day!
+  TEMPLATE END;
   ```
 
   Example:
@@ -146,11 +159,13 @@ This document has the following content available:
 - Ben Franklin effect
 
   ```text
+  TEMPLATE BEGIN:
   Hi {{name}},
 
   The Ben Franklin effect - when we do a person a favor, we tend to like them more as a result. Anything I can do for you?
 
   Best, {{my_name}}
+  TEMPLATE END;
   ```
 
   Example:
@@ -164,10 +179,12 @@ This document has the following content available:
 - Ask for connecting virtually
 
   ```text
+  TEMPLATE BEGIN:
   Hi {{name}},
 
   I hope you're doing well. I'm {{my_name}}, {{my_position}} of {{my_company_name}}. We're looking for {{position}} and it would be
   great to connect over a 'virtual' coffee/chat and see what we can do together?
+  TEMPLATE END;
   ```
 
   Example:
@@ -181,50 +198,82 @@ This document has the following content available:
 **inb** will choose any of the following template by itself if you use the flag `--template-common-connection-request`.
 
 ```text
+TEMPLATE BEGIN:
 Hey {{name}},
 
 I notice we share a mutual connection or two & would love to add you to my network of professionals.
 
 If you're open to that let's connect!
+TEMPLATE END;
 ```
 
 ```text
+TEMPLATE BEGIN:
 Hi {{name}},
 
 I see we have some mutual connections. I always like networking with new people, and thought this would be an easy way for us to
 introduce ourselves.
+TEMPLATE END;
 ```
 
 ```text
+TEMPLATE BEGIN:
 Hi {{name}},
 
 Life is both long and short. We have quite a few mutual connections. I would like to invite you to join my network on LinkedIn
 platform. Hopefully, our paths will cross professionally down the line. Until then, wishing you and yours an incredible {{year}}.
 
 {{my_name}}
+TEMPLATE END;
 ```
 
 ```text
+TEMPLATE BEGIN:
 Hi {{name}},
 
 I was looking at your profile and noticed we had a few shared connections. I thought it would be nice to reach out to connect with
 you and share out networks.
 
 Thank you and hope all is well!
+TEMPLATE END;
 ```
 
 ```text
+TEMPLATE BEGIN:
 Hey {{first_name}},
 
 I saw you're based in {{location}} and work on {{keyword}}, I'd love to connect.
 
 Thanks, {{my_name}}
+TEMPLATE END;
 ```
 
 Example:
 
 ```shell
 python3 inb/inb.py search --email "ayush854032@gmail.com" --password "F:(:);GVlk\`" --location "Australia" --title "Artist" --keyword "Artist" message --template-common-connection-request
+```
+
+## Important
+
+In case you are using a template where your name is required, your company's name, your industry or your location is required then you have to create a file that will store these values for you like following:
+
+**variable.txt**
+
+```text
+VARIABLE BEGIN:
+{{my_name}}=Ayush Joshi
+{{my_first_name}}=Ayush
+{{my_last_name}}=Joshi
+{{my_company_name}}=joshiayush
+{{my_position}}=Developer
+VARIABLE END;
+```
+
+Once you've created this file you have to specify this file over the command line with the `--var` flag, for example:
+
+```shell
+python3 inb/inb.py search --email "ayush854032@gmail.com" --password "F:(:);GVlk\`" --location "Australia" --title "Director"  --keyword "People Management" message --template-virtual-coffee --var "variable.txt"
 ```
 
 ## How you can add your own?
@@ -237,12 +286,14 @@ For example,
 **message.txt**
 
 ```text
+TEMPLATE BEGIN:
 Hi {{name}},
 
 Life is both long and short. We have quite a few mutual connections. I would like to invite you to join my network on LinkedIn
 platform. Hopefully, our paths will cross professionally down the line. Until then, wishing you and yours an incredible {{year}}.
 
-{{my_name}}
+Ayush
+TEMPLATE END;
 ```
 
 _Note: The file name can be anything._

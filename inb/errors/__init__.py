@@ -258,6 +258,26 @@ class InternetNotConnectedException(Exception):
       return "InternetNotConnectedException has been raised!"
 
 
+class TemplateFileException(Exception):
+  """Thrown when there is a problem proccessing data internally."""
+
+  def __init__(self: TemplateFileException, *
+               args: Tuple[Any]) -> None:
+    super(TemplateFileException, self).__init__(*args)
+    if args:
+      if args[0]:
+        self.message = args[0]
+    else:
+      self.message = None
+    self.name = type(self).__name__
+
+  def __str__(self: TemplateFileException) -> str:
+    if self.message:
+      return '%(name)s: %(message)s' % {
+          'name': self.name, 'message': self.message}
+    else:
+      return '%(name)s has been raised!' % {'name': self.name}
+
 class TemplateFileNotSupportedException(Exception):
   """Thrown when template file is not supported."""
 

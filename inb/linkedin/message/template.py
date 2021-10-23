@@ -48,17 +48,20 @@ import os
 import json
 import random
 import datetime
-import language_tool_python
 
 from errors import (
+  TemplateFileException,
   TemplateFileNotSupportedException,
   TemplateMessageLengthExceededException,
 )
 
+MY_NAMES = [
+    '{{my_name}}', '{{my_first_name}}', '{{my_last_name}}', 
+    '{{my_company_name}}', '{{my_position}}', ]
+
 NAMES = [
-    '{{name}}', '{{first_name}}', '{{last_name}}', '{{my_name}}',
-    '{{my_first_name}}', '{{my_last_name}}', '{{my_company_name}}',
-    '{{current_company}}', ]
+    '{{name}}', '{{first_name}}', '{{last_name}}', 
+    '{{current_company}}', *MY_NAMES, ]
 
 OTHERS = [
     '{{keyword}}', '{{location}}', '{{industry}}', '{{title}}',
@@ -69,17 +72,27 @@ SUPPORTED_TEMP_FILES = ['.txt', ]
 
 DEFAULT_LANG = 'en-US'
 
+VAR_BEGN_BLK = 'VARIABLE BEGIN:'
+VAR_END_BLK = 'VARIABLE END;'
+TEMPL_BEGN_BLK = 'TEMPLATE BEGIN:'
+TEMPL_END_BLK = 'TEMPLATE END;'
+
 
 class Template:
   def __init__(
           self: Template, message_template: str,
-          *, grammar_check: bool = True) -> None:
+          *, var_tamplate: str, grammar_check: bool = True) -> None:
     if os.path.isfile(message_template):
       self._message_template = self.load_message(message_template)
     else:
       self._message_template = message_template
+    if os.path.isfile(var_tamplate):
+      self.var_template = var_tamplate
+    else:
+      self.var_template = None
     self._enable_language_tool = grammar_check
     if self._enable_language_tool:
+      import language_tool_python
       self._language_tool = language_tool_python.LanguageTool(
           language=DEFAULT_LANG)
 
@@ -88,9 +101,6 @@ class Template:
     self._data = {**self._data, **{'{{name}}': data.pop('name', None)}}
     self._data = {**self._data, **{'{{first_name}}': data.pop('first_name', None)}}
     self._data = {**self._data, **{'{{last_name}}': data.pop('last_name', None)}}
-    self._data = {**self._data, **{'{{my_name}}': data.pop('my_name', None)}}
-    self._data = {**self._data, **{'{{my_first_name}}': data.pop('my_first_name', None)}}
-    self._data = {**self._data, **{'{{my_last_name}}': data.pop('my_last_name', None)}}
     self._data = {**self._data, **{'{{keyword}}': data.pop('keyword', None)}}
     self._data = {**self._data, **{'{{location}}': data.pop('location', None)}}
     self._data = {**self._data, **{'{{industry}}': data.pop('industry', None)}}
@@ -98,13 +108,11 @@ class Template:
     self._data = {**self._data, **{'{{school}}': data.pop('school', None)}}
     self._data = {**self._data, **{'{{current_company}}': data.pop('current_company', None)}}
     self._data = {**self._data, **{'{{profile_language}}': data.pop('profile_language', None)}}
-    self._data = {**self._data, **{'{{my_position}}': data.pop('my_position', None)}}
-    self._data = {**self._data, **{'{{my_company_name}}': data.pop('my_company_name', None)}}
     self._data = {**self._data, **{'{{position}}': data.pop('position', None)}}
     self._data = {**self._data, **{'{{year}}': data.pop('year', str(datetime.datetime.now().year))}}
 
   @staticmethod
-  def load_message(path: str) -> str:
+  def check_if_file_is_supported(path: str) -> bool:
     unmatched_temp_files_count = 0
     for ext in SUPPORTED_TEMP_FILES:
       if not path.endswith(ext):
@@ -112,12 +120,36 @@ class Template:
       else:
         break
     if unmatched_temp_files_count == len(SUPPORTED_TEMP_FILES):
+      return False
+    return True
+
+  @staticmethod
+  def load_message(path: str) -> str:
+    if Template.check_if_file_is_supported(path) is False:
       raise TemplateFileNotSupportedException(
           'Template file %(file)s is not supported!' %
           {'file': path})
-    with open(path, 'r') as template_file:
-      message = template_file.read()
-    return message
+    with open(path, 'r') as templ_file:
+      message = templ_file.read()
+    return message[message.find(TEMPL_BEGN_BLK)+len(TEMPL_BEGN_BLK):message.find(TEMPL_END_BLK):]
+
+  def load_variable(self: Template, path: str) -> str:
+    if self.check_if_file_is_supported(path) is False:
+      raise TemplateFileNotSupportedException(
+          'Template file %(file)s is not supported!' %
+          {'file': path})
+    with open(path, 'r') as templ_file:
+      variables = templ_file.read()
+    variables = variables[variables.find(VAR_BEGN_BLK)+len(VAR_BEGN_BLK):variables.find(VAR_END_BLK):]
+    variables = variables.split('\n')
+    for var in variables:
+      var_, val = var.split('=')
+      var_ = var.strip()
+      if var_ in MY_NAMES:
+        self._data = {**self._data, **{var_: val.strip()}}
+      else:
+        raise TemplateFileException(
+          f"Variables other than {MY_NAMES} are not currently supported!")
 
   def parse(self: Template) -> str:
     def common_connection_request_random_choice() -> str:
