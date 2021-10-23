@@ -6,47 +6,47 @@ fi
 
 project_root_dir=$(pwd)
 
-# 
+#
 # function _dcache deletes __pycache__ folders floating around python modules
-# 
+#
 function _dcache() {
-  find "$project_root_dir/inb" -name "__pycache__" > pycache
+    find "$project_root_dir/inb" -name "__pycache__" >pycache
 
-  while IFS= read -r cache_file; do
-    rm -r $cache_file
-  done < pycache
+    while IFS= read -r cache_file; do
+        rm -r $cache_file
+    done <pycache
 
-  rm pycache
+    rm pycache
 }
 
-# 
-# function _allow_premissions changes the filemodes of the files in the project root 
-# directory while setting the git core.filemode option to false 
-# 
+#
+# function _allow_premissions changes the filemodes of the files in the project root
+# directory while setting the git core.filemode option to false
+#
 function _allow_permission() {
-  # 
-  # change file mode of the files/directories and sub-directories
-  #   
-  chmod 777 -R .
+    #
+    # change file mode of the files/directories and sub-directories
+    #
+    chmod 777 -R .
 
-  # 
-  # set git config core.filemode to false to tell git not to track the access bits 
-  # of the files/directories
-  #   
-  git config core.filemode false
+    #
+    # set git config core.filemode to false to tell git not to track the access bits
+    # of the files/directories
+    #
+    git config core.filemode false
 }
 
-# 
+#
 # function _get_code_lines count the number of code lines written so far in project
 # inb
-# 
+#
 function _get_code_lines() {
-    echo $(find inb/ -name '*.py' -exec cat {} \; | wc -l )
+    echo $(find inb/ -name '*.py' -exec cat {} \; | wc -l)
 }
 
-# 
+#
 # function _install installs the requirements for project inb
-# 
+#
 function _install() {
     local verbose=$1
     if [ -z $verbose ]; then
@@ -59,11 +59,39 @@ function _install() {
             python3 -m pip install -r requirements.txt >/dev/null
         fi
     fi
+    if [ $verbose -eq 0 ]; then
+        if [ $EUID -eq 0 ]; then
+            sudo apt update
+            sudo apt install openjdk-8-jdk openjdk-8-jre
+            echo "JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64" >>/etc/environment
+            echo "JRE_HOME=/usr/lib/jvm/java-8-openjdk-amd64/jre" >>/etc/environment
+        else
+            echo "Root privileges required to install java!" >&2
+            exit 1
+        fi
+    else
+        if [ $EUID -eq 0 ]; then
+            sudo apt update >/dev/null 2>&1
+            sudo apt install openjdk-8-jdk openjdk-8-jre >/dev/null 2>&1
+            echo "JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64" >>/etc/environment 2>&1
+            echo "JRE_HOME=/usr/lib/jvm/java-8-openjdk-amd64/jre" >>/etc/environment 2>&1
+        else
+            echo "Root privileges required to install java!" >&2
+            exit 1
+        fi
+    fi
+    source bin/activate
+    if [ $verbose -eq 0 ]; then
+        python3 -c "import language_tool_python; tool = language_tool_python.LanguageTool('en-US')"
+    else
+        python3 -c "import language_tool_python; tool = language_tool_python.LanguageTool('en-US')" >/dev/null
+    fi
+    deactivate
 }
 
-# 
+#
 # function _parse_args parses the arguments given to the program
-# 
+#
 _parse_args() {
     arg=
     mutually_exclusive_group_found=false
@@ -95,15 +123,16 @@ _parse_args() {
             ;;
         "-v" | "--verbose")
             arg="$arg verbose"
+            ;;
         esac
         shift
     done
     echo $arg
 }
 
-# 
+#
 # entry point
-# 
+#
 function main() {
     arg=$(_parse_args $@)
     if [[ $arg == install* ]]; then
