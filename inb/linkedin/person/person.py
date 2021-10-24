@@ -160,7 +160,13 @@ class Person(object):
       # set a counter for elements that we are going to target
       target = 1
       # targetting elements using their relative xpath
-      xpath = Path_To_Element_By.SEARCH_RESULTS_PEOPLE_XPATH
+      try:
+        WebDriverWait(self._driver, 5).until(
+        EC.presence_of_element_located(
+          (By.XPATH, '//*[@id="main"]/div/div/div[2]//a[text()="Try Premium Free For 1 Month"]')))
+        xpath = Path_To_Element_By.SEARCH_RESULTS_PEOPLE_XPATH_SEC
+      except (TimeoutException, NoSuchElementException):
+        xpath = Path_To_Element_By.SEARCH_RESULTS_PEOPLE_XPATH_PRM
       search_results_person_lis: List[webdriver.Chrome] = []
       while True:
         # update the xpath using the value of target to target the next element
@@ -215,6 +221,12 @@ class Person(object):
 
         entity_result_content_anchor_tag = entity_result_content_container.find_element_by_tag_name("a")
         person_name = entity_result_content_anchor_tag.text
+        # the above line will give a result something like this:
+        # 
+        # Ayush Joshi\nView Ayush Joshi’s profile
+        # 
+        # and we don't want any thing except for the name so we split the result
+        # at '\n' and take out the first element of the resulting list
         person_name = person_name.split('\n')[0]
 
         person_connect_button = entity_result_item_container.find_element_by_css_selector("div[class^='entity-result__actions']").find_element_by_tag_name("button")
