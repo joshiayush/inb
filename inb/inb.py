@@ -283,11 +283,12 @@ connect.set_defaults(which="connect",
 
 #
 # Usage: inb search [-h] [-e [EMAIL]] [-p [PASSWORD]] [-k [KEYWORD]]
-#                   [-l [LOCATION]] [-t [TITLE]] [-fn [FIRST_NAME]]
-#                   [-ln [LAST_NAME]] [-s [SCHOOL]] [-inds [INDUSTRY]]
-#                   [-cc [CURRENT_COMPANY]] [-pl [PROFILE_LANGUAGE]] [-c] [-i]
-#                   [-ngpu] [-m]
-#                   {limit} ...
+#   [-l [LOCATION]] [-t [TITLE]] [-fn [FIRST_NAME]]
+#   [-ln [LAST_NAME]] [-s [SCHOOL]] [-inds [INDUSTRY]]
+#   [-cc [CURRENT_COMPANY]] [-pl [PROFILE_LANGUAGE]]
+#   [-msg [MESSAGE] | -tb | -ts | -tre | -tci | -thr | -tiind |
+#   -tbfn | -tvc | -tccr] [-c] [-i] [-ngpu] [-m] [-idb]
+#   {limit} ...
 #
 #  _       _
 # (_)_ __ | |__
@@ -326,11 +327,33 @@ connect.set_defaults(which="connect",
 #                         Person's current company
 #   -pl [PROFILE_LANGUAGE], --profile-language [PROFILE_LANGUAGE]
 #                         Person's profile language
+#   -msg [MESSAGE], --message [MESSAGE]
+#                         adds a message template
+#   -tb, --template-business
+#                         template to expand network with business owners
+#   -ts, --template-sales
+#                         template to expand network with sales person
+#   -tre, --template-real-estate
+#                         template to expand network with real estate agents
+#   -tci, --template-creative-industry
+#                         template to expand your network with people who belong
+#                         to creative industry
+#   -thr, --template-hr   template to expand your network with HRs
+#   -tiind, --template-include-industry
+#                         template to expand your network with people who belong
+#                         to the industry you specified over command line
+#   -tbfn, --template-ben-franklin
+#                         template with subtle pitch
+#   -tvc, --template-virtual-coffee
+#                         template to invite people for webinar
+#   -tccr, --template-common-connection-request
+#                         template to personalize common connection request
 #   -c, --cookies         uses cookies for authentication
 #   -i, --incognito       set browser in incognito mode
 #   -ngpu, --headless     starts chrome in headless mode
 #   -m, --start-maximized
 #                         set browser in full screen
+#   -idb, --debug         logs debug info when given
 #
 
 search = subparsers.add_parser(
@@ -394,6 +417,62 @@ search.add_argument("-pl", "--profile-language",
                     default=None,
                     help="Person's profile language")
 
+search_templ_group = search.add_mutually_exclusive_group()
+
+search_templ_group.add_argument('-msg', '--message', type=str,
+                                nargs=NARGS.OPTIONAL, default=None,
+                                help='adds a message template')
+
+search_templ_group.add_argument(
+    '-tb', '--template-business', action=OPT_ARGS_ACTION.STORE_TRUE,
+    help='template to expand network with business owners')
+
+search_templ_group.add_argument(
+    '-ts', '--template-sales', action=OPT_ARGS_ACTION.STORE_TRUE,
+    help='template to expand network with sales person')
+
+search_templ_group.add_argument(
+    '-tre', '--template-real-estate',
+    action=OPT_ARGS_ACTION.STORE_TRUE,
+    help='template to expand network with real estate agents')
+
+search_templ_group.add_argument(
+    '-tci', '--template-creative-industry',
+    action=OPT_ARGS_ACTION.STORE_TRUE,
+    help='template to expand your network with people who belong to creative industry')
+
+search_templ_group.add_argument(
+    '-thr', '--template-hr', action=OPT_ARGS_ACTION.STORE_TRUE,
+    help='template to expand your network with HRs')
+
+search_templ_group.add_argument(
+    '-tiind', '--template-include-industry',
+    action=OPT_ARGS_ACTION.STORE_TRUE,
+    help='template to expand your network with people who belong to the industry you specified over command line')
+
+search_templ_group.add_argument(
+    '-tbfn', '--template-ben-franklin',
+    action=OPT_ARGS_ACTION.STORE_TRUE,
+    help='template with subtle pitch')
+
+search_templ_group.add_argument(
+    '-tvc', '--template-virtual-coffee',
+    action=OPT_ARGS_ACTION.STORE_TRUE,
+    help='template to invite people for webinar')
+
+search_templ_group.add_argument(
+    '-tccr', '--template-common-connection-request',
+    action=OPT_ARGS_ACTION.STORE_TRUE,
+    help='template to personalize common connection request')
+
+search.add_argument(
+    '-f', '--force', action=OPT_ARGS_ACTION.STORE_TRUE,
+    help='do not alter the message grammar')
+
+search.add_argument(
+    '--var', type=str, nargs=NARGS.OPTIONAL, default=None,
+    help='template holding your personal details')
+
 #
 # Usage: inb search limit [-h] [limit]
 #
@@ -451,24 +530,18 @@ search.add_argument("-idb", "--debug",
                     action=OPT_ARGS_ACTION.STORE_TRUE,
                     help="logs debug info when given")
 
-search.set_defaults(which="search",
-                    email=None,
-                    password=None,
-                    keyword=None,
-                    location=None,
-                    title=None,
-                    first_name=None,
-                    last_name=None,
-                    school=None,
-                    industry=None,
-                    current_company=None,
-                    profile_language=None,
-                    headless=False,
-                    limit=20,
-                    debug=False,
-                    cookies=False,
-                    incognito=False,
-                    start_maximized=False)
+search.set_defaults(
+    which="search", email=None, password=None, keyword=None,
+    location=None, title=None, first_name=None, last_name=None,
+    school=None, industry=None, current_company=None,
+    profile_language=None, headless=False, message=None,
+    template_business=False, template_sales=False,
+    template_real_estate=False, template_creative_industry=False,
+    template_hr=False, template_include_industry=False,
+    template_ben_franklin=False, template_virtual_coffee=False,
+    template_common_connection_request=False, force=False, var=None,
+    limit=20, debug=False, cookies=False, incognito=False,
+    start_maximized=False)
 
 #
 # Usage: inb config [-h] [EMAIL] [PASSWORD]
@@ -685,7 +758,7 @@ if len(sys.argv) <= 1:
 exceptions = tuple([EmtpyDatabaseException,
                     CredentialsNotGivenException,
                     DatabaseDoesNotExistException,
-                    InternetNotConnectedException])
+                    InternetNotConnectedException, ])
 
 try:
   Parser(parser.parse_args()).parse()

@@ -20,22 +20,26 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-"""from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!"""
+# from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!
 from __future__ import annotations
 
+import re
 import sys
 import json
+import nameparser
 
-from typing import Union
-from typing import TextIO
+from typing import (
+  Union,
+  TextIO,
+)
 
-import re
 from selenium import webdriver
 
 
 class Path_To_Element_By(object):
   SUGGESTION_BOX_ELEMENT_XPATH = '/html/body/div[6]/div[3]/div/div/div/div/div[2]/div/div/main/div[3]/section/section/section/div/ul/li[1]'
-  SEARCH_RESULTS_PEOPLE_XPATH: str = """//*[@id="main"]/div/div/div[2]/ul/li[1]"""
+  SEARCH_RESULTS_PEOPLE_XPATH_PRM = '//*[@id="main"]/div/div/div[2]/ul/li[1]'
+  SEARCH_RESULTS_PEOPLE_XPATH_SEC = '//*[@id="main"]/div/div/div[3]/ul/li[1]'
 
 
 class Person_Info(object):
@@ -44,15 +48,10 @@ class Person_Info(object):
   """
 
   def __init__(
-          self: Person_Info,
-          name: Union[str, None] = None,
-          occupation: Union[str, None] = None,
-          profile_url: Union[str, None] = None,
-          photo_url: Union[str, None] = None,
-          location: Union[str, None] = None,
-          summary: Union[str, None] = None,
-          connect_button: Union[webdriver.Chrome, None] = None
-  ) -> None:
+          self: Person_Info, *, name: str = None, occupation: str = None,
+          profile_url: str = None, photo_url: str = None,
+          location: str = None, summary: str = None,
+          connect_button: webdriver.Chrome = None) -> None:
     """Constructor method initializes the Person_Info object with basic details
     about the person.
 
@@ -65,6 +64,9 @@ class Person_Info(object):
         - connect_button: {webdriver.Chrome} person's connect button instance.
     """
     self.name = name
+    name_ = nameparser.HumanName(self.name)
+    self.first_name = name_.first
+    self.last_name = name_.last
     self.occupation = occupation
     self.profile_url = profile_url
     if "?" in photo_url:

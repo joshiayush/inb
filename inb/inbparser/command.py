@@ -179,12 +179,16 @@ class Command(InbArgParser):
       chrome_driver_options.append(Driver.OPTIONS['incognito'])
       chrome_driver_options.append(
         Driver.OPTIONS['ignore-certificate-errors'])
-      if self.headless == True:
+      if self.headless:
         chrome_driver_options.append(Driver.OPTIONS['headless'])
         chrome_driver_options.append(
             Driver.OPTIONS['default-headless-window-size'])
         chrome_driver_options.append(
           Driver.OPTIONS['start-maximized'])
+      if self.incognito:
+        chrome_driver_options.append(Driver.OPTIONS['incognito'])
+      if self.start_maximized:
+        chrome_driver_options.append(Driver.OPTIONS['start-maximized'])
 
       # Instantiate LinkedIn login API
       self.linkedin = LinkedIn(
@@ -304,7 +308,10 @@ class Command(InbArgParser):
         first_name=self.first_name, last_name=self.last_name,
         school=self.school, industry=self.industry,
         current_company=self.current_company,
-        profile_language=self.profile_language, limit=self.limit)
+        profile_language=self.profile_language,
+        message_template=self.message,
+        use_template=self.use_template, var_template=self.var_template,
+        grammar_check=self.grammar_check, limit=self.limit)
 
     self.logger.info("Sending GET request to search results page")
     linkedin_search_connect.run()

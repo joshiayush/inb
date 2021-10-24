@@ -23,8 +23,10 @@
 # from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!
 from __future__ import annotations
 
-from typing import Any
-from typing import Tuple
+from typing import (
+  Any,
+  Tuple,
+)
 
 from lib.utils import _type
 
@@ -223,12 +225,8 @@ class ValidationError(Exception):
   def __init__(self: ValidationError, *args: Tuple[Any]) -> None:
     super(ValidationError, self).__init__(*args)
     if args:
-      if isinstance(args[0], str):
+      if args[0]:
         self.message = args[0]
-      else:
-        raise Exception(
-            "ValidationError: Constructor's first argument must be of type 'str' not '%(type)s'" % {
-                "type": _type(args[0])})
     else:
       self.message = None
 
@@ -247,12 +245,8 @@ class InternetNotConnectedException(Exception):
                [Any]) -> None:
     super(InternetNotConnectedException, self).__init__(*args)
     if args:
-      if isinstance(args[0], str):
+      if args[0]:
         self.message = args[0]
-      else:
-        raise Exception(
-            "InternetNotConnectedException: Constructor's first argument must be of type 'str' not '%(type)s'" % {
-                "type": _type(args[0])})
     else:
       self.message = None
 
@@ -262,3 +256,71 @@ class InternetNotConnectedException(Exception):
           "message": self.message}
     else:
       return "InternetNotConnectedException has been raised!"
+
+
+class TemplateFileException(Exception):
+  """Thrown when there is a problem proccessing data internally."""
+
+  def __init__(self: TemplateFileException, *
+               args: Tuple[Any]) -> None:
+    super(TemplateFileException, self).__init__(*args)
+    if args:
+      if args[0]:
+        self.message = args[0]
+    else:
+      self.message = None
+    self.name = type(self).__name__
+
+  def __str__(self: TemplateFileException) -> str:
+    if self.message:
+      return '%(name)s: %(message)s' % {
+          'name': self.name, 'message': self.message}
+    else:
+      return '%(name)s has been raised!' % {'name': self.name}
+
+class TemplateFileNotSupportedException(Exception):
+  """Thrown when template file is not supported."""
+
+  def __init__(self: TemplateFileNotSupportedException, *
+               args: Tuple[Any]) -> None:
+    super(TemplateFileNotSupportedException, self).__init__(*args)
+    if args:
+      if args[0]:
+        self.message = args[0]
+    else:
+      self.message = None
+    self.name = type(self).__name__
+
+  def __str__(self: TemplateFileNotSupportedException) -> str:
+    if self.message:
+      return '%(name)s: %(message)s' % {
+          'name': self.name, 'message': self.message}
+    else:
+      return '%(name)s has been raised!' % {'name': self.name}
+
+
+class TemplateMessageLengthExceededException(Exception):
+  """Thrown when template file content length exceeds the limit 300."""
+
+  def __init__(
+          self: TemplateMessageLengthExceededException, *
+          args: Tuple[Any]) -> None:
+    if args:
+      if args[0]:
+        self.message = args[0]
+      if len(args) >= 2:
+        self.length = args[1]
+    else:
+      self.message = None
+    self.name = type(self).__name__
+
+  def __str__(self: TemplateMessageLengthExceededException) -> str:
+    if self.message and self.length:
+      return ('%(name)s: %(message)s\n' +
+              'LinkedIn allows 300 characters only, you gave %(characters)s') % {
+          'name': self.name, 'message': self.message, 'characters': self.length}
+    elif self.message:
+      return '%(name)s: %(message)s' % {
+          'name': self.name, 'message': self.message}
+    else:
+      return '%(name)s has been raised!' % {'name': self.name}

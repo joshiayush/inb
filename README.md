@@ -1,7 +1,6 @@
 # inb 🤖
 
-This command line tool is very helpful to increase your connections on **LinkedIn**, you are going to achieve **500+** connections
-very easily.
+This command line tool is very helpful to increase your connections on **LinkedIn** by personalizing connection requests.
 
 ## Features
 
@@ -10,6 +9,7 @@ very easily.
 - [x] Automatically sends invitation to people based on their location.
 - [x] Automatically sends invitation to people based on their name.
 - [x] Automatically connects you with a person based on the profile id.
+- [x] Personalizing connection request messages.
 
 Know more [here][_project].
 
@@ -98,8 +98,10 @@ The above command will give the following output:
 Usage: inb search [-h] [-e [EMAIL]] [-p [PASSWORD]] [-k [KEYWORD]]
                   [-l [LOCATION]] [-t [TITLE]] [-fn [FIRST_NAME]]
                   [-ln [LAST_NAME]] [-s [SCHOOL]] [-inds [INDUSTRY]]
-                  [-cc [CURRENT_COMPANY]] [-pl [PROFILE_LANGUAGE]] [-c] [-i]
-                  [-ngpu] [-m]
+                  [-cc [CURRENT_COMPANY]] [-pl [PROFILE_LANGUAGE]]
+                  [-msg [MESSAGE] | -tb | -ts | -tre | -tci | -thr | -tiind |
+                  -tbfn | -tvc | -tccr] [-f] [--var [VAR]] [-c] [-i] [-ngpu]
+                  [-m] [-idb]
                   {limit} ...
 
  _       _
@@ -139,11 +141,35 @@ optional arguments:
                         Person's current company
   -pl [PROFILE_LANGUAGE], --profile-language [PROFILE_LANGUAGE]
                         Person's profile language
+  -msg [MESSAGE], --message [MESSAGE]
+                        adds a message template
+  -tb, --template-business
+                        template to expand network with business owners
+  -ts, --template-sales
+                        template to expand network with sales person
+  -tre, --template-real-estate
+                        template to expand network with real estate agents
+  -tci, --template-creative-industry
+                        template to expand your network with people who belong
+                        to creative industry
+  -thr, --template-hr   template to expand your network with HRs
+  -tiind, --template-include-industry
+                        template to expand your network with people who belong
+                        to the industry you specified over command line
+  -tbfn, --template-ben-franklin
+                        template with subtle pitch
+  -tvc, --template-virtual-coffee
+                        template to invite people for webinar
+  -tccr, --template-common-connection-request
+                        template to personalize common connection request
+  -f, --force           do not alter the message grammar
+  --var [VAR]           template holding your personal details
   -c, --cookies         uses cookies for authentication
   -i, --incognito       set browser in incognito mode
   -ngpu, --headless     starts chrome in headless mode
   -m, --start-maximized
                         set browser in full screen
+  -idb, --debug         logs debug info when given
 ```
 
 You target a specific industry by using the `--keyword` flag of `search` command.
@@ -153,6 +179,30 @@ $ python3 inb/inb.py search --email "ayush854032@gmail.com" --password "F:(:);GV
 ```
 
 The above command will start sending invitation to people who belong to _Software Developer_ industry.
+
+## Personalize your request messages
+
+Create a template file name **message.txt** inside folder **inb**.
+
+**message.txt**
+
+```text
+TEMPLATE BEGIN:
+Hi {{name}},
+
+I'm on a personal mission of expanding my network with like-minded professionals.
+
+If that sounds good, let's connect!
+TEMPLATE END;
+```
+
+Now use this template to customize your connection request messages.
+
+```shell
+$ python3 inb/inb.py search --email "ayush854032@gmail.com" --password "F:(:);GVlk\`" --keyword "Software Developer" --location "United States" --message message.txt
+```
+
+**Note: inb will replace the {{name}} with the person name you are sending request to.**
 
 Look in the [docs][_docs] folder to know more about `inb` and how to use it.
 
