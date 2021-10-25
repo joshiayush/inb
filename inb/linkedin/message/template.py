@@ -134,7 +134,7 @@ class Template:
     self._data = {**self._data, **{'{{position}}': data.pop('position', None)}}
     self._data = {**self._data, **{'{{year}}': data.pop('year', str(datetime.datetime.now().year))}}
 
-    if os.path.isfile(self.var_template):
+    if self.var_template is not None and os.path.isfile(self.var_template):
       self.load_variable(self.var_template)
 
   @staticmethod

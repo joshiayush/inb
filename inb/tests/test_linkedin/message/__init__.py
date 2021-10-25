@@ -19,14 +19,3 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
-
-from .test_algo import TestLevenshteinFunction
-from .test_utils import TestPingFunction
-from .test_utils import TestTerminalClass
-from .test_utils import TestValidatorClass
-from .test_utils import TestInbValidatorClass
-from .test_utils import TestCustomTypeFunction
-from .test_utils import TestCreateFigletFunction
-from .test_parser import TestOverridedVersionOfArgumentParserClass
-
-# from .test_commandvalueparser import TestCommandValueParserClass
