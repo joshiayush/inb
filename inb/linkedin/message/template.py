@@ -95,13 +95,13 @@ class Template:
       if use_template is None:
         return
       else:
-          self._message_template = self.get_template_by_name(use_template)
+          self._message = self.get_template_by_name(use_template)
           if use_template == 'template_common_connection_request':
-            self._message_template = random.choice(self._message_template)
+            self._message = random.choice(self._message)
     elif os.path.isfile(message_template):
-      self._message_template = self.load_message(message_template)
+      self._message = self.load_message(message_template)
     else:
-      self._message_template = message_template
+      self._message = message_template
     self.var_template = var_template
     self._enable_language_tool = grammar_check
     if self._enable_language_tool:
@@ -187,22 +187,23 @@ class Template:
       return message
     def check_if_templ_variable_missing(var: str) -> bool:
       nonlocal self
-      return var in self._data and self._data[var] is None and self._message_template.find(var) > -1
+      return var in self._data and self._data[var] is None and self._message.find(var) > -1
+    message = self._message
     for var in OTHERS:
       if var in self._data and self._data[var]:
-        self._message_template = self._message_template.replace(var, self._data[var])
+        message = self._message.replace(var, self._data[var])
       elif check_if_templ_variable_missing(var):
-        self._message_template = common_connection_request_random_choice()
+        message = common_connection_request_random_choice()
         return self.parse()
     if self._enable_language_tool:
-      self._message_template = self._language_tool.correct(self._message_template)
+      message = self._language_tool.correct(message)
     for var in NAMES:
       if var in self._data and self._data[var]:
-        self._message_template = self._message_template.replace(var, self._data[var])
+        message = self._message.replace(var, self._data[var])
       elif check_if_templ_variable_missing(var):
-        self._message_template = common_connection_request_random_choice()
+        message = common_connection_request_random_choice()
         return self.parse()
-    return self._message_template
+    return message
 
   def read(self: Template) -> str:
     message = self.parse()
