@@ -20,6 +20,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-from .parser import NARGS
-from .parser import OPT_ARGS_ACTION
-from .parser import _ArgumentParser as ArgumentParser
+from lib.parser.parser import NARGS
+from lib.parser.parser import OPT_ARGS_ACTION
+from lib.parser.parser import _ArgumentParser as ArgumentParser

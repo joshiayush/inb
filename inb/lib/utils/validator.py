@@ -28,9 +28,11 @@ import os
 import sys
 import errno
 
-from .type import is_str
-from .type import is_none
-from .type import is_empty
+from lib.utils.type import (
+    is_str,
+    is_none,
+    is_empty,
+)
 
 
 class Validator(object):

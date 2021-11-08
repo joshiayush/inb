@@ -22,24 +22,28 @@
 
 import os
 
-from .algo import levenshtein
+from lib.algo import levenshtein
 
-from .parser import NARGS
-from .parser import ArgumentParser
-from .parser import OPT_ARGS_ACTION
+from lib.parser import (
+    NARGS,
+    ArgumentParser,
+    OPT_ARGS_ACTION,
+)
 
-from .utils import ping
-from .utils import _type
-from .utils import is_int
-from .utils import is_str
-from .utils import is_none
-from .utils import is_empty
-from .utils import is_present
-from .utils import Terminal
-from .utils import Validator
-from .utils import disable_logging
-from .utils import InbValidator
-from .utils import CreateFigletString
+from lib.utils import(
+    ping,
+    _type,
+    is_int,
+    is_str,
+    is_none,
+    is_empty,
+    is_present,
+    Terminal,
+    Validator,
+    disable_logging,
+    InbValidator,
+    CreateFigletString,
+)
 
 __all__ = ["DRIVER_PATH"]
 

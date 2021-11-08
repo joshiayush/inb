@@ -20,7 +20,7 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-from ..utils import _type
+from lib.utils import _type
 
 
 def levenshtein(string1: str, string2: str) -> int:

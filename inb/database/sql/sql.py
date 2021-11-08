@@ -6,7 +6,7 @@ from typing import Any
 from rich.table import Table
 from rich.console import Console
 
-from . import SQL
+from database.sql import SQL
 
 from errors import DatabaseDoesNotExistException
 

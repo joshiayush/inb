@@ -20,5 +20,5 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-from .javascript import JS
-from .cleaners import Cleaner
+from linkedin.DOM.javascript import JS
+from linkedin.DOM.cleaners import Cleaner

@@ -45,7 +45,7 @@ from __future__ import annotations
 
 import argparse
 
-from .command import Command
+from inbparser.command import Command
 
 
 class Parser:
