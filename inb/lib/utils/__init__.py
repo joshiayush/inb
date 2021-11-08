@@ -20,15 +20,19 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-from .net import ping
-from .log import disable_logging
-from .type import _type
-from .type import is_int
-from .type import is_str
-from .type import is_none
-from .type import is_empty
-from .type import is_present
-from .window import Terminal
-from .figlet import CreateFigletString
-from .validator import Validator
-from .validator import InbValidator
+from lib.utils.net import ping
+from lib.utils.log import disable_logging
+from lib.utils.type import (
+    _type,
+    is_int,
+    is_str,
+    is_none,
+    is_empty,
+    is_present,
+)
+from lib.utils.window import Terminal
+from lib.utils.figlet import CreateFigletString
+from lib.utils.validator import (
+    Validator,
+    InbValidator,
+)

@@ -56,11 +56,11 @@ from errors import (
 
 from lib.algo import levenshtein
 
-from ..DOM import Cleaner
-from ..message import Template
-from ..person.person import Person
-from ..DOM.javascript import JS
-from ..invitation.status import Invitation
+from linkedin.DOM import Cleaner
+from linkedin.message import Template
+from linkedin.person.person import Person
+from linkedin.DOM.javascript import JS
+from linkedin.invitation.status import Invitation
 
 
 class LinkedInSearchConnect(object):

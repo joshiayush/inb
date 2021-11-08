@@ -24,9 +24,9 @@ import logging
 
 from typing import Union
 
-from .type import is_int
-from .type import is_str
-from .type import is_list
+from lib.utils.type import is_int
+from lib.utils.type import is_str
+from lib.utils.type import is_list
 
 
 def _set_logging_level(

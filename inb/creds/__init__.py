@@ -8,7 +8,7 @@ from cryptography.fernet import Fernet
 from database import database_path
 from database.sql.sql import Database
 
-from errors.error import DatabaseDoesNotExistException
+from errors import DatabaseDoesNotExistException
 
 
 class Creds(object):

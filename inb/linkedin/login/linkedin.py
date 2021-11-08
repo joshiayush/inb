@@ -34,10 +34,12 @@ from __future__ import annotations
 import functools
 
 from typing import (
-    Any, Dict, List
+  Any,
+  Dict,
+  List
 )
 
-from .. import Driver
+from linkedin import Driver
 
 from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.keys import Keys

@@ -25,14 +25,18 @@ from __future__ import annotations
 
 import time
 
-from typing import Any
-from typing import Dict
+from typing import (
+  Any,
+  Dict,
+)
 
-from . import SUCCESS_RATE
-from . import FAILURE_RATE
-from . import SENT_STATUS_SYMBOL
-from . import FAILED_STATUS_SYMBOL
-from . import UNDEFINED_STATUS_SYMBOL
+from linkedin.invitation import (
+  SUCCESS_RATE,
+  FAILURE_RATE,
+  SENT_STATUS_SYMBOL,
+  FAILED_STATUS_SYMBOL,
+  UNDEFINED_STATUS_SYMBOL,
+)
 
 
 class Invitation(object):
@@ -49,7 +53,7 @@ class Invitation(object):
                             elapsed_time: int | float = 0) -> None:
     self._name = name
     if len(occupation) >= 50:
-      self._occupation = occupation[0:50] + ' ' + '.'*3
+      self._occupation = occupation[0:50] + ' ' + '.' * 3
     else:
       self._occupation = occupation
     self._success_rate = 0

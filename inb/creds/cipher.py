@@ -1,7 +1,9 @@
 from __future__ import annotations
 
-from . import Creds
-from . import Fernet
+from creds import (
+    Creds,
+    Fernet,
+)
 
 
 class Cipher(Creds):

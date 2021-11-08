@@ -32,15 +32,17 @@ from typing import Dict
 
 from selenium import webdriver
 from selenium.webdriver import ActionChains
-from selenium.common.exceptions import TimeoutException
-from selenium.common.exceptions import ElementNotInteractableException
-from selenium.common.exceptions import ElementClickInterceptedException
+from selenium.common.exceptions import (
+    TimeoutException,
+    ElementNotInteractableException,
+    ElementClickInterceptedException,
+)
 
 from lib import _type
 
-from ..DOM import Cleaner
-from ..person.person import Person
-from ..invitation.status import Invitation
+from linkedin.DOM import Cleaner
+from linkedin.person.person import Person
+from linkedin.invitation.status import Invitation
 
 
 class LinkedInConnectViaId(object):

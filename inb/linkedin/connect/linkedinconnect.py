@@ -32,9 +32,9 @@ from typing import (
   Dict,
 )
 
-from ..DOM.cleaners import Cleaner
-from ..person.person import Person
-from ..invitation.status import Invitation
+from linkedin.DOM.cleaners import Cleaner
+from linkedin.person.person import Person
+from linkedin.invitation.status import Invitation
 
 from errors import (
   ConnectionLimitExceededException,

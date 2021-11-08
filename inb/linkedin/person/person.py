@@ -37,12 +37,12 @@ from selenium.common.exceptions import (
   NoSuchElementException,
 )
 
-from . import (
+from linkedin.person import (
   Person_Info,
   Path_To_Element_By,
 )
 
-from ..DOM.javascript import JS
+from linkedin.DOM.javascript import JS
 
 
 class Person(object):
@@ -132,20 +132,26 @@ class Person(object):
       """
       # first target the html elements that holds the actual details of a person
       # that we are interested in
-      info_container = li.find_element_by_css_selector("div[class='discover-entity-type-card__info-container']")
+      info_container = li.find_element_by_css_selector(
+        "div[class='discover-entity-type-card__info-container']")
       anchor_tag = info_container.find_element_by_tag_name("a")
       img_tag = anchor_tag.find_element_by_tag_name("img")
-      bottom_container = li.find_element_by_css_selector("div[class^='discover-entity-type-card__bottom-container']")
+      bottom_container = li.find_element_by_css_selector(
+        "div[class^='discover-entity-type-card__bottom-container']")
       footer = bottom_container.find_element_by_tag_name("footer")
 
       # target the actual values from the html elements that we get from the above
       # operations and store them to later create a Person_Info object with these
       # details
-      person_name = anchor_tag.find_element_by_css_selector("span[class^='discover-person-card__name']").text
-      person_occupation = anchor_tag.find_element_by_css_selector("span[class^='discover-person-card__occupation']").text
+      person_name = anchor_tag.find_element_by_css_selector(
+          "span[class^='discover-person-card__name']").text
+      person_occupation = anchor_tag.find_element_by_css_selector(
+          "span[class^='discover-person-card__occupation']").text
       person_photo_url = img_tag.get_attribute("src")
-      person_profile_url = "%(profile_path)s" % {"profile_path": anchor_tag.get_attribute("href")}
-      person_connect_button = footer.find_element_by_css_selector("button[aria-label^='Invite']")
+      person_profile_url = "%(profile_path)s" % {
+          "profile_path": anchor_tag.get_attribute("href")}
+      person_connect_button = footer.find_element_by_css_selector(
+          "button[aria-label^='Invite']")
 
       return Person_Info(
           name=person_name, occupation=person_occupation,
@@ -161,9 +167,11 @@ class Person(object):
       target = 1
       # targetting elements using their relative xpath
       try:
-        WebDriverWait(self._driver, 5).until(
-        EC.presence_of_element_located(
-          (By.XPATH, '//*[@id="main"]/div/div/div[2]//a[text()="Try Premium Free For 1 Month"]')))
+        WebDriverWait(
+            self._driver, 5).until(
+            EC.presence_of_element_located(
+                (By.XPATH,
+                 '//*[@id="main"]/div/div/div[2]//a[text()="Try Premium Free For 1 Month"]')))
         xpath = Path_To_Element_By.SEARCH_RESULTS_PEOPLE_XPATH_SEC
       except (TimeoutException, NoSuchElementException):
         xpath = Path_To_Element_By.SEARCH_RESULTS_PEOPLE_XPATH_PRM
@@ -186,73 +194,96 @@ class Person(object):
 
       return search_results_person_lis
 
-    def transform_to_object(lis: List[webdriver.Chrome]) -> List[Person_Info]:
+    def transform_to_object(
+            lis: List[webdriver.Chrome]) -> List[Person_Info]:
       person_infos: List[Person_Info] = []
       person_summary_extra_words = [
         'Summary', 'Current', 'Past', 'Skills']
 
       for li in lis:
-        entity_result_item_container = li.find_element_by_tag_name("div").find_element_by_css_selector("div[class='entity-result__item']")
-        entity_result_image_container = entity_result_item_container.find_element_by_css_selector("div[class='entity-result__image']")
+        entity_result_item_container = li.find_element_by_tag_name(
+            "div").find_element_by_css_selector(
+            "div[class='entity-result__item']")
+        entity_result_image_container = entity_result_item_container.find_element_by_css_selector(
+          "div[class='entity-result__image']")
 
-        entity_result_anchor_tag = entity_result_image_container.find_element_by_tag_name("a")
-        person_profile_url = entity_result_anchor_tag.get_attribute("href")
-        entity_result_img_tag = entity_result_image_container.find_element_by_xpath("//div/a/div[1]/div[1]/img[1]")
+        entity_result_anchor_tag = entity_result_image_container.find_element_by_tag_name(
+          "a")
+        person_profile_url = entity_result_anchor_tag.get_attribute(
+            "href")
+        entity_result_img_tag = entity_result_image_container.find_element_by_xpath(
+          "//div/a/div[1]/div[1]/img[1]")
         person_photo_url = entity_result_img_tag.get_attribute("src")
 
-        entity_result_content_container = entity_result_item_container.find_element_by_css_selector("div[class^='entity-result__content']")
+        entity_result_content_container = entity_result_item_container.find_element_by_css_selector(
+          "div[class^='entity-result__content']")
         try:
-          person_occupation = entity_result_content_container.find_element_by_css_selector("div[class^='entity-result__primary-subtitle']").text
+          person_occupation = entity_result_content_container.find_element_by_css_selector(
+            "div[class^='entity-result__primary-subtitle']").text
         except NoSuchElementException:
           person_occupation = None
         try:
-          person_location = entity_result_content_container.find_element_by_css_selector("div[class^='entity-result__secondary-subtitle']").text
+          person_location = entity_result_content_container.find_element_by_css_selector(
+            "div[class^='entity-result__secondary-subtitle']").text
         except NoSuchElementException:
           person_location = None
         try:
-          person_summary = entity_result_content_container.find_element_by_css_selector("p[class^='entity-result__summary']").text
+          person_summary = entity_result_content_container.find_element_by_css_selector(
+            "p[class^='entity-result__summary']").text
           for extr_wrd in person_summary_extra_words:
             indx = person_summary.find(extr_wrd)
             if indx > -1:
-              person_summary = person_summary[len(extr_wrd)+indx+1::]
+              person_summary = person_summary[len(
+                extr_wrd) + indx + 1::]
             person_summary = person_summary.strip()
         except NoSuchElementException:
           person_summary = None
 
-        entity_result_content_anchor_tag = entity_result_content_container.find_element_by_tag_name("a")
+        entity_result_content_anchor_tag = entity_result_content_container.find_element_by_tag_name(
+          "a")
         person_name = entity_result_content_anchor_tag.text
         # the above line will give a result something like this:
-        # 
+        #
         # Ayush Joshi\nView Ayush Joshi’s profile
-        # 
+        #
         # and we don't want any thing except for the name so we split the result
         # at '\n' and take out the first element of the resulting list
         person_name = person_name.split('\n')[0]
 
-        person_connect_button = entity_result_item_container.find_element_by_css_selector("div[class^='entity-result__actions']").find_element_by_tag_name("button")
+        person_connect_button = entity_result_item_container.find_element_by_css_selector(
+          "div[class^='entity-result__actions']").find_element_by_tag_name("button")
 
-        person_infos.append(Person_Info(
-            name=person_name, occupation=person_occupation,
-            photo_url=person_photo_url, profile_url=person_profile_url,
-            location=person_location, summary=person_summary,
-            connect_button=person_connect_button))
+        person_infos.append(
+            Person_Info(
+                name=person_name,
+                occupation=person_occupation,
+                photo_url=person_photo_url,
+                profile_url=person_profile_url,
+                location=person_location,
+                summary=person_summary,
+                connect_button=person_connect_button))
 
       return person_infos
 
     return transform_to_object(get_search_results_person_lis())
 
   def get_profile_element(self: Person) -> Person_Info:
-    person_info_container = self._driver.find_element_by_id("main").find_element_by_xpath("/div[1]/section[1]")
-    
-    photo_url = person_info_container.find_element_by_xpath("/div[2]/div[1]/div[1]/div[1]/button[1]/img[1]").get_attribute("src")
-    person_name = person_info_container.find_element_by_xpath("/div[2]/div[2]/div[1]/div[1]/h1[1]").text
-    person_occupation = person_info_container.find_element_by_xpath("/div[2]/div[2]/div[1]/div[2]").text
+    person_info_container = self._driver.find_element_by_id(
+      "main").find_element_by_xpath("/div[1]/section[1]")
+
+    photo_url = person_info_container.find_element_by_xpath(
+      "/div[2]/div[1]/div[1]/div[1]/button[1]/img[1]").get_attribute("src")
+    person_name = person_info_container.find_element_by_xpath(
+        "/div[2]/div[2]/div[1]/div[1]/h1[1]").text
+    person_occupation = person_info_container.find_element_by_xpath(
+        "/div[2]/div[2]/div[1]/div[2]").text
     try:
-      person_location = person_info_container.find_element_by_xpath("/div[2]/div[2]/div[1]/div[3]/span[1]").text
+      person_location = person_info_container.find_element_by_xpath(
+          "/div[2]/div[2]/div[1]/div[3]/span[1]").text
     except NoSuchElementException:
       person_location = None
-    person_connect_button = person_info_container.find_element_by_xpath("/div[3]/div[1]").find_element_by_xpath("//button[@aria-label='Connect with %(name)s']" % {
-      "name": person_name})
+    person_connect_button = person_info_container.find_element_by_xpath(
+      "/div[3]/div[1]").find_element_by_xpath("//button[@aria-label='Connect with %(name)s']" % {"name": person_name})
 
     return Person_Info(
       name=person_name, occupation=person_occupation,

@@ -20,6 +20,6 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-from .linkedinconnect import LinkedInConnect
-from .linkedinconnectviaid import LinkedInConnectViaId
-from .linkedinsearchconnect import LinkedInSearchConnect
+from linkedin.connect.linkedinconnect import LinkedInConnect
+from linkedin.connect.linkedinconnectviaid import LinkedInConnectViaId
+from linkedin.connect.linkedinsearchconnect import LinkedInSearchConnect

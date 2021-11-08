@@ -23,9 +23,8 @@
 # from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!
 from __future__ import annotations
 
-from database.sql.sql import Database
-
 from creds.cipher import Cipher
+from database.sql.sql import Database
 
 from errors import DatabaseDoesNotExistException
 

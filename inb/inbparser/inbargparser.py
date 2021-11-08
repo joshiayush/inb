@@ -64,7 +64,6 @@ from database.sql.sql import (
 )
 
 from lib import Validator
-
 from errors import CredentialsNotGivenException
 
 

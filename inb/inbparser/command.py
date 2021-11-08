@@ -75,7 +75,7 @@ from lib import (
   ping,
 )
 
-from .inbargparser import InbArgParser
+from inbparser.inbargparser import InbArgParser
 
 
 class Command(InbArgParser):
