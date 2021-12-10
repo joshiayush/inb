@@ -1,212 +1,321 @@
-# inb 🤖
+<div id="top"></div>
 
-This command line tool is very helpful to increase your connections on **LinkedIn** by personalizing connection requests.
+<div align="center">
 
-## Features
+[![Contributors][inb_contributors]][inb_contributors_url]
+[![Forks][inb_forks]][inb_forks_url]
+[![Stargazers][inb_stars]][inb_stars_url]
+[![Issues][inb_issues]][inb_issues_url]
+[![LICENSE][inb_license]][inb_license_url]
+[![LinkedIn][developer_linkedin]][developer_linkedin_url]
 
-- [x] Automatically sends invitation to people based on your profile.
-- [x] Automatically sends invitation to people based on their industry.
-- [x] Automatically sends invitation to people based on their location.
-- [x] Automatically sends invitation to people based on their name.
-- [x] Automatically connects you with a person based on the profile id.
-- [x] Personalizing connection request messages.
+</div>
 
-Know more [here][_project].
+<br />
+<div align="center">
+  <a href="https://github.com/joshiayush/inb">
+    <img src="./images/linkedin.png" alt="Logo" width="80" height="80">
+  </a>
+
+  <h3 align="center">inb</h3>
+
+  <p align="center">
+    Automate the world of LinkedIn!
+    <br />
+    <a href="https://github.com/joshiayush/docs"><strong>Explore the docs »</strong></a>
+    <br />
+    <br />
+    <a href="https://github.com/joshiayush/inb/wiki">Wiki</a>
+    ·
+    <a href="https://github.com/joshiayush/inb/issues">Report Bug</a>
+    ·
+    <a href="https://github.com/joshiayush/inb/issues">Request Feature</a>
+  </p>
+</div>
+
+<details>
+  <summary>Contents</summary>
+  <ol>
+    <li>
+      <a href="#inb">inb</a>
+      <ul>
+        <li><a href="#technologies-used">Technologies Used</li>
+      </ul>
+    </li>
+    <li>
+      <a href="#commence">Commence</a>
+      <ul>
+        <li>
+          <a href="#prerequisites">Prerequisites</a>
+          <ul>
+            <li><a href="#ubuntu">Ubuntu</a></li>
+          </ul>
+        </li>
+        <li><a href="#installation">Installation</a></li>
+      </ul>
+    </li>
+    <li><a href="#usage">Usage</a></li>
+    <li><a href="#contribution">Contribution</a></li>
+    <li><a href="#license">License</a></li>
+    <li><a href="#developers">Developers</a></li>
+    <li><a href="#acknowledgments">Acknowledgments</a></li>
+    <li><a href="#maintainership">Maintainership</a></li>
+  </ol>
+</details>
+
+# inb
+
+<!-- @TODO(joshiayush): Include a screen shot or a short video of working of inb -->
+
+Word **inb** is made up of two words "**in**" and "**b**" where "**in**" stands for [LinkedIn][_linkedin] which is an _American business and employment-oriented online service that operates via websites and mobile apps_ and "**b**" stands for bot. So by now you've already deduced that inb is a bot that automates [LinkedIn][_linkedin].
+
+**Features include:**
+
+- Automatically send invitation to people in your MyNetwork page.
+- Automatically send invitation to people based on their industry, location, name and profile id.
+- Personalize connection request messages.
+
+**Features planned to include:**
+
+- Automatically remove connections.
+- [Information Gathering][_inb_info_gathering_issue] module to gather information of a person or a company on LinkedIn
+
+<div align="right">
+  <a href="#top">
+  
+  ![Back to top][back_to_top]
+  
+  </a>
+</div>
+
+## Technologies Used
+
+<div align="center">
+
+![Bash][bash]
+![Python][python]
+![Python Selenium][python_selenium]
+![Chromedriver][chromedriver]
+
+</div>
+
+<div align="right">
+  <a href="#top">
+  
+  ![Back to top][back_to_top]
+  
+  </a>
+</div>
+
+# Commence
+
+To get a local copy up and running follow the steps below.
+
+## Prerequisites
+
+You must have a `Python 3.7.x` version or higher. We recommend setting up a virtual environment using `virtualenv`.
+
+### Ubuntu
+
+**Step 1: Install Virtualenv**
+
+First, we will update our `apt`, then we will install the **virtualenv** module.
+
+```shell
+sudo apt update
+sudo apt install python-virtualenv
+```
+
+**Step 2: Create a Virtual Environment & Install Python 3**
+
+Virtualenv works by creating a folder that houses the necessary Python executables in the bin directory. In this instance, we are
+installing `Python 3.7.12` while setting up the virtual environment in the project's directory.
+
+```shell
+virtualenv -p /usr/bin/python3 .
+```
+
+<p align="right"><a href="#virtualenv_imp_note">Important note!</a></p>
+
+**Step 3: Activate Your Virtual Environment**
+
+From the project's root directory execute the following command.
+
+```shell
+source bin/activate
+```
+
+<p align="right"><a href="#virtualenv_imp_note">Important note!</a></p>
+
+<div id="virtualenv_imp_note">
+  <strong>Note: Virtual environment setup and activation step should be done after cloning the repository.</strong>
+</div>
+
+<!-- @TODO(@): Add installation steps for Windows and MacOS. -->
 
 ## Installation
 
-```shell
-$ git clone https://github.com/JoshiAyush/inb.git inb
-$ cd inb
-```
-
-Executing script `rwx.sh` will change the directory permissions and will also set the `core.filemode` variable of `git` to `false`
-so that `git` doesn't track the filemode's if the project is in someone else's computer (only do this if you want to contribute to
-`inb` otherwise for just using `inb` you don't really need to do that).
+Clone the repository.
 
 ```shell
-$ sudo ./inb.sh --rwx
+git clone https://github.com/joshiayush/inb.git
 ```
 
-Execute the above command from the project's root directory to change the filemodes.
-
-## Dependencies
-
-You have to install dependencies required for `inb`.
+Next step is to install all the dependencies required for project **inb** listed in the `requirements.txt` file.
 
 ```shell
-$ python3 -m pip install requirements.txt
+python3 -m pip install [-r] requirements.txt
 ```
 
-Alternatively,
+<div align="right">
+  <a href="#top">
+  
+  ![Back to top][back_to_top]
+  
+  </a>
+</div>
+
+# Usage
+
+To send invitations to people on LinkedIn you must execute the following command. The following command will send invitations to 40 people that are in your `MyNetwork` page.
 
 ```shell
-$ ./inb.sh --install
+python3 inb/inb.py send -e "ayush854032@gmail.com" -p "xxx-xxx-xxx"
 ```
 
-## inb
+Go to our [Wiki][_inb_wiki] for more usage instructions.
 
-Execute the below command from the project's root directory.
+<div align="right">
+  <a href="#top">
+  
+  ![Back to top][back_to_top]
+  
+  </a>
+</div>
 
-```shell
-$ python3 inb/inb.py -h
-```
+# Contribution
 
-You will get a output something like this:
+Contributions are what makes the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
 
-```
-Usage: inb [-h] {send,search,config,show,delete,developer} ...
+If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement", "bug", or "documentation". Don't forget to give the project a star! Thanks again!
 
- _       _
-(_)_ __ | |__
-| | '_ \| '_ \
-| | | | | |_) |
-|_|_| |_|_.__/
+Project [**inb**][_inb] is hosted on [GitHub][_github]. If you want to contribute changes please make sure to read the [`CONTRIBUTING.md`][_inb_contrib_f] file. You can also contribute changes to the [`CONTRIBUTING.md`][_inb_contrib_f] file itself.
 
+<div align="right">
+  <a href="#top">
+  
+  ![Back to top][back_to_top]
+  
+  </a>
+</div>
 
-inb Bash, version 1.51.35(1)-release (inb-1.51.35)
-These commands are defined internally. Type '--help' to see this list
-Type (command) --help to know more about that command
+# License
 
-positional arguments:
-  {send,search,config,show,delete,developer}
-                        available actions
-    send                sends invitation to people on linkedin.
-    search              searches people on LinekdIn and then invites them.
-    config              used to store user's credentials
-    show                prints the information that is in the database
-    delete              deletes the information stored in the database
-    developer           prints the information about the author
+Distributed under the MIT License. See [`LICENSE`][_inb_license_f] for more information. Please do not use project [**inb**][_inb] if you have any issue with MIT License.
 
-optional arguments:
-  -h, --help            show this help message and exit
-```
+<div align="right">
+  <a href="#top">
+  
+  ![Back to top][back_to_top]
+  
+  </a>
+</div>
 
-You can use the `-h` or `--help` flag with any of the above positional arguments to know more about them.
+# Developers
 
-### Send Invitation
+- [**joshiayush**](https://www.github.com/joshiayush)
 
-The `search` command is used to send invitations to people belong to a specific industry.
+  <a href="https://github.com/joshiayush">
+  <img src="./images/github.png" alt="Logo" width="40" height="40">
+  </a>
+  <a href="https://www.linkedin.com/in/ayush-joshi-3600a01b7/">
+  <img src="./images/linkedin.png" alt="Logo" width="40" height="40">
+  </a>
+  <a href="http://twitter.com/joshiayushjoshi">
+  <img src="./images/twitter.png" alt="Logo" width="40" height="40">
+  </a>
+  <a href="https://stackoverflow.com/users/13910122/ayush">
+  <img src="./images/stack-overflow.png" alt="Logo" width="40" height="40">
+  </a>
 
-```shell
-$ python3 inb/inb.py search -h
-```
+<!-- Contibutors who have contributed non-trivial changes are encouraged to add their details here. -->
 
-The above command will give the following output:
+<div align="right">
+  <a href="#top">
+  
+  ![Back to top][back_to_top]
+  
+  </a>
+</div>
 
-```
-Usage: inb search [-h] [-e [EMAIL]] [-p [PASSWORD]] [-k [KEYWORD]]
-                  [-l [LOCATION]] [-t [TITLE]] [-fn [FIRST_NAME]]
-                  [-ln [LAST_NAME]] [-s [SCHOOL]] [-inds [INDUSTRY]]
-                  [-cc [CURRENT_COMPANY]] [-pl [PROFILE_LANGUAGE]]
-                  [-msg [MESSAGE] | -tb | -ts | -tre | -tci | -thr | -tiind |
-                  -tbfn | -tvc | -tccr] [-f] [--var [VAR]] [-c] [-i] [-ngpu]
-                  [-m] [-idb]
-                  {limit} ...
+# Acknowledgments
 
- _       _
-(_)_ __ | |__
-| | '_ \| '_ \
-| | | | | |_) |
-|_|_| |_|_.__/
+A big thanks goes to the following resources who have helped in the development of project [**inb**][_inb].
 
+- [Flaticon](https://www.flaticon.com/)
+- [Shields.io](https://shields.io/)
+- [Best-README-Template](https://github.com/othneildrew/Best-README-Template)
+- [Selenium With Python](https://selenium-python.readthedocs.io/)
+- [Stack Overflow](https://www.stackoverflow.com)
 
-Searches people on LinkedIn and then invites them.
+<div align="right">
+  <a href="#top">
+  
+  ![Back to top][back_to_top]
+  
+  </a>
+</div>
 
-positional arguments:
-  {limit}               available actions
-    limit               sets the daily invitation limit
+# Maintainership
 
-optional arguments:
-  -h, --help            show this help message and exit
-  -e [EMAIL], --email [EMAIL]
-                        User's email address
-  -p [PASSWORD], --password [PASSWORD]
-                        User's password
-  -k [KEYWORD], --keyword [KEYWORD]
-                        Keyword to search for
-  -l [LOCATION], --location [LOCATION]
-                        Location(s) to search in (separated by (:) colon)
-  -t [TITLE], --title [TITLE]
-                        Match title
-  -fn [FIRST_NAME], --first-name [FIRST_NAME]
-                        Match first name
-  -ln [LAST_NAME], --last-name [LAST_NAME]
-                        Match last name
-  -s [SCHOOL], --school [SCHOOL]
-                        Person's school
-  -inds [INDUSTRY], --industry [INDUSTRY]
-                        Industry(ies) to search in (separated by (:) colon)
-  -cc [CURRENT_COMPANY], --current-company [CURRENT_COMPANY]
-                        Person's current company
-  -pl [PROFILE_LANGUAGE], --profile-language [PROFILE_LANGUAGE]
-                        Person's profile language
-  -msg [MESSAGE], --message [MESSAGE]
-                        adds a message template
-  -tb, --template-business
-                        template to expand network with business owners
-  -ts, --template-sales
-                        template to expand network with sales person
-  -tre, --template-real-estate
-                        template to expand network with real estate agents
-  -tci, --template-creative-industry
-                        template to expand your network with people who belong
-                        to creative industry
-  -thr, --template-hr   template to expand your network with HRs
-  -tiind, --template-include-industry
-                        template to expand your network with people who belong
-                        to the industry you specified over command line
-  -tbfn, --template-ben-franklin
-                        template with subtle pitch
-  -tvc, --template-virtual-coffee
-                        template to invite people for webinar
-  -tccr, --template-common-connection-request
-                        template to personalize common connection request
-  -f, --force           do not alter the message grammar
-  --var [VAR]           template holding your personal details
-  -c, --cookies         uses cookies for authentication
-  -i, --incognito       set browser in incognito mode
-  -ngpu, --headless     starts chrome in headless mode
-  -m, --start-maximized
-                        set browser in full screen
-  -idb, --debug         logs debug info when given
-```
+We're actively seeking maintainers that will triage issues and pull requests and cut releases. If you are interested in maintaining project [**inb**][_inb], send an email to ayush854032@gmail.com with a subject "**Interested in maintaining project inb**".
 
-You target a specific industry by using the `--keyword` flag of `search` command.
-
-```shell
-$ python3 inb/inb.py search --email "ayush854032@gmail.com" --password "F:(:);GVlk\`" --keyword "Software Developer"
-```
-
-The above command will start sending invitation to people who belong to _Software Developer_ industry.
-
-## Personalize your request messages
-
-Create a template file name **message.txt** inside folder **inb**.
-
-**message.txt**
-
-```text
-TEMPLATE BEGIN:
-Hi {{name}},
-
-I'm on a personal mission of expanding my network with like-minded professionals.
-
-If that sounds good, let's connect!
-TEMPLATE END;
-```
-
-Now use this template to customize your connection request messages.
-
-```shell
-$ python3 inb/inb.py search --email "ayush854032@gmail.com" --password "F:(:);GVlk\`" --keyword "Software Developer" --location "United States" --message message.txt
-```
-
-**Note: inb will replace the {{name}} with the person name you are sending request to.**
-
-Look in the [docs][_docs] folder to know more about `inb` and how to use it.
+<div align="right">
+  <a href="#top">
+  
+  ![Back to top][back_to_top]
+  
+  </a>
+</div>
 
 <!-- Definitions -->
 
-[_docs]: https://github.com/JoshiAyush/inb/tree/master/docs
-[_project]: https://github.com/joshiayush/inb/tree/master/docs/project/README.md
+[_github]: https://www.github.com
+[_linkedin]: https://www.linkedin.com
+[_inb]: https://www.github.com/joshiayush/inb
+
+<!-- Shields and attached links -->
+
+[inb_contributors]: https://img.shields.io/github/contributors/joshiayush/inb?logo=GitHub&style=for-the-badge
+[inb_contributors_url]: https://github.com/joshiayush/inb/graphs/contributors
+[inb_forks]: https://img.shields.io/github/forks/joshiayush/inb?logo=GitHub&style=for-the-badge
+[inb_forks_url]: https://github.com/joshiayush/inb/network/members
+[inb_stars]: https://img.shields.io/github/stars/joshiayush/inb?logo=GitHub&style=for-the-badge
+[inb_stars_url]: https://github.com/joshiayush/inb/stargazers
+[inb_issues]: https://img.shields.io/github/issues/joshiayush/inb?logo=GitHub&style=for-the-badge
+[inb_issues_url]: https://github.com/joshiayush/inb/issues
+[inb_license]: https://img.shields.io/github/license/joshiayush/inb?logo=GitHub&style=for-the-badge
+[inb_license_url]: https://github.com/joshiayush/inb/blob/master/LICENSE
+[developer_linkedin]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
+[developer_linkedin_url]: https://www.linkedin.com/in/ayush-joshi-3600a01b7/
+[back_to_top]: https://img.shields.io/badge/-Back%20to%20top-lightgrey
+
+<!-- Technologies used -->
+
+[bash]: https://img.shields.io/badge/-Bash-blue?style=for-the-badge
+[python]: https://img.shields.io/badge/-Python-blue?style=for-the-badge
+[python_selenium]: https://img.shields.io/badge/-Python%20Selenium-blue?style=for-the-badge
+[chromedriver]: https://img.shields.io/badge/-Chromedriver-blue?style=for-the-badge
+
+<!-- Issues -->
+
+[_inb_info_gathering_issue]: https://github.com/joshiayush/inb/issues/16
+
+<!-- Wiki -->
+
+[_inb_wiki]: https://github.com/joshiayush/inb/wiki
+
+<!-- Files -->
+
+[_inb_contrib_f]: https://github.com/joshiayush/inb/blob/master/CONTRIBUTING.md
+[_inb_license_f]: https://github.com/joshiayush/inb/blob/master/LICENSE
