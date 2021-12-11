@@ -37,6 +37,10 @@ To execute all the tests written so far you need to first `cd` into the `inb` di
 python3 -m unittest discover -s tests/
 ```
 
+## Commit
+
+Before commiting please make sure that you have read the [`DEVELOPERS.md`](https://github.com/joshiayush/inb/blob/master/DEVELOPERS.md) file.
+
 ## License
 
 By contributing, you agree that your contributions will be licensed under its MIT License. Include the following license at the beginning of every file.
