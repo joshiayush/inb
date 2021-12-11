@@ -1,56 +1,41 @@
-# Contributing to inb
+# How to become a contributor and submit your own code
 
-We love your input! We want to make contributing to this project as easy and transparent as possible, whether it's:
+## Contributing A Patch
 
-- Reporting a bug
-- Discussing the current state of the code
-- Submitting a fix
-- Proposing new features
-- Becoming a maintainer
+1. Submit an issue describing your proposed change to the [issue tracker](https://github.com/joshiayush/inb/issues).
+2. Please don't mix more than one logical change per submittal, because it makes the history hard to follow. If you want to make a change that doesn't have a corresponding issue in the issue tracker, please create one.
+3. Also, coordinate with team members that are listed on the issue in question. This ensures that work isn't being duplicated and communicating your plan early also generally leads to better patches.
+4. Fork the repo, develop and test your code changes.
+5. Ensure that your code adheres to the existing style. See [.pylintrc](https://github.com/joshiayush/inb/blob/master/.pylintrc) in the root directory.
+6. Ensure that your code has an appropriate set of unit tests which all pass.
+7. Submit a pull request.
 
-## We Develop with Github
+## Style
 
-We use github to host code, to track issues and feature requests, as well as accept pull requests.
+To keep the source consistent, readable, diffable and easy to merge, we use a fairly rigid coding style, as defined by the [Google Python Style Guide](https://google.github.io/styleguide/pyguide.html)
 
-## We Use [Github Flow](https://guides.github.com/introduction/flow/index.html), So All Code Changes Happen Through Pull Requests
+## Requirements for Contributors
 
-Pull requests are the best way to propose changes to the codebase (we use [Github Flow](https://guides.github.com/introduction/flow/index.html)). We actively welcome your pull requests:
+If you plan to contribute a patch, you need:
 
-1. Fork the repo and create your branch from `master`.
-2. If you've added code that should be tested, add tests.
-3. If you've changed APIs, update the documentation.
-4. Ensure the test suite passes.
-5. Make sure your code lints.
-6. Issue that pull request!
+- `Python 3.7.12` or `Python 3.7.x` or higher.
+- `virtualenv 20.7.2` or `virtualenv 20.7.x` or higher.
 
-## Any contributions you make will be under the MIT Software License
+## Testing inb
 
-In short, when you submit code changes, your submissions are understood to be under the same [MIT License](http://choosealicense.com/licenses/mit/) that covers the project. Feel free to contact the maintainers if that's a concern.
+We use [unittest][_unittest] framework for testing, it also comes with a built-in test runner. If you have a python version that is greater than `3.7` then [unittest][_unittest] is already present in your system.
 
-## Report bugs using Github's [issues](https://github.com/JoshiAyush/inb/issues)
+Otherwise install it using the following command,
 
-We use GitHub issues to track public bugs. Report a bug by [opening a new issue](); it's that easy!
+```shell
+pip install unittest
+```
 
-## Write bug reports with detail, background, and sample code
+To execute all the tests written so far you need to first `cd` into the `inb` directory inside of the project's root directory and then execute the following command to discover and run test cases,
 
-[This is an example](http://stackoverflow.com/q/12488905/180626) of a bug report [briandk](https://stackoverflow.com/users/180626/briandk) wrote, and I think it's not a bad model. Here's [another example from Craig Hockenberry](http://www.openradar.me/11905408), an app developer.
-
-**Great Bug Reports** tend to have:
-
-- A quick summary and/or background
-- Steps to reproduce
-  - Be specific!
-  - Give sample code if you can. [briandk's stackoverflow question](http://stackoverflow.com/q/12488905/180626) includes sample code that _anyone_ with a base R setup can run to reproduce what I was seeing
-- What you expected would happen
-- What actually happens
-- Notes (possibly including why you think this might be happening, or stuff you tried that didn't work)
-
-People _love_ thorough bug reports. I'm not even kidding.
-
-## Use a Consistent Coding Style
-
-- Tab for indentation.
-- Single underscore `(_)` before the name of a local variable.
+```shell
+python3 -m unittest discover -s tests/
+```
 
 ## License
 
@@ -79,3 +64,7 @@ By contributing, you agree that your contributions will be licensed under its MI
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 ```
+
+<!-- Definitions -->
+
+[_unittest]: https://docs.python.org/3/library/unittest.html
