@@ -22,7 +22,7 @@
   <p align="center">
     Automate the world of LinkedIn!
     <br />
-    <a href="https://github.com/joshiayush/docs"><strong>Explore the docs »</strong></a>
+    <a href="https://github.com/joshiayush/inb/tree/master/docs"><strong>Explore the docs »</strong></a>
     <br />
     <br />
     <a href="https://github.com/joshiayush/inb/wiki">Wiki</a>
