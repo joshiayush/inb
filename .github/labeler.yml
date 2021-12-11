@@ -21,4 +21,11 @@
 # THE SOFTWARE.
 
 documentation:
-- any: [ 'docs/**', 'README.md', 'CODE_OF_CONDUCT.md', 'CONTRIBUTING.md', 'DEVELOPERS.md' ]
+  - any:
+      [
+        "docs/**",
+        "README.md",
+        "CODE_OF_CONDUCT.md",
+        "CONTRIBUTING.md",
+        "DEVELOPERS.md",
+      ]
