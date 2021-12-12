@@ -1,3 +1,5 @@
+# pylint: disable=missing-module-docstring
+
 # MIT License
 #
 # Copyright (c) 2019 Creative Commons
@@ -20,81 +22,131 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-# from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!
 from __future__ import annotations
 
-import os
-import stat
+from typing import List
+
 import unittest
 
-from unittest.mock import call
-from unittest.mock import Mock
-from unittest.mock import patch
+from unittest import mock
+from selenium import webdriver
+from selenium.common import exceptions
 
-from linkedin import Driver
-
-from lib import DRIVER_PATH
-from errors import WebDriverPathNotGivenException
-from errors import WebDriverNotExecutableException
+from lib import utils
+from linkedin import (driver, settings)
 
 
-class TestDriverClass(unittest.TestCase):
+class TestPrivateDriverClass(unittest.TestCase):  # pylint: disable=missing-class-docstring
 
-  @unittest.skipIf(not os.getuid() == 0, "Requires root privileges!")
-  def test_constructor_method_with_invalid_executable_path(
-          self: TestDriverClass) -> None:
-    paths = [1, (1, 2, 3), [1, 2, 3], {1: 1, 2: 2}]
-    for path in paths:
-      with self.assertRaises(WebDriverPathNotGivenException):
-        driver = Driver(path)
+  def setUp(self) -> None:
+    self.driver = driver._Driver()  # pylint: disable=protected-access
 
-    original_file_permissions = stat.S_IMODE(
-        os.lstat(DRIVER_PATH).st_mode)
+  def _get_add_argument_calling_order(self) -> List[str]:
+    return [
+        driver.CHROMEDRIVER_OPTIONS['start-maximized'],
+        driver.CHROMEDRIVER_OPTIONS['incognito'],
+        driver.CHROMEDRIVER_OPTIONS['enable-automation'],
+        driver.CHROMEDRIVER_OPTIONS['no-sandbox'],
+        driver.CHROMEDRIVER_OPTIONS['disable-setuid-sandbox'],
+        driver.CHROMEDRIVER_OPTIONS['disable-gpu'],
+        driver.CHROMEDRIVER_OPTIONS['headless'],
+        driver.CHROMEDRIVER_OPTIONS['disable-notifications'],
+        driver.CHROMEDRIVER_OPTIONS['disable-infobars'],
+        driver.CHROMEDRIVER_OPTIONS['ignore-certificate-errors'],
+        driver.CHROMEDRIVER_OPTIONS['disable-extensions'],
+    ]
 
-    def remove_execute_permissions(path):
-      """Remove write permissions from this path, while keeping all other 
-      permissions intact.
+  @mock.patch('selenium.webdriver.ChromeOptions.add_argument')
+  def test_enable_webdriver_chrome_with_only_path(
+      self, mock_add_argument: mock.Mock) -> None:
+    try:
+      self.driver.enable_webdriver_chrome(settings.CHROME_DRIVER_ABS_PATH, None)
+      mock_add_argument.assert_not_called()
+    except exceptions.WebDriverException as exc:
+      self.fail('enable_webdriver_chrome(%(path)s, None) failed with %(msg)s.' %
+                {
+                    'path': settings.CHROME_DRIVER_ABS_PATH,
+                    'msg': str(exc)
+                })
+    else:
+      self.assertIsInstance(
+          self.driver.driver, webdriver.Chrome,
+          ('Expected self.driver.driver to be webdriver.Chrome, received '
+           '%(type)s') % {'type': utils.Type(self.driver.driver)})
 
-      Params:
-          path:  The path whose permissions to alter.
-      """
-      NO_USER_EXECUTE = ~stat.S_IXUSR
-      NO_GROUP_EXECUTE = ~stat.S_IXGRP
-      NO_OTHER_EXECUTE = ~stat.S_IXOTH
-      NO_EXECUTE = NO_USER_EXECUTE & NO_GROUP_EXECUTE & NO_OTHER_EXECUTE
+  @mock.patch('selenium.webdriver.ChromeOptions.add_argument')
+  def test_enable_webdriver_chrome_with_path_set_to_none(
+      self, mock_add_argument: mock.Mock) -> None:
+    if not utils.Which('chromedriver'):
+      self.skipTest(
+          ('Chromedriver executable is not present in the environment PATH.\n'
+           'Check if the x bit is OK in case environment PATH exists.'))
+    try:
+      self.driver.enable_webdriver_chrome(None, None)
+      mock_add_argument.assert_not_called()
+    except exceptions.WebDriverException as exc:
+      self.fail('enable_webdriver_chrome(%(path)s, None) failed with %(msg)s.' %
+                {
+                    'path': settings.CHROME_DRIVER_ABS_PATH,
+                    'msg': str(exc)
+                })
+    else:
+      self.assertIsInstance(
+          self.driver.driver, webdriver.Chrome,
+          ('Expected self.driver.driver to be webdriver.Chrome, received '
+           '%(type)s') % {'type': utils.Type(self.driver.driver)})
 
-      current_permissions = stat.S_IMODE(os.lstat(path).st_mode)
-      os.chmod(path, current_permissions & NO_EXECUTE)
+  @mock.patch('selenium.webdriver.ChromeOptions.add_argument')
+  def test_enable_webdriver_chrome_with_path_set_to_none_but_options_given(
+      self, mock_add_argument: mock.Mock) -> None:
+    if not utils.Which('chromedriver'):
+      self.skipTest(
+          ('Chromedriver executable is not present in the environment PATH.\n'
+           'Check if the x bit is OK in case environment PATH exists.'))
+    try:
+      self.driver.enable_webdriver_chrome(
+          settings.CHROME_DRIVER_ABS_PATH,
+          self._get_add_argument_calling_order())
+      mock_add_argument.assert_has_calls([
+          mock.call(option)
+          for option in self._get_add_argument_calling_order()
+      ])
+    except exceptions.WebDriverException as exc:
+      self.fail(
+          'enable_webdriver_chrome(%(path)s, %(opts)s) failed with %(msg)s.' % {
+              'path': settings.CHROME_DRIVER_ABS_PATH,
+              'opts': self._get_add_argument_calling_order(),
+              'msg': str(exc)
+          })
+    else:
+      self.assertIsInstance(
+          self.driver.driver, webdriver.Chrome,
+          ('Expected self.driver.driver to be webdriver.Chrome, received '
+           '%(type)s') % {'type': utils.Type(self.driver.driver)})
 
-    remove_execute_permissions(DRIVER_PATH)
-    with self.assertRaises(WebDriverNotExecutableException):
-      driver = Driver(driver_path=DRIVER_PATH)
+  @mock.patch('selenium.webdriver.ChromeOptions.add_argument')
+  def test_enable_webdriver_chrome_with_path_and_options(
+      self, mock_add_argument: mock.Mock) -> None:
+    try:
+      self.driver.enable_webdriver_chrome(
+          settings.CHROME_DRIVER_ABS_PATH,
+          self._get_add_argument_calling_order())
+      mock_add_argument.assert_has_calls([
+          mock.call(option)
+          for option in self._get_add_argument_calling_order()
+      ])
+    except exceptions.WebDriverException as exc:
+      self.fail(
+          'enable_webdriver_chrome(%(path)s, %(opts)s) failed with %(msg)s.' % {
+              'path': settings.CHROME_DRIVER_ABS_PATH,
+              'opts': self._get_add_argument_calling_order(),
+              'msg': str(exc)
+          })
+    else:
+      self.assertIsInstance(
+          self.driver.driver, webdriver.Chrome,
+          ('Expected self.driver.driver to be webdriver.Chrome, received '
+           '%(type)s') % {'type': utils.Type(self.driver.driver)})
 
-    # place the original file permissions back
-    os.chmod(DRIVER_PATH, original_file_permissions)
-
-  @patch("linkedin.Driver.enable_webdriver_chrome")
-  def test_constructor_method_with_valid_chromedriver_path(self: TestDriverClass, mock_enable_webdriver_chrome: Mock) -> None:
-    driver = Driver(driver_path=DRIVER_PATH)
-    mock_enable_webdriver_chrome.assert_called()
-
-  @patch("selenium.webdriver.ChromeOptions.add_argument")
-  def test_constructor_method_add_argument_internal_calls(
-          self: TestDriverClass, mock_add_argument: Mock) -> None:
-    calls = [
-        call(Driver.HEADLESS),
-        call(Driver.INCOGNITO),
-        call(Driver.NO_SANDBOX),
-        call(Driver.DISABLE_GPU),
-        call(Driver.START_MAXIMIZED),
-        call(Driver.DISABLE_INFOBARS),
-        call(Driver.ENABLE_AUTOMATION),
-        call(Driver.DISABLE_EXTENSIONS),
-        call(Driver.DISABLE_NOTIFICATIONS),
-        call(Driver.DISABLE_SETUID_SANDBOX),
-        call(Driver.IGNORE_CERTIFICATE_ERRORS)]
-    driver = Driver(driver_path=DRIVER_PATH, options=[
-                    Driver.HEADLESS, Driver.INCOGNITO, Driver.NO_SANDBOX, Driver.DISABLE_GPU, Driver.START_MAXIMIZED,
-                    Driver.DISABLE_INFOBARS, Driver.ENABLE_AUTOMATION, Driver.DISABLE_EXTENSIONS, Driver.DISABLE_NOTIFICATIONS,
-                    Driver.DISABLE_SETUID_SANDBOX, Driver.IGNORE_CERTIFICATE_ERRORS])
-    mock_add_argument.assert_has_calls(calls)
+  def tearDown(self) -> None:
+    del self.driver

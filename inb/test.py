@@ -1,3 +1,5 @@
+# pylint: disable=missing-module-docstring
+
 # MIT License
 #
 # Copyright (c) 2019 Creative Commons
@@ -22,34 +24,7 @@
 
 import unittest
 
-# ################################
-# testing classes for utils module
-# ################################
-from tests import TestPingFunction
-from tests import TestTerminalClass
-from tests import TestValidatorClass
-from tests import TestInbValidatorClass
-from tests import TestCustomTypeFunction
-from tests import TestCreateFigletFunction
-
-# ###############################
-# testing classes for algo module
-# ###############################
-from tests import TestLevenshteinFunction
-
-# ###################################
-# testing classes for argparse module
-# ###################################
-from tests import TestOverridedVersionOfArgumentParserClass
-
-# ############################################
-# testing classes for command handling modules
-# ############################################
-from tests import TestCommandValueParserClass
-
-from tests import TestDriverClass
-
-from tests import TestLinkedInSearchConnectClass
+from tests.test_linkedin.test_driver import TestPrivateDriverClass  # pylint: disable=unused-import
 
 if __name__ == "__main__":
   unittest.main()
