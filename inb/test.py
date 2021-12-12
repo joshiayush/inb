@@ -24,7 +24,11 @@
 
 import unittest
 
-from tests.test_linkedin.test_driver import TestPrivateDriverClass  # pylint: disable=unused-import
+from tests.test_linkedin.test_driver import (  # pylint: disable=unused-import
+    TestProtectedDriverClass, TestProtectedMemberDriver,
+    TestGChromeDriverInstanceClass, TestGetGlobalChromeDriverInstanceMethod,
+    TestDisableGlobalChromeDriverInstanceMethod,
+)
 
 if __name__ == "__main__":
   unittest.main()
