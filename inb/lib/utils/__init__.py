@@ -20,4 +20,5 @@
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
 
-from lib.utils.utils import (Type, Which)
+from lib.utils.utils import (Type, Which, IgnoreWarnings, RemoveFilePermissions,
+                             AddFilePermissions)
