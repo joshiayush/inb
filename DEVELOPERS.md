@@ -57,4 +57,6 @@ The footer should contain any information about **Breaking Changes** and is also
 
 **Breaking Changes** should start with the word `BREAKING CHANGE:` with a space or two newlines. The rest of the commit message is then used for this.
 
+**Please read the [docs](https://github.com/joshiayush/inb/tree/master/docs) before developing inb, there's a lot that you need to know before developing inb.**
+
 [changelog]: CHANGELOG.md
