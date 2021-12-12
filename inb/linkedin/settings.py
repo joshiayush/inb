@@ -34,3 +34,12 @@ if not os.path.exists(LOG_DIR_PATH):
 LOG_FORMAT_STR = '%(asctime)s:%(name)s:%(levelname)s:%(filename)s:%(funcName)s:%(message)s'  # pylint: disable=line-too-long
 
 INB_VERSION = '1.0.0'
+
+
+def _ChromeDriverAbsPath() -> str:
+  dir_path = os.path.dirname(os.path.abspath(__file__))
+  last_inb_indx = dir_path.rfind('inb')
+  return os.path.join(dir_path[:last_inb_indx], 'driver/chromedriver')
+
+
+CHROME_DRIVER_ABS_PATH = _ChromeDriverAbsPath()
