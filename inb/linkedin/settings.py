@@ -19,3 +19,18 @@
 # LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 # OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 # THE SOFTWARE.
+
+import os
+import pathlib
+
+LOG_DIR_PATH = pathlib.Path(__file__).resolve().parent.parent.parent / 'logs'
+
+# We want to create the log directory if it does not exists otherwise the
+# file handlers for loggers used in other modules will complain about its
+# absence.
+if not os.path.exists(LOG_DIR_PATH):
+  os.mkdir(LOG_DIR_PATH)
+
+LOG_FORMAT_STR = '%(asctime)s:%(name)s:%(levelname)s:%(filename)s:%(funcName)s:%(message)s'  # pylint: disable=line-too-long
+
+INB_VERSION = '1.0.0'

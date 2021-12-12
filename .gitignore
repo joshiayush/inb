@@ -13,3 +13,5 @@ bin
 pyvenv.cfg
 
 .vscode
+
+logs
