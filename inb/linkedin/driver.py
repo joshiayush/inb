@@ -129,7 +129,7 @@ class _Driver(object):
       for chromedriver_option in chromedriver_options:
         self.options.add_argument(chromedriver_option)
 
-    self.driver = webdriver.Chrome(chromedriver_path, chromedriver_options)
+    self.driver = webdriver.Chrome(chromedriver_path, options=self.options)
 
   def disable_webdriver_chrome(self) -> None:
     """Disables the `webdriver.Chrome` instance.
