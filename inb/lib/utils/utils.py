@@ -82,11 +82,19 @@ def RemoveFilePermissions(path: str, bit: str):
     new_bit_mask = ~stat.S_IWUSR & ~stat.S_IWGRP & ~stat.S_IWOTH
   elif bit == 'x':
     new_bit_mask = ~stat.S_IXUSR & ~stat.S_IXGRP & ~stat.S_IXOTH
-  original_permissions = stat.S_IMODE(os.lstat(path).st_mode)
-  os.chmod(path, original_permissions & new_bit_mask)
-  modified_permissions = stat.S_IMODE(os.lstat(path).st_mode)
-  return original_permissions, modified_permissions
+  os.chmod(path, stat.S_IMODE(os.lstat(path).st_mode) & new_bit_mask)
 
 
-def AddFilePermissions(path: str, permissions: int):
-  os.chmod(path, permissions)
+def AddFilePermissions(path: str, bit: str):
+  assert bit in (
+      'r', 'w',
+      'x'), "Expected either of ('r', 'w', 'x'), received %(bit)s." % {
+          'bit': bit
+      }
+  if bit == 'r':
+    new_bit_mask = stat.S_IRUSR | stat.S_IRGRP | stat.S_IROTH
+  elif bit == 'w':
+    new_bit_mask = stat.S_IWUSR | stat.S_IWGRP | stat.S_IWOTH
+  elif bit == 'x':
+    new_bit_mask = stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH
+  os.chmod(path, stat.S_IMODE(os.lstat(path).st_mode) | new_bit_mask)

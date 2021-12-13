@@ -196,14 +196,12 @@ class TestGetGlobalChromeDriverInstanceMethod(unittest.TestCase):
   @unittest.skipIf(not os.getuid() == 0, 'Requires root!')
   def test_get_global_chrome_driver_instance_method_when_x_bit_is_off(
       self) -> None:
-    original_permissions, _ = utils.RemoveFilePermissions(
-        settings.CHROME_DRIVER_ABS_PATH, 'x')
+    utils.RemoveFilePermissions(settings.CHROME_DRIVER_ABS_PATH, 'x')
 
     with self.assertRaises(exceptions.WebDriverException):
       _ = driver.GetGlobalChromeDriverInstance()
 
-    utils.AddFilePermissions(settings.CHROME_DRIVER_ABS_PATH,
-                             original_permissions)
+    utils.AddFilePermissions(settings.CHROME_DRIVER_ABS_PATH, 'x')
 
   def tearDown(self) -> None:
     driver.DisableGlobalChromeDriverInstance()
