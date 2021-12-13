@@ -1,5 +1,3 @@
-# pylint: disable=missing-module-docstring
-
 # MIT License
 #
 # Copyright (c) 2019 Creative Commons
@@ -24,11 +22,17 @@
 
 import unittest
 
+from tests.test_lib.test_utils.test_utils import (  # pylint: disable=unused-import
+    TestCustomTypeUtilityFunction, TestWhichUtilityFunction,
+    TestIgnoreWarningsUtilityFunction,
+    TestRemoveFilePermissionsAndAddFilePermissionsFunction,
+)
+
 from tests.test_linkedin.test_driver import (  # pylint: disable=unused-import
     TestProtectedDriverClass, TestProtectedMemberDriver,
     TestGChromeDriverInstanceClass, TestGetGlobalChromeDriverInstanceMethod,
     TestDisableGlobalChromeDriverInstanceMethod,
 )
 
-if __name__ == "__main__":
-  unittest.main()
+if __name__ == '__main__':
+  unittest.main(verbosity=2)
