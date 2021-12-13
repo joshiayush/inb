@@ -1,5 +1,3 @@
-# pylint: disable=missing-module-docstring
-
 # MIT License
 #
 # Copyright (c) 2019 Creative Commons
@@ -175,14 +173,14 @@ class TestGetGlobalChromeDriverInstanceMethod(unittest.TestCase):
     driver.GChromeDriverInstance.initialize(settings.CHROME_DRIVER_ABS_PATH,
                                             _GetAddArgumentCallingOrder())
 
-  def test_get_global_chrome_driver_instance_method_with_no_arguments(
-      self) -> None:
+  @utils.IgnoreWarnings(ResourceWarning)
+  def test_with_no_arguments(self) -> None:
     self.assertIsInstance(driver.GetGlobalChromeDriverInstance(),
                           webdriver.Chrome)
 
+  @utils.IgnoreWarnings(ResourceWarning)
   @mock.patch('logging.Logger.critical')
-  def test_get_global_chrome_driver_instance_method_with_invalid_fields(
-      self, mock_logger_critical: mock.Mock) -> None:
+  def test_with_invalid_fields(self, mock_logger_critical: mock.Mock) -> None:
     driver.GChromeDriverInstance.initialize(
         settings.CHROME_DRIVER_ABS_PATH[:settings.CHROME_DRIVER_ABS_PATH.
                                         find('chromedriver')],
@@ -193,9 +191,19 @@ class TestGetGlobalChromeDriverInstanceMethod(unittest.TestCase):
 
     mock_logger_critical.assert_called()
 
-  @unittest.skipIf(not os.getuid() == 0, 'Requires root!')
-  def test_get_global_chrome_driver_instance_method_when_x_bit_is_off(
-      self) -> None:
+  @utils.IgnoreWarnings(ResourceWarning)
+  @unittest.skipIf(
+      not os.getuid() == 0,
+      ('\nThis test case requires to be ran as root!\n'
+       'You need to run this test suite separately using,\n'
+       'python3 inb/test.py TestRemoveFilePermissionsFunction.test_name\n'))
+  def test_when_x_bit_is_off(self) -> None:
+    """Note: This test case should be ran over command line as root using,
+
+    ```shell
+    python3 inb/test.py TestGetGlobalChromeDriverInstanceMethod.test_when_x_bit_is_off
+    ```
+    """
     utils.RemoveFilePermissions(settings.CHROME_DRIVER_ABS_PATH, 'x')
 
     with self.assertRaises(exceptions.WebDriverException):
