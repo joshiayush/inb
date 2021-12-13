@@ -31,10 +31,16 @@ Otherwise install it using the following command,
 pip install unittest
 ```
 
-To execute all the tests written so far you need to first `cd` into the `inb` directory inside of the project's root directory and then execute the following command to discover and run test cases,
+**Execute all tests written so far,**
 
 ```shell
-python3 -m unittest discover -s tests/
+python3 inb/test.py
+```
+
+**Run a specific test case,**
+
+```shell
+python3 inb/test.py TestCaseName[.test_suite]
 ```
 
 ## Commit
