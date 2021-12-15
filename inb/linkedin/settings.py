@@ -29,9 +29,25 @@ import subprocess
 
 LOG_DIR_PATH = pathlib.Path(__file__).resolve().parent.parent.parent / 'logs'
 
-# We want to create the log directory if it does not exists otherwise the
-# file handlers for loggers used in other modules will complain about its
-# absence.
+# Variable's value decides whether debugging is allowed in the entire project.
+#
+# Note: You must not update the value of this variable directly, you must call
+# the `TurnOnLoggingLevelDebug()` function to update its value otherwise you may
+# update the value of this variable but this particular module will not have any
+# effect of that change.
+LOGGING_LEVEL_DEBUG_ENABLED = False
+
+# Variable's value decides whether logging to stream is allowed in the entire
+# project.
+#
+# Note: You must not update the value of this variable directly, you must call
+# the `TurnOnLoggingLevelDebug()` function to update its value otherwise you may
+# update the value of this variable but this particular module will not have any
+# effect of that change.
+LOGGING_TO_STREAM_ENABLED = False
+
+# We want to create the log directory if it does not exists otherwise the file
+# handlers for loggers used in other modules will complain about its absence.
 if not os.path.exists(LOG_DIR_PATH):
   os.mkdir(LOG_DIR_PATH)
 
@@ -45,11 +61,27 @@ logger.setLevel(logging.ERROR)
 file_handler = logging.FileHandler(LOG_DIR_PATH / __name__, mode='w')
 file_handler.setFormatter(logging.Formatter(LOG_FORMAT_STR))
 
-stream_handler = logging.StreamHandler(sys.stderr)
-stream_handler.setFormatter(logging.Formatter(LOG_FORMAT_STR))
-
 logger.addHandler(file_handler)
-logger.addHandler(stream_handler)
+
+
+def TurnOnLoggingToStream() -> None:
+  global LOGGING_TO_STREAM_ENABLED
+  LOGGING_TO_STREAM_ENABLED = True
+  stream_handler = logging.StreamHandler(sys.stderr)
+  stream_handler.setFormatter(logging.Formatter(LOG_FORMAT_STR))
+  logger.addHandler(stream_handler)
+
+
+def TurnOnLoggingLevelDebug() -> None:
+  global LOGGING_LEVEL_DEBUG_ENABLED
+  LOGGING_LEVEL_DEBUG_ENABLED = True
+  logger.setLevel(logging.DEBUG)
+
+
+_CHROME_BINARY_NOT_FOUND_MSG = 'Google Chrome binary is not present in path %s.'
+_CHROME_BINARIES_NOT_FOUND_MSG = (
+    'Google Chrome binary is not present in the following paths\n'
+    '%s')
 
 
 def _GetGoogleChromeBinaryVersion() -> str:
@@ -75,12 +107,12 @@ def _GetGoogleChromeBinaryVersion() -> str:
       try:
         version = subprocess.check_output([path, '--version']).decode('utf-8')
       except subprocess.CalledProcessError:
-        logger.error('Could not find Chrome binary in path %s.', path)
+        logger.error(_CHROME_BINARY_NOT_FOUND_MSG, path)
       else:
         version = re.search(version_regex, version)
         return version.group(0)
-    raise FileNotFoundError(('Could not find Chrome binary in following paths,'
-                             f'\n{chrome_binary_path}'))
+    raise FileNotFoundError(_CHROME_BINARIES_NOT_FOUND_MSG %
+                            (', '.join(chrome_binary_path)))
   elif sys.platform == 'darwin':
     chrome_binary_path = (
         r'/Applications/Google Chrome.app/Contents/MacOS/Google Chrome')
@@ -88,12 +120,12 @@ def _GetGoogleChromeBinaryVersion() -> str:
       try:
         version = subprocess.check_output([path, '--version']).decode('utf-8')
       except subprocess.CalledProcessError:
-        logger.error('Could not find Chrome binary in path %s.', path)
+        logger.error(_CHROME_BINARY_NOT_FOUND_MSG, path)
       else:
         version = re.search(version_regex, version)
         return version.group(0)
-    raise FileNotFoundError(('Could not find Chrome binary in following paths,'
-                             f'\n{chrome_binary_path}'))
+    raise FileNotFoundError(_CHROME_BINARIES_NOT_FOUND_MSG %
+                            (', '.join(chrome_binary_path)))
   elif sys.platform in ('win32', 'cygwin'):
     chrome_binary_path = (
         r'%ProgramFiles%\Google\Chrome\Application\chrome.exe',
@@ -107,13 +139,13 @@ def _GetGoogleChromeBinaryVersion() -> str:
             '/value'
         ]).decode('utf-8')
       except subprocess.CalledProcessError:
-        logger.error('Could not find Chrome binary in path %s.', path)
+        logger.error(_CHROME_BINARY_NOT_FOUND_MSG, path)
         continue
       else:
         version = re.search(version_regex, version)
         return version.group(0)
-    raise FileNotFoundError((f'Could not find Chrome binary in following paths,'
-                             f'\n{chrome_binary_path}'))
+    raise FileNotFoundError(_CHROME_BINARIES_NOT_FOUND_MSG %
+                            (', '.join(chrome_binary_path)))
 
 
 def _ChromeDriverAbsPath() -> str:
