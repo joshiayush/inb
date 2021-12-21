@@ -1,5 +1,5 @@
 altgraph==0.17
-autopep8==1.5.7
+astroid==2.9.0
 CacheControl==0.12.6
 cachetools==4.2.2
 certifi==2021.5.30
@@ -29,10 +29,14 @@ grpcio==1.38.1
 httplib2==0.19.1
 idna==2.10
 importlib-metadata==4.5.0
+isort==5.10.1
 language-tool-python==2.6.1
+lazy-object-proxy==1.6.0
+mccabe==0.6.1
 msgpack==1.0.2
 nameparser==1.0.6
 packaging==20.9
+platformdirs==2.4.0
 proto-plus==1.18.1
 protobuf==3.17.3
 pyaes==1.6.1
@@ -44,6 +48,7 @@ pyfiglet==0.8.post1
 Pygments==2.9.0
 pyinstaller==4.3
 pyinstaller-hooks-contrib==2021.2
+pylint==2.12.2
 pyparsing==2.4.7
 PySocks==1.7.1
 python-dateutil==2.8.1
@@ -56,9 +61,12 @@ six==1.16.0
 smmap==4.0.0
 toml==0.10.2
 tqdm==4.62.3
+typed-ast==1.5.1
 typing-extensions==3.10.0.0
 uritemplate==3.0.1
 urllib3==1.26.5
 validator==0.7.0
 webdriver-manager==3.2.2
+wrapt==1.13.3
+yapf==0.31.0
 zipp==3.4.1

@@ -20,23 +20,6 @@ function _dcache() {
 }
 
 #
-# function _allow_premissions changes the filemodes of the files in the project root
-# directory while setting the git core.filemode option to false
-#
-function _allow_permission() {
-    #
-    # change file mode of the files/directories and sub-directories
-    #
-    chmod 777 -R .
-
-    #
-    # set git config core.filemode to false to tell git not to track the access bits
-    # of the files/directories
-    #
-    git config core.filemode false
-}
-
-#
 # function _get_code_lines count the number of code lines written so far in project
 # inb
 #
@@ -59,34 +42,6 @@ function _install() {
             python3 -m pip install -r requirements.txt >/dev/null
         fi
     fi
-    if [ $verbose -eq 0 ]; then
-        if [ $EUID -eq 0 ]; then
-            sudo apt update
-            sudo apt install openjdk-8-jdk openjdk-8-jre
-            echo "JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64" >>/etc/environment
-            echo "JRE_HOME=/usr/lib/jvm/java-8-openjdk-amd64/jre" >>/etc/environment
-        else
-            echo "Root privileges required to install java!" >&2
-            exit 1
-        fi
-    else
-        if [ $EUID -eq 0 ]; then
-            sudo apt update >/dev/null 2>&1
-            sudo apt install openjdk-8-jdk openjdk-8-jre >/dev/null 2>&1
-            echo "JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64" >>/etc/environment 2>&1
-            echo "JRE_HOME=/usr/lib/jvm/java-8-openjdk-amd64/jre" >>/etc/environment 2>&1
-        else
-            echo "Root privileges required to install java!" >&2
-            exit 1
-        fi
-    fi
-    source bin/activate
-    if [ $verbose -eq 0 ]; then
-        python3 -c "import language_tool_python; tool = language_tool_python.LanguageTool('en-US')"
-    else
-        python3 -c "import language_tool_python; tool = language_tool_python.LanguageTool('en-US')" >/dev/null
-    fi
-    deactivate
 }
 
 #
@@ -115,12 +70,6 @@ _parse_args() {
                 mutually_exclusive_group_found=true
             fi
             ;;
-        "-p" | "--rwx")
-            if [ $mutually_exclusive_group_found = false ]; then
-                arg="rwx"
-                mutually_exclusive_group_found=true
-            fi
-            ;;
         "-v" | "--verbose")
             arg="$arg verbose"
             ;;
@@ -145,8 +94,6 @@ function main() {
         _dcache
     elif [[ $arg == "line" ]]; then
         _get_code_lines
-    elif [[ $arg == "rwx" ]]; then
-        _allow_permission
     fi
 }
 

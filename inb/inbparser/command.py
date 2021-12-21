@@ -48,31 +48,29 @@ import argparse
 import functools
 
 from typing import (
-  Any,
-  List,
-  Dict,
+    Any,
+    List,
+    Dict,
 )
 
 from selenium.common.exceptions import (
-  TimeoutException,
-)
+    TimeoutException,)
 
 from errors import (
-  InternetNotConnectedException,
-)
+    InternetNotConnectedException,)
 
-from linkedin import Driver
+from linkedin import driver
 from linkedin.login import LinkedIn
 from linkedin.connect import (
-  LinkedInConnect,
-  LinkedInConnectViaId,
-  LinkedInSearchConnect,
+    LinkedInConnect,
+    LinkedInConnectViaId,
+    LinkedInSearchConnect,
 )
 
 from lib import (
-  DRIVER_PATH,
-  __project_name__,
-  ping,
+    DRIVER_PATH,
+    __project_name__,
+    ping,
 )
 
 from inbparser.inbargparser import InbArgParser
@@ -134,16 +132,17 @@ class Command(InbArgParser):
     ...     # Your login API call goes here
     ...     ...
     """
+
     @functools.wraps(function_)
-    def wrapper(
-            self: Command, *args: List[Any],
-            **kwargs: Dict[Any, Any]) -> None:
+    def wrapper(self: Command, *args: List[Any], **kwargs: Dict[Any,
+                                                                Any]) -> None:
       nonlocal function_
       self.logger.info("Checking network status")
       if not ping("linkedin.com"):
         raise InternetNotConnectedException("Weak network found")
       self.logger.info("Internet is connected")
       function_(self, *args, **kwargs)
+
     return wrapper
 
   def _login(function_: function) -> function:
@@ -168,39 +167,39 @@ class Command(InbArgParser):
     ...     # Your send API call goes here
     ...     ...
     """
+
     @functools.wraps(function_)
-    def wrapper(
-            self: Command, *args: List[Any],
-            **kwargs: Dict[Any, Any]) -> None:
+    def wrapper(self: Command, *args: List[Any], **kwargs: Dict[Any,
+                                                                Any]) -> None:
       nonlocal function_
 
       # Initialise driver options object
       chrome_driver_options: List[str] = []
-      chrome_driver_options.append(Driver.OPTIONS['incognito'])
+      chrome_driver_options.append(driver.CHROMEDRIVER_OPTIONS['incognito'])
       chrome_driver_options.append(
-        Driver.OPTIONS['ignore-certificate-errors'])
+          driver.CHROMEDRIVER_OPTIONS['ignore-certificate-errors'])
       if self.headless:
-        chrome_driver_options.append(Driver.OPTIONS['headless'])
+        chrome_driver_options.append(driver.CHROMEDRIVER_OPTIONS['headless'])
         chrome_driver_options.append(
-            Driver.OPTIONS['default-headless-window-size'])
+            driver.CHROMEDRIVER_OPTIONS['default-headless-window-size'])
         chrome_driver_options.append(
-          Driver.OPTIONS['start-maximized'])
+            driver.CHROMEDRIVER_OPTIONS['start-maximized'])
       if self.incognito:
-        chrome_driver_options.append(Driver.OPTIONS['incognito'])
+        chrome_driver_options.append(driver.CHROMEDRIVER_OPTIONS['incognito'])
       if self.start_maximized:
-        chrome_driver_options.append(Driver.OPTIONS['start-maximized'])
+        chrome_driver_options.append(
+            driver.CHROMEDRIVER_OPTIONS['start-maximized'])
 
       # Instantiate LinkedIn login API
-      self.linkedin = LinkedIn(
-          user_email=self.email, user_password=self.password,
-          driver_path=DRIVER_PATH,
-          opt_chromedriver_options=chrome_driver_options)
+      self.linkedin = LinkedIn(user_email=self.email,
+                               user_password=self.password,
+                               driver_path=DRIVER_PATH,
+                               opt_chromedriver_options=chrome_driver_options)
 
       self.logger.info("Connecting")
       self.logger.info("Sending GET request to login page")
-      self.logger.info(
-          "Logging in LinkedIn account (user-id=%(user_id)s)" %
-          {"user_id": self.email})
+      self.logger.info("Logging in LinkedIn account (user-id=%(user_id)s)" %
+                       {"user_id": self.email})
 
       try:
         self.linkedin.login()  # call login method
@@ -211,6 +210,7 @@ class Command(InbArgParser):
         self.logger.info("Successfully connected")
 
       function_(self, *args, **kwargs)
+
     return wrapper
 
   @_check_net_stat
@@ -235,8 +235,8 @@ class Command(InbArgParser):
     >>> command.send()
     """
     self.logger.info("Instantiating connection object")
-    linkedinconnect = LinkedInConnect(
-      driver=self.linkedin.driver, limit=self.limit)
+    linkedinconnect = LinkedInConnect(driver=self.linkedin.driver,
+                                      limit=self.limit)
 
     self.logger.info("Sending GET request to mynetwork page")
     try:
@@ -267,8 +267,8 @@ class Command(InbArgParser):
     >>> command.connect()
     """
     self.logger.info("Instantiating connection object")
-    linkedinconnectid = LinkedInConnectViaId(
-        driver=self.linkedin.driver, person_id=self.personid)
+    linkedinconnectid = LinkedInConnectViaId(driver=self.linkedin.driver,
+                                             person_id=self.personid)
 
     self.logger.info("Sending GET request to person's profile page")
     try:
@@ -303,15 +303,17 @@ class Command(InbArgParser):
     """
     self.logger.info("Instantiating connection object")
     linkedin_search_connect = LinkedInSearchConnect(
-        self.linkedin.driver, keyword=self.keyword,
-        location=self.location, title=self.title,
-        first_name=self.first_name, last_name=self.last_name,
-        school=self.school, industry=self.industry,
+        self.linkedin.driver,
+        keyword=self.keyword,
+        location=self.location,
+        title=self.title,
+        first_name=self.first_name,
+        last_name=self.last_name,
+        school=self.school,
+        industry=self.industry,
         current_company=self.current_company,
         profile_language=self.profile_language,
-        message_template=self.message,
-        use_template=self.use_template, var_template=self.var_template,
-        grammar_check=self.grammar_check, limit=self.limit)
+        limit=self.limit)
 
     self.logger.info("Sending GET request to search results page")
     linkedin_search_connect.run()
