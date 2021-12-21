@@ -5,6 +5,7 @@ cachetools==4.2.2
 certifi==2021.5.30
 cffi==1.14.5
 chardet==4.0.0
+click==8.0.3
 colorama==0.4.4
 commonmark==0.9.1
 configparser==5.0.2
@@ -30,7 +31,6 @@ httplib2==0.19.1
 idna==2.10
 importlib-metadata==4.5.0
 isort==5.10.1
-language-tool-python==2.6.1
 lazy-object-proxy==1.6.0
 mccabe==0.6.1
 msgpack==1.0.2
