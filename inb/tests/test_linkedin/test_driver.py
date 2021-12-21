@@ -1,37 +1,44 @@
-# MIT License
+# Copyright 2021, joshiayus Inc.
+# All rights reserved.
 #
-# Copyright (c) 2019 Creative Commons
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are
+# met:
 #
-# Permission is hereby granted, free of charge, to any person obtaining a
-# copy of this software and associated documentation files (the "Software"),
-# to deal in the Software without restriction, including without limitation
-# the rights to use, copy, modify, merge, publish, distribute, sublicense,
-# and/or sell copies of the Software, and to permit persons to whom the
-# Software is furnished to do so, subject to the following conditions
+#     * Redistributions of source code must retain the above copyright
+# notice, this list of conditions and the following disclaimer.
+#     * Redistributions in binary form must reproduce the above
+# copyright notice, this list of conditions and the following disclaimer
+# in the documentation and/or other materials provided with the
+# distribution.
+#     * Neither the name of joshiayus Inc. nor the names of its
+# contributors may be used to endorse or promote products derived from
+# this software without specific prior written permission.
 #
-# The above copyright notice and this permission notice shall be included
-# in all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-# OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+# A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+# OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+# LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+# DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+# THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from __future__ import annotations
 
-import os
 from typing import List
 
+import os
 import unittest
 
 from unittest import mock
 from selenium import webdriver
 from selenium.common import exceptions
 
-from lib import utils
+import lib
 from linkedin import (driver, settings)
 
 
@@ -56,28 +63,28 @@ class TestProtectedDriverClass(unittest.TestCase):  # pylint: disable=missing-cl
   def setUp(self) -> None:
     self.driver = driver._Driver()  # pylint: disable=protected-access
 
-  @utils.IgnoreWarnings(ResourceWarning)
+  @lib.IgnoreWarnings(ResourceWarning)
   @mock.patch('selenium.webdriver.ChromeOptions.add_argument')
   def test_enable_webdriver_chrome_with_only_path(
       self, mock_add_argument: mock.Mock) -> None:
     try:
-      self.driver.enable_webdriver_chrome(settings.CHROME_DRIVER_ABS_PATH, None)
+      self.driver.enable_webdriver_chrome(settings.ChromeDriverAbsPath(), None)
       mock_add_argument.assert_not_called()
     except exceptions.WebDriverException as exc:
       self.fail('enable_webdriver_chrome(%(path)s, None) failed with %(msg)s.' %
                 {
-                    'path': settings.CHROME_DRIVER_ABS_PATH,
+                    'path': settings.ChromeDriverAbsPath(),
                     'msg': str(exc)
                 })
     else:
       self.assertIsInstance(
           self.driver.driver, webdriver.Chrome,
           ('Expected self.driver.driver to be webdriver.Chrome, received '
-           '%(type)s') % {'type': utils.Type(self.driver.driver)})
+           '%(type)s') % {'type': lib.Type(self.driver.driver)})
 
-  @utils.IgnoreWarnings(ResourceWarning)
+  @lib.IgnoreWarnings(ResourceWarning)
   @unittest.skipIf(
-      not utils.Which('chromedriver'),
+      not lib.Which('chromedriver'),
       ('Chromedriver executable is not present in the environment PATH.\n'
        'Check if the x bit is OK in case environment PATH exists.'))
   @mock.patch('selenium.webdriver.ChromeOptions.add_argument')
@@ -89,32 +96,32 @@ class TestProtectedDriverClass(unittest.TestCase):  # pylint: disable=missing-cl
     except exceptions.WebDriverException as exc:
       self.fail('enable_webdriver_chrome(%(path)s, None) failed with %(msg)s.' %
                 {
-                    'path': settings.CHROME_DRIVER_ABS_PATH,
+                    'path': settings.ChromeDriverAbsPath(),
                     'msg': str(exc)
                 })
     else:
       self.assertIsInstance(
           self.driver.driver, webdriver.Chrome,
           ('Expected self.driver.driver to be webdriver.Chrome, received '
-           '%(type)s') % {'type': utils.Type(self.driver.driver)})
+           '%(type)s') % {'type': lib.Type(self.driver.driver)})
 
-  @utils.IgnoreWarnings(ResourceWarning)
+  @lib.IgnoreWarnings(ResourceWarning)
   @unittest.skipIf(
-      not utils.Which('chromedriver'),
+      not lib.Which('chromedriver'),
       ('Chromedriver executable is not present in the environment PATH.\n'
        'Check if the x bit is OK in case environment PATH exists.'))
   @mock.patch('selenium.webdriver.ChromeOptions.add_argument')
   def test_enable_webdriver_chrome_with_path_set_to_none_but_options_given(
       self, mock_add_argument: mock.Mock) -> None:
     try:
-      self.driver.enable_webdriver_chrome(settings.CHROME_DRIVER_ABS_PATH,
+      self.driver.enable_webdriver_chrome(settings.ChromeDriverAbsPath(),
                                           _GetAddArgumentCallingOrder())
       mock_add_argument.assert_has_calls(
           [mock.call(option) for option in _GetAddArgumentCallingOrder()])
     except exceptions.WebDriverException as exc:
       self.fail(
           'enable_webdriver_chrome(%(path)s, %(opts)s) failed with %(msg)s.' % {
-              'path': settings.CHROME_DRIVER_ABS_PATH,
+              'path': settings.ChromeDriverAbsPath(),
               'opts': _GetAddArgumentCallingOrder(),
               'msg': str(exc)
           })
@@ -122,21 +129,21 @@ class TestProtectedDriverClass(unittest.TestCase):  # pylint: disable=missing-cl
       self.assertIsInstance(
           self.driver.driver, webdriver.Chrome,
           ('Expected self.driver.driver to be webdriver.Chrome, received '
-           '%(type)s') % {'type': utils.Type(self.driver.driver)})
+           '%(type)s') % {'type': lib.Type(self.driver.driver)})
 
-  @utils.IgnoreWarnings(ResourceWarning)
+  @lib.IgnoreWarnings(ResourceWarning)
   @mock.patch('selenium.webdriver.ChromeOptions.add_argument')
   def test_enable_webdriver_chrome_with_path_and_options(
       self, mock_add_argument: mock.Mock) -> None:
     try:
-      self.driver.enable_webdriver_chrome(settings.CHROME_DRIVER_ABS_PATH,
+      self.driver.enable_webdriver_chrome(settings.ChromeDriverAbsPath(),
                                           _GetAddArgumentCallingOrder())
       mock_add_argument.assert_has_calls(
           [mock.call(option) for option in _GetAddArgumentCallingOrder()])
     except exceptions.WebDriverException as exc:
       self.fail(
           'enable_webdriver_chrome(%(path)s, %(opts)s) failed with %(msg)s.' % {
-              'path': settings.CHROME_DRIVER_ABS_PATH,
+              'path': settings.ChromeDriverAbsPath(),
               'opts': _GetAddArgumentCallingOrder(),
               'msg': str(exc)
           })
@@ -144,7 +151,7 @@ class TestProtectedDriverClass(unittest.TestCase):  # pylint: disable=missing-cl
       self.assertIsInstance(
           self.driver.driver, webdriver.Chrome,
           ('Expected self.driver.driver to be webdriver.Chrome, received '
-           '%(type)s') % {'type': utils.Type(self.driver.driver)})
+           '%(type)s') % {'type': lib.Type(self.driver.driver)})
 
   def tearDown(self) -> None:
     del self.driver
@@ -159,10 +166,10 @@ class TestProtectedMemberDriver(unittest.TestCase):
 class TestGChromeDriverInstanceClass(unittest.TestCase):
 
   def test_if_initialize_method_sets_static_method(self) -> None:
-    driver.GChromeDriverInstance.initialize(settings.CHROME_DRIVER_ABS_PATH,
+    driver.GChromeDriverInstance.initialize(settings.ChromeDriverAbsPath(),
                                             _GetAddArgumentCallingOrder())
     self.assertEqual(driver.GChromeDriverInstance.CHROMEDIRVER_PATH,
-                     settings.CHROME_DRIVER_ABS_PATH)
+                     settings.ChromeDriverAbsPath())
     self.assertEqual(driver.GChromeDriverInstance.CHROMEDRIVER_OPTIONS,
                      _GetAddArgumentCallingOrder())
 
@@ -170,20 +177,20 @@ class TestGChromeDriverInstanceClass(unittest.TestCase):
 class TestGetGlobalChromeDriverInstanceMethod(unittest.TestCase):
 
   def setUp(self) -> None:
-    driver.GChromeDriverInstance.initialize(settings.CHROME_DRIVER_ABS_PATH,
+    driver.GChromeDriverInstance.initialize(settings.ChromeDriverAbsPath(),
                                             _GetAddArgumentCallingOrder())
 
-  @utils.IgnoreWarnings(ResourceWarning)
+  @lib.IgnoreWarnings(ResourceWarning)
   def test_with_no_arguments(self) -> None:
     self.assertIsInstance(driver.GetGlobalChromeDriverInstance(),
                           webdriver.Chrome)
 
-  @utils.IgnoreWarnings(ResourceWarning)
+  @lib.IgnoreWarnings(ResourceWarning)
   @mock.patch('logging.Logger.critical')
   def test_with_invalid_fields(self, mock_logger_critical: mock.Mock) -> None:
     driver.GChromeDriverInstance.initialize(
-        settings.CHROME_DRIVER_ABS_PATH[:settings.CHROME_DRIVER_ABS_PATH.
-                                        find('chromedriver')],
+        settings.ChromeDriverAbsPath()
+        [:settings.ChromeDriverAbsPath().find('chromedriver')],
         _GetAddArgumentCallingOrder())
 
     with self.assertRaises(exceptions.WebDriverException):
@@ -191,7 +198,7 @@ class TestGetGlobalChromeDriverInstanceMethod(unittest.TestCase):
 
     mock_logger_critical.assert_called()
 
-  @utils.IgnoreWarnings(ResourceWarning)
+  @lib.IgnoreWarnings(ResourceWarning)
   @unittest.skipIf(
       not os.getuid() == 0,
       ('\nThis test case requires to be ran as root!\n'
@@ -204,12 +211,12 @@ class TestGetGlobalChromeDriverInstanceMethod(unittest.TestCase):
     python3 inb/test.py TestGetGlobalChromeDriverInstanceMethod.test_when_x_bit_is_off
     ```
     """
-    utils.RemoveFilePermissions(settings.CHROME_DRIVER_ABS_PATH, 'x')
+    lib.RemoveFilePermissions(settings.ChromeDriverAbsPath(), 'x')
 
     with self.assertRaises(exceptions.WebDriverException):
       _ = driver.GetGlobalChromeDriverInstance()
 
-    utils.AddFilePermissions(settings.CHROME_DRIVER_ABS_PATH, 'x')
+    lib.AddFilePermissions(settings.ChromeDriverAbsPath(), 'x')
 
   def tearDown(self) -> None:
     driver.DisableGlobalChromeDriverInstance()
@@ -217,11 +224,11 @@ class TestGetGlobalChromeDriverInstanceMethod(unittest.TestCase):
 
 class TestDisableGlobalChromeDriverInstanceMethod(unittest.TestCase):
 
-  @utils.IgnoreWarnings(ResourceWarning)
+  @lib.IgnoreWarnings(ResourceWarning)
   @mock.patch('selenium.webdriver.Chrome.quit')
   def test_disable_global_chromedriver_instance_method(
       self, mock_quit: mock.Mock) -> None:
-    driver.GChromeDriverInstance.initialize(settings.CHROME_DRIVER_ABS_PATH,
+    driver.GChromeDriverInstance.initialize(settings.ChromeDriverAbsPath(),
                                             _GetAddArgumentCallingOrder())
     driver_ = driver.GetGlobalChromeDriverInstance()
     self.assertIsInstance(driver_, webdriver.Chrome)
