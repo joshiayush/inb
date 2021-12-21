@@ -6,221 +6,86 @@ This module provides service to communicate with LinkedIn's login form.
   :license: MIT License, see license for details
 """
 
-# MIT License
+# Copyright 2021, joshiayus Inc.
+# All rights reserved.
 #
-# Copyright (c) 2019 Creative Commons
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are
+# met:
 #
-# Permission is hereby granted, free of charge, to any person obtaining a
-# copy of this software and associated documentation files (the "Software"),
-# to deal in the Software without restriction, including without limitation
-# the rights to use, copy, modify, merge, publish, distribute, sublicense,
-# and/or sell copies of the Software, and to permit persons to whom the
-# Software is furnished to do so, subject to the following conditions
+#     * Redistributions of source code must retain the above copyright
+# notice, this list of conditions and the following disclaimer.
+#     * Redistributions in binary form must reproduce the above
+# copyright notice, this list of conditions and the following disclaimer
+# in the documentation and/or other materials provided with the
+# distribution.
+#     * Neither the name of joshiayus Inc. nor the names of its
+# contributors may be used to endorse or promote products derived from
+# this software without specific prior written permission.
 #
-# The above copyright notice and this permission notice shall be included
-# in all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-# OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+# A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+# OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+# LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+# DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+# THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!
 from __future__ import annotations
 
-import functools
+from linkedin import (driver, settings)
 
-from typing import (
-  Any,
-  Dict,
-  List
-)
-
-from linkedin import Driver
-
-from selenium.common.exceptions import TimeoutException
-from selenium.webdriver.common.keys import Keys
-
-from lib import __project_name__
-from errors import CredentialsNotGivenException
+from selenium.webdriver.common import keys
 
 
-class LinkedIn(Driver):
-  LOGIN_PAGE_URL = "https://www.linkedin.com/login"
+class LoginPageElements:
+  """Stores path fields of the form elements."""
 
-  def __init__(self: LinkedIn, user_email: str,
-               user_password: str, driver_path: str,
-               opt_chromedriver_options: list = []) -> None:
-    """LinkedIn class constructor to initialise LinkedIn object.
+  @staticmethod
+  def get_username_element_name() -> str:
+    return 'session_key'
 
-    This instance will help to log into LinkedIn account.
+  @staticmethod
+  def get_password_element_name() -> str:
+    return 'session_password'
 
-    Args:
-      self: (LinkedIn) Self
-      user_email: (str) User email.
-      user_password: (str) User password.
-      driver_path: (str) Chrome driver path.
-      opt_chromedriver_options: (list) Chromedriver options if any (optional).
 
-    Returns: 
-      `None`
+class LinkedIn:
+  """LinkedIn login routine."""
 
-    Raises:
-      CredentialsNotGivenException: If either of `user_email` or `user_password` field is
-        empty.
+  @staticmethod
+  def login(username: str, password: str) -> None:
+    """Logs into your LinkedIn account provided that the `username` and the
+    `password` fields are valid.
 
-    Example:
-    >>> from lib import chromedriver_abs_path
-    >>> from linkedin import Driver
-    >>> from linkedin.login import LinkedIn
-    >>>
-    >>> chromedriver_options = [Driver.HEADLESS, Driver.INCOGNITO, ...]
-    >>> linkedin = LinkedIn('ayush854032@gmail.com', 'xxx-xxx-xxx', 
-    ...              chromedriver_abs_path(), chromedriver_options)
-    """
-    super(LinkedIn, self).__init__(
-        driver_path=driver_path, options=opt_chromedriver_options)
-
-    if user_email is None:
-      raise CredentialsNotGivenException(
-          "Expected 'str' object, received 'NoneType'")
-    else:
-      self._user_email = user_email
-    if user_password is None:
-      raise CredentialsNotGivenException(
-          "Expected 'str' object, received 'NoneType'")
-    else:
-      self._user_password = user_password
-
-  @classmethod
-  def set_login_page_url(cls: LinkedIn, url: str) -> None:
-    """Class method `set_login_page_url()` sets the value of static variable
-    `LOGIN_PAGE_URL` to the given value in case the user wants to provide an
-    explicit value for the url.
+    This function does not do any sanity check over the fields given so please
+    provide valid fields otherwise bot will end up submitting invalid fields
+    resulting you to wait forever over the command line.
 
     Args:
-      cls: (LinkedIn) Class.
-      url: (str) Url.
-
-    Example:
-    >>> from linkedin.login import LinkedIn
-    >>> LinkedIn.set_login_page_url('https://custom.url.com')
+      username: Username.
+      password: User password.
     """
-    cls.LOGIN_PAGE_URL = url
+    if username is None:
+      raise ValueError("Username field can't be empty.")
+    if password is None:
+      raise ValueError("Password field can't be empty.")
 
-  def _get_login_page(function_: function) -> function:
-    """Decorator `get_login_page()` adds a `wrapper` around a function. This `wrapper`
-    then takes you to the LinkedIn login page before executing the function given to it.
+    driver.GetGlobalChromeDriverInstance().get(
+        settings.GetLinkedInLoginPageUrl())
 
-    Args:
-      function_: (function) Function to decorate.
+    username_elem = driver.GetGlobalChromeDriverInstance().find_element_by_name(
+        LoginPageElements.get_username_element_name())
+    username_elem.clear()
+    username_elem.send_keys(username)
 
-    Returns:
-      `function`
+    password_elem = driver.GetGlobalChromeDriverInstance().find_element_by_name(
+        LoginPageElements.get_password_element_name())
+    password_elem.clear()
+    password_elem.send_keys(password)
 
-    Raises:
-      TimeoutException: If weak network is found.
-
-    Example:
-    >>> class LinkedIn(Driver):
-    ...   @_get_login_page
-    ...   def login(self: LinkedIn) -> None:
-    ...     '''Method login() logs into your personal LinkedIn profile.
-    ...
-    ...     Args:
-    ...       self: (LinkedIn) Self. 
-    ...     '''
-    ...     # Your login code here
-    """
-    @functools.wraps(function_)
-    def wrapper(
-            self: LinkedIn, *args: List[Any],
-            **kwargs: Dict[Any, Any]):
-      nonlocal function_
-      try:
-        self.driver.get(LinkedIn.LOGIN_PAGE_URL)
-      except TimeoutException:
-        raise TimeoutException(
-            "ERR: Cannot log in due to weak network!")
-      else:
-        function_(self, *args, **kwargs)
-    return wrapper
-
-  def _enter_email(self: LinkedIn, return_: bool = False) -> None:
-    """Method `_enter_email()` enters the email in the email input field.
-
-    Args:
-      self: (LinkedIn) Self.
-      return_: (bool) Whether to send return key or not.
-
-    Example:
-    >>> class LinkedIn(Driver):
-    ...   def foo(self: Driver) -> Any:
-    ...     self._enter_email('ayush854032@gmail.com')
-    """
-    email_box = self.driver.find_element_by_name("session_key")
-    email_box.clear()
-    email_box.send_keys(self._user_email)
-    if return_ == True:
-      email_box.send_keys(Keys.RETURN)
-
-  def _enter_passwd(self: LinkedIn, return_: bool = True) -> None:
-    """Method `_enter_passwd()` enters the password in the password input field.
-
-    Args:
-      self: (LinkedIn) Self.
-      return_: (bool) Whether to send return key or not.
-
-    Example:
-    >>> class LinkedIn(Driver):
-    ...   def foo(self: Driver) -> Any:
-    ...     self._enter_password('xxx-xxx-xxx')
-    """
-    password_box = self.driver.find_element_by_name(
-        "session_password")
-    password_box.clear()
-    password_box.send_keys(self._user_password)
-    if return_ == True:
-      password_box.send_keys(Keys.RETURN)
-
-  @_get_login_page
-  def login(self: LinkedIn) -> None:
-    """Method `login()` logs into your personal LinkedIn profile.
-
-    Args:
-      self: (LinkedIn) Self. 
-
-    Example:
-    >>> from lib import chromedriver_abs_path
-    >>> from linkedin import Driver
-    >>> from linkedin.login import LinkedIn
-    >>>
-    >>> chromedriver_options = [Driver.HEADLESS, Driver.INCOGNITO, ...]
-    >>> linkedin = LinkedIn('ayush854032@gmail.com', 'xxx-xxx-xxx', 
-    ...              chromedriver_abs_path(), chromedriver_options)
-    >>> linkedin.login()
-    """
-    self._enter_email()
-    self._enter_passwd()
-
-  def __del__(self: LinkedIn) -> None:
-    """LinkedIn class `destructor` to delete the instance.
-
-    Args:
-      self: (LinkedIn) Self.
-
-    Example:
-    >>> from lib import chromedriver_abs_path
-    >>> from linkedin import Driver
-    >>> from linkedin.login import LinkedIn
-    >>>
-    >>> chromedriver_options = [Driver.HEADLESS, Driver.INCOGNITO, ...]
-    >>> linkedin = LinkedIn('ayush854032@gmail.com', 'xxx-xxx-xxx', 
-    ...              chromedriver_abs_path(), chromedriver_options)
-    >>> linkedin.login()
-    >>> del linkedin
-    """
-    self.disable_webdriver_chrome()
+    password_elem.send_keys(keys.Keys.RETURN)
