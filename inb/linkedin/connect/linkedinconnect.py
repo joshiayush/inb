@@ -1,190 +1,211 @@
-# MIT License
+# Copyright 2021, joshiayus Inc.
+# All rights reserved.
 #
-# Copyright (c) 2019 Creative Commons
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are
+# met:
 #
-# Permission is hereby granted, free of charge, to any person obtaining a
-# copy of this software and associated documentation files (the "Software"),
-# to deal in the Software without restriction, including without limitation
-# the rights to use, copy, modify, merge, publish, distribute, sublicense,
-# and/or sell copies of the Software, and to permit persons to whom the
-# Software is furnished to do so, subject to the following conditions
+#     * Redistributions of source code must retain the above copyright
+# notice, this list of conditions and the following disclaimer.
+#     * Redistributions in binary form must reproduce the above
+# copyright notice, this list of conditions and the following disclaimer
+# in the documentation and/or other materials provided with the
+# distribution.
+#     * Neither the name of joshiayus Inc. nor the names of its
+# contributors may be used to endorse or promote products derived from
+# this software without specific prior written permission.
 #
-# The above copyright notice and this permission notice shall be included
-# in all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-# OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+# A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+# OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+# LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+# DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+# THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!
 from __future__ import annotations
 
+import sys
 import time
-import functools
+import logging
+import traceback
 
-from typing import (
-  Any,
-  List,
-  Dict,
-)
+from selenium.common import exceptions
+from selenium.webdriver.remote import webelement
+from selenium.webdriver.common import (by, action_chains)
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 
-from linkedin.DOM.cleaners import Cleaner
-from linkedin.person.person import Person
-from linkedin.invitation.status import Invitation
+from linkedin import (driver, settings)
+from linkedin.DOM import (cleaners, javascript)
+from linkedin.invitation import status
 
-from errors import (
-  ConnectionLimitExceededException,
-)
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.CRITICAL)
 
-from selenium import webdriver
+file_handler = logging.FileHandler(settings.LOG_DIR_PATH / __name__, mode='w')
+file_handler.setFormatter(logging.Formatter(settings.LOG_FORMAT_STR))
 
-from selenium.common.exceptions import (
-  TimeoutException,
-  ElementNotInteractableException,
-  ElementClickInterceptedException,
-)
+if settings.LOGGING_TO_STREAM_ENABLED:
+  stream_handler = logging.StreamHandler(sys.stderr)
+  stream_handler.setFormatter(logging.Formatter(settings.LOG_FORMAT_STR))
+  logger.addHandler(stream_handler)
 
-from selenium.webdriver.common.action_chains import ActionChains
+logger.addHandler(file_handler)
+
+
+class SuggestionBoxPersonElements:
+
+  @staticmethod
+  def get_suggestion_box_person_li_parent() -> str:
+    return '/html/body/div[6]/div[3]/div/div/div/div/div[2]/div/div/main/div[3]/section/section/section/div/ul'  # pylint: disable=line-too-long
+
+  @staticmethod
+  def get_suggestion_box_li_root_xpath(positiion: int) -> str:
+    return SuggestionBoxPersonElements.get_suggestion_box_person_li_parent(
+    ) + '/li[' + str(positiion) + ']'
+
+  @staticmethod
+  def _get_suggestion_box_li_card_container_xpath(position: int) -> str:
+    return SuggestionBoxPersonElements.get_suggestion_box_li_root_xpath(
+        position) + '/div/section'
+
+  @staticmethod
+  def _get_suggestion_box_li_card_info_container_xpath(position: int) -> str:
+    return SuggestionBoxPersonElements._get_suggestion_box_li_card_container_xpath(  # pylint: disable=line-too-long
+        position) + '/div[1]'
+
+  @staticmethod
+  def get_suggestion_box_li_card_link_xpath(position: int) -> str:
+    return SuggestionBoxPersonElements._get_suggestion_box_li_card_info_container_xpath(  # pylint: disable=line-too-long
+        position) + '/a'
+
+  @staticmethod
+  def get_suggestion_box_li_card_name_xpath(position: int) -> str:
+    return SuggestionBoxPersonElements.get_suggestion_box_li_card_link_xpath(
+        position) + '/span[2]'
+
+  @staticmethod
+  def get_suggestion_box_li_card_occupation_xpath(position: int) -> str:
+    return SuggestionBoxPersonElements.get_suggestion_box_li_card_link_xpath(
+        position) + '/span[4]'
+
+  @staticmethod
+  def _get_suggestion_box_li_card_bottom_container_xpath(position: int) -> str:
+    return SuggestionBoxPersonElements._get_suggestion_box_li_card_container_xpath(  # pylint: disable=line-too-long
+        position) + '/div[2]'
+
+  @staticmethod
+  def get_suggestion_box_li_card_member_mutual_connections_xpath(
+      position: int) -> str:
+    return SuggestionBoxPersonElements._get_suggestion_box_li_card_bottom_container_xpath(  # pylint: disable=line-too-long
+        position) + '/div/div/button/span'
+
+  @staticmethod
+  def get_suggestion_box_li_card_invite_button_xpath(position: int) -> str:  # pylint: disable=line-too-long
+    return SuggestionBoxPersonElements._get_suggestion_box_li_card_bottom_container_xpath(  # pylint: disable=line-too-long
+        position) + '/footer/button'
+
+
+class _Person:
+
+  def __init__(self, name: str, occupation: str, mutual_connections: str,
+               profileid: str, profileurl: str,
+               connect_button: webelement.WebElement):
+    self.name = name
+    self.occupation = occupation
+    self.mutual_connections = mutual_connections
+    self.profileid = profileid
+    self.profileurl = profileurl
+    self.connect_button = connect_button
+
+
+def _GetElementByXPath(xpath: str, wait: int = 60) -> webelement.WebElement:
+  while True:
+    try:
+      return WebDriverWait(driver.GetGlobalChromeDriverInstance(), wait).until(
+          EC.presence_of_element_located((by.By.XPATH, xpath)))
+    except (exceptions.TimeoutException,
+            exceptions.NoSuchElementException) as error:
+      logger.critical(traceback.format_exc())
+      if isinstance(error, exceptions.TimeoutException):
+        javascript.JS.load_page()
+      continue
+
+
+def _GetSuggestionBoxPersonLiObject(position: int) -> _Person:
+  profileid = _GetElementByXPath(
+      SuggestionBoxPersonElements.get_suggestion_box_li_card_link_xpath(
+          position)).get_attribute('href')
+  name = _GetElementByXPath(
+      SuggestionBoxPersonElements.get_suggestion_box_li_card_name_xpath(
+          position)).text
+  occupation = _GetElementByXPath(
+      SuggestionBoxPersonElements.get_suggestion_box_li_card_occupation_xpath(
+          position)).text
+  mutual_connections = _GetElementByXPath(
+      SuggestionBoxPersonElements.
+      get_suggestion_box_li_card_member_mutual_connections_xpath(position)).text
+  connect_button = _GetElementByXPath(
+      SuggestionBoxPersonElements.
+      get_suggestion_box_li_card_invite_button_xpath(position))
+  profileurl = settings.GetLinkedInUrl() + profileid
+  return _Person(name, occupation, mutual_connections, profileid, profileurl,
+                 connect_button)
 
 
 class LinkedInConnect(object):
-  _INVITATION_SENT = 0
-  MY_NETWORK_PAGE = "https://www.linkedin.com/mynetwork/"
 
-  def __init__(self: LinkedInConnect, driver: webdriver.Chrome,
-               limit: int = 40) -> None:
-    """LinkedInConnectionsAuto class constructor to initialise LinkedInConnectionsAuto object.
-
-    :Args:
-        - self: {LinkedInConnectionsAuto} object
-        - driver: {webdriver.Chrome} chromedriver instance
-        - limit: {int} daily invitation limit
-
-    :Returns:
-        - {LinkedInConnectionsAuto} LinkedInConnectionsAuto object
-
-    :Raises:
-        - ConnectionLimitExceededException if user gives a connection limit that exceeds 80
-    """
-    if driver:
-      self._driver = driver
-    else:
-      raise Exception(
-        "Expected 'webdriver.Chrome' but NoneType object recieved!")
-    if limit > 80:
-      raise ConnectionLimitExceededException(
-          "Daily invitation limit can't be greater than 80, we recommend 40!")
+  def __init__(self, limit: int) -> None:
+    assert 0 < limit <= 80, "error: inb: Limit can't be greater than 80."
     self._limit = limit
-    self._cleaner = Cleaner(self._driver)
+    driver.GetGlobalChromeDriverInstance().get(
+        settings.GetLinkedInMyNetworkPageUrl())
+    cleaners.Cleaner.clear_message_overlay()
 
-  def _get_mynetwork(function_: function) -> None:
-    """Method get_my_network() sends a GET request to the network page of LinkedIn.
+  def send_invitations(self) -> None:
+    invitation_count = 0
+    start_time = time.time()
 
-    :Args:
-        - self: {LinkedInConnectionsAuto} object
-        - _url: {str} url to send GET request to
-
-    :Returns:
-        - {None}
-
-    :Raises:
-        - EmptyResponseException if there is a TimeoutException
-    """
-    @functools.wraps(function_)
-    def wrapper(
-            self: LinkedInConnect, *args: List[Any],
-            **kwargs: Dict[Any, Any]) -> None:
-      nonlocal function_
-      try:
-        self._driver.get(LinkedInConnect.MY_NETWORK_PAGE)
-      except TimeoutException:
-        raise TimeoutException(
-            "ERR: Cannot get mynetwork page due to weak network!")
-      else:
-        function_(self, *args, **kwargs)
-    return wrapper
-
-  def _send_invitation(self: LinkedInConnect) -> None:
-    """Method send_invitation() starts sending invitation to people on linkedin.
-
-    :Args:
-        - self: {LinkedInConnectionsAuto} object
-
-    :Returns:
-        - {None}
-    """
-    start = time.time()
-
-    p = Person(self._driver)
-    person = p.get_suggestion_box_element()
-
-    invitation = Invitation()
+    invitation = status.Invitation()
+    person = _GetSuggestionBoxPersonLiObject(invitation_count + 1)
     while person:
-      if LinkedInConnect._INVITATION_SENT == self._limit:
+      if invitation_count == (self._limit - 1):
         break
-
       try:
-        ActionChains(self._driver).move_to_element(
-            person.connect_button).click().perform()
+        action_chains.ActionChains(
+            driver.GetGlobalChromeDriverInstance()).move_to_element(
+                person.connect_button).click().perform()
         invitation.set_invitation_fields(
-            name=person.name, occupation=person.occupation,
-            status="sent", elapsed_time=time.time() - start)
-        invitation.status(come_back_by=8)
-        LinkedInConnect._INVITATION_SENT += 1
-      except (ElementNotInteractableException,
-              ElementClickInterceptedException) as error:
-        if isinstance(error, ElementClickInterceptedException):
+            name=person.name,
+            occupation=person.occupation,
+            location=None,
+            summary=None,
+            mutual_connections=person.mutual_connections,
+            profileid=person.profileid,
+            profileurl=person.profileurl,
+            status='sent',
+            elapsed_time=time.time() - start_time)
+        invitation.status()
+        invitation_count += 1
+      except (exceptions.ElementNotInteractableException,
+              exceptions.ElementClickInterceptedException) as error:
+        logger.critical(traceback.format_exc())
+        if isinstance(error, exceptions.ElementClickInterceptedException):
           break
         invitation.set_invitation_fields(
-            name=person.name, occupation=person.occupation,
-            status="sent", elapsed_time=time.time() - start)
-        invitation.status(come_back_by=8)
-
-      person = p.get_suggestion_box_element()
-
-  def _execute_cleaners(self: LinkedInConnect) -> None:
-    """Method execute_cleaners() scours the unwanted element from the page during the
-    connect process.
-
-    :Args:
-        - self: {LinkedInConnectionsAuto}
-
-    :Returns:
-        - {None}
-    """
-    self._cleaner.clear_message_overlay()
-
-  @_get_mynetwork
-  def run(self: LinkedInConnect) -> None:
-    """Method run() calls the send_invitation method, but first it assures that the object
-    self has driver property in it.
-
-    :Args:
-        - self: {LinkedInConnectionsAuto} object
-
-    :Returns:
-        - {None}
-    """
-    self._execute_cleaners()
-    self._send_invitation()
-
-  def __del__(self: LinkedInConnect) -> None:
-    """LinkedInConnectionsAuto destructor to de-initialise LinkedInConnectionsAuto object.
-
-    :Args:
-        - self: {LinkedInConnectionsAuto} object
-
-    :Returns:
-        - {None}
-    """
-    LinkedInConnect._INVITATION_SENT = 0
-    try:
-      self._driver.quit()
-    except AttributeError:
-      # this mean that the above code produces some error while running and
-      # driver instance died
-      pass
+            name=person.name,
+            occupation=person.occupation,
+            location=None,
+            summary=None,
+            mutual_connections=person.mutual_connections,
+            profileid=person.profileid,
+            profileurl=person.profileurl,
+            status='failed',
+            elapsed_time=time.time() - start_time)
+        invitation.status()
+      person = _GetSuggestionBoxPersonLiObject(invitation_count + 1)
