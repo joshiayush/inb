@@ -177,10 +177,10 @@ python3 -m pip install [-r] requirements.txt
 
 # Usage
 
-To send invitations to people on LinkedIn you must execute the following command. The following command will send invitations to 40 people that are in your `MyNetwork` page.
+To send invitations to people on LinkedIn you must execute the following command. The following command will send invitations to 20 people that are in your `MyNetwork` page.
 
 ```shell
-python3 inb/inb.py send -e "ayush854032@gmail.com" -p "xxx-xxx-xxx"
+python3 inb/inb.py send --email ayush854032@gmail.com --password xxx-xxx-xxx
 ```
 
 Go to our [Wiki][_inb_wiki] for more usage instructions.
