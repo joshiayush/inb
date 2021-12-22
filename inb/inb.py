@@ -65,9 +65,10 @@ def send_and_search_common_options(func: function) -> function:  # pylint: disab
       is_flag=True,
       help=(
           'Maximizes the Chrome window even if it is in headless mode.'))(func)
-  func = click.option('--verbose',
-                      is_flag=True,
-                      help=('Prints out extra information at runtime.'))(func)
+  func = click.option(
+      '--debug',
+      is_flag=True,
+      help=('Prints out debugging information at runtime.'))(func)
   return func
 
 
@@ -92,7 +93,7 @@ def inb():
                        help='LinkedIn password.')
 @send_and_search_common_options
 def send(email: str, password: str, limit: int, headless: bool, maximized: bool,
-         verbose: bool) -> None:
+         debug: bool) -> None:
   """Sends invitations on LinkedIn to people in your MyNetwork page.
 
   Usage:
@@ -132,7 +133,7 @@ def send(email: str, password: str, limit: int, headless: bool, maximized: bool,
   Note: The limit should not exceed by 80 and we recommend a limit of 40 every
   time you run this bot.
   """
-  if verbose:
+  if debug:
     settings.TurnOnLoggingToStream()
   from linkedin import driver  # pylint: disable=import-outside-toplevel
   chromedriver_options = []
@@ -140,10 +141,17 @@ def send(email: str, password: str, limit: int, headless: bool, maximized: bool,
     chromedriver_options.append(driver.CHROMEDRIVER_OPTIONS['headless'])
   if maximized:
     chromedriver_options.append(driver.CHROMEDRIVER_OPTIONS['start-maximized'])
-  driver.GChromeDriverInstance.initialize(settings.ChromeDriverAbsPath(),
-                                          chromedriver_options)
-  login.LinkedIn.login(email, password)
-  connect.LinkedInConnect(limit).send_invitations()
+  try:
+    driver.GChromeDriverInstance.initialize(settings.ChromeDriverAbsPath(),
+                                            chromedriver_options)
+    login.LinkedIn.login(email, password)
+    connect.LinkedInConnect(limit).send_invitations()
+  except Exception as exc:  # pylint: disable=broad-except
+    if debug:
+      raise exc
+    click.echo(f'{type(exc).__name__}: {str(exc)}', None, True, True)
+  finally:
+    driver.DisableGlobalChromeDriverInstance()
 
 
 @click.command()
@@ -162,7 +170,7 @@ def send(email: str, password: str, limit: int, headless: bool, maximized: bool,
               help='Location to search for.')
 @send_and_search_common_options
 def search(email: str, password: str, keyword: str, location: str, limit: int,
-           headless: bool, maximized: bool, verbose: bool) -> None:
+           headless: bool, maximized: bool, debug: bool) -> None:
   """Searches for the specific keyword given and sends invitation to them.
 
   Usage:
@@ -173,7 +181,7 @@ def search(email: str, password: str, keyword: str, location: str, limit: int,
   Note: When running with '--headless' also provide '--maximized' to capture
   the complete view.
   """
-  if verbose:
+  if debug:
     settings.TurnOnLoggingToStream()
   from linkedin import driver  # pylint: disable=import-outside-toplevel
   chromedriver_options = []
@@ -181,9 +189,26 @@ def search(email: str, password: str, keyword: str, location: str, limit: int,
     chromedriver_options.append(driver.CHROMEDRIVER_OPTIONS['headless'])
   if maximized:
     chromedriver_options.append(driver.CHROMEDRIVER_OPTIONS['start-maximized'])
-  driver.GChromeDriverInstance.initialize(settings.ChromeDriverAbsPath(),
-                                          chromedriver_options)
-  login.LinkedIn.login(email, password)
+  try:
+    driver.GChromeDriverInstance.initialize(settings.ChromeDriverAbsPath(),
+                                            chromedriver_options)
+    login.LinkedIn.login(email, password)
+    connect.LinkedInSearchConnect(keyword=keyword,
+                                  location=location,
+                                  industry=None,
+                                  title=None,
+                                  firstname=None,
+                                  lastname=None,
+                                  school=None,
+                                  current_company=None,
+                                  profile_language=None,
+                                  limit=limit).send_invitations()
+  except Exception as exc:  # pylint: disable=broad-except
+    if debug:
+      raise exc
+    click.echo(f'{type(exc).__name__}: {str(exc)}', None, True, True)
+  finally:
+    driver.DisableGlobalChromeDriverInstance()
 
 
 inb.add_command(send)

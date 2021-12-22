@@ -28,4 +28,4 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 from linkedin.connect.linkedinconnect import LinkedInConnect
-# from linkedin.connect.linkedinsearchconnect import LinkedInSearchConnect
+from linkedin.connect.linkedinsearchconnect import LinkedInSearchConnect

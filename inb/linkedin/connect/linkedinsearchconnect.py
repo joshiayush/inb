@@ -1,222 +1,618 @@
-# MIT License
-#
-# Copyright (c) 2019 Creative Commons
-#
-# Permission is hereby granted, free of charge, to any person obtaining a
-# copy of this software and associated documentation files (the "Software"),
-# to deal in the Software without restriction, including without limitation
-# the rights to use, copy, modify, merge, publish, distribute, sublicense,
-# and/or sell copies of the Software, and to permit persons to whom the
-# Software is furnished to do so, subject to the following conditions
-#
-# The above copyright notice and this permission notice shall be included
-# in all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS
-# OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
+# pylint: disable=missing-module-docstring
 
-# from __future__ imports must occur at the beginning of the file. DO NOT CHANGE!
+# Copyright 2021, joshiayus Inc.
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions are
+# met:
+#
+#     * Redistributions of source code must retain the above copyright
+# notice, this list of conditions and the following disclaimer.
+#     * Redistributions in binary form must reproduce the above
+# copyright notice, this list of conditions and the following disclaimer
+# in the documentation and/or other materials provided with the
+# distribution.
+#     * Neither the name of joshiayus Inc. nor the names of its
+# contributors may be used to endorse or promote products derived from
+# this software without specific prior written permission.
+#
+# THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+# "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT
+# LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+# A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT
+# OWNER OR CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL,
+# SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT
+# LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+# DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+# THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+# (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
+# OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 from __future__ import annotations
 
+import re
+import sys
 import time
-import functools
+import logging
+import traceback
 
 from typing import (
-    Any,
     List,
     Dict,
-    Optional,
 )
 
 from selenium import webdriver
-
-from selenium.common.exceptions import (
-    NoSuchElementException,
-    InvalidElementStateException,
-    ElementNotInteractableException,
-    ElementClickInterceptedException,
+from selenium.common import exceptions
+from selenium.webdriver.remote import webelement
+from selenium.webdriver.common import (
+    by,
+    keys,
+    action_chains,
 )
-
-from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.action_chains import ActionChains
-
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
-from errors import (
-    ConnectionLimitExceededException,
-    TemplateMessageLengthExceededException,
-)
+from linkedin import (message, driver, settings)
+from linkedin.DOM import javascript
+from linkedin.invitation import status
 
-from lib.algo import levenshtein
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.ERROR)
 
-from linkedin.DOM import Cleaner
-from linkedin.message import Template
-from linkedin.person.person import Person
-from linkedin.DOM.javascript import JS
-from linkedin.invitation.status import Invitation
+file_handler = logging.FileHandler(settings.LOG_DIR_PATH / __name__, mode='w')
+file_handler.setFormatter(logging.Formatter(settings.LOG_FORMAT_STR))
+
+if settings.LOGGING_TO_STREAM_ENABLED:
+  stream_handler = logging.StreamHandler(sys.stderr)
+  stream_handler.setFormatter(logging.Formatter(settings.LOG_FORMAT_STR))
+  logger.addHandler(stream_handler)
+
+logger.addHandler(file_handler)
 
 
-class LinkedInSearchConnect(object):
-  """Class LinkedInSearchConnect() will search people based on the given Keyword,
-  Location, Current Company, School, Industry, Profile Language, First Name,
-  Last Name, Title."""
-  WAIT: int = 60
-  __INVITATION_SENT: int = 0
+class _ElementsPathSelectors:
+  """Serves elements path selectors needed for scraping users information from
+  the search results page.
+  """
 
-  def __init__(self: LinkedInSearchConnect,
-               driver: webdriver.Chrome,
-               *,
-               keyword: str,
-               location: Optional[str] = None,
-               title: Optional[str] = None,
-               first_name: Optional[str] = None,
-               last_name: Optional[str] = None,
-               school: Optional[str] = None,
-               industry: Optional[str] = None,
-               current_company: Optional[str] = None,
-               profile_language: Optional[str] = None,
-               limit: int = 40) -> None:
-    """Constructor method to initialize LinkedInSearchConnect instance.
+  @staticmethod
+  def get_global_nav_typeahead_input_box_xpath() -> str:
+    """Global nav typeahead input box `xpath`.
 
-    :Args:
-        - self: {LinkedInSearchConnect} self.
-        - driver: {webdriver.Chrome} chromedriver instance.
-        - keyword: {str} keyword to search for.
-        - location: {str} location to search the keyword in.
-        - title: {str} person occupation (Optional).
-        - first_name: {str} person first name (Optional).
-        - last_name: {str} person last name (Optional).
-        - school: {str} person school (Optional).
-        - industry: {str} person's industry (Optional).
-        - current_company: {str} person's current company (Optional).
-        - profile_language: {str} person's profile language (Optional).
+    Element present at this xpath lets you type in a keyword and the searches
+    for people on LinkedIn that matches that keyword.
 
-    :Raises:
-        - {Exception}
-        - {ConnectionLimitExceededException}
+    Returns:
+      Global nav typeahead input box `xpath`.
     """
-    if driver is None:
-      raise Exception("Expected 'webdriver.Chrome' but received 'NoneType'")
-    else:
-      self._driver = driver
-    if limit > 80:
-      raise ConnectionLimitExceededException(
-          "Daily invitation limit can't be greater than 80, we recommend 40!")
-    else:
-      self._limit = limit
+    return '//*[@id="global-nav-typeahead"]/input'
+
+  @staticmethod
+  def get_filter_by_people_button_xpath() -> str:
+    """Filter by people button `xpath`.
+
+    Button present at this xpath lets you filter down the results that matches
+    the keyword you typed in to only LinkedIn's `users` and removes all the
+    `pages`, `jobs`, `services`, `groups`, `posts`, `courses` and `schools` that
+    matches that keyword.
+
+    Returns:
+      Filter by people button `xpath`.
+    """
+    return '//div[@id="search-reusables__filters-bar"]//button[@aria-label="People"]'  # pylint: disable=line-too-long
+
+  @staticmethod
+  def get_all_filters_button_xpath() -> str:
+    """All filters button `xpath`.
+
+    Button present at this xpath lets you add more filters to your search
+    results.  It lets you filter down your search results by the
+    `connection degree`, `location`, `current company`, `past company`,
+    `school`, `industry`, `profile langauge`, `service categories` and
+    `keywords` related to `first name`, `last name`, `title`, `compnay`, and
+    `school`.
+
+    Returns:
+      All filters button `xpath`.
+    """
+    return '//div[@id="search-reusables__filters-bar"]//button[@aria-label="All filters"]'  # pylint: disable=line-too-long
+
+  @staticmethod
+  def get_available_location_options_xpath() -> str:
+    """Regexp `xpath` for available location options on the `filters` frame.
+
+    This `xpath` contains regex expression so all the elements that matches this
+    `xpath` will be returned in case you use this `xpath` with
+    `driver.find_elements_by_xpath()` method.  This expression is used to select
+    various checkboxes avialable for location filter on the `filters` frame.
+
+    Returns:
+      Regexp `xpath` for available location options on the `filters` frame.
+    """
+    return '//input[starts-with(@id, "advanced-filter-geoUrn-")]'
+
+  @staticmethod
+  def get_available_location_labels_xpath() -> str:
+    """Regexp `xpath` for available location labels on the `filters` frame.
+
+    This `xpath` contains regex expression so all the elements that matches this
+    `xpath` will be returned in case you use this `xpath` with
+    `driver.find_elements_by_xpath()` method.  This expression is used to select
+    various avialable location labels on the `filters` frame.
+
+    Returns:
+      Regexp `xpath` for available location labels on the `filters` frame.
+    """
+    return '//label[starts-with(@for, "advanced-filter-geoUrn-")]'
+
+  @staticmethod
+  def get_available_industry_options_xpath() -> str:
+    """Regexp `xpath` for available industry options on the `filters` frame.
+
+    This `xpath` contains regex expression so all the elements that matches this
+    `xpath` will be returned in case you use this `xpath` with
+    `driver.find_elements_by_xpath()` method.  This expression is used to select
+    various checkboxes avialable for industry filter on the `filters` frame.
+
+    Returns:
+      Regexp `xpath` for available industry options on the `filters` frame.
+    """
+    return '//input[starts-with(@id, "advanced-filter-industry-")]'
+
+  @staticmethod
+  def get_available_industry_labels_xpath() -> str:
+    """Regexp `xpath` for available industry labels on the `filters` frame.
+
+    This `xpath` contains regex expression so all the elements that matches this
+    `xpath` will be returned in case you use this `xpath` with
+    `driver.find_elements_by_xpath()` method.  This expression is used to select
+    various avialable industry labels on the `filters` frame.
+
+    Returns:
+      Regexp `xpath` for available industry labels on the `filters` frame.
+    """
+    return '//label[starts-with(@for, "advanced-filter-industry-")]'
+
+  @staticmethod
+  def get_available_profile_language_options_xpath() -> str:
+    """Regexp `xpath` for available profile language options on the `filters`
+    frame.
+
+    This `xpath` contains regex expression so all the elements that matches this
+    `xpath` will be returned in case you use this `xpath` with
+    `driver.find_elements_by_xpath()` method.  This expression is used to select
+    various checkboxes avialable for profile language filter on the `filters`
+    frame.
+
+    Returns:
+      Regexp `xpath` for available profile language options on the `filters`
+        frame.
+    """
+    return '//input[starts-with(@id, "advanced-filter-profileLanguage-")]'
+
+  @staticmethod
+  def get_available_profile_langauge_labels_xpath() -> str:
+    """Regexp `xpath` for available profile language labels on the `filters`
+    frame.
+
+    This `xpath` contains regex expression so all the elements that matches this
+    `xpath` will be returned in case you use this `xpath` with
+    `driver.find_elements_by_xpath()` method.  This expression is used to select
+    various checkboxes avialable profile language labels on the `filters` frame.
+
+    Returns:
+      Regexp `xpath` for available profile language labels on the `filters`
+        frame.
+    """
+    return '//label[starts-with(@for, "advanced-filter-profileLanguage-")]'
+
+  @staticmethod
+  def get_first_name_input_element_container_xpath() -> str:
+    """Regexp `xpath` for the first name input element on the `filters` page.
+
+    Input element present that matches this `xpath` is used to enter the first
+    name of the person you want to search for.
+
+    Returns:
+      Regexp `xpath` for the first name input element on the `filters` page.
+    """
+    return '//label[contains(text(), "First name")]'
+
+  @staticmethod
+  def get_last_name_input_element_container_xpath() -> str:
+    """Regexp `xpath` for the last name input element on the `filters` page.
+
+    Input element present that matches this `xpath` is used to enter the last
+    name of the person you want to search for.
+
+    Returns:
+      Regexp `xpath` for the last name input element on the `filters` page.
+    """
+    return '//label[contains(text(), "Last name")]'
+
+  @staticmethod
+  def get_title_input_element_container_xpath() -> str:
+    """Regexp `xpath` for the title input element on the `filters` page.
+
+    Input element present that matches this `xpath` is used to enter the title
+    of the person you want to search for.
+
+    Returns:
+      Regexp `xpath` for the title input element on the `filters` page.
+    """
+    return '//label[contains(text(), "Title")]'
+
+  @staticmethod
+  def get_current_company_input_element_container_xpath() -> str:
+    """Regexp `xpath` for the current company input element on the `filters`
+    page.
+
+    Input element present that matches this `xpath` is used to enter the current
+    company of the person you want to search for.
+
+    Returns:
+      Regexp `xpath` for the current company input element on the `filters`
+        page.
+    """
+    return '//label[contains(text(), "Company")]'
+
+  @staticmethod
+  def get_school_input_element_container_xpath() -> str:
+    """Regexp `xpath` for the school input element on the `filters` page.
+
+    Input element present that matches this `xpath` is used to enter the school
+    the person you want to search for.
+
+    Returns:
+      Regexp `xpath` for the school input element on the `filters` page.
+    """
+    return '//label[contains(text(), "School")]'
+
+  @staticmethod
+  def get_apply_current_filters_button_xpath() -> str:
+    """Apply current filters button `xpath`.
+
+    Button present at this `xpath` is used to apply the filters program has
+    selected so far.
+
+    Returns:
+      Apply current filters button `xpath`.
+    """
+    return '//div[@id="artdeco-modal-outlet"]//button[@aria-label="Apply current filters to show results"]'  # pylint: disable=line-too-long
+
+  @staticmethod
+  def get_search_results_person_li_parent_xpath() -> str:
+    """Person `li` element's parent element i.e., `ul`.
+
+    This is the parent element that contains all the `li` tags for LinkedIn
+    users.
+
+    Returns:
+      Person `li` element's parent element i.e., `ul`.
+    """
+    return '//*[@id="main"]/div/div/div[2]/ul'
+
+  @staticmethod
+  def get_search_results_person_li_xpath(positiion: int) -> str:
+    """Search results person `li` xpath located at `position`.
+
+    This function returns the `li` tag inside the parent `ul` tag located at
+    `position` that contains the information of a LinkedIn user.
+
+    Args:
+      position: `li` position.
+
+    Returns:
+      Search results person `li` xpath located at `position`.
+    """
+    return _ElementsPathSelectors.get_search_results_person_li_parent_xpath(  # pylint: disable=line-too-long
+    ) + '/li[' + str(positiion) + ']'
+
+  @staticmethod
+  def _get_search_results_person_li_card_container_xpath(position: int) -> str:
+    """`xpath` for person's card container.
+
+    This function returns the card container of an `li` tag located at
+    `position` inside the `ul` parent element.
+
+    Args:
+      position: `li` position.
+
+    Returns:
+      `xpath` for person's card container.
+    """
+    return _ElementsPathSelectors.get_search_results_person_li_xpath(  # pylint: disable=line-too-long
+        position) + '/div/div'
+
+  @staticmethod
+  def _get_search_results_person_li_card_info_container_xpath(
+      position: int) -> str:
+    """`xpath` for person's information card container.
+
+    This function returns `xpath` for parent element that contains the person's
+    information located at `position`.
+
+    Returns:
+      `xpath` for person's information card container.
+    """
+    return _ElementsPathSelectors._get_search_results_person_li_card_container_xpath(  # pylint: disable=line-too-long
+        position) + '/div[2]'
+
+  @staticmethod
+  def _get_search_results_person_li_card_info_nav_xpath(position: int) -> str:
+    """`xpath` to person card information nav bar.
+
+    Element at this `xpath` is a container that contains the person name and
+    the connection degree information.
+
+    Args:
+      position: `li` position.
+
+    Returns:
+      `xpath` to person card information nav bar.
+    """
+    return _ElementsPathSelectors._get_search_results_person_li_card_info_container_xpath(  # pylint: disable=line-too-long
+        position) + '/div[1]/div[1]/div'
+
+  @staticmethod
+  def _get_search_results_person_li_card_info_footer_xpath(
+      position: int) -> str:
+    return _ElementsPathSelectors._get_search_results_person_li_card_info_container_xpath(  # pylint: disable=line-too-long
+        position) + '/div[2]'
+
+  @staticmethod
+  def get_search_results_person_li_card_mutual_connections_info_container_xpath(
+      position: int) -> str:
+    return _ElementsPathSelectors._get_search_results_person_li_card_info_footer_xpath(  # pylint: disable=line-too-long
+        position) + '/div/div[2]/span'
+
+  @staticmethod
+  def get_search_results_person_li_card_link_xpath(position: int) -> str:
+    return _ElementsPathSelectors._get_search_results_person_li_card_info_nav_xpath(  # pylint: disable=line-too-long
+        position) + '/span[1]/span/a'
+
+  @staticmethod
+  def get_search_results_person_li_card_name_xpath(position: int) -> str:
+    """`xpath` to the direct element that contains person name.
+
+    This element is a direct container element that contains person name that
+    is located at `position` inside `ul`.
+
+    Args:
+      position: `li` position.
+
+    Returns:
+      `xpath` to the direct element that contains person name.
+    """
+    return _ElementsPathSelectors._get_search_results_person_li_card_info_nav_xpath(  # pylint: disable=line-too-long
+        position) + '/span[1]/span/a/span/span[1]'
+
+  @staticmethod
+  def get_search_results_person_li_card_degree_info_xpath(position: int) -> str:
+    """`xpath` to the direct element that contains degree of connection that
+    person is with you.
+
+    This element is a direct container element that contains the degree of
+    connection that person is with you that is located at `position` inside
+    `ul`.
+
+    Args:
+      position: `li` position.
+
+    Returns:
+      `xpath` to the direct element that contains degree of connection that
+        person is with you.
+    """
+    return _ElementsPathSelectors._get_search_results_person_li_card_info_nav_xpath(  # pylint: disable=line-too-long
+        position) + '/span[2]/div/span/span[2]'
+
+  @staticmethod
+  def _get_search_results_person_li_occupation_and_location_info_card_container_xpath(  # pylint: disable=line-too-long
+      position: int) -> str:
+    return _ElementsPathSelectors._get_search_results_person_li_card_info_container_xpath(  # pylint: disable=line-too-long
+        position) + '/div[1]/div[2]'
+
+  @staticmethod
+  def get_search_results_person_li_occupation_info_card_container_xpath(
+      position: int) -> str:
+    return _ElementsPathSelectors._get_search_results_person_li_occupation_and_location_info_card_container_xpath(  # pylint: disable=line-too-long
+        position) + '/div/div[1]'
+
+  @staticmethod
+  def get_search_results_person_li_location_info_card_container_xpath(
+      position: int) -> str:
+    return _ElementsPathSelectors._get_search_results_person_li_occupation_and_location_info_card_container_xpath(  # pylint: disable=line-too-long
+        position) + '/div/div[2]'
+
+  @staticmethod
+  def _get_search_results_person_li_card_actions_container_xpath(
+      position: int) -> str:
+    """`xpath` to the actions container of the person `li` at `position`.
+
+    Element located at this `xpath` is the parent element for the connect
+    button.
+
+    Args:
+      position: `li` position.
+
+    Returns:
+      `xpath` to the actions container of the person `li` at `position`.
+    """
+    return _ElementsPathSelectors._get_search_results_person_li_card_container_xpath(  # pylint: disable=line-too-long
+        position) + '/div[3]'
+
+  @staticmethod
+  def get_search_results_person_li_connect_button_xpath(position: int) -> str:
+    """`xpath` to the person connect button.
+
+    Args:
+      position: `li` position.
+
+    Returns:
+      `xpath` to the person connect button.
+    """
+    return _ElementsPathSelectors._get_search_results_person_li_card_actions_container_xpath(  # pylint: disable=line-too-long
+        position) + '/button'
+
+  @staticmethod
+  def get_send_invite_modal_xpath() -> str:
+    """"""
+    return '//div[@aria-labelledby="send-invite-modal"]'
+
+  @staticmethod
+  def get_send_now_button_xpath() -> str:
+    """"""
+    return '//button[@aria-label="Send now"]'
+
+  @staticmethod
+  def get_goto_next_page_button_xpath() -> str:
+    """"""
+    return '//main[@id="main"]//button[@aria-label="Next"]'
+
+
+class _Person:
+
+  def __init__(self, name: str, degree: str, occupation: str, location: str,
+               mutual_connections: str, profileid: str, profileurl: str,
+               connect_button: webelement.WebElement):
+    self.name = name
+    self.degree = degree
+    self.occupation = occupation
+    self.location = location
+    self.mutual_connections = mutual_connections
+    self.profileid = profileid
+    self.profileurl = profileurl
+    self.connect_button = connect_button
+
+  @staticmethod
+  def extract_profileid_from_profileurl(profileurl: str) -> str:
+    re_ = re.compile(r'([a-z]+-?)+([a-zA-Z0-9]+)?', re.IGNORECASE)
+    return re_.search(profileurl).group(0)
+
+
+def _GetElementByXPath(xpath: str, wait: int = 60) -> webelement.WebElement:
+  while True:
+    try:
+      return WebDriverWait(driver.GetGlobalChromeDriverInstance(), wait).until(
+          EC.presence_of_element_located((by.By.XPATH, xpath)))
+    except (exceptions.TimeoutException,
+            exceptions.NoSuchElementException) as error:
+      logger.error(traceback.format_exc())
+      if isinstance(error, exceptions.TimeoutException):
+        javascript.JS.load_page()
+      continue
+
+
+def _GetLiElementsFromPage(wait: int = 60) -> List[webelement.WebElement]:
+  return _GetElementByXPath(
+      _ElementsPathSelectors.get_search_results_person_li_parent_xpath(),
+      wait).find_elements_by_tag_name('li')
+
+
+def _GetSearchResultsPersonLiObjects() -> List[_Person]:
+  persons = []
+  for i in range(len(_GetLiElementsFromPage())):
+    name = _GetElementByXPath(
+        _ElementsPathSelectors.get_search_results_person_li_card_name_xpath(
+            i + 1)).text
+    degree = _GetElementByXPath(
+        _ElementsPathSelectors.
+        get_search_results_person_li_card_degree_info_xpath(i + 1)).text
+    occupation = _GetElementByXPath(
+        _ElementsPathSelectors.
+        get_search_results_person_li_occupation_info_card_container_xpath(
+            i + 1)).text
+    location = _GetElementByXPath(
+        _ElementsPathSelectors.
+        get_search_results_person_li_location_info_card_container_xpath(i +
+                                                                        1)).text
+    mutual_connections = _GetElementByXPath(
+        _ElementsPathSelectors.
+        get_search_results_person_li_card_mutual_connections_info_container_xpath(  # pylint: disable=line-too-long
+            i + 1)).text
+    profileurl = _GetElementByXPath(
+        _ElementsPathSelectors.get_search_results_person_li_card_link_xpath(
+            i + 1)).get_attribute('href')
+    connect_button = _GetElementByXPath(
+        _ElementsPathSelectors.
+        get_search_results_person_li_connect_button_xpath(i + 1))
+    persons.append(
+        _Person(name, degree, occupation, location, mutual_connections,
+                _Person.extract_profileid_from_profileurl(profileurl),
+                profileurl, connect_button))
+  return persons
+
+
+class LinkedInSearchConnect:
+
+  def __init__(self, *, keyword: str, location: str, title: str, firstname: str,
+               lastname: str, school: str, industry: str, current_company: str,
+               profile_language: str, limit: int) -> None:
+    assert 0 < limit <= 80, (
+        f'Invitation limit can not exceed by 80, you gave {limit}.')
+    self._limit = limit
+
     if keyword is None:
-      raise Exception("Expected 'str' but received 'NoneType'")
-    else:
-      self._keyword = keyword
+      raise ValueError("'keyword' should not be None.")
+
+    self._keyword = keyword
     self._location = location
     self._title = title
-    self._first_name = first_name
-    self._last_name = last_name
+    self._firstname = firstname
+    self._lastname = lastname
     self._school = school
     self._industry = industry
     self._current_company = current_company
     self._profile_language = profile_language
-    self.cleaner = Cleaner(self._driver)
 
-  def _scroll(self: LinkedInSearchConnect) -> None:
-    """Private method _scroll() scrolls the page.
+    self._get_search_results_page()
+    self._apply_filters_to_search_results()
 
-    :Args:
-        - self: {LinkedInSearchConnect} self
+  def _get_search_results_page(self) -> None:
+    typeahead_input_box = self._get_element_by_xpath(
+        _ElementsPathSelectors.get_global_nav_typeahead_input_box_xpath())
+    try:
+      typeahead_input_box.clear()
+    except exceptions.InvalidElementStateException:
+      logger.error(traceback.format_exc())
+    typeahead_input_box.send_keys(self._keyword)
+    typeahead_input_box.send_keys(keys.Keys.RETURN)
 
-    :Returns:
-        - {None}
-    """
-    js = JS(self._driver)
-    old_page_offset = js.get_page_y_offset()
-    new_page_offset = js.get_page_y_offset()
-    while old_page_offset == new_page_offset:
-      js.scroll_bottom()
-      time.sleep(1)
-      new_page_offset = js.get_page_y_offset()
+  def _get_element_by_xpath(self,
+                            xpath: str,
+                            wait: int = 60) -> webdriver.Chrome:
+    return WebDriverWait(driver.GetGlobalChromeDriverInstance(), wait).until(
+        EC.presence_of_element_located((by.By.XPATH, xpath)))
 
-  def _get_search_results_page(function_: function) -> function:
+  def _get_elements_by_xpath(self,
+                             xpath: str,
+                             wait: int = 60) -> webdriver.Chrome:
+    return WebDriverWait(driver.GetGlobalChromeDriverInstance(), wait).until(
+        EC.presence_of_all_elements_located((by.By.XPATH, xpath)))
 
-    @functools.wraps(function_)
-    def wrapper(self: LinkedInSearchConnect, *args: List[Any],
-                **kwargs: Dict[Any, Any]) -> None:
-      nonlocal function_
-      search_box: webdriver.Chrome = WebDriverWait(self._driver, 60).until(
-          EC.presence_of_element_located(
-              (By.XPATH, """//*[@id="global-nav-typeahead"]/input""")))
-      try:
-        search_box.clear()
-      except InvalidElementStateException:  # don't do anything if the element is in read-only state
-        pass
-      search_box.send_keys(self._keyword)
-      search_box.send_keys(Keys.RETURN)
-      function_(self, *args, **kwargs)
+  def _check_if_any_filter_is_given(self) -> bool:
+    return any([
+        self._location, self._industry, self._profile_language, self._firstname,
+        self._lastname, self._title, self._current_company, self._school
+    ])
 
-    return wrapper
+  def _apply_filters_to_search_results(self):
+    filter_by_people_button = self._get_element_by_xpath(
+        _ElementsPathSelectors.get_filter_by_people_button_xpath())
+    filter_by_people_button.click()
+    del filter_by_people_button
 
-  def _execute_cleaners(self: LinkedInSearchConnect) -> None:
-    """Method execute_cleaners() scours the unwanted element from the page during the
-    connect process.
+    if self._check_if_any_filter_is_given():
+      all_filters_button = self._get_element_by_xpath(
+          _ElementsPathSelectors.get_all_filters_button_xpath())
+      all_filters_button.click()
+      del all_filters_button
 
-    :Args:
-        - self: {LinkedInConnectionsAuto}
-
-    :Returns:
-        - {None}
-    """
-    self.cleaner.clear_message_overlay()
-
-  def _apply_filters(self: LinkedInSearchConnect):
-
-    def get_element_by_xpath(xpath: str, wait: int = None) -> webdriver.Chrome:
-      if wait == None:
-        wait = LinkedInSearchConnect.WAIT
-      return WebDriverWait(self._driver, wait).until(
-          EC.presence_of_element_located((By.XPATH, xpath)))
-
-    def get_elements_by_xpath(xpath: str, wait: int = None) -> webdriver.Chrome:
-      if wait == None:
-        wait = LinkedInSearchConnect.WAIT
-      return WebDriverWait(self._driver, wait).until(
-          EC.presence_of_all_elements_located((By.XPATH, xpath)))
-
-    people_button = get_element_by_xpath(
-        "//div[@id='search-reusables__filters-bar']//button[@aria-label='People']"
-    )
-    people_button.click()
-    del people_button
-
-    if self._location or self._industry or self._profile_language or self._first_name or \
-            self._last_name or self._title or self._current_company or self._school:
-      filters_button = get_element_by_xpath(
-          "//div[@id='search-reusables__filters-bar']//button[@aria-label='All filters']"
-      )
-      filters_button.click()
-      del filters_button
-
-    def check_for_filter(filter: str,
-                         filter_dict: Dict[str, webdriver.Chrome],
-                         threshold: float = 80.0) -> None:
-      """Nested function check_for_filter() checks if the filter option is present or not.
-
-      This function also does some sort of magic using the levenshtein distance algorithm
-      to predict the filter option in case the filter given is not present on the filters
-      page.
-
-      :Args:
-          - filter: {str} Filter option to search for.
-          - filter_dict: {Dict[str, webdriver.Chrome]} Hash-map containing filter one side and
-              the element to click on, on the other side.
-          - threshold: {float} Threshold used by levenshtein distance algorithm to predict for
-              a match in case the filter option is not directly present on the filters page.
-      """
+    def check_for_filter(
+        filter: str,  # pylint: disable=redefined-builtin
+        filter_dict: Dict[str, webdriver.Chrome]
+    ) -> None:
       nonlocal self
       filters_present: List[str] = filter_dict.keys()
 
@@ -229,19 +625,14 @@ class LinkedInSearchConnect(object):
         """
         nonlocal self
         # @TODO: Validate if the current version of this function is efficient
-        self._driver.execute_script("arguments[0].click();", element)
+        driver.GetGlobalChromeDriverInstance().execute_script(
+            'arguments[0].click();', element)
 
       if isinstance(filter, str):
         if filter in filters_present:
           click_overlapped_element(filter_dict[filter])
-          return
-        for fltr in filters_present:
-          levenshtein_dis = levenshtein(filter, fltr)
-          total_str_len = (len(filter) + len(fltr))
-          levenshtein_dis_percent = (
-              (total_str_len - levenshtein_dis) / total_str_len) * 100
-          if levenshtein_dis_percent >= threshold:
-            click_overlapped_element(filter_dict[fltr])
+        else:
+          raise RuntimeError('Given filter "' + filter + '" is not present.')
         return
 
       if isinstance(filter, list):
@@ -249,227 +640,184 @@ class LinkedInSearchConnect(object):
           if fltr in filters_present:
             click_overlapped_element(filter_dict[fltr])
             continue
-          for _fltr in filters_present:
-            levenshtein_dis = levenshtein(fltr, _fltr)
-            total_str_len = (len(fltr) + len(_fltr))
-            levenshtein_dis_percent = (
-                (total_str_len - levenshtein_dis) / total_str_len) * 100
-            if levenshtein_dis_percent >= threshold:
-              click_overlapped_element(filter_dict[_fltr])
+          else:
+            raise RuntimeError('Given filter "' + fltr + '" is not present.')
         return
 
     if self._location:
-      location_inps = get_elements_by_xpath(
-          "//input[starts-with(@id, 'advanced-filter-geoUrn-')]")
-      location_labels = get_elements_by_xpath(
-          "//label[starts-with(@for, 'advanced-filter-geoUrn-')]")
-      locations: List[str] = [
-          label.find_element_by_tag_name("span").text
-          for label in location_labels
+      available_location_options = self._get_elements_by_xpath(
+          _ElementsPathSelectors.get_available_location_options_xpath())
+      available_location_labels = self._get_elements_by_xpath(
+          _ElementsPathSelectors.get_available_location_labels_xpath())
+      available_locations: List[str] = [
+          label.find_element_by_tag_name('span').text
+          for label in available_location_labels
       ]
-      # delete location_labels list as soon as we found the location names
-      # these objects uses a lot of memory so free them after using them
-      del location_labels
+
+      del available_location_labels
       locations_dict: Dict[str, webdriver.Chrome] = {}
-      for location, location_inp in zip(locations, location_inps):
-        locations_dict[location] = location_inp
-      # our primary goal here is to create the location_dict object; once
-      # it is created delete the other objects left behind
-      del locations
-      del location_inps
+      for location, location_option in zip(available_locations,
+                                           available_location_options):
+        locations_dict[location] = location_option
+      del available_locations
+      del available_location_options
 
       check_for_filter(self._location, locations_dict)
-      # location_dict again uses a lot of memory so free it after using it
       del locations_dict
 
     if self._industry:
-      industry_inps = get_elements_by_xpath(
-          "//input[starts-with(@id, 'advanced-filter-industry-')]")
-      industry_labels = get_elements_by_xpath(
-          "//label[starts-with(@for, 'advanced-filter-industry-')]")
-      industries: List[str] = [
-          label.find_element_by_tag_name("span").text
-          for label in industry_labels
+      available_industry_options = self._get_elements_by_xpath(
+          _ElementsPathSelectors.get_available_industry_options_xpath())
+      available_industry_labels = self._get_elements_by_xpath(
+          _ElementsPathSelectors.get_available_industry_labels_xpath())
+      available_industries: List[str] = [
+          label.find_element_by_tag_name('span').text
+          for label in available_industry_labels
       ]
-      # delete industry_labels list as soon as we found the industry names
-      # these objects uses a lot of memory so free them after using them
-      del industry_labels
+
+      del available_industry_labels
       industries_dict: Dict[str, webdriver.Chrome] = {}
-      for industry, industry_inp in zip(industries, industry_inps):
-        industries_dict[industry] = industry_inp
-      # our primary goal here is to create the industries_dict object; once
-      # it is created delete the other objects left behind
-      del industries
-      del industry_inps
+      for industry, industry_option in zip(available_industries,
+                                           available_industry_options):
+        industries_dict[industry] = industry_option
+      del available_industries
+      del available_industry_options
 
       check_for_filter(self._industry, industries_dict)
-      # industries_dict again uses a lot of memory so free it after using it
       del industries_dict
 
     if self._profile_language:
-      profile_language_inps = get_elements_by_xpath(
-          "//input[starts-with(@id, 'advanced-filter-profileLanguage-')]")
-      profile_language_labels = get_elements_by_xpath(
-          "//label[starts-with(@for, 'advanced-filter-profileLanguage-')]")
-      profile_languages: List[str] = [
-          label.find_element_by_tag_name("span").text
-          for label in profile_language_labels
+      available_profile_language_options = self._get_elements_by_xpath(
+          _ElementsPathSelectors.get_available_profile_language_options_xpath())
+      available_profile_language_lables = self._get_elements_by_xpath(
+          _ElementsPathSelectors.get_available_profile_langauge_labels_xpath())
+      available_profile_languages: List[str] = [
+          label.find_element_by_tag_name('span').text
+          for label in available_profile_language_lables
       ]
-      # delete profile_language_labels list as soon as we found the industry names
-      # these objects uses a lot of memory so free them after using them
-      del profile_language_labels
+
+      del available_profile_language_lables
       profile_languages_dict: Dict[str, webdriver.Chrome] = {}
-      for profile_language, profile_language_inp in zip(profile_languages,
-                                                        profile_language_inps):
-        profile_languages_dict[profile_language] = profile_language_inp
-      # our primary goal here is to create the profile_languages_dict object; once
-      # it is created delete the other objects left behind
-      del profile_languages
-      del profile_language_inps
+      for profile_language, profile_language_option in zip(
+          available_profile_languages, available_profile_language_options):
+        profile_languages_dict[profile_language] = profile_language_option
+      del available_profile_languages
+      del available_profile_language_options
 
       check_for_filter(self._profile_language, profile_languages_dict)
-      # profile_languages_dict again uses a lot of memory so free it after using it
       del profile_languages_dict
 
-    if self._first_name:
-      first_name_box = get_elements_by_xpath(
-          "//label[contains(text(), 'First name')]").find_element_by_tag_name(
-              "input")
-      first_name_box.clear()
-      first_name_box.send_keys(self._first_name)
-      # first_name_box element uses a lot of memory as it is a webdriver.Chrome object
-      # so delete it
-      del first_name_box
+    if self._firstname:
+      firstname_input_element = self._get_elements_by_xpath(
+          _ElementsPathSelectors.get_first_name_input_element_container_xpath(
+          )).find_element_by_tag_name('input')
+      firstname_input_element.clear()
+      firstname_input_element.send_keys(self._firstname)
+      del firstname_input_element
 
-    if self._last_name:
-      last_name_box = get_element_by_xpath(
-          "//label[contains(text(), 'Last name')]").find_element_by_tag_name(
-              "input")
-      last_name_box.clear()
-      last_name_box.send_keys(self._last_name)
-      # last_name_box element uses a lot of memory as it is a webdriver.Chrome object
-      # so delete it
-      del last_name_box
+    if self._lastname:
+      lastname_input_element = self._get_element_by_xpath(
+          _ElementsPathSelectors.get_last_name_input_element_container_xpath(
+          )).find_element_by_tag_name('input')
+      lastname_input_element.clear()
+      lastname_input_element.send_keys(self._lastname)
+      del lastname_input_element
 
     if self._title:
-      title_box = get_element_by_xpath("//label[contains(text(), 'Title')]"
-                                      ).find_element_by_tag_name("input")
-      title_box.clear()
-      title_box.send_keys(self._title)
-      # title_box element uses a lot of memory as it is a webdriver.Chrome object
-      # so delete it
-      del title_box
+      title_input_element = self._get_element_by_xpath(
+          _ElementsPathSelectors.get_title_input_element_container_xpath(
+          )).find_element_by_tag_name('input')
+      title_input_element.clear()
+      title_input_element.send_keys(self._title)
+      del title_input_element
 
     if self._current_company:
-      company_box = get_element_by_xpath("//label[contains(text(), 'Company')]"
-                                        ).find_element_by_tag_name("input")
-      company_box.clear()
-      company_box.send_keys(self._current_company)
-      # company_box element uses a lot of memory as it is a webdriver.Chrome object
-      # so delete it
-      del company_box
+      current_company_input_element = self._get_element_by_xpath(
+          _ElementsPathSelectors.
+          get_current_company_input_element_container_xpath(
+          )).find_element_by_tag_name('input')
+      current_company_input_element.clear()
+      current_company_input_element.send_keys(self._current_company)
+      del current_company_input_element
 
     if self._school:
-      school_box = get_element_by_xpath("//label[contains(text(), 'School')]"
-                                       ).find_element_by_tag_name("input")
-      school_box.clear()
-      school_box.send_keys(self._school)
-      # school_box element uses a lot of memory as it is a webdriver.Chrome object
-      # so delete it
-      del school_box
+      school_input_element = self._get_element_by_xpath(
+          _ElementsPathSelectors.get_school_input_element_container_xpath(
+          )).find_element_by_tag_name('input')
+      school_input_element.clear()
+      school_input_element.send_keys(self._school)
+      del school_input_element
 
-    if self._location or self._industry or self._profile_language or self._first_name or \
-            self._last_name or self._title or self._current_company or self._school:
-      show_results_button = get_element_by_xpath(
-          "//div[@id='artdeco-modal-outlet']//button[@aria-label='Apply current filters to show results']"
-      )
-      show_results_button.click()
-      # show_results_button element uses a lot of memory as it is a webdriver.Chrome object
-      # so delete it
-      del show_results_button
+    if self._check_if_any_filter_is_given():
+      apply_current_filters_button = self._get_element_by_xpath(
+          _ElementsPathSelectors.get_apply_current_filters_button_xpath())
+      apply_current_filters_button.click()
+      del apply_current_filters_button
 
-  def _send_invitation(self: LinkedInSearchConnect) -> None:
-    start = time.time()
+  def send_invitations(self) -> None:
+    invitation_count = 0
+    start_time = time.time()
 
-    p = Person(self._driver)
-    persons = p.get_search_results_elements()
-
-    invitation = Invitation()
+    persons = _GetSearchResultsPersonLiObjects()
+    invitation = status.Invitation()
     while True:
       for person in persons:
-        if person.connect_button.text == "Pending" or \
-                person.connect_button.get_attribute("aria-label") in ("Follow", "Message"):
+        if person.connect_button.text == 'Pending' or \
+          person.connect_button.get_attribute('aria-label') in (
+            'Follow', 'Message'):
           continue
         try:
-          ActionChains(self._driver).move_to_element(
-              person.connect_button).click().perform()
-          send_invite_modal = WebDriverWait(
-              self._driver, LinkedInSearchConnect.WAIT).until(
-                  EC.presence_of_element_located(
-                      (By.XPATH,
-                       "//div[@aria-labelledby='send-invite-modal']")))
-          send_now = send_invite_modal.find_element_by_xpath(
-              "//button[@aria-label='Send now']")
-          ActionChains(self._driver).move_to_element(send_now).click().perform()
-          invitation.set_invitation_fields(name=person.name,
-                                           occupation=person.occupation,
-                                           status="sent",
-                                           elapsed_time=time.time() - start)
-          invitation.status(come_back_by=9)
-          LinkedInSearchConnect.__INVITATION_SENT += 1
-        except (ElementNotInteractableException,
-                ElementClickInterceptedException) as exc:
-          if isinstance(exc, ElementClickInterceptedException):
+          action_chains.ActionChains(
+              driver.GetGlobalChromeDriverInstance()).move_to_element(
+                  person.connect_button).click().perform()
+          send_now_button = self._get_element_by_xpath(
+              _ElementsPathSelectors.get_send_invite_modal_xpath(
+              )).find_element_by_xpath(
+                  _ElementsPathSelectors.get_send_now_button_xpath())
+          action_chains.ActionChains(
+              driver.GetGlobalChromeDriverInstance()).move_to_element(
+                  send_now_button).click().perform()
+          invitation.set_invitation_fields(
+              name=person.name,
+              occupation=person.occupation,
+              location=person.location,
+              mutual_connections=person.mutual_connections,
+              profileid=person.profileid,
+              profileurl=person.profileurl,
+              status='sent',
+              elapsed_time=time.time() - start_time)
+          invitation.status()
+          invitation_count += 1
+        except (exceptions.ElementNotInteractableException,
+                exceptions.ElementClickInterceptedException) as exc:
+          logger.error(traceback.format_exc())
+          if isinstance(exc, exceptions.ElementClickInterceptedException):
             break
-          invitation.set_invitation_fields(name=person.name,
-                                           occupation=person.occupation,
-                                           status="failed",
-                                           elapsed_time=time.time() - start)
-          invitation.status(come_back_by=9)
+          invitation.set_invitation_fields(
+              name=person.name,
+              occupation=person.occupation,
+              location=person.location,
+              mutual_connections=person.mutual_connections,
+              profileid=person.profileid,
+              profileurl=person.profileurl,
+              status='failed',
+              elapsed_time=time.time() - start_time)
+          invitation.status()
 
-        if LinkedInSearchConnect.__INVITATION_SENT == self._limit:
+        if invitation_count == self._limit:
           break
 
-      def next_() -> None:
-        next_: webdriver.Chrome = self._driver.find_element_by_xpath(
-            "//main[@id='main']//button[@aria-label='Next']")
-        ActionChains(self._driver).move_to_element(next_).click().perform()
+      def goto_next_page() -> None:  # pylint: disable=redefined-builtin
+        next_button = driver.GetGlobalChromeDriverInstance(
+        ).find_element_by_xpath(
+            _ElementsPathSelectors.get_goto_next_page_button_xpath())
+        action_chains.ActionChains(
+            driver.GetGlobalChromeDriverInstance()).move_to_element(
+                next_button).click().perform()
 
       try:
-        next_()
-      except NoSuchElementException:
-        self._scroll()
-        next_()
-      persons = p.get_search_results_elements()
-
-  @_get_search_results_page
-  def run(self: LinkedInSearchConnect) -> None:
-    """Method run() calls the send_invitation method, but first it assures that the object
-    self has driver property in it.
-
-    :Args:
-        - self: {LinkedInConnectionsAuto} object
-
-    :Returns:
-        - {None}
-    """
-    self._apply_filters()
-    self._execute_cleaners()
-    self._send_invitation()
-
-  def __del__(self: LinkedInSearchConnect) -> None:
-    """LinkedInConnectionsAuto destructor to de-initialise LinkedInConnectionsAuto object.
-
-    :Args:
-        - self: {LinkedInConnectionsAuto} object
-
-    :Returns:
-        - {None}
-    """
-    LinkedInSearchConnect.__INVITATION_SENT = 0
-    try:
-      self._driver.quit()
-    except AttributeError:
-      # this mean that the above code produces some error while running and
-      # driver instance died
-      pass
+        goto_next_page()
+      except exceptions.NoSuchElementException:
+        javascript.JS.load_page()
+        goto_next_page()
+      persons = _GetSearchResultsPersonLiObjects()
