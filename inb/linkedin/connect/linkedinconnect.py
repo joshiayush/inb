@@ -1,3 +1,5 @@
+# pylint: disable=missing-module-docstring
+
 # Copyright 2021, joshiayus Inc.
 # All rights reserved.
 #
@@ -58,56 +60,56 @@ if settings.LOGGING_TO_STREAM_ENABLED:
 logger.addHandler(file_handler)
 
 
-class SuggestionBoxPersonElements:
+class _ElementsPathSelectors:
 
   @staticmethod
-  def get_suggestion_box_person_li_parent() -> str:
+  def get_suggestion_box_person_li_parent_xpath() -> str:
     return '/html/body/div[6]/div[3]/div/div/div/div/div[2]/div/div/main/div[3]/section/section/section/div/ul'  # pylint: disable=line-too-long
 
   @staticmethod
   def get_suggestion_box_li_root_xpath(positiion: int) -> str:
-    return SuggestionBoxPersonElements.get_suggestion_box_person_li_parent(
+    return _ElementsPathSelectors.get_suggestion_box_person_li_parent_xpath(
     ) + '/li[' + str(positiion) + ']'
 
   @staticmethod
   def _get_suggestion_box_li_card_container_xpath(position: int) -> str:
-    return SuggestionBoxPersonElements.get_suggestion_box_li_root_xpath(
+    return _ElementsPathSelectors.get_suggestion_box_li_root_xpath(
         position) + '/div/section'
 
   @staticmethod
   def _get_suggestion_box_li_card_info_container_xpath(position: int) -> str:
-    return SuggestionBoxPersonElements._get_suggestion_box_li_card_container_xpath(  # pylint: disable=line-too-long
+    return _ElementsPathSelectors._get_suggestion_box_li_card_container_xpath(  # pylint: disable=line-too-long
         position) + '/div[1]'
 
   @staticmethod
   def get_suggestion_box_li_card_link_xpath(position: int) -> str:
-    return SuggestionBoxPersonElements._get_suggestion_box_li_card_info_container_xpath(  # pylint: disable=line-too-long
+    return _ElementsPathSelectors._get_suggestion_box_li_card_info_container_xpath(  # pylint: disable=line-too-long
         position) + '/a'
 
   @staticmethod
   def get_suggestion_box_li_card_name_xpath(position: int) -> str:
-    return SuggestionBoxPersonElements.get_suggestion_box_li_card_link_xpath(
+    return _ElementsPathSelectors.get_suggestion_box_li_card_link_xpath(
         position) + '/span[2]'
 
   @staticmethod
   def get_suggestion_box_li_card_occupation_xpath(position: int) -> str:
-    return SuggestionBoxPersonElements.get_suggestion_box_li_card_link_xpath(
+    return _ElementsPathSelectors.get_suggestion_box_li_card_link_xpath(
         position) + '/span[4]'
 
   @staticmethod
   def _get_suggestion_box_li_card_bottom_container_xpath(position: int) -> str:
-    return SuggestionBoxPersonElements._get_suggestion_box_li_card_container_xpath(  # pylint: disable=line-too-long
+    return _ElementsPathSelectors._get_suggestion_box_li_card_container_xpath(  # pylint: disable=line-too-long
         position) + '/div[2]'
 
   @staticmethod
   def get_suggestion_box_li_card_member_mutual_connections_xpath(
       position: int) -> str:
-    return SuggestionBoxPersonElements._get_suggestion_box_li_card_bottom_container_xpath(  # pylint: disable=line-too-long
+    return _ElementsPathSelectors._get_suggestion_box_li_card_bottom_container_xpath(  # pylint: disable=line-too-long
         position) + '/div/div/button/span'
 
   @staticmethod
   def get_suggestion_box_li_card_invite_button_xpath(position: int) -> str:  # pylint: disable=line-too-long
-    return SuggestionBoxPersonElements._get_suggestion_box_li_card_bottom_container_xpath(  # pylint: disable=line-too-long
+    return _ElementsPathSelectors._get_suggestion_box_li_card_bottom_container_xpath(  # pylint: disable=line-too-long
         position) + '/footer/button'
 
 
@@ -139,20 +141,20 @@ def _GetElementByXPath(xpath: str, wait: int = 60) -> webelement.WebElement:
 
 def _GetSuggestionBoxPersonLiObject(position: int) -> _Person:
   profileid = _GetElementByXPath(
-      SuggestionBoxPersonElements.get_suggestion_box_li_card_link_xpath(
+      _ElementsPathSelectors.get_suggestion_box_li_card_link_xpath(
           position)).get_attribute('href')
   name = _GetElementByXPath(
-      SuggestionBoxPersonElements.get_suggestion_box_li_card_name_xpath(
+      _ElementsPathSelectors.get_suggestion_box_li_card_name_xpath(
           position)).text
   occupation = _GetElementByXPath(
-      SuggestionBoxPersonElements.get_suggestion_box_li_card_occupation_xpath(
+      _ElementsPathSelectors.get_suggestion_box_li_card_occupation_xpath(
           position)).text
   mutual_connections = _GetElementByXPath(
-      SuggestionBoxPersonElements.
+      _ElementsPathSelectors.
       get_suggestion_box_li_card_member_mutual_connections_xpath(position)).text
   connect_button = _GetElementByXPath(
-      SuggestionBoxPersonElements.
-      get_suggestion_box_li_card_invite_button_xpath(position))
+      _ElementsPathSelectors.get_suggestion_box_li_card_invite_button_xpath(
+          position))
   profileurl = settings.GetLinkedInUrl() + profileid
   return _Person(name, occupation, mutual_connections, profileid, profileurl,
                  connect_button)
@@ -161,7 +163,8 @@ def _GetSuggestionBoxPersonLiObject(position: int) -> _Person:
 class LinkedInConnect(object):
 
   def __init__(self, limit: int) -> None:
-    assert 0 < limit <= 80, "error: inb: Limit can't be greater than 80."
+    assert 0 < limit <= 80, (
+        f'Invitation limit can not exceed by 80, you gave {limit}.')
     self._limit = limit
     driver.GetGlobalChromeDriverInstance().get(
         settings.GetLinkedInMyNetworkPageUrl())
@@ -184,7 +187,6 @@ class LinkedInConnect(object):
             name=person.name,
             occupation=person.occupation,
             location=None,
-            summary=None,
             mutual_connections=person.mutual_connections,
             profileid=person.profileid,
             profileurl=person.profileurl,
@@ -201,7 +203,6 @@ class LinkedInConnect(object):
             name=person.name,
             occupation=person.occupation,
             location=None,
-            summary=None,
             mutual_connections=person.mutual_connections,
             profileid=person.profileid,
             profileurl=person.profileurl,
