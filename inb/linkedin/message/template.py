@@ -49,12 +49,6 @@ import json
 import random
 import datetime
 
-from errors import (
-    TemplateFileException,
-    TemplateFileNotSupportedException,
-    TemplateMessageLengthExceededException,
-)
-
 MY_NAMES = [
     '{{my_name}}',
     '{{my_first_name}}',
