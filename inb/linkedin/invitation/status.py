@@ -48,7 +48,6 @@ SEND_INVITATION_STATUS_TEMPL = """  {{status}}  {{name}}
 SEARCH_INVITATION_STATUS_TEMPL = """  {{status}}  {{name}}  • {{degree}}
   {{occupation}}
   {{location}}
-  {{summary}}
   {{mutual_connections}}
   ID: {{profileid}}
   URL: {{profileurl}}
@@ -60,13 +59,12 @@ class Invitation(object):
   _SLEEP_TIME_AFTER_LOGGING = 0.18
 
   def set_invitation_fields(self, name: str, occupation: str, location: str,
-                            summary: str, mutual_connections: str,
-                            profileid: str, profileurl: str, status: str,
+                            mutual_connections: str, profileid: str,
+                            profileurl: str, status: str,
                             elapsed_time: int) -> None:
     self._name = name
     self._occupation = occupation
     self._location = location
-    self._summary = summary
     self._mutual_connections = mutual_connections
     self._profileid = profileid
     self._profileurl = profileurl
@@ -110,7 +108,6 @@ class Invitation(object):
     message = message.replace('{{name}}', self._name)
     message = message.replace('{{occupation}}', self._occupation)
     message = message.replace('{{location}}', self._location)
-    message = message.replace('{{summary}}', self._summary)
     message = message.replace('{{mutual_connections}}',
                               self._mutual_connections)
     message = message.replace('{{profileid}}', self._profileid)
