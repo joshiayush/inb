@@ -40,8 +40,6 @@ FAILED_STATUS_SYMBOL = '✘'
 SEND_INVITATION_STATUS_TEMPL = """  {{status}}  {{name}}
   {{occupation}}
   {{mutual_connections}}
-  ID: {{profileid}}
-  URL: {{profileurl}}
   Success:  {{success}}  Failure: {{failure}}  Elapsed time: {{elapsed_time}}
 """
 
@@ -49,8 +47,6 @@ SEARCH_INVITATION_STATUS_TEMPL = """  {{status}}  {{name}}  • {{degree}}
   {{occupation}}
   {{location}}
   {{mutual_connections}}
-  ID: {{profileid}}
-  URL: {{profileurl}}
   Success:  {{success}}  Failure: {{failure}}  Elapsed time: {{elapsed_time}}
 """
 
@@ -95,8 +91,6 @@ class Invitation(object):
     message = message.replace('{{occupation}}', self._occupation)
     message = message.replace('{{mutual_connections}}',
                               self._mutual_connections)
-    message = message.replace('{{profileid}}', self._profileid)
-    message = message.replace('{{profileurl}}', self._profileurl)
     message = message.replace('{{success}}', str(self._success_rate))
     message = message.replace('{{failure}}', str(self._failure_rate))
     message = message.replace('{{elapsed_time}}', str(self._elapsed_time))
@@ -110,15 +104,13 @@ class Invitation(object):
     message = message.replace('{{location}}', self._location)
     message = message.replace('{{mutual_connections}}',
                               self._mutual_connections)
-    message = message.replace('{{profileid}}', self._profileid)
-    message = message.replace('{{profileurl}}', self._profileurl)
     message = message.replace('{{success}}', str(self._success_rate))
     message = message.replace('{{failure}}', str(self._failure_rate))
     message = message.replace('{{elapsed_time}}', str(self._elapsed_time))
     return message
 
   def status(self) -> None:
-    if self._location is None and self._summary is None:
+    if self._location is None:
       message = self._fill_send_message_template()
     else:
       message = self._fill_search_message_template()
