@@ -14,7 +14,7 @@
 <br />
 <div align="center">
   <a href="https://github.com/joshiayush/inb">
-    <img src="./images/linkedin.png" alt="Logo" width="80" height="80">
+    <img src="./media/linkedin.png" alt="Logo" width="80" height="80">
   </a>
 
   <h3 align="center">inb</h3>
@@ -66,6 +66,8 @@
 # inb
 
 <!-- @TODO(joshiayush): Include a screen shot or a short video of working of inb -->
+
+![inb](./media/inb.gif)
 
 Word **inb** is made up of two words "**in**" and "**b**" where "**in**" stands for [LinkedIn][_linkedin] which is an _American business and employment-oriented online service that operates via websites and mobile apps_ and "**b**" stands for bot. So by now you've already deduced that inb is a bot that automates [LinkedIn][_linkedin].
 
@@ -179,7 +181,7 @@ python3 -m pip install [-r] requirements.txt
 
 To send invitations to people on LinkedIn you must execute the following command. The following command will send invitations to 20 people that are in your `MyNetwork` page.
 
-```shell
+```
 python3 inb/inb.py send --email ayush854032@gmail.com --password xxx-xxx-xxx
 ```
 
@@ -226,16 +228,16 @@ Distributed under the MIT License. See [`LICENSE`][_inb_license_f] for more info
 - [**joshiayush**](https://www.github.com/joshiayush)
 
   <a href="https://github.com/joshiayush">
-  <img src="./images/github.png" alt="Logo" width="40" height="40">
+  <img src="./media/github.png" alt="Logo" width="40" height="40">
   </a>
   <a href="https://www.linkedin.com/in/ayush-joshi-3600a01b7/">
-  <img src="./images/linkedin.png" alt="Logo" width="40" height="40">
+  <img src="./media/linkedin.png" alt="Logo" width="40" height="40">
   </a>
   <a href="http://twitter.com/joshiayushjoshi">
-  <img src="./images/twitter.png" alt="Logo" width="40" height="40">
+  <img src="./media/twitter.png" alt="Logo" width="40" height="40">
   </a>
   <a href="https://stackoverflow.com/users/13910122/ayush">
-  <img src="./images/stack-overflow.png" alt="Logo" width="40" height="40">
+  <img src="./media/stack-overflow.png" alt="Logo" width="40" height="40">
   </a>
 
 <!-- Contibutors who have contributed non-trivial changes are encouraged to add their details here. -->
