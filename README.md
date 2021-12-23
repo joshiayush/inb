@@ -65,8 +65,6 @@
 
 # inb
 
-<!-- @TODO(joshiayush): Include a screen shot or a short video of working of inb -->
-
 ![inb](./media/inb.gif)
 
 Word **inb** is made up of two words "**in**" and "**b**" where "**in**" stands for [LinkedIn][_linkedin] which is an _American business and employment-oriented online service that operates via websites and mobile apps_ and "**b**" stands for bot. So by now you've already deduced that inb is a bot that automates [LinkedIn][_linkedin].
@@ -168,6 +166,24 @@ Next step is to install all the dependencies required for project **inb** listed
 ```shell
 python3 -m pip install [-r] requirements.txt
 ```
+
+**Build executable**
+
+No matter what platform you are running on you just got to follow these steps to build [**inb**][_inb] in a single executable file.
+
+1. Bundle [**inb**][_inb] into a executable file under `dist` directory.
+
+   ```shell
+   pyinstaller --onefile inb/inb.py
+   ```
+
+2. Create a symbolic link of the executable file in your envrionment `PATH`.
+
+   **Ubuntu & MacOS**
+
+   ```shell
+   sudo ln -s dist/inb /usr/local/bin/inb
+   ```
 
 <div align="right">
   <a href="#top">
