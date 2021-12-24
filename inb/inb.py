@@ -142,7 +142,7 @@ def send(email: str, password: str, limit: int, headless: bool, maximized: bool,
   if maximized:
     chromedriver_options.append(driver.CHROMEDRIVER_OPTIONS['start-maximized'])
   try:
-    driver.GChromeDriverInstance.initialize(settings.ChromeDriverAbsPath(),
+    driver.GChromeDriverInstance.initialize(settings.ChromeDriverAbsolutePath(),
                                             chromedriver_options)
     login.LinkedIn.login(email, password)
     connect.LinkedInConnect(limit).send_invitations()
@@ -190,7 +190,7 @@ def search(email: str, password: str, keyword: str, location: str, limit: int,
   if maximized:
     chromedriver_options.append(driver.CHROMEDRIVER_OPTIONS['start-maximized'])
   try:
-    driver.GChromeDriverInstance.initialize(settings.ChromeDriverAbsPath(),
+    driver.GChromeDriverInstance.initialize(settings.ChromeDriverAbsolutePath(),
                                             chromedriver_options)
     login.LinkedIn.login(email, password)
     connect.LinkedInSearchConnect(keyword=keyword,
