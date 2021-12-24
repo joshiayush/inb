@@ -1,18 +1,6 @@
 <div id="top"></div>
 
 <div align="center">
-
-[![Contributors][inb_contributors]][inb_contributors_url]
-[![Forks][inb_forks]][inb_forks_url]
-[![Stargazers][inb_stars]][inb_stars_url]
-[![Issues][inb_issues]][inb_issues_url]
-[![LICENSE][inb_license]][inb_license_url]
-[![LinkedIn][developer_linkedin]][developer_linkedin_url]
-
-</div>
-
-<br />
-<div align="center">
   <a href="https://github.com/joshiayush/inb">
     <img src="./media/linkedin.png" alt="Logo" width="80" height="80">
   </a>
@@ -32,36 +20,6 @@
     <a href="https://github.com/joshiayush/inb/issues">Request Feature</a>
   </p>
 </div>
-
-<details>
-  <summary>Contents</summary>
-  <ol>
-    <li>
-      <a href="#inb">inb</a>
-      <ul>
-        <li><a href="#technologies-used">Technologies Used</li>
-      </ul>
-    </li>
-    <li>
-      <a href="#commence">Commence</a>
-      <ul>
-        <li>
-          <a href="#prerequisites">Prerequisites</a>
-          <ul>
-            <li><a href="#ubuntu">Ubuntu</a></li>
-          </ul>
-        </li>
-        <li><a href="#installation">Installation</a></li>
-      </ul>
-    </li>
-    <li><a href="#usage">Usage</a></li>
-    <li><a href="#contribution">Contribution</a></li>
-    <li><a href="#license">License</a></li>
-    <li><a href="#developers">Developers</a></li>
-    <li><a href="#acknowledgments">Acknowledgments</a></li>
-    <li><a href="#maintainership">Maintainership</a></li>
-  </ol>
-</details>
 
 # inb
 
@@ -286,16 +244,6 @@ We're actively seeking maintainers that will triage issues and pull requests and
 
 <!-- Shields and attached links -->
 
-[inb_contributors]: https://img.shields.io/github/contributors/joshiayush/inb?logo=GitHub&style=for-the-badge
-[inb_contributors_url]: https://github.com/joshiayush/inb/graphs/contributors
-[inb_forks]: https://img.shields.io/github/forks/joshiayush/inb?logo=GitHub&style=for-the-badge
-[inb_forks_url]: https://github.com/joshiayush/inb/network/members
-[inb_stars]: https://img.shields.io/github/stars/joshiayush/inb?logo=GitHub&style=for-the-badge
-[inb_stars_url]: https://github.com/joshiayush/inb/stargazers
-[inb_issues]: https://img.shields.io/github/issues/joshiayush/inb?logo=GitHub&style=for-the-badge
-[inb_issues_url]: https://github.com/joshiayush/inb/issues
-[inb_license]: https://img.shields.io/github/license/joshiayush/inb?logo=GitHub&style=for-the-badge
-[inb_license_url]: https://github.com/joshiayush/inb/blob/master/LICENSE
 [developer_linkedin]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
 [developer_linkedin_url]: https://www.linkedin.com/in/ayush-joshi-3600a01b7/
 [back_to_top]: https://img.shields.io/badge/-Back%20to%20top-lightgrey
