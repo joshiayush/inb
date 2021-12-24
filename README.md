@@ -167,24 +167,6 @@ Next step is to install all the dependencies required for project **inb** listed
 python3 -m pip install [-r] requirements.txt
 ```
 
-**Build executable**
-
-No matter what platform you are running on you just got to follow these steps to build [**inb**][_inb] in a single executable file.
-
-1. Bundle [**inb**][_inb] into a executable file under `dist` directory.
-
-   ```shell
-   pyinstaller --onefile inb/inb.py
-   ```
-
-2. Create a symbolic link of the executable file in your envrionment `PATH`.
-
-   **Ubuntu & MacOS**
-
-   ```shell
-   sudo ln -s dist/inb /usr/local/bin/inb
-   ```
-
 <div align="right">
   <a href="#top">
   
