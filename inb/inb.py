@@ -150,7 +150,8 @@ def send(  # pylint: disable=invalid-name
     driver.GChromeDriverInstance.initialize(settings.ChromeDriverAbsolutePath(),
                                             chromedriver_options)
     login.LinkedIn.login(email, password)
-    connect.LinkedInConnect(limit).send_invitations()
+    connect.LinkedInConnect.get_my_network_page()
+    connect.LinkedInConnect.send_connection_requests(connection_limit=limit)
   except Exception as exc:  # pylint: disable=broad-except
     if debug:
       raise exc

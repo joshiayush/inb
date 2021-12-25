@@ -63,12 +63,12 @@ logger.addHandler(file_handler)
 class _ElementsPathSelectors:
 
   @staticmethod
-  def get_suggestion_box_person_li_parent_xpath() -> str:
+  def _get_suggestion_box_person_li_parent_xpath() -> str:
     return '/html/body/div[6]/div[3]/div/div/div/div/div[2]/div/div/main/div[3]/section/section/section/div/ul'  # pylint: disable=line-too-long
 
   @staticmethod
   def get_suggestion_box_li_root_xpath(positiion: int) -> str:
-    return _ElementsPathSelectors.get_suggestion_box_person_li_parent_xpath(
+    return _ElementsPathSelectors._get_suggestion_box_person_li_parent_xpath(
     ) + '/li[' + str(positiion) + ']'
 
   @staticmethod
@@ -135,6 +135,9 @@ class _Person:
     self.name = name
     self.occupation = occupation
     self.mutual_connections = mutual_connections
+    # Note: 'profileid' and 'profileurl' should not be dumped into the console
+    # rather they should be put inside the log records i.e., our history
+    # database.
     self.profileid = profileid
     self.profileurl = profileurl
     self.connect_button = connect_button
@@ -203,22 +206,69 @@ def _GetSuggestionBoxPersonLiObject(position: int) -> _Person:
 
 class LinkedInConnect(object):
 
-  def __init__(self, limit: int) -> None:
-    assert 0 < limit <= 80, (
-        f'Invitation limit can not exceed by 80, you gave {limit}.')
-    self._limit = limit
+  @staticmethod
+  def get_my_network_page() -> None:
+    """Function sends a `GET` request to LinkedIn's `My Network` page.
+
+    This function must be called before calling the staticmethod
+    `send_connection_requests()` otherwise you'll get a
+    `NoSuchElementException` thrown at you.
+
+    This function takes you to the `My Network` page of LinkedIn where LinkedIn
+    already filters out some people that matches with your account in order to
+    improve user experience so we leverage that facility in our simple `send`
+    routine.
+    """
     driver.GetGlobalChromeDriverInstance().get(
         settings.GetLinkedInMyNetworkPageUrl())
+
+  @staticmethod
+  def send_connection_requests(connection_limit: int = None) -> None:
+    """Function sends connection requests to people on your `My Network`
+    page.
+
+    Sends connection requests to people on your `My Network` page.  Explicitly
+    waits until the elements that contains user information pops themselves up
+    on the page.  This explicit wait is important that we achieve using the
+    `WebDriverWait` API because LinkedIn is a dynamic website and will not pop
+    the elements on the page until requested.  Protected function
+    `_GetElementByXPath()` helps finding out the elements from the `DOM` by
+    explicitly requesting elements from the dynamic page by triggering a scroll
+    down event.
+
+    You will also see the user's information printed on the console as this
+    function sends connection request on LinkedIn.  `Invitation` API handles
+    the printing of the information on the console.
+
+    Args:
+      connection_limit: Number of invitations to send.  This should not exceed
+                        the number 80 because LinkedIn does not allow a
+                        non-premium account to send over 80 connection requests
+                        in a day.
+    """
+    if connection_limit is None:
+      connection_limit = 20
+    elif not 0 < connection_limit <= 80:
+      raise ValueError(settings.CONNECTION_LIMIT_EXCEED_EXCEPTION_MESSAGE %
+                       (connection_limit))
+
+    # We don't want the message overlay to overlap the 'li' tags that contains
+    # the user information on your 'My Network' page as this will result in a
+    # 'NoSuchElementException' if the message overlay overlaps the 'li'
+    # element(s).  We remove the message overlay from the 'DOM' by setting its
+    # display to 'none'.  Do you have a better idea?
     cleaners.Cleaner.clear_message_overlay()
 
-  def send_invitations(self) -> None:
+    # We want to keep track of the invitations we've sent so far so that we can
+    # later stop the connection request process once we've reached the
+    # 'connection_limit'.
     invitation_count = 0
     start_time = time.time()
 
     invitation = status.Invitation()
     person = _GetSuggestionBoxPersonLiObject(invitation_count + 1)
     while person:
-      if invitation_count == (self._limit - 1):
+      if invitation_count == connection_limit:
         break
       try:
         action_chains.ActionChains(
