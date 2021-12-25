@@ -68,12 +68,13 @@ class TestProtectedDriverClass(unittest.TestCase):  # pylint: disable=missing-cl
   def test_enable_webdriver_chrome_with_only_path(
       self, mock_add_argument: mock.Mock) -> None:
     try:
-      self.driver.enable_webdriver_chrome(settings.ChromeDriverAbsPath(), None)
+      self.driver.enable_webdriver_chrome(settings.ChromeDriverAbsolutePath(),
+                                          None)
       mock_add_argument.assert_not_called()
     except exceptions.WebDriverException as exc:
       self.fail('enable_webdriver_chrome(%(path)s, None) failed with %(msg)s.' %
                 {
-                    'path': settings.ChromeDriverAbsPath(),
+                    'path': settings.ChromeDriverAbsolutePath(),
                     'msg': str(exc)
                 })
     else:
@@ -96,7 +97,7 @@ class TestProtectedDriverClass(unittest.TestCase):  # pylint: disable=missing-cl
     except exceptions.WebDriverException as exc:
       self.fail('enable_webdriver_chrome(%(path)s, None) failed with %(msg)s.' %
                 {
-                    'path': settings.ChromeDriverAbsPath(),
+                    'path': settings.ChromeDriverAbsolutePath(),
                     'msg': str(exc)
                 })
     else:
@@ -114,14 +115,14 @@ class TestProtectedDriverClass(unittest.TestCase):  # pylint: disable=missing-cl
   def test_enable_webdriver_chrome_with_path_set_to_none_but_options_given(
       self, mock_add_argument: mock.Mock) -> None:
     try:
-      self.driver.enable_webdriver_chrome(settings.ChromeDriverAbsPath(),
+      self.driver.enable_webdriver_chrome(settings.ChromeDriverAbsolutePath(),
                                           _GetAddArgumentCallingOrder())
       mock_add_argument.assert_has_calls(
           [mock.call(option) for option in _GetAddArgumentCallingOrder()])
     except exceptions.WebDriverException as exc:
       self.fail(
           'enable_webdriver_chrome(%(path)s, %(opts)s) failed with %(msg)s.' % {
-              'path': settings.ChromeDriverAbsPath(),
+              'path': settings.ChromeDriverAbsolutePath(),
               'opts': _GetAddArgumentCallingOrder(),
               'msg': str(exc)
           })
@@ -136,14 +137,14 @@ class TestProtectedDriverClass(unittest.TestCase):  # pylint: disable=missing-cl
   def test_enable_webdriver_chrome_with_path_and_options(
       self, mock_add_argument: mock.Mock) -> None:
     try:
-      self.driver.enable_webdriver_chrome(settings.ChromeDriverAbsPath(),
+      self.driver.enable_webdriver_chrome(settings.ChromeDriverAbsolutePath(),
                                           _GetAddArgumentCallingOrder())
       mock_add_argument.assert_has_calls(
           [mock.call(option) for option in _GetAddArgumentCallingOrder()])
     except exceptions.WebDriverException as exc:
       self.fail(
           'enable_webdriver_chrome(%(path)s, %(opts)s) failed with %(msg)s.' % {
-              'path': settings.ChromeDriverAbsPath(),
+              'path': settings.ChromeDriverAbsolutePath(),
               'opts': _GetAddArgumentCallingOrder(),
               'msg': str(exc)
           })
@@ -166,10 +167,10 @@ class TestProtectedMemberDriver(unittest.TestCase):
 class TestGChromeDriverInstanceClass(unittest.TestCase):
 
   def test_if_initialize_method_sets_static_method(self) -> None:
-    driver.GChromeDriverInstance.initialize(settings.ChromeDriverAbsPath(),
+    driver.GChromeDriverInstance.initialize(settings.ChromeDriverAbsolutePath(),
                                             _GetAddArgumentCallingOrder())
     self.assertEqual(driver.GChromeDriverInstance.CHROMEDIRVER_PATH,
-                     settings.ChromeDriverAbsPath())
+                     settings.ChromeDriverAbsolutePath())
     self.assertEqual(driver.GChromeDriverInstance.CHROMEDRIVER_OPTIONS,
                      _GetAddArgumentCallingOrder())
 
@@ -177,7 +178,7 @@ class TestGChromeDriverInstanceClass(unittest.TestCase):
 class TestGetGlobalChromeDriverInstanceMethod(unittest.TestCase):
 
   def setUp(self) -> None:
-    driver.GChromeDriverInstance.initialize(settings.ChromeDriverAbsPath(),
+    driver.GChromeDriverInstance.initialize(settings.ChromeDriverAbsolutePath(),
                                             _GetAddArgumentCallingOrder())
 
   @lib.IgnoreWarnings(ResourceWarning)
@@ -189,8 +190,8 @@ class TestGetGlobalChromeDriverInstanceMethod(unittest.TestCase):
   @mock.patch('logging.Logger.critical')
   def test_with_invalid_fields(self, mock_logger_critical: mock.Mock) -> None:
     driver.GChromeDriverInstance.initialize(
-        settings.ChromeDriverAbsPath()
-        [:settings.ChromeDriverAbsPath().find('chromedriver')],
+        settings.ChromeDriverAbsolutePath()
+        [:settings.ChromeDriverAbsolutePath().find('chromedriver')],
         _GetAddArgumentCallingOrder())
 
     with self.assertRaises(exceptions.WebDriverException):
@@ -211,12 +212,12 @@ class TestGetGlobalChromeDriverInstanceMethod(unittest.TestCase):
     python3 inb/test.py TestGetGlobalChromeDriverInstanceMethod.test_when_x_bit_is_off
     ```
     """
-    lib.RemoveFilePermissions(settings.ChromeDriverAbsPath(), 'x')
+    lib.RemoveFilePermissions(settings.ChromeDriverAbsolutePath(), 'x')
 
     with self.assertRaises(exceptions.WebDriverException):
       _ = driver.GetGlobalChromeDriverInstance()
 
-    lib.AddFilePermissions(settings.ChromeDriverAbsPath(), 'x')
+    lib.AddFilePermissions(settings.ChromeDriverAbsolutePath(), 'x')
 
   def tearDown(self) -> None:
     driver.DisableGlobalChromeDriverInstance()
@@ -228,7 +229,7 @@ class TestDisableGlobalChromeDriverInstanceMethod(unittest.TestCase):
   @mock.patch('selenium.webdriver.Chrome.quit')
   def test_disable_global_chromedriver_instance_method(
       self, mock_quit: mock.Mock) -> None:
-    driver.GChromeDriverInstance.initialize(settings.ChromeDriverAbsPath(),
+    driver.GChromeDriverInstance.initialize(settings.ChromeDriverAbsolutePath(),
                                             _GetAddArgumentCallingOrder())
     driver_ = driver.GetGlobalChromeDriverInstance()
     self.assertIsInstance(driver_, webdriver.Chrome)
