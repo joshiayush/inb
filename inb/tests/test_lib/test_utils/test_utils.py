@@ -72,6 +72,7 @@ class TestWhichUtilityFunction(unittest.TestCase):
 
 class TestIgnoreWarningsUtilityFunction(unittest.TestCase):
 
+  @lib.IgnoreWarnings(ResourceWarning)
   @mock.patch('warnings.simplefilter')
   @mock.patch('warnings.catch_warnings')
   def test_with_subclass_of_builtin_warning(
