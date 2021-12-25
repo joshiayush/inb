@@ -127,16 +127,43 @@ class _Person:
 
 
 def _GetElementByXPath(xpath: str, wait: int = 60) -> webelement.WebElement:
+  """Returns an element from the `DOM` whose `xpath` is known.
+
+  Function tries to find out an element from the `DOM` at the given `xpath`
+  using the `WebDriverWait` API.  This function loads the page further
+  immediately after the `WebDriverWait` API has raised `TimeoutException`
+  in an hope that the element could be at the bottom of the page.
+
+  THE MAIN CAVEAT here is that this function should only be used when you are
+  completely sure that the element is going to reveal itself once you have
+  scrolled the page a bit otherwise this function is going to stuck in an
+  infinite loop and can only be stopped by the `KeyboardInterrupt` exception
+  triggered explicitly.
+
+  ```python
+  # Taking the name out from the `DOM` using an explicit wait routine.
+  name = _GetElementByXPath(
+      _ElementsPathSelectors.get_suggestion_box_li_card_name_xpath(
+          position)).text
+  ```
+
+  Args:
+    xpath:  Element `xpath`.
+    wait:   Time we should wait for until the element has popped itself to the
+              `DOM`.
+
+  Returns:
+    `WebElement` located at the given `xpath`.
+  """
   while True:
     try:
       return WebDriverWait(driver.GetGlobalChromeDriverInstance(), wait).until(
           EC.presence_of_element_located((by.By.XPATH, xpath)))
-    except (exceptions.TimeoutException,
-            exceptions.NoSuchElementException) as error:
+    except exceptions.TimeoutException as exc:
       logger.critical(traceback.format_exc())
-      if isinstance(error, exceptions.TimeoutException):
+      if isinstance(exc, exceptions.TimeoutException):
         javascript.JS.load_page()
-      continue
+        continue
 
 
 def _GetSuggestionBoxPersonLiObject(position: int) -> _Person:
