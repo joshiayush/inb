@@ -1,9 +1,26 @@
 """
-This module provides service to communicate with LinkedIn's login form.
+This module provides routines to communicate with the LinkedIn login page.
+
+Before using this module be sure that the elements' path selectors inside the
+class `_ElementsPathSelectors` are up to date.
+
+```python
+# Login to LinkedIn
+from linkedin import login
+
+login.LinkedIn.login('mohika@gmail.com', 'secretpassword')
+```
+
+Note: This module does not inform you about the invalidness of the credentials
+in case the user name and password fields are incorrect.  So if the user is
+using the bot in headless mode there's no way to tell the user that the fields
+were incorrect and you need to restart the bot with valid fields.
+
+@TODO(joshiayush): Show user that the given fields were invalid.
 
   :author: Ayush Joshi, ayush854032@gmail.com
   :copyright: Copyright (c) 2019 Creative Commons
-  :license: MIT License, see license for details
+  :license: BSD 3-Clause License, see license for details
 """
 
 # Copyright 2021, joshiayus Inc.
@@ -42,16 +59,26 @@ from linkedin import (driver, settings)
 from selenium.webdriver.common import keys
 
 
-class LoginPageElements:
+class _ElementsPathSelectors:
   """Stores path fields of the form elements."""
 
   @staticmethod
-  def get_username_element_name() -> str:
-    return 'session_key'
+  def get_username_element_id() -> str:
+    """Value for the name attribute of the `username` input element.
+
+    Returns:
+      Value for the name attribute of the `username` input element.
+    """
+    return 'username'
 
   @staticmethod
-  def get_password_element_name() -> str:
-    return 'session_password'
+  def get_password_element_id() -> str:
+    """Value for the name attribute of the `password` input element.
+
+    Returns:
+      Value for the name attribute of the `password` input element.
+    """
+    return 'password'
 
 
 class LinkedIn:
@@ -69,6 +96,9 @@ class LinkedIn:
     Args:
       username: Username.
       password: User password.
+
+    Raises:
+      ValueError: If the `username` or `password` is `None`.
     """
     if username is None:
       raise ValueError("Username field can't be empty.")
@@ -78,13 +108,13 @@ class LinkedIn:
     driver.GetGlobalChromeDriverInstance().get(
         settings.GetLinkedInLoginPageUrl())
 
-    username_elem = driver.GetGlobalChromeDriverInstance().find_element_by_name(
-        LoginPageElements.get_username_element_name())
+    username_elem = driver.GetGlobalChromeDriverInstance().find_element_by_id(
+        _ElementsPathSelectors.get_username_element_id())
     username_elem.clear()
     username_elem.send_keys(username)
 
-    password_elem = driver.GetGlobalChromeDriverInstance().find_element_by_name(
-        LoginPageElements.get_password_element_name())
+    password_elem = driver.GetGlobalChromeDriverInstance().find_element_by_id(
+        _ElementsPathSelectors.get_password_element_id())
     password_elem.clear()
     password_elem.send_keys(password)
 
