@@ -1,15 +1,23 @@
+# cache
 __pycache__
 
+# pyinstaller
 *.spec
 dist/**
 build/**
 
+# virtual environment
 lib/**
 lib64
 include
 bin
 pyvenv.cfg
 
+# visual studio code
 .vscode
 
+# log records
 logs
+
+# credentials
+credentials.json
