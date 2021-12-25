@@ -244,7 +244,7 @@ def _GetGoogleChromeBinaryVersion() -> str:
   Returns:
     `Google Chrome` version.
   """
-  version_regex = r'[0-9]{2}.[0-9]{1}.[0-9]{4}.[0-9]{2}'
+  version_regex = r'[0-9]{2}.[0-9]{1}.[0-9]{4}.[0-9]{3}'
   if sys.platform == 'linux':
     chrome_binaries = ['google-chrome', 'google-chrome-stable']
     chrome_binary_path = []
