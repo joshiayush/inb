@@ -44,10 +44,11 @@ from linkedin import (driver, settings)
 
 def _GetAddArgumentCallingOrder() -> List[str]:
   return [
+      driver.CHROMEDRIVER_OPTIONS['no-sandbox'],
+      driver.CHROMEDRIVER_OPTIONS['disable-dev-shm-usage'],
       driver.CHROMEDRIVER_OPTIONS['start-maximized'],
       driver.CHROMEDRIVER_OPTIONS['incognito'],
       driver.CHROMEDRIVER_OPTIONS['enable-automation'],
-      driver.CHROMEDRIVER_OPTIONS['no-sandbox'],
       driver.CHROMEDRIVER_OPTIONS['disable-setuid-sandbox'],
       driver.CHROMEDRIVER_OPTIONS['disable-gpu'],
       driver.CHROMEDRIVER_OPTIONS['headless'],

@@ -73,6 +73,7 @@ CHROMEDRIVER_OPTIONS = {
     # this is highly vulnerable not only your information is at risk but the
     # available sessions too
     'no-sandbox': '--no-sandbox',
+    'disable-dev-shm-usage': '--disable-dev-shm-usage',
     # set this flag if running chromedriver in headless mode otherwise many
     # elements will fall beyond the current page view
     'default-headless-window-size': 'window-size=1200,1100',
