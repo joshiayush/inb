@@ -34,5 +34,8 @@ from tests.test_linkedin.test_driver import (  # pylint: disable=unused-import
     TestDisableGlobalChromeDriverInstanceMethod,
 )
 
+from tests.test_linkedin.test_login.test_login import (  # pylint: disable=unused-import
+    TestLoginApiLinkedInClass,)
+
 if __name__ == '__main__':
   unittest.main(verbosity=2)
