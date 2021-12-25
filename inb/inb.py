@@ -38,7 +38,7 @@ import click
 from linkedin import (login, settings, connect)
 
 
-def send_and_search_common_options(func: function) -> function:  # pylint: disable=undefined-variable
+def _SendAndSearchCommandCommonOptions(func: function) -> function:  # pylint: disable=undefined-variable
   """Decorator provides common command line flags for command `send` and
   `search`.
 
@@ -73,7 +73,7 @@ def send_and_search_common_options(func: function) -> function:  # pylint: disab
 
 
 @click.group()
-def inb():
+def Inb():
   """inb version 1.0.0
 
   Command line utility to automate the world of LinkedIn.
@@ -91,47 +91,52 @@ def inb():
                        type=str,
                        required=True,
                        help='LinkedIn password.')
-@send_and_search_common_options
-def send(email: str, password: str, limit: int, headless: bool, maximized: bool,
-         debug: bool) -> None:
+@_SendAndSearchCommandCommonOptions
+def send(  # pylint: disable=invalid-name
+    email: str, password: str, limit: int, headless: bool, maximized: bool,
+    debug: bool) -> None:
   """Sends invitations on LinkedIn to people in your MyNetwork page.
 
   Usage:
 
     python3 inb/inb.py send --email "username" --password "password"
 
-  If you want to open Chrome browser in its full size use '--maximized' over
-  the command line.
+  If you want to open Chrome browser in its full size use\n
+  '--maximized' over the command line.
 
-    python3 inb/inb.py send --email "username" --password "password" \\
+    python3 inb/inb.py send --email "username" --password "password"
         --maximized
 
-  If you want to send invitations without opening Chrome browser use
-  '--headless' flag over the command line.
+  If you want to send invitations without opening Chrome browser\n
+  use '--headless' flag over the command line.
 
-    python3 inb/inb.py send --email "username" --password "password" \\
+    python3 inb/inb.py send --email "username" --password "password"
         --headless
 
-  Note: When running with '--headless' also provide '--maximized' to capture
-  the complete view otherwise the bot will complain about 'No such element'.
+  Note: When running with '--headless' also provide '--maximized'\n
+  to capture the complete view otherwise the bot will complain
+  about 'No such element'.
 
-    python3 inb/inb.py send --email "username" --password "password" \\
+    python3 inb/inb.py send --email "username" --password "password"
         --headless --maximized
 
   Controlling Invitation Limit:
 
-  By default the bot will send invitations to 20 people onn LinkedIn if you
-  provide a plain command over the command line.
+  By default the bot will send invitations to 20 people on\n
+  LinkedIn if you provide a plain command over the command
+  line.
 
     python3 inb/inb.py send --email "username" --password "password"
 
-  In order to override the default behaviour you need to pass the flag '--limit'
-  to provide the number of invitations the bot should send.
+  In order to override the default behaviour you need to pass the\n
+  flag '--limit' to provide the number of invitations the bot
+  should send.
 
-    python3 inb/inb.py send --email "username" --password "password" --limit 40
+    python3 inb/inb.py send --email "username" --password "password"
+        --limit 40
 
-  Note: The limit should not exceed by 80 and we recommend a limit of 40 every
-  time you run this bot.
+  Note: The limit should not exceed by 80 and we recommend a limit\n
+  of 40 every time you run this bot.
   """
   if debug:
     settings.TurnOnLoggingToStream()
@@ -168,14 +173,15 @@ def send(email: str, password: str, limit: int, headless: bool, maximized: bool,
               type=str,
               required=False,
               help='Location to search for.')
-@send_and_search_common_options
-def search(email: str, password: str, keyword: str, location: str, limit: int,
-           headless: bool, maximized: bool, debug: bool) -> None:
+@_SendAndSearchCommandCommonOptions
+def search(  # pylint: disable=invalid-name
+    email: str, password: str, keyword: str, location: str, limit: int,
+    headless: bool, maximized: bool, debug: bool) -> None:
   """Searches for the specific keyword given and sends invitation to them.
 
   Usage:
 
-    python3 inb/inb.py search --email "username" --password "password" \\
+    python3 inb/inb.py search --email "username" --password "password"
         --keyword "keyword"
 
   Note: When running with '--headless' also provide '--maximized' to capture
@@ -211,8 +217,8 @@ def search(email: str, password: str, keyword: str, location: str, limit: int,
     driver.DisableGlobalChromeDriverInstance()
 
 
-inb.add_command(send)
-inb.add_command(search)
+Inb.add_command(send)
+Inb.add_command(search)
 
 if __name__ == '__main__':
-  inb()
+  Inb()
