@@ -50,10 +50,8 @@ class JS:
   @staticmethod
   def load_page() -> None:
     """Loads the page the bot is currently at by scrolling it down."""
-    old_page_offset = driver.GetGlobalChromeDriverInstance().execute_script(
-        _GET_PAGE_Y_OFFSET_SCRIPT)
-    new_page_offset = driver.GetGlobalChromeDriverInstance().execute_script(
-        _GET_PAGE_Y_OFFSET_SCRIPT)
+    old_page_offset = new_page_offset = driver.GetGlobalChromeDriverInstance(
+    ).execute_script(_GET_PAGE_Y_OFFSET_SCRIPT)
     while old_page_offset == new_page_offset:
       driver.GetGlobalChromeDriverInstance().execute_script(
           _SCROLL_TO_BOTTOM_SCRIPT)
