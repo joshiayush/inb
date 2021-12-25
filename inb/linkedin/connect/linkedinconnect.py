@@ -114,6 +114,20 @@ class _ElementsPathSelectors:
 
 
 class _Person:
+  """A separate type for the LinkedIn user inside our program particularly
+  aimed for the `LinkedInConnect` API.
+
+  Used inside the protected function `_GetSuggestionBoxPersonLiObject()`
+  after storing the person information from the `DOM` inside the local
+  variables like you can see below:
+
+  ```python
+  def _GetSuggestionBoxPersonLiObject(position: int) -> _Person:
+    ...
+    return _Person(name, occupation, mutual_connections, profileid, profileurl,
+                   connect_button)
+  ```
+  """
 
   def __init__(self, name: str, occupation: str, mutual_connections: str,
                profileid: str, profileurl: str,
