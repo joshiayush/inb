@@ -47,7 +47,7 @@ from linkedin.DOM import (cleaners, javascript)
 from linkedin.invitation import status
 
 logger = logging.getLogger(__name__)
-logger.setLevel(logging.CRITICAL)
+logger.setLevel(logging.DEBUG)
 
 file_handler = logging.FileHandler(settings.LOG_DIR_PATH / __name__, mode='w')
 file_handler.setFormatter(logging.Formatter(settings.LOG_FORMAT_STR))
@@ -286,9 +286,9 @@ class LinkedInConnect(object):
         invitation.status()
         invitation_count += 1
       except (exceptions.ElementNotInteractableException,
-              exceptions.ElementClickInterceptedException) as error:
+              exceptions.ElementClickInterceptedException) as exc:
         logger.critical(traceback.format_exc())
-        if isinstance(error, exceptions.ElementClickInterceptedException):
+        if isinstance(exc, exceptions.ElementClickInterceptedException):
           break
         invitation.set_invitation_fields(
             name=person.name,
