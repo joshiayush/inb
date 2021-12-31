@@ -43,8 +43,6 @@ Please be patient and make sure that the connection limit is between (0, 80]
 and you are not running the bot in a day more than once otherwise LinkedIn
 will block your IP."""
 
-print(CONNECTION_LIMIT_EXCEED_EXCEPTION_MESSAGE)
-
 LOG_DIR_PATH = pathlib.Path(__file__).resolve().parent.parent.parent / 'logs'
 
 # Variable's value decides whether logging to stream is allowed in the entire
