@@ -35,7 +35,7 @@ from __future__ import annotations
 
 import click
 
-from linkedin import (login, settings, connect)
+from linkedin import settings
 
 
 def _SendAndSearchCommandCommonOptions(func: function) -> function:  # pylint: disable=undefined-variable
@@ -44,6 +44,11 @@ def _SendAndSearchCommandCommonOptions(func: function) -> function:  # pylint: d
 
   Use this decorator to pass `--limit`, `--headless`, `--versbose` flags from
   command line.
+
+  ```shell
+  python3 inb/inb.py send --email "username" --password "password" --headless
+    --maximized
+  ```
 
   Args:
     func: Function to decorate.
@@ -149,13 +154,14 @@ def send(  # pylint: disable=invalid-name
   try:
     driver.GChromeDriverInstance.initialize(settings.ChromeDriverAbsolutePath(),
                                             chromedriver_options)
+    from linkedin import (login, connect)  # pylint: disable=import-outside-toplevel
     login.LinkedIn.login(email, password)
     connect.LinkedInConnect.get_my_network_page()
     connect.LinkedInConnect.send_connection_requests(connection_limit=limit)
   except Exception as exc:  # pylint: disable=broad-except
     if debug:
       raise exc
-    click.echo(f'{type(exc).__name__}: {str(exc)}', None, True, True)
+    click.echo(f'{type(exc).__name__}: {str(exc)}', None, False, True)
   finally:
     driver.DisableGlobalChromeDriverInstance()
 
@@ -199,6 +205,7 @@ def search(  # pylint: disable=invalid-name
   try:
     driver.GChromeDriverInstance.initialize(settings.ChromeDriverAbsolutePath(),
                                             chromedriver_options)
+    from linkedin import (login, connect)  # pylint: disable=import-outside-toplevel
     login.LinkedIn.login(email, password)
     connect.LinkedInSearchConnect(keyword=keyword,
                                   location=location,
@@ -213,7 +220,7 @@ def search(  # pylint: disable=invalid-name
   except Exception as exc:  # pylint: disable=broad-except
     if debug:
       raise exc
-    click.echo(f'{type(exc).__name__}: {str(exc)}', None, True, True)
+    click.echo(f'{type(exc).__name__}: {str(exc)}', None, False, True)
   finally:
     driver.DisableGlobalChromeDriverInstance()
 
