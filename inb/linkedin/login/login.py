@@ -54,9 +54,28 @@ were incorrect and you need to restart the bot with valid fields.
 
 from __future__ import annotations
 
+import sys
+import logging
+import traceback
+
+from selenium.common.exceptions import NoSuchElementException
+
 from linkedin import (driver, settings)
 
 from selenium.webdriver.common import keys
+
+logger = logging.getLogger(__name__)
+logger.setLevel(logging.DEBUG)
+
+file_handler = logging.FileHandler(settings.LOG_DIR_PATH / __name__, mode='w')
+file_handler.setFormatter(logging.Formatter(settings.LOG_FORMAT_STR))
+
+if settings.LOGGING_TO_STREAM_ENABLED:
+  stream_handler = logging.StreamHandler(sys.stderr)
+  stream_handler.setFormatter(logging.Formatter(settings.LOG_FORMAT_STR))
+  logger.addHandler(stream_handler)
+
+logger.addHandler(file_handler)
 
 
 class _ElementsPathSelectors:
@@ -108,14 +127,24 @@ class LinkedIn:
     driver.GetGlobalChromeDriverInstance().get(
         settings.GetLinkedInLoginPageUrl())
 
-    username_elem = driver.GetGlobalChromeDriverInstance().find_element_by_id(
-        _ElementsPathSelectors.get_username_element_id())
-    username_elem.clear()
-    username_elem.send_keys(username)
+    try:
+      username_elem = driver.GetGlobalChromeDriverInstance().find_element_by_id(
+          _ElementsPathSelectors.get_username_element_id())
+    except NoSuchElementException as exc:
+      logger.critical(traceback.format_exc())
+      raise exc
+    else:
+      username_elem.clear()
+      username_elem.send_keys(username)
 
-    password_elem = driver.GetGlobalChromeDriverInstance().find_element_by_id(
-        _ElementsPathSelectors.get_password_element_id())
-    password_elem.clear()
-    password_elem.send_keys(password)
+    try:
+      password_elem = driver.GetGlobalChromeDriverInstance().find_element_by_id(
+          _ElementsPathSelectors.get_password_element_id())
+    except NoSuchElementException as exc:
+      logger.critical(traceback.format_exc())
+      raise exc
+    else:
+      password_elem.clear()
+      password_elem.send_keys(password)
 
     password_elem.send_keys(keys.Keys.RETURN)
