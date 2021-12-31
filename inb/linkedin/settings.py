@@ -30,11 +30,17 @@
 import re
 import os
 import sys
+import click
 import pathlib
 import logging
 import subprocess
 
 from urllib import (request, parse)
+
+try:
+  from gettext import gettext as _  # pylint: disable=unused-import
+except ImportError:
+  _ = lambda msg: msg
 
 CONNECTION_LIMIT_EXCEED_EXCEPTION_MESSAGE = """Invalid connection limit %d.
 LinkedIn does not allow to send over 80 invitations per-day to a non-premium
@@ -80,8 +86,8 @@ def TurnOnLoggingToStream() -> None:
   logger.addHandler(stream_handler)
 
 
-_CHROME_BINARY_NOT_FOUND_MSG = 'Google Chrome binary is not present in path %s.'
-_CHROME_BINARIES_NOT_FOUND_MSG = (
+_CHROME_BINARY_NOT_FOUND_MSG = _('Google Chrome binary is not present in path %s.')
+_CHROME_BINARIES_NOT_FOUND_MSG = _(
     'Google Chrome binary is not present in the following paths\n'
     '%s')
 
@@ -131,7 +137,7 @@ def _RetrieveChromeDriverZip(url: str, dest: str, verbose: bool = True) -> str:
   """
   u = request.urlopen(url)
 
-  _, _, path, _, _ = parse.urlsplit(url)
+  scheme, netloc, path, query, fragment = parse.urlsplit(url)  # pylint: disable=unused-variable
   filename = os.path.basename(path)
   if not filename:
     filename = 'downloaded'
@@ -151,7 +157,7 @@ def _RetrieveChromeDriverZip(url: str, dest: str, verbose: bool = True) -> str:
       file_size = None
       if meta_length:
         file_size = int(meta_length[0])
-        logger.info('Downloading: %s Bytes: %s', url, file_size)
+        click.echo(_('Downloading: %s Bytes: %s') % (url, file_size))
 
     file_size_dl = 0
     block_size = 8192
@@ -168,7 +174,7 @@ def _RetrieveChromeDriverZip(url: str, dest: str, verbose: bool = True) -> str:
         if file_size:
           status += '   [{0:6.2f}%]'.format(file_size_dl * 100 / file_size)  # pylint: disable=consider-using-f-string
         status += chr(13)
-        logger.info(status)
+        click.echo(f'{status}\r', None, False)
 
   return filename
 
@@ -359,6 +365,7 @@ def _GetPlatformSpecificChromeDriverUrlForGoogleChromeMajor(major: str) -> str:
     Platform specific `chromedriver` file URL that is compatible with
       `Google Chrome` with the give `major` as major.
   """
+  chromedriver_storage_googleapis = 'https://chromedriver.storage.googleapis.com'  # pylint: disable=line-too-long
   for release in (
       '95.0.4638.69',
       '96.0.4664.45',
@@ -366,11 +373,11 @@ def _GetPlatformSpecificChromeDriverUrlForGoogleChromeMajor(major: str) -> str:
   ):
     if release.startswith(major):
       if sys.platform == 'linux':
-        return f'https://chromedriver.storage.googleapis.com/{release}/{_CHROME_DRIVER_BINARY}_linux64.zip'  # pylint: disable=line-too-long
+        return f'{chromedriver_storage_googleapis}/{release}/{_CHROME_DRIVER_BINARY}_linux64.zip'  # pylint: disable=line-too-long
       elif sys.platform == 'darwin':
-        return f'https://chromedriver.storage.googleapis.com/{release}/{_CHROME_DRIVER_BINARY}_mac64.zip'  # pylint: disable=line-too-long
+        return f'{chromedriver_storage_googleapis}/{release}/{_CHROME_DRIVER_BINARY}_mac64.zip'  # pylint: disable=line-too-long
       elif sys.platform in ('win32', 'cygwin'):
-        return f'https://chromedriver.storage.googleapis.com/{release}/{_CHROME_DRIVER_BINARY}_win32.zip'  # pylint: disable=line-too-long
+        return f'{chromedriver_storage_googleapis}/{release}/{_CHROME_DRIVER_BINARY}_win32.zip'  # pylint: disable=line-too-long
 
 
 def _GetPlatformSpecificChromeDriverCompatibleVersionUrl(
@@ -462,27 +469,15 @@ def ChromeDriverAbsolutePath() -> str:
 
 
 def GetLinkedInUrl() -> str:
-  """Returns URL to LinkedIn.
-
-  Returns:
-    URL to LinkedIn.
-  """
+  """Returns URL to LinkedIn."""
   return 'https://www.linkedin.com'
 
 
 def GetLinkedInLoginPageUrl() -> str:
-  """Returns URL to LinkedIn's login page.
-
-  Returns:
-    URL to LinkedIn's login page.
-  """
+  """Returns URL to LinkedIn's login page."""
   return GetLinkedInUrl() + '/login/'
 
 
 def GetLinkedInMyNetworkPageUrl() -> str:
-  """Returns URL to LinkedIn's `MyNetwork` page.
-
-  Returns:
-    URL to LinkedIn's `MyNetwork` page.
-  """
+  """Returns URL to LinkedIn's `MyNetwork` page."""
   return GetLinkedInUrl() + '/mynetwork/'
