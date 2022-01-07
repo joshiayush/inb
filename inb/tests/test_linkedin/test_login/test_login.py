@@ -51,21 +51,6 @@ else:
   _LINKEDIN_LOGIN_CREDENTIALS = None
 
 
-class _ElementsPathSelector:  # pylint: disable=missing-class-docstring
-
-  @staticmethod
-  def get_signin_card_organic_div_id() -> str:
-    return 'organic-div'
-
-  @staticmethod
-  def get_signin_card_heading_relative_to_organic_div_xpath() -> str:
-    return '//div[1]/h1'
-
-  @staticmethod
-  def get_signin_card_subheading_relative_to_organic_div_xpath() -> str:
-    return '//div[1]/p'
-
-
 class TestLoginApiLinkedInClass(unittest.TestCase):  # pylint: disable=missing-class-docstring
 
   def setUp(self) -> None:
@@ -85,28 +70,7 @@ class TestLoginApiLinkedInClass(unittest.TestCase):  # pylint: disable=missing-c
     self.assertEqual(driver.GetGlobalChromeDriverInstance().title,
                      'LinkedIn Login, Sign in | LinkedIn')
 
-  def test003_linkedin_login_page_signin_card_organic_div(self) -> None:
-    try:
-      _ = driver.GetGlobalChromeDriverInstance().find_element_by_id(
-          _ElementsPathSelector.get_signin_card_organic_div_id())
-    except exceptions.NoSuchElementException as exc:
-      self.fail(str(exc))
-
-    self.assertEqual(
-        driver.GetGlobalChromeDriverInstance().find_element_by_id(
-            _ElementsPathSelector.get_signin_card_organic_div_id(
-            )).find_element_by_xpath(
-                _ElementsPathSelector.
-                get_signin_card_heading_relative_to_organic_div_xpath()).text,
-        'Sign in')
-    self.assertEqual(
-        driver.GetGlobalChromeDriverInstance().find_element_by_id(
-            _ElementsPathSelector.get_signin_card_organic_div_id()).
-        find_element_by_xpath(
-            _ElementsPathSelector.
-            get_signin_card_subheading_relative_to_organic_div_xpath()).text,
-        'Stay updated on your professional world')
-
+  def test003_linkedin_login_page_signin_card(self) -> None:
     try:
       _ = driver.GetGlobalChromeDriverInstance().find_element_by_id(
           linkedinloginroutine._ElementsPathSelectors.get_username_element_id())  # pylint: disable=protected-access
