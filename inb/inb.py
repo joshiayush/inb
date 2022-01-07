@@ -37,6 +37,11 @@ import click
 
 from linkedin import settings
 
+try:
+  from gettext import gettext as _  # pylint: disable=unused-import
+except ImportError:
+  _ = lambda msg: msg
+
 
 def _SendAndSearchCommandCommonOptions(func: function) -> function:  # pylint: disable=undefined-variable
   """Decorator provides common command line flags for command `send` and
@@ -60,25 +65,25 @@ def _SendAndSearchCommandCommonOptions(func: function) -> function:  # pylint: d
       '--limit',
       type=int,
       default=20,
-      help=('Overrides the default limit of 20 by passing an explicit'
-            ' limit number.'))(func)
+      help=_('Overrides the default limit of 20 by passing an explicit'
+             ' limit number.'))(func)
   func = click.option('--headless',
                       is_flag=True,
-                      help=('Disables GPU support for Chromedriver.'))(func)
+                      help=_('Disables GPU support for Chromedriver.'))(func)
   func = click.option(
       '--maximized',
       is_flag=True,
-      help=(
+      help=_(
           'Maximizes the Chrome window even if it is in headless mode.'))(func)
   func = click.option(
       '--debug',
       is_flag=True,
-      help=('Prints out debugging information at runtime.'))(func)
+      help=_('Prints out debugging information at runtime.'))(func)
   return func
 
 
 @click.group()
-def Inb():
+def Inb():  # pylint: disable=invalid-name
   """inb version 1.0.0
 
   Command line utility to automate the world of LinkedIn.
@@ -91,11 +96,11 @@ def Inb():
 
 
 @click.command()
-@click.option('--email', type=str, required=True, help='LinkedIn username.')
+@click.option('--email', type=str, required=True, help=_('LinkedIn username.'))
 @click.password_option('--password',
                        type=str,
                        required=True,
-                       help='LinkedIn password.')
+                       help=_('LinkedIn password.'))
 @_SendAndSearchCommandCommonOptions
 def send(  # pylint: disable=invalid-name
     email: str, password: str, limit: int, headless: bool, maximized: bool,
@@ -156,8 +161,9 @@ def send(  # pylint: disable=invalid-name
                                             chromedriver_options)
     from linkedin import (login, connect)  # pylint: disable=import-outside-toplevel
     login.LinkedIn.login(email, password)
-    connect.LinkedInConnect.get_my_network_page()
-    connect.LinkedInConnect.send_connection_requests(connection_limit=limit)
+    linkedinconnect = connect.LinkedInConnect(max_connection_limit=limit)
+    linkedinconnect.get_my_network_page()
+    linkedinconnect.send_connection_requests()
   except Exception as exc:  # pylint: disable=broad-except
     if debug:
       raise exc
@@ -167,19 +173,19 @@ def send(  # pylint: disable=invalid-name
 
 
 @click.command()
-@click.option('--email', type=str, required=True, help='LinkedIn username.')
+@click.option('--email', type=str, required=True, help=_('LinkedIn username.'))
 @click.password_option('--password',
                        type=str,
                        required=True,
-                       help='LinkedIn password.')
+                       help=_('LinkedIn password.'))
 @click.option('--keyword',
               type=str,
               required=True,
-              help='Keyword to search for.')
+              help=_('Keyword to search for.'))
 @click.option('--location',
               type=str,
               required=False,
-              help='Location to search for.')
+              help=_('Location to search for.'))
 @_SendAndSearchCommandCommonOptions
 def search(  # pylint: disable=invalid-name
     email: str, password: str, keyword: str, location: str, limit: int,

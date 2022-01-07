@@ -30,20 +30,23 @@
 from __future__ import annotations
 
 import time
+import click
 
-SUCCESS_RATE = 0
-FAILURE_RATE = 0
+from typing import Any, List
 
-SENT_STATUS_SYMBOL = '✔'
-FAILED_STATUS_SYMBOL = '✘'
+_SUCCESS_RATE = 0
+_FAILURE_RATE = 0
 
-SEND_INVITATION_STATUS_TEMPL = """  {{status}}  {{name}}
+_SENT_STATUS_SYMBOL = '✔'
+_FAILED_STATUS_SYMBOL = '✘'
+
+_SEND_INVITATION_STATUS_TEMPL = """  {{status}}  {{name}}
   {{occupation}}
   {{mutual_connections}}
   Success:  {{success}}  Failure: {{failure}}  Elapsed time: {{elapsed_time}}
 """
 
-SEARCH_INVITATION_STATUS_TEMPL = """  {{status}}  {{name}}  • {{degree}}
+_SEARCH_INVITATION_STATUS_TEMPL = """  {{status}}  {{name}}  • {{degree}}
   {{occupation}}
   {{location}}
   {{mutual_connections}}
@@ -69,54 +72,74 @@ class Invitation(object):
     self._failure_rate = 0
 
     if status == 'sent':
-      self._status = SENT_STATUS_SYMBOL
-      global SUCCESS_RATE
-      SUCCESS_RATE += 1
-      self._success_rate = SUCCESS_RATE
+      self._status = _SENT_STATUS_SYMBOL
+      global _SUCCESS_RATE
+      _SUCCESS_RATE += 1
+      self._success_rate = _SUCCESS_RATE
     elif status == 'failed':
-      self._status = FAILED_STATUS_SYMBOL
-      global FAILURE_RATE
-      FAILURE_RATE += 1
-      self._failure_rate = FAILURE_RATE
+      self._status = _FAILED_STATUS_SYMBOL
+      global _FAILURE_RATE
+      _FAILURE_RATE += 1
+      self._failure_rate = _FAILURE_RATE
 
     try:
       self._elapsed_time = str(elapsed_time)[0:5] + 's'
     except IndexError:
       self._elapsed_time = elapsed_time
 
+  @staticmethod
+  def _replace_template_var_with_template_value(
+      message_template: str, replace_template_var_with: List[tuple]) -> None:
+    for replace_template_var_with_value_pair in replace_template_var_with:
+      message_template = message_template.replace(
+          *replace_template_var_with_value_pair)
+    return message_template
+
   def _fill_send_message_template(self) -> str:
-    message = SEND_INVITATION_STATUS_TEMPL
-    message = message.replace('{{status}}', self._status)
-    message = message.replace('{{name}}', self._name)
-    message = message.replace('{{occupation}}', self._occupation)
-    message = message.replace('{{mutual_connections}}',
-                              self._mutual_connections)
-    message = message.replace('{{success}}', str(self._success_rate))
-    message = message.replace('{{failure}}', str(self._failure_rate))
-    message = message.replace('{{elapsed_time}}', str(self._elapsed_time))
-    return message
+    replace_template_var_with = [('{{status}}', self._status),
+                                 ('{{name}}', self._name),
+                                 ('{{occupation}}', self._occupation),
+                                 ('{{mutual_connections}}',
+                                  self._mutual_connections),
+                                 ('{{success}}', str(self._success_rate)),
+                                 ('{{failure}}', str(self._failure_rate)),
+                                 ('{{elapsed_time}}', str(self._elapsed_time))]
+    return self._replace_template_var_with_template_value(
+        _SEND_INVITATION_STATUS_TEMPL, replace_template_var_with)
 
   def _fill_search_message_template(self) -> str:
-    message = SEARCH_INVITATION_STATUS_TEMPL
-    message = message.replace('{{status}}', self._status)
-    message = message.replace('{{name}}', self._name)
-    message = message.replace('{{occupation}}', self._occupation)
-    message = message.replace('{{location}}', self._location)
-    message = message.replace('{{mutual_connections}}',
-                              self._mutual_connections)
-    message = message.replace('{{success}}', str(self._success_rate))
-    message = message.replace('{{failure}}', str(self._failure_rate))
-    message = message.replace('{{elapsed_time}}', str(self._elapsed_time))
-    return message
+    replace_template_var_with = [('{{status}}', self._status),
+                                 ('{{name}}', self._name),
+                                 ('{{occupation}}', self._occupation),
+                                 ('{{location}}', self._location),
+                                 ('{{mutual_connections}}',
+                                  self._mutual_connections),
+                                 ('{{success}}', str(self._success_rate)),
+                                 ('{{failure}}', str(self._failure_rate)),
+                                 ('{{elapsed_time}}', str(self._elapsed_time))]
+    return self._replace_template_var_with_template_value(
+        _SEARCH_INVITATION_STATUS_TEMPL, replace_template_var_with)
 
-  def status(self) -> None:
-    if self._location is None:
-      message = self._fill_send_message_template()
-    else:
-      message = self._fill_search_message_template()
+  def _send_status_to_console(self, sleep: bool = True) -> None:
+    click.echo('', None, True, True)
+    click.echo(
+        self._fill_send_message_template() if self._location is None else
+        self._fill_search_message_template(), None, True, True)
+    click.echo('', None, True, True)
+    if sleep is True:
+      time.sleep(self._SLEEP_TIME_AFTER_LOGGING)
 
-    print()
-    print(message)
-    print()
-
-    time.sleep(self._SLEEP_TIME_AFTER_LOGGING)
+  def display_invitation_status_on_console(
+      self,
+      person: Any,
+      status: str,  # pylint: disable=redefined-outer-name
+      start_time: int) -> None:
+    self.set_invitation_fields(name=person.name,
+                               occupation=person.occupation,
+                               location=None,
+                               mutual_connections=person.mutual_connections,
+                               profileid=person.profileid,
+                               profileurl=person.profileurl,
+                               status=status,
+                               elapsed_time=time.time() - start_time)
+    self._send_status_to_console()

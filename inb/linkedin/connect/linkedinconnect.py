@@ -49,7 +49,7 @@ from linkedin.invitation import status
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
-file_handler = logging.FileHandler(settings.LOG_DIR_PATH / __name__, mode='w')
+file_handler = logging.FileHandler(settings.LOG_DIR_PATH / __name__, mode='a')
 file_handler.setFormatter(logging.Formatter(settings.LOG_FORMAT_STR))
 
 if settings.LOGGING_TO_STREAM_ENABLED:
@@ -183,28 +183,64 @@ def _GetElementByXPath(xpath: str, wait: int = 60) -> webelement.WebElement:
         continue
 
 
-def _GetSuggestionBoxPersonLiObject(position: int) -> _Person:
-  profileid = _GetElementByXPath(
-      _ElementsPathSelectors.get_suggestion_box_li_card_link_xpath(
-          position)).get_attribute('href')
-  name = _GetElementByXPath(
-      _ElementsPathSelectors.get_suggestion_box_li_card_name_xpath(
-          position)).text
-  occupation = _GetElementByXPath(
-      _ElementsPathSelectors.get_suggestion_box_li_card_occupation_xpath(
-          position)).text
-  mutual_connections = _GetElementByXPath(
-      _ElementsPathSelectors.
-      get_suggestion_box_li_card_member_mutual_connections_xpath(position)).text
-  connect_button = _GetElementByXPath(
-      _ElementsPathSelectors.get_suggestion_box_li_card_invite_button_xpath(
-          position))
-  profileurl = settings.GetLinkedInUrl() + profileid
-  return _Person(name, occupation, mutual_connections, profileid, profileurl,
-                 connect_button)
+_LINKEDIN_MAX_INVITATION_LIMIT = 80
+
+
+def _GetSuggestionBoxPersonLiObject() -> _Person:
+  """Generator function returns a `_Person` instance by collecting a user's
+  information from the `DOM`.
+
+  Every time this generator function is called it increases its
+  `person_li_position` value by one and collects the information of the next
+  user in the `ul` list on the `DOM`.
+
+  This function uses `_GetElementByXPath()` protected method which internally
+  makes the browser to wait explicitly until the requested element arrives on
+  the `DOM`.
+
+  Does not raises `StopIteration` exception instead returns silently when the
+  `person_li_position` count becomes equal to the global variable
+  `_LINKEDIN_MAX_INVITATION_LIMIT`, the reason why `StopIteration` is not used
+  is because `pylint` says not to use it rather return silently.
+
+  `_LINKEDIN_MAX_INVITATION_LIMIT` is neccessary as LinkedIn limits the number
+  of connections a non-premium account can send in a week.
+  """
+  person_li_position = 1
+  while True:
+    profileid = _GetElementByXPath(
+        _ElementsPathSelectors.get_suggestion_box_li_card_link_xpath(
+            person_li_position)).get_attribute('href')
+    name = _GetElementByXPath(
+        _ElementsPathSelectors.get_suggestion_box_li_card_name_xpath(
+            person_li_position)).text
+    occupation = _GetElementByXPath(
+        _ElementsPathSelectors.get_suggestion_box_li_card_occupation_xpath(
+            person_li_position)).text
+    mutual_connections = _GetElementByXPath(
+        _ElementsPathSelectors.
+        get_suggestion_box_li_card_member_mutual_connections_xpath(
+            person_li_position)).text
+    connect_button = _GetElementByXPath(
+        _ElementsPathSelectors.get_suggestion_box_li_card_invite_button_xpath(
+            person_li_position))
+    profileurl = settings.GetLinkedInUrl() + profileid
+    yield _Person(name, occupation, mutual_connections, profileid, profileurl,
+                  connect_button)
+    if person_li_position == _LINKEDIN_MAX_INVITATION_LIMIT:
+      return
+    person_li_position += 1
 
 
 class LinkedInConnect(object):
+
+  def __init__(self, max_connection_limit: int):
+    if max_connection_limit is None:
+      max_connection_limit = 20
+    elif not 0 < max_connection_limit <= 80:
+      raise ValueError(settings.CONNECTION_LIMIT_EXCEED_EXCEPTION_MESSAGE %
+                       (max_connection_limit))
+    self._max_connection_limit = max_connection_limit
 
   @staticmethod
   def get_my_network_page() -> None:
@@ -222,8 +258,7 @@ class LinkedInConnect(object):
     driver.GetGlobalChromeDriverInstance().get(
         settings.GetLinkedInMyNetworkPageUrl())
 
-  @staticmethod
-  def send_connection_requests(connection_limit: int = None) -> None:
+  def send_connection_requests(self) -> None:
     """Function sends connection requests to people on your `My Network`
     page.
 
@@ -239,65 +274,27 @@ class LinkedInConnect(object):
     You will also see the user's information printed on the console as this
     function sends connection request on LinkedIn.  `Invitation` API handles
     the printing of the information on the console.
-
-    Args:
-      connection_limit: Number of invitations to send.  This should not exceed
-                        the number 80 because LinkedIn does not allow a
-                        non-premium account to send over 80 connection requests
-                        in a day.
     """
-    if connection_limit is None:
-      connection_limit = 20
-    elif not 0 < connection_limit <= 80:
-      raise ValueError(settings.CONNECTION_LIMIT_EXCEED_EXCEPTION_MESSAGE %
-                       (connection_limit))
-
-    # We don't want the message overlay to overlap the 'li' tags that contains
-    # the user information on your 'My Network' page as this will result in a
-    # 'NoSuchElementException' if the message overlay overlaps the 'li'
-    # element(s).  We remove the message overlay from the 'DOM' by setting its
-    # display to 'none'.  Do you have a better idea?
     cleaners.Cleaner.clear_message_overlay()
 
-    # We want to keep track of the invitations we've sent so far so that we can
-    # later stop the connection request process once we've reached the
-    # 'connection_limit'.
     invitation_count = 0
     start_time = time.time()
 
     invitation = status.Invitation()
-    person = _GetSuggestionBoxPersonLiObject(invitation_count + 1)
-    while person:
-      if invitation_count == connection_limit:
+    for person in _GetSuggestionBoxPersonLiObject():
+      if invitation_count == self._max_connection_limit:
         break
       try:
         action_chains.ActionChains(
             driver.GetGlobalChromeDriverInstance()).move_to_element(
                 person.connect_button).click().perform()
-        invitation.set_invitation_fields(
-            name=person.name,
-            occupation=person.occupation,
-            location=None,
-            mutual_connections=person.mutual_connections,
-            profileid=person.profileid,
-            profileurl=person.profileurl,
-            status='sent',
-            elapsed_time=time.time() - start_time)
-        invitation.status()
+        invitation.display_invitation_status_on_console(person, 'sent',
+                                                        start_time)
         invitation_count += 1
       except (exceptions.ElementNotInteractableException,
               exceptions.ElementClickInterceptedException) as exc:
         logger.critical(traceback.format_exc())
         if isinstance(exc, exceptions.ElementClickInterceptedException):
           break
-        invitation.set_invitation_fields(
-            name=person.name,
-            occupation=person.occupation,
-            location=None,
-            mutual_connections=person.mutual_connections,
-            profileid=person.profileid,
-            profileurl=person.profileurl,
-            status='failed',
-            elapsed_time=time.time() - start_time)
-        invitation.status()
-      person = _GetSuggestionBoxPersonLiObject(invitation_count + 1)
+        invitation.display_invitation_status_on_console(person, 'failed',
+                                                        start_time)
