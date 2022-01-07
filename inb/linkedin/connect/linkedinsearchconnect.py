@@ -36,6 +36,7 @@ import sys
 import time
 import logging
 import traceback
+import functools
 
 from typing import (
     List,
@@ -60,7 +61,7 @@ from linkedin.invitation import status
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.ERROR)
 
-file_handler = logging.FileHandler(settings.LOG_DIR_PATH / __name__, mode='w')
+file_handler = logging.FileHandler(settings.LOG_DIR_PATH / __name__, mode='a')
 file_handler.setFormatter(logging.Formatter(settings.LOG_FORMAT_STR))
 
 if settings.LOGGING_TO_STREAM_ENABLED:
@@ -306,8 +307,7 @@ class _ElementsPathSelectors:
     Returns:
       Search results person `li` xpath located at `position`.
     """
-    return _ElementsPathSelectors.get_search_results_person_li_parent_xpath(  # pylint: disable=line-too-long
-    ) + '/li[' + str(positiion) + ']'
+    return f'{_ElementsPathSelectors.get_search_results_person_li_parent_xpath()}/li[{positiion}]'  # pylint: disable=line-too-long
 
   @staticmethod
   def _get_search_results_person_li_card_container_xpath(position: int) -> str:
@@ -322,8 +322,7 @@ class _ElementsPathSelectors:
     Returns:
       `xpath` for person's card container.
     """
-    return _ElementsPathSelectors.get_search_results_person_li_xpath(  # pylint: disable=line-too-long
-        position) + '/div/div'
+    return f'{_ElementsPathSelectors.get_search_results_person_li_xpath(position)}/div/div'  # pylint: disable=line-too-long
 
   @staticmethod
   def _get_search_results_person_li_card_info_container_xpath(
@@ -336,8 +335,7 @@ class _ElementsPathSelectors:
     Returns:
       `xpath` for person's information card container.
     """
-    return _ElementsPathSelectors._get_search_results_person_li_card_container_xpath(  # pylint: disable=line-too-long
-        position) + '/div[2]'
+    return f'{_ElementsPathSelectors._get_search_results_person_li_card_container_xpath(position)}/div[2]'  # pylint: disable=line-too-long
 
   @staticmethod
   def _get_search_results_person_li_card_info_nav_xpath(position: int) -> str:
@@ -352,25 +350,21 @@ class _ElementsPathSelectors:
     Returns:
       `xpath` to person card information nav bar.
     """
-    return _ElementsPathSelectors._get_search_results_person_li_card_info_container_xpath(  # pylint: disable=line-too-long
-        position) + '/div[1]/div[1]/div'
+    return f'{_ElementsPathSelectors._get_search_results_person_li_card_info_container_xpath(position)}/div[1]/div[1]/div'  # pylint: disable=line-too-long
 
   @staticmethod
   def _get_search_results_person_li_card_info_footer_xpath(
       position: int) -> str:
-    return _ElementsPathSelectors._get_search_results_person_li_card_info_container_xpath(  # pylint: disable=line-too-long
-        position) + '/div[2]'
+    return f'{_ElementsPathSelectors._get_search_results_person_li_card_info_container_xpath(position)}/div[2]'  # pylint: disable=line-too-long
 
   @staticmethod
   def get_search_results_person_li_card_mutual_connections_info_container_xpath(
       position: int) -> str:
-    return _ElementsPathSelectors._get_search_results_person_li_card_info_footer_xpath(  # pylint: disable=line-too-long
-        position) + '/div/div[2]/span'
+    return f'{_ElementsPathSelectors._get_search_results_person_li_card_info_footer_xpath(position)}/div/div[2]/span'  # pylint: disable=line-too-long
 
   @staticmethod
   def get_search_results_person_li_card_link_xpath(position: int) -> str:
-    return _ElementsPathSelectors._get_search_results_person_li_card_info_nav_xpath(  # pylint: disable=line-too-long
-        position) + '/span[1]/span/a'
+    return f'{_ElementsPathSelectors._get_search_results_person_li_card_info_nav_xpath(position)}/span[1]/span/a'  # pylint: disable=line-too-long
 
   @staticmethod
   def get_search_results_person_li_card_name_xpath(position: int) -> str:
@@ -385,8 +379,7 @@ class _ElementsPathSelectors:
     Returns:
       `xpath` to the direct element that contains person name.
     """
-    return _ElementsPathSelectors._get_search_results_person_li_card_info_nav_xpath(  # pylint: disable=line-too-long
-        position) + '/span[1]/span/a/span/span[1]'
+    return f'{_ElementsPathSelectors._get_search_results_person_li_card_info_nav_xpath(position)}/span[1]/span/a/span/span[1]'  # pylint: disable=line-too-long
 
   @staticmethod
   def get_search_results_person_li_card_degree_info_xpath(position: int) -> str:
@@ -404,26 +397,22 @@ class _ElementsPathSelectors:
       `xpath` to the direct element that contains degree of connection that
         person is with you.
     """
-    return _ElementsPathSelectors._get_search_results_person_li_card_info_nav_xpath(  # pylint: disable=line-too-long
-        position) + '/span[2]/div/span/span[2]'
+    return f'{_ElementsPathSelectors._get_search_results_person_li_card_info_nav_xpath(position)}/span[2]/div/span/span[2]'  # pylint: disable=line-too-long
 
   @staticmethod
   def _get_search_results_person_li_occupation_and_location_info_card_container_xpath(  # pylint: disable=line-too-long
       position: int) -> str:
-    return _ElementsPathSelectors._get_search_results_person_li_card_info_container_xpath(  # pylint: disable=line-too-long
-        position) + '/div[1]/div[2]'
+    return f'{_ElementsPathSelectors._get_search_results_person_li_card_info_container_xpath(position)}/div[1]/div[2]'  # pylint: disable=line-too-long
 
   @staticmethod
   def get_search_results_person_li_occupation_info_card_container_xpath(
       position: int) -> str:
-    return _ElementsPathSelectors._get_search_results_person_li_occupation_and_location_info_card_container_xpath(  # pylint: disable=line-too-long
-        position) + '/div/div[1]'
+    return f'{_ElementsPathSelectors._get_search_results_person_li_occupation_and_location_info_card_container_xpath(position)}/div/div[1]'  # pylint: disable=line-too-long
 
   @staticmethod
   def get_search_results_person_li_location_info_card_container_xpath(
       position: int) -> str:
-    return _ElementsPathSelectors._get_search_results_person_li_occupation_and_location_info_card_container_xpath(  # pylint: disable=line-too-long
-        position) + '/div/div[2]'
+    return f'{_ElementsPathSelectors._get_search_results_person_li_occupation_and_location_info_card_container_xpath(position)}/div/div[2]'  # pylint: disable=line-too-long
 
   @staticmethod
   def _get_search_results_person_li_card_actions_container_xpath(
@@ -439,8 +428,7 @@ class _ElementsPathSelectors:
     Returns:
       `xpath` to the actions container of the person `li` at `position`.
     """
-    return _ElementsPathSelectors._get_search_results_person_li_card_container_xpath(  # pylint: disable=line-too-long
-        position) + '/div[3]'
+    return f'{_ElementsPathSelectors._get_search_results_person_li_card_container_xpath(position)}/div[3]'  # pylint: disable=line-too-long
 
   @staticmethod
   def get_search_results_person_li_connect_button_xpath(position: int) -> str:
@@ -452,8 +440,7 @@ class _ElementsPathSelectors:
     Returns:
       `xpath` to the person connect button.
     """
-    return _ElementsPathSelectors._get_search_results_person_li_card_actions_container_xpath(  # pylint: disable=line-too-long
-        position) + '/button'
+    return f'{_ElementsPathSelectors._get_search_results_person_li_card_actions_container_xpath(position)}/button'  # pylint: disable=line-too-long
 
   @staticmethod
   def get_send_invite_modal_xpath() -> str:
@@ -510,51 +497,77 @@ def _GetLiElementsFromPage(wait: int = 60) -> List[webelement.WebElement]:
       wait).find_elements_by_tag_name('li')
 
 
+_LINKEDIN_MAX_INVITATION_LIMIT = 80
+
+
 def _GetSearchResultsPersonLiObjects() -> List[_Person]:
-  persons = []
-  for i in range(len(_GetLiElementsFromPage())):
-    name = _GetElementByXPath(
-        _ElementsPathSelectors.get_search_results_person_li_card_name_xpath(
-            i + 1)).text
-    degree = _GetElementByXPath(
-        _ElementsPathSelectors.
-        get_search_results_person_li_card_degree_info_xpath(i + 1)).text
-    occupation = _GetElementByXPath(
-        _ElementsPathSelectors.
-        get_search_results_person_li_occupation_info_card_container_xpath(
-            i + 1)).text
-    location = _GetElementByXPath(
-        _ElementsPathSelectors.
-        get_search_results_person_li_location_info_card_container_xpath(i +
-                                                                        1)).text
-    mutual_connections = _GetElementByXPath(
-        _ElementsPathSelectors.
-        get_search_results_person_li_card_mutual_connections_info_container_xpath(  # pylint: disable=line-too-long
-            i + 1)).text
-    profileurl = _GetElementByXPath(
-        _ElementsPathSelectors.get_search_results_person_li_card_link_xpath(
-            i + 1)).get_attribute('href')
-    connect_button = _GetElementByXPath(
-        _ElementsPathSelectors.
-        get_search_results_person_li_connect_button_xpath(i + 1))
-    persons.append(
-        _Person(name, degree, occupation, location, mutual_connections,
-                _Person.extract_profileid_from_profileurl(profileurl),
-                profileurl, connect_button))
-  return persons
+  person_li_count = 0
+  while True:
+    for i in range(len(_GetLiElementsFromPage())):
+      name = _GetElementByXPath(
+          _ElementsPathSelectors.get_search_results_person_li_card_name_xpath(
+              i + 1)).text
+      degree = _GetElementByXPath(
+          _ElementsPathSelectors.
+          get_search_results_person_li_card_degree_info_xpath(i + 1)).text
+      occupation = _GetElementByXPath(
+          _ElementsPathSelectors.
+          get_search_results_person_li_occupation_info_card_container_xpath(
+              i + 1)).text
+      location = _GetElementByXPath(
+          _ElementsPathSelectors.
+          get_search_results_person_li_location_info_card_container_xpath(
+              i + 1)).text
+      mutual_connections = _GetElementByXPath(
+          _ElementsPathSelectors.
+          get_search_results_person_li_card_mutual_connections_info_container_xpath(  # pylint: disable=line-too-long
+              i + 1)).text
+      profileurl = _GetElementByXPath(
+          _ElementsPathSelectors.get_search_results_person_li_card_link_xpath(
+              i + 1)).get_attribute('href')
+      connect_button = _GetElementByXPath(
+          _ElementsPathSelectors.
+          get_search_results_person_li_connect_button_xpath(i + 1))
+      yield _Person(name, degree, occupation, location, mutual_connections,
+                    _Person.extract_profileid_from_profileurl(profileurl),
+                    profileurl, connect_button)
+      person_li_count += 1
+
+    if person_li_count == _LINKEDIN_MAX_INVITATION_LIMIT:
+      return
+
+    def goto_next_page() -> None:  # pylint: disable=redefined-builtin
+      next_button = driver.GetGlobalChromeDriverInstance(
+      ).find_element_by_xpath(
+          _ElementsPathSelectors.get_goto_next_page_button_xpath())
+      action_chains.ActionChains(
+          driver.GetGlobalChromeDriverInstance()).move_to_element(
+              next_button).click().perform()
+
+    try:
+      goto_next_page()
+    except exceptions.NoSuchElementException:
+      javascript.JS.load_page()
+      goto_next_page()
 
 
 class LinkedInSearchConnect:
 
   def __init__(self, *, keyword: str, location: str, title: str, firstname: str,
                lastname: str, school: str, industry: str, current_company: str,
-               profile_language: str, limit: int) -> None:
-    assert 0 < limit <= 80, (
-        f'Invitation limit can not exceed by 80, you gave {limit}.')
-    self._limit = limit
+               profile_language: str, max_connection_limit: int) -> None:
+    if max_connection_limit is None:
+      max_connection_limit = 20
+    elif not 0 < max_connection_limit <= 80:
+      raise ValueError(settings.CONNECTION_LIMIT_EXCEED_EXCEPTION_MESSAGE %
+                       (max_connection_limit))
+    self._max_connection_limit = max_connection_limit
 
     if keyword is None:
-      raise ValueError("'keyword' should not be None.")
+      raise ValueError(
+          "Function expects at least one argument 'keyword'. Provide a industry"
+          " keyword such as 'Software Developer', 'Hacker' or you can pass in"
+          " someone's name like 'Mohika' you want to connect with.")
 
     self._keyword = keyword
     self._location = location
@@ -565,9 +578,6 @@ class LinkedInSearchConnect:
     self._industry = industry
     self._current_company = current_company
     self._profile_language = profile_language
-
-    self._get_search_results_page()
-    self._apply_filters_to_search_results()
 
   def _get_search_results_page(self) -> None:
     typeahead_input_box = self._get_element_by_xpath(
@@ -754,70 +764,48 @@ class LinkedInSearchConnect:
       apply_current_filters_button.click()
       del apply_current_filters_button
 
-  def send_invitations(self) -> None:
+  def _search_and_filter_results(function_: function):  # pylint: disable=undefined-variable, no-self-argument
+
+    @functools.wraps(function_)
+    def wrapper(self, *args, **kwargs):
+      self._get_search_results_page()  # pylint: disable=protected-access
+      self._apply_filters_to_search_results()  # pylint: disable=protected-access
+      function_(*args, **kwargs)  # pylint: disable=not-callable
+
+    return wrapper
+
+  @_search_and_filter_results
+  def send_connection_request(self) -> None:
     invitation_count = 0
     start_time = time.time()
 
-    persons = _GetSearchResultsPersonLiObjects()
     invitation = status.Invitation()
-    while True:
-      for person in persons:
-        if person.connect_button.text == 'Pending' or \
-          person.connect_button.get_attribute('aria-label') in (
-            'Follow', 'Message'):
-          continue
-        try:
-          action_chains.ActionChains(
-              driver.GetGlobalChromeDriverInstance()).move_to_element(
-                  person.connect_button).click().perform()
-          send_now_button = self._get_element_by_xpath(
-              _ElementsPathSelectors.get_send_invite_modal_xpath(
-              )).find_element_by_xpath(
-                  _ElementsPathSelectors.get_send_now_button_xpath())
-          action_chains.ActionChains(
-              driver.GetGlobalChromeDriverInstance()).move_to_element(
-                  send_now_button).click().perform()
-          invitation.set_invitation_fields(
-              name=person.name,
-              occupation=person.occupation,
-              location=person.location,
-              mutual_connections=person.mutual_connections,
-              profileid=person.profileid,
-              profileurl=person.profileurl,
-              status='sent',
-              elapsed_time=time.time() - start_time)
-          invitation.status()
-          invitation_count += 1
-        except (exceptions.ElementNotInteractableException,
-                exceptions.ElementClickInterceptedException) as exc:
-          logger.error(traceback.format_exc())
-          if isinstance(exc, exceptions.ElementClickInterceptedException):
-            break
-          invitation.set_invitation_fields(
-              name=person.name,
-              occupation=person.occupation,
-              location=person.location,
-              mutual_connections=person.mutual_connections,
-              profileid=person.profileid,
-              profileurl=person.profileurl,
-              status='failed',
-              elapsed_time=time.time() - start_time)
-          invitation.status()
-
-        if invitation_count == self._limit:
-          break
-
-      def goto_next_page() -> None:  # pylint: disable=redefined-builtin
-        next_button = driver.GetGlobalChromeDriverInstance(
-        ).find_element_by_xpath(
-            _ElementsPathSelectors.get_goto_next_page_button_xpath())
+    for person in _GetSearchResultsPersonLiObjects():
+      if (person.connect_button.text == 'Pending' or
+          person.connect_button.get_attribute('aria-label')
+          in ('Follow', 'Message')):
+        continue
+      try:
         action_chains.ActionChains(
             driver.GetGlobalChromeDriverInstance()).move_to_element(
-                next_button).click().perform()
+                person.connect_button).click().perform()
+        send_now_button = self._get_element_by_xpath(
+            _ElementsPathSelectors.get_send_invite_modal_xpath(
+            )).find_element_by_xpath(
+                _ElementsPathSelectors.get_send_now_button_xpath())
+        action_chains.ActionChains(
+            driver.GetGlobalChromeDriverInstance()).move_to_element(
+                send_now_button).click().perform()
+        invitation.display_invitation_status_on_console(person, 'sent',
+                                                        start_time)
+        invitation_count += 1
+      except (exceptions.ElementNotInteractableException,
+              exceptions.ElementClickInterceptedException) as exc:
+        logger.error(traceback.format_exc())
+        if isinstance(exc, exceptions.ElementClickInterceptedException):
+          break
+        invitation.display_invitation_status_on_console(person, 'failed',
+                                                        start_time)
 
-      try:
-        goto_next_page()
-      except exceptions.NoSuchElementException:
-        javascript.JS.load_page()
-        goto_next_page()
-      persons = _GetSearchResultsPersonLiObjects()
+      if invitation_count == self._max_connection_limit:
+        break

@@ -213,16 +213,18 @@ def search(  # pylint: disable=invalid-name
                                             chromedriver_options)
     from linkedin import (login, connect)  # pylint: disable=import-outside-toplevel
     login.LinkedIn.login(email, password)
-    connect.LinkedInSearchConnect(keyword=keyword,
-                                  location=location,
-                                  industry=None,
-                                  title=None,
-                                  firstname=None,
-                                  lastname=None,
-                                  school=None,
-                                  current_company=None,
-                                  profile_language=None,
-                                  limit=limit).send_invitations()
+    linkedinsearchconnect = connect.LinkedInSearchConnect(
+        keyword=keyword,
+        location=location,
+        industry=None,
+        title=None,
+        firstname=None,
+        lastname=None,
+        school=None,
+        current_company=None,
+        profile_language=None,
+        max_connection_limit=limit)
+    linkedinsearchconnect.send_connection_request()
   except Exception as exc:  # pylint: disable=broad-except
     if debug:
       raise exc
