@@ -65,14 +65,14 @@ LOGGING_TO_STREAM_ENABLED = False
 if not os.path.exists(LOG_DIR_PATH):
   os.mkdir(LOG_DIR_PATH)
 
-LOG_FORMAT_STR = '%(asctime)s:%(name)s:%(levelname)s:%(filename)s:%(funcName)s:%(message)s'  # pylint: disable=line-too-long
+LOG_FORMAT_STR = '%(asctime)s:%(name)s:%(levelname)s:%(funcName)s\n%(message)s'  # pylint: disable=line-too-long
 
 INB_VERSION = '1.0.0'
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
-file_handler = logging.FileHandler(LOG_DIR_PATH / __name__, mode='w')
+file_handler = logging.FileHandler(LOG_DIR_PATH / __name__, mode='a')
 file_handler.setFormatter(logging.Formatter(LOG_FORMAT_STR))
 
 logger.addHandler(file_handler)
@@ -175,6 +175,8 @@ def _RetrieveChromeDriverZip(url: str, dest: str, verbose: bool = True) -> str:
           status += '   [{0:6.2f}%]'.format(file_size_dl * 100 / file_size)  # pylint: disable=consider-using-f-string
         status += chr(13)
         click.echo(f'{status}\r', None, False)
+    if verbose:
+      click.echo('')
 
   return filename
 

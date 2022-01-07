@@ -67,7 +67,7 @@ from selenium.webdriver.common import keys
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
 
-file_handler = logging.FileHandler(settings.LOG_DIR_PATH / __name__, mode='w')
+file_handler = logging.FileHandler(settings.LOG_DIR_PATH / __name__, mode='a')
 file_handler.setFormatter(logging.Formatter(settings.LOG_FORMAT_STR))
 
 if settings.LOGGING_TO_STREAM_ENABLED:
