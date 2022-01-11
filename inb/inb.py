@@ -43,7 +43,7 @@ except ImportError:
   _ = lambda msg: msg
 
 
-def _SendAndSearchCommandCommonOptions(func: function) -> function:  # pylint: disable=undefined-variable
+def _SendAndSearchCommandCommonOptions(f: function) -> function:  # pylint: disable=undefined-variable
   """Decorator provides common command line flags for command `send` and
   `search`.
 
@@ -61,25 +61,25 @@ def _SendAndSearchCommandCommonOptions(func: function) -> function:  # pylint: d
   Returns:
     Function attached with common command line flags.
   """
-  func = click.option(
+  f = click.option(
       '--limit',
       type=int,
       default=20,
       help=_('Overrides the default limit of 20 by passing an explicit'
-             ' limit number.'))(func)
-  func = click.option('--headless',
-                      is_flag=True,
-                      help=_('Disables GPU support for Chromedriver.'))(func)
-  func = click.option(
+             ' limit number.'))(f)
+  f = click.option('--headless',
+                   is_flag=True,
+                   help=_('Disables GPU support for Chromedriver.'))(f)
+  f = click.option(
       '--maximized',
       is_flag=True,
       help=_(
-          'Maximizes the Chrome window even if it is in headless mode.'))(func)
-  func = click.option(
+          'Maximizes the Chrome window even if it is in headless mode.'))(f)
+  f = click.option(
       '--debug',
       is_flag=True,
-      help=_('Prints out debugging information at runtime.'))(func)
-  return func
+      help=_('Prints out debugging information at runtime.'))(f)
+  return f
 
 
 @click.group()
@@ -259,6 +259,7 @@ def search(  # pylint: disable=invalid-name
         current_company=None,
         profile_language=None,
         max_connection_limit=limit)
+    linkedinsearchconnect.get_search_results_page()
     linkedinsearchconnect.send_connection_request()
   except Exception as exc:  # pylint: disable=broad-except
     if debug:

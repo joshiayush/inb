@@ -36,7 +36,6 @@ import sys
 import time
 import logging
 import traceback
-import functools
 
 from typing import (
     List,
@@ -578,7 +577,7 @@ class LinkedInSearchConnect:
     self._current_company = current_company
     self._profile_language = profile_language
 
-  def _get_search_results_page(self) -> None:
+  def get_search_results_page(self) -> None:
     typeahead_input_box = self._get_element_by_xpath(
         _ElementsPathSelectors.get_global_nav_typeahead_input_box_xpath())
     try:
@@ -763,18 +762,9 @@ class LinkedInSearchConnect:
       apply_current_filters_button.click()
       del apply_current_filters_button
 
-  def _search_and_filter_results(function_: function):  # pylint: disable=undefined-variable, no-self-argument
-
-    @functools.wraps(function_)
-    def wrapper(self, *args, **kwargs):
-      self._get_search_results_page()  # pylint: disable=protected-access
-      self._apply_filters_to_search_results()  # pylint: disable=protected-access
-      function_(*args, **kwargs)  # pylint: disable=not-callable
-
-    return wrapper
-
-  @_search_and_filter_results
   def send_connection_request(self) -> None:
+    self._apply_filters_to_search_results()
+
     invitation_count = 0
     start_time = time.time()
 
