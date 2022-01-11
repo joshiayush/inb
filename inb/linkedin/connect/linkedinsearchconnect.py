@@ -37,10 +37,7 @@ import time
 import logging
 import traceback
 
-from typing import (
-    List,
-    Dict,
-)
+from typing import Optional
 
 from selenium import webdriver
 from selenium.common import exceptions
@@ -53,7 +50,7 @@ from selenium.webdriver.common import (
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
-from linkedin import (message, driver, settings)
+from linkedin import (driver, settings, message)
 from linkedin.DOM import javascript
 from linkedin.invitation import status
 
@@ -490,7 +487,7 @@ def _GetElementByXPath(xpath: str, wait: int = 60) -> webelement.WebElement:
       continue
 
 
-def _GetLiElementsFromPage(wait: int = 60) -> List[webelement.WebElement]:
+def _GetLiElementsFromPage(wait: int = 60) -> list[webelement.WebElement]:
   return _GetElementByXPath(
       _ElementsPathSelectors.get_search_results_person_li_parent_xpath(),
       wait).find_elements_by_tag_name('li')
@@ -499,7 +496,7 @@ def _GetLiElementsFromPage(wait: int = 60) -> List[webelement.WebElement]:
 _LINKEDIN_MAX_INVITATION_LIMIT = 80
 
 
-def _GetSearchResultsPersonLiObjects() -> List[_Person]:
+def _GetSearchResultsPersonLiObjects() -> list[_Person]:
   person_li_count = 0
   while True:
     for i in range(len(_GetLiElementsFromPage())):
@@ -552,9 +549,19 @@ def _GetSearchResultsPersonLiObjects() -> List[_Person]:
 
 class LinkedInSearchConnect:
 
-  def __init__(self, *, keyword: str, location: str, title: str, firstname: str,
-               lastname: str, school: str, industry: str, current_company: str,
-               profile_language: str, max_connection_limit: int) -> None:
+  def __init__(self,
+               *,
+               keyword: str,
+               location: str,
+               title: str,
+               firstname: str,
+               lastname: str,
+               school: str,
+               industry: str,
+               current_company: str,
+               profile_language: str,
+               max_connection_limit: int,
+               template_file: Optional[str] = None) -> None:
     if max_connection_limit is None:
       max_connection_limit = 20
     elif not 0 < max_connection_limit <= 80:
@@ -576,6 +583,10 @@ class LinkedInSearchConnect:
     self._industry = industry
     self._current_company = current_company
     self._profile_language = profile_language
+    if template_file is not None:
+      self._invitation_message = message.template.ReadTemplate(template_file)
+    else:
+      self._invitation_message = None
 
   def get_search_results_page(self) -> None:
     typeahead_input_box = self._get_element_by_xpath(
@@ -619,10 +630,10 @@ class LinkedInSearchConnect:
 
     def check_for_filter(
         filter: str,  # pylint: disable=redefined-builtin
-        filter_dict: Dict[str, webdriver.Chrome]
+        filter_dict: dict[str, webdriver.Chrome]
     ) -> None:
       nonlocal self
-      filters_present: List[str] = filter_dict.keys()
+      filters_present: list[str] = filter_dict.keys()
 
       def click_overlapped_element(element: webdriver.Chrome) -> None:
         """Nested function click_overlapped_element() fixes the WebdriverException:
@@ -657,13 +668,13 @@ class LinkedInSearchConnect:
           _ElementsPathSelectors.get_available_location_options_xpath())
       available_location_labels = self._get_elements_by_xpath(
           _ElementsPathSelectors.get_available_location_labels_xpath())
-      available_locations: List[str] = [
+      available_locations: list[str] = [
           label.find_element_by_tag_name('span').text
           for label in available_location_labels
       ]
 
       del available_location_labels
-      locations_dict: Dict[str, webdriver.Chrome] = {}
+      locations_dict: dict[str, webdriver.Chrome] = {}
       for location, location_option in zip(available_locations,
                                            available_location_options):
         locations_dict[location] = location_option
@@ -678,13 +689,13 @@ class LinkedInSearchConnect:
           _ElementsPathSelectors.get_available_industry_options_xpath())
       available_industry_labels = self._get_elements_by_xpath(
           _ElementsPathSelectors.get_available_industry_labels_xpath())
-      available_industries: List[str] = [
+      available_industries: list[str] = [
           label.find_element_by_tag_name('span').text
           for label in available_industry_labels
       ]
 
       del available_industry_labels
-      industries_dict: Dict[str, webdriver.Chrome] = {}
+      industries_dict: dict[str, webdriver.Chrome] = {}
       for industry, industry_option in zip(available_industries,
                                            available_industry_options):
         industries_dict[industry] = industry_option
@@ -699,13 +710,13 @@ class LinkedInSearchConnect:
           _ElementsPathSelectors.get_available_profile_language_options_xpath())
       available_profile_language_lables = self._get_elements_by_xpath(
           _ElementsPathSelectors.get_available_profile_langauge_labels_xpath())
-      available_profile_languages: List[str] = [
+      available_profile_languages: list[str] = [
           label.find_element_by_tag_name('span').text
           for label in available_profile_language_lables
       ]
 
       del available_profile_language_lables
-      profile_languages_dict: Dict[str, webdriver.Chrome] = {}
+      profile_languages_dict: dict[str, webdriver.Chrome] = {}
       for profile_language, profile_language_option in zip(
           available_profile_languages, available_profile_language_options):
         profile_languages_dict[profile_language] = profile_language_option
