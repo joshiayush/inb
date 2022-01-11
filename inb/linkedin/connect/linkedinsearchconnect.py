@@ -568,7 +568,6 @@ class LinkedInSearchConnect:
           "Function expects at least one argument 'keyword'. Provide a industry"
           " keyword such as 'Software Developer', 'Hacker' or you can pass in"
           " someone's name like 'Mohika' you want to connect with.")
-
     self._keyword = keyword
     self._location = location
     self._title = title

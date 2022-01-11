@@ -128,8 +128,7 @@ class Template:
   @staticmethod
   def get_template_by_name(name: str) -> str:
     if not name in TEMPL_AVAIL:
-      raise TemplateFileException(
-          f"Invalid template! Use any of these {TEMPL_AVAIL}")
+      raise Exception(f"Invalid template! Use any of these {TEMPL_AVAIL}")
     else:
       with open(TEMPL_FILE_PATH, 'r') as templ_file:
         data = json.load(templ_file)
@@ -193,8 +192,8 @@ class Template:
   @staticmethod
   def load_message(path: str) -> str:
     if Template.check_if_file_is_supported(path) is False:
-      raise TemplateFileNotSupportedException(
-          'Template file %(file)s is not supported!' % {'file': path})
+      raise Exception('Template file %(file)s is not supported!' %
+                      {'file': path})
     with open(path, 'r') as templ_file:
       message = templ_file.read()
     return message[message.find(TEMPL_BEGN_BLK) +
@@ -202,8 +201,8 @@ class Template:
 
   def load_variable(self: Template, path: str) -> str:
     if self.check_if_file_is_supported(path) is False:
-      raise TemplateFileNotSupportedException(
-          'Template file %(file)s is not supported!' % {'file': path})
+      raise Exception('Template file %(file)s is not supported!' %
+                      {'file': path})
     with open(path, 'r') as templ_file:
       variables = templ_file.read()
     variables = variables[variables.find(VAR_BEGN_BLK) +
@@ -217,7 +216,7 @@ class Template:
       if var_ in MY_NAMES:
         self._data = {**self._data, **{var_: val.strip()}}
       else:
-        raise TemplateFileException(
+        raise Exception(
             f"Variables other than {MY_NAMES} are not currently supported, you gave {var_}!"
         )
 
@@ -252,7 +251,7 @@ class Template:
   def read(self: Template) -> str:
     message = self.parse()
     if len(message) > 300:
-      raise TemplateMessageLengthExceededException(
+      raise Exception(
           'Personalized message length cannot exceed by 300, you gave %(characters)s characters'
           % {'characters': len(message)})
     return message

@@ -83,7 +83,7 @@ def _SendAndSearchCommandCommonOptions(func: function) -> function:  # pylint: d
 
 
 @click.group()
-def Inb():  # pylint: disable=invalid-name
+def Inb():
   """inb version 1.0.0
 
   Command line utility to automate the world of LinkedIn.
@@ -183,7 +183,7 @@ def send(  # pylint: disable=invalid-name
               required=True,
               help=_('Keyword to search for.'))
 @click.option('--location',
-              type=str,
+              type=list,
               required=False,
               help=_('Location to search for.'))
 @_SendAndSearchCommandCommonOptions
@@ -195,10 +195,45 @@ def search(  # pylint: disable=invalid-name
   Usage:
 
     python3 inb/inb.py search --email "username" --password "password"
-        --keyword "keyword"
+        --keyword "Software developer"
 
-  Note: When running with '--headless' also provide '--maximized' to capture
-  the complete view.
+  If you want to open Chrome browser in its full size use\n
+  '--maximized' over the command line.
+
+    python3 inb/inb.py search --email "username" --password "password"
+        --keyword "Software developer" --maximized
+
+  If you want to send invitations without opening Chrome browser\n
+  use '--headless' flag over the command line.
+
+    python3 inb/inb.py send --email "username" --password "password"
+        --keyword "Software developer" --headless
+
+  Note: When running with '--headless' also provide '--maximized'\n
+  to capture the complete view otherwise the bot will complain
+  about 'No such element'.
+
+    python3 inb/inb.py send --email "username" --password "password"
+        --keyword "Software developer" --headless --maximized
+
+  Controlling Invitation Limit:
+
+  By default the bot will send invitations to 20 people on\n
+  LinkedIn if you provide a plain command over the command
+  line.
+
+    python3 inb/inb.py send --email "username" --password "password"
+        --keyword "Software developer"
+
+  In order to override the default behaviour you need to pass the\n
+  flag '--limit' to provide the number of invitations the bot
+  should send.
+
+    python3 inb/inb.py send --email "username" --password "password"
+        --keyword "Software developer" --limit 40
+
+  Note: The limit should not exceed by 80 and we recommend a limit\n
+  of 40 every time you run this bot.
   """
   if debug:
     settings.TurnOnLoggingToStream()
@@ -215,7 +250,7 @@ def search(  # pylint: disable=invalid-name
     login.LinkedIn.login(email, password)
     linkedinsearchconnect = connect.LinkedInSearchConnect(
         keyword=keyword,
-        location=location,
+        location=''.join(location).split(','),
         industry=None,
         title=None,
         firstname=None,

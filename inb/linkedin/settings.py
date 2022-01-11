@@ -99,7 +99,7 @@ _CHROME_DRIVER_ZIP_FILE = None
 #
 # This version must be changed with the installed 'chromedriver' version that
 # comes with the repository.
-_GOOGLE_CHROME_COMPATIBLE_VERSION_WITH_INSTALLED_CHROMEDRIVER = '96.0.4664.110'
+_GOOGLE_CHROME_COMPATIBLE_VERSION_WITH_INSTALLED_CHROMEDRIVER = '97.0.4692.71'
 
 
 def _ExtractChromeDriverZip(chromedriver_zip: str) -> None:
@@ -259,7 +259,7 @@ def _GetGoogleChromeBinaryVersion() -> str:
   Returns:
     `Google Chrome` version.
   """
-  version_regex = r'[0-9]{2}.[0-9]{1}.[0-9]{4}.[0-9]{3}'
+  version_regex = r'[0-9]{1,2}.[0-9]{1}.[0-9]{1,4}.[0-9]{1,3}'
   if sys.platform == 'linux':
     chrome_binaries = ['google-chrome', 'google-chrome-stable']
     chrome_binary_path = []

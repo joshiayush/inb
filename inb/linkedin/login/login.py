@@ -128,23 +128,23 @@ class LinkedIn:
         settings.GetLinkedInLoginPageUrl())
 
     try:
-      username_elem = driver.GetGlobalChromeDriverInstance().find_element_by_id(
+      uname_inp_box = driver.GetGlobalChromeDriverInstance().find_element_by_id(
           _ElementsPathSelectors.get_username_element_id())
     except NoSuchElementException as exc:
       logger.critical(traceback.format_exc())
       raise exc
     else:
-      username_elem.clear()
-      username_elem.send_keys(username)
+      uname_inp_box.clear()
+      uname_inp_box.send_keys(username)
 
     try:
-      password_elem = driver.GetGlobalChromeDriverInstance().find_element_by_id(
+      pswd_inp_box = driver.GetGlobalChromeDriverInstance().find_element_by_id(
           _ElementsPathSelectors.get_password_element_id())
     except NoSuchElementException as exc:
       logger.critical(traceback.format_exc())
       raise exc
     else:
-      password_elem.clear()
-      password_elem.send_keys(password)
+      pswd_inp_box.clear()
+      pswd_inp_box.send_keys(password)
 
-    password_elem.send_keys(keys.Keys.RETURN)
+    pswd_inp_box.send_keys(keys.Keys.RETURN)
