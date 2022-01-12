@@ -47,8 +47,7 @@ Ayush
 """.strip('\n')
 
 
-class TestReadTemplateFunction(unittest.TestCase):  # pylint: disable=missing-class-docstring
-
+class TestTemplateBaseClass(unittest.TestCase):  # pylint: disable=missing-class-docstring
   _TEST_MSG_TEMPLATE_F = pathlib.PurePath(
       __file__).parent / 'test-message-template-f.txt'
 
@@ -56,7 +55,51 @@ class TestReadTemplateFunction(unittest.TestCase):  # pylint: disable=missing-cl
     self.maxDiff = None  # pylint: disable=invalid-name
     signal.signal(signal.SIGINT, self.tearDown)
 
-  def test_read_template_output(self) -> None:
+  def tearDown(self) -> None:
+    if os.access(self._TEST_MSG_TEMPLATE_F, os.F_OK):
+      os.remove(self._TEST_MSG_TEMPLATE_F)
+
+
+class TestProtectedFunctionCheckIfTemplateFileIsSupported(
+    TestTemplateBaseClass):
+
+  def test_function_with_unsupported_file_extensions(self) -> None:
+    ill_extensions = ['.py', '.pyi', '.cc', '.c', '.h', '.hh']
+    for ext in ill_extensions:
+      self.assertFalse(
+          template._CheckIfTemplateFileIsSupported(  # pylint: disable=protected-access
+              os.fspath(self._TEST_MSG_TEMPLATE_F)[:-4] + ext))
+
+  def test_function_with_supported_file_extensions(self) -> None:
+    extensions = ['.txt']
+    for ext in extensions:
+      self.assertTrue(
+          template._CheckIfTemplateFileIsSupported(  # pylint: disable=protected-access
+              os.fspath(self._TEST_MSG_TEMPLATE_F)[:-4] + ext))
+
+
+class TestProtectedFunctionLoadMessageTemplate(TestTemplateBaseClass):  # pylint: disable=missing-class-docstring
+
+  def test_function_with_invalid_path(self) -> None:
+    with self.assertRaises(FileNotFoundError):
+      template._LoadMessageTemplate(os.fspath(self._TEST_MSG_TEMPLATE_F)[:-4])  # pylint: disable=protected-access
+
+  def test_function_output_with_valid_path(self) -> None:
+    with open(self._TEST_MSG_TEMPLATE_F, 'w+', encoding='utf-8') as t_file:
+      t_file.write(f'{template._TEMPL_BEGIN_BLOCK}')  # pylint: disable=protected-access
+      t_file.write('\n\n')
+      t_file.write(f'{_ADMIRATION_MESSAGE_TEMPLATE}')
+      t_file.write('\n\n')
+      t_file.write(f'{template._TEMPL_END_BLOCK}')  # pylint: disable=protected-access
+
+    self.assertEqual(
+        template._LoadMessageTemplate(self._TEST_MSG_TEMPLATE_F).strip('\n'),  # pylint: disable=protected-access
+        _ADMIRATION_MESSAGE_TEMPLATE)
+
+
+class TestFunctionReadTemplate(TestTemplateBaseClass):  # pylint: disable=missing-class-docstring
+
+  def test_function_output(self) -> None:
     with open(self._TEST_MSG_TEMPLATE_F, 'w+', encoding='utf-8') as t_file:
       t_file.write(f'{template._TEMPL_BEGIN_BLOCK}')  # pylint: disable=protected-access
       t_file.write('\n\n')
@@ -66,7 +109,3 @@ class TestReadTemplateFunction(unittest.TestCase):  # pylint: disable=missing-cl
 
     self.assertEqual(template.ReadTemplate(self._TEST_MSG_TEMPLATE_F),
                      _ADMIRATION_MESSAGE_TEMPLATE)
-
-  def tearDown(self) -> None:
-    if os.access(self._TEST_MSG_TEMPLATE_F, os.F_OK):
-      os.remove(self._TEST_MSG_TEMPLATE_F)

@@ -52,7 +52,9 @@ from tests.test_linkedin.test_login.test_login import (  # pylint: disable=unuse
     TestLoginApiLinkedInClass,)
 
 from tests.test_linkedin.test_message.test_template import (  # pylint: disable=unused-import
-    TestReadTemplateFunction,)
+    TestFunctionReadTemplate, TestProtectedFunctionLoadMessageTemplate,
+    TestProtectedFunctionCheckIfTemplateFileIsSupported,
+)
 
 if __name__ == '__main__':
   unittest.main(verbosity=2)

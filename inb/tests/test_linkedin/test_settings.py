@@ -38,6 +38,7 @@ import subprocess
 
 from unittest import mock
 
+import lib
 from linkedin import settings
 
 logger = logging.getLogger(__name__)
@@ -55,6 +56,7 @@ logger.addHandler(file_handler)
 
 class TestProtectedGetGoogleChromeBinaryVersionFunction(unittest.TestCase):  # pylint: disable=missing-class-docstring
 
+  @lib.IgnoreWarnings(ResourceWarning)
   @unittest.skipUnless(sys.platform == 'linux',
                        'Current platform is not linux.  '
                        'This test is supposed to be ran on linux.')
@@ -98,6 +100,7 @@ class TestProtectedGetGoogleChromeBinaryVersionFunction(unittest.TestCase):  # p
       # version.
       mk_check_output.assert_any_call([path, '--version'])
 
+  @lib.IgnoreWarnings(ResourceWarning)
   @unittest.skipUnless(sys.platform == 'darwin',
                        'Current platform is not darwin.  '
                        'This test is supposed to be ran on darwin.')
@@ -118,6 +121,7 @@ class TestProtectedGetGoogleChromeBinaryVersionFunction(unittest.TestCase):  # p
       # version.
       mk_check_output.assert_any_call([path, '--version'])
 
+  @lib.IgnoreWarnings(ResourceWarning)
   @unittest.skipUnless(sys.platform in ('win32', 'cygwin'),
                        'Current platform is not win32 or cygwin.  '
                        'This test is supposed to be ran on win32 or cygwin.')

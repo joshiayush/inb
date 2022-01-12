@@ -119,37 +119,37 @@ class TestRemoveFilePermissionsAndAddFilePermissionsFunction(unittest.TestCase):
   """
 
   def test_if_r_bit_is_removed_and_added(self) -> None:
-    lib.RemoveFilePermissions(settings.ChromeDriverAbsPath(), 'r')
+    lib.RemoveFilePermissions(settings.ChromeDriverAbsolutePath(), 'r')
     self.assertTrue(
         bool(
-            os.stat(settings.ChromeDriverAbsPath()).st_mode & ~stat.S_IRUSR &
-            ~stat.S_IRGRP & ~stat.S_IROTH))
-    lib.AddFilePermissions(settings.ChromeDriverAbsPath(), 'r')
+            os.stat(settings.ChromeDriverAbsolutePath()).st_mode &
+            ~stat.S_IRUSR & ~stat.S_IRGRP & ~stat.S_IROTH))
+    lib.AddFilePermissions(settings.ChromeDriverAbsolutePath(), 'r')
     self.assertTrue(
         bool(
-            os.stat(settings.ChromeDriverAbsPath()).st_mode | stat.S_IRUSR |
-            stat.S_IRGRP | stat.S_IROTH))
+            os.stat(settings.ChromeDriverAbsolutePath()).st_mode |
+            stat.S_IRUSR | stat.S_IRGRP | stat.S_IROTH))
 
   def test_if_w_bit_is_removed_and_added(self) -> None:
-    lib.RemoveFilePermissions(settings.ChromeDriverAbsPath(), 'w')
+    lib.RemoveFilePermissions(settings.ChromeDriverAbsolutePath(), 'w')
     self.assertTrue(
         bool(
-            os.stat(settings.ChromeDriverAbsPath()).st_mode & ~stat.S_IWUSR &
-            ~stat.S_IWGRP & ~stat.S_IWOTH))
-    lib.AddFilePermissions(settings.ChromeDriverAbsPath(), 'w')
+            os.stat(settings.ChromeDriverAbsolutePath()).st_mode &
+            ~stat.S_IWUSR & ~stat.S_IWGRP & ~stat.S_IWOTH))
+    lib.AddFilePermissions(settings.ChromeDriverAbsolutePath(), 'w')
     self.assertTrue(
         bool(
-            os.stat(settings.ChromeDriverAbsPath()).st_mode | stat.S_IWUSR |
-            stat.S_IWGRP | stat.S_IWOTH))
+            os.stat(settings.ChromeDriverAbsolutePath()).st_mode |
+            stat.S_IWUSR | stat.S_IWGRP | stat.S_IWOTH))
 
   def test_if_x_bit_is_removed_and_added(self) -> None:
-    lib.RemoveFilePermissions(settings.ChromeDriverAbsPath(), 'x')
+    lib.RemoveFilePermissions(settings.ChromeDriverAbsolutePath(), 'x')
     self.assertTrue(
         bool(
-            os.stat(settings.ChromeDriverAbsPath()).st_mode & ~stat.S_IXUSR &
-            ~stat.S_IXGRP & ~stat.S_IXOTH))
-    lib.AddFilePermissions(settings.ChromeDriverAbsPath(), 'x')
+            os.stat(settings.ChromeDriverAbsolutePath()).st_mode &
+            ~stat.S_IXUSR & ~stat.S_IXGRP & ~stat.S_IXOTH))
+    lib.AddFilePermissions(settings.ChromeDriverAbsolutePath(), 'x')
     self.assertTrue(
         bool(
-            os.stat(settings.ChromeDriverAbsPath()).st_mode | stat.S_IXUSR |
-            stat.S_IXGRP | stat.S_IXOTH))
+            os.stat(settings.ChromeDriverAbsolutePath()).st_mode |
+            stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH))
