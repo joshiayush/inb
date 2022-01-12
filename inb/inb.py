@@ -33,6 +33,7 @@
 
 from __future__ import annotations
 
+import sys
 import click
 
 from linkedin import settings
@@ -151,11 +152,20 @@ def send(  # pylint: disable=invalid-name
   if debug:
     settings.TurnOnLoggingToStream()
   from linkedin import driver  # pylint: disable=import-outside-toplevel
-  chromedriver_options = []
+  chromedriver_options = [
+      driver.CHROMEDRIVER_OPTIONS['disable-infobars'],
+      driver.CHROMEDRIVER_OPTIONS['enable-automation']
+  ]
   if headless:
-    chromedriver_options.append(driver.CHROMEDRIVER_OPTIONS['headless'])
+    chromedriver_options = [
+        *chromedriver_options,
+        driver.CHROMEDRIVER_OPTIONS['headless'] if sys.platform
+        in ('linux', 'darwin') else driver.CHROMEDRIVER_OPTIONS['disable-gpu']
+    ]
   if maximized:
-    chromedriver_options.append(driver.CHROMEDRIVER_OPTIONS['start-maximized'])
+    chromedriver_options = [
+        *chromedriver_options, driver.CHROMEDRIVER_OPTIONS['start-maximized']
+    ]
   try:
     driver.GChromeDriverInstance.initialize(settings.ChromeDriverAbsolutePath(),
                                             chromedriver_options)
@@ -238,11 +248,20 @@ def search(  # pylint: disable=invalid-name
   if debug:
     settings.TurnOnLoggingToStream()
   from linkedin import driver  # pylint: disable=import-outside-toplevel
-  chromedriver_options = []
+  chromedriver_options = [
+      driver.CHROMEDRIVER_OPTIONS['disable-infobars'],
+      driver.CHROMEDRIVER_OPTIONS['enable-automation']
+  ]
   if headless:
-    chromedriver_options.append(driver.CHROMEDRIVER_OPTIONS['headless'])
+    chromedriver_options = [
+        *chromedriver_options,
+        driver.CHROMEDRIVER_OPTIONS['headless'] if sys.platform
+        in ('linux', 'darwin') else driver.CHROMEDRIVER_OPTIONS['disable-gpu']
+    ]
   if maximized:
-    chromedriver_options.append(driver.CHROMEDRIVER_OPTIONS['start-maximized'])
+    chromedriver_options = [
+        *chromedriver_options, driver.CHROMEDRIVER_OPTIONS['start-maximized']
+    ]
   try:
     driver.GChromeDriverInstance.initialize(settings.ChromeDriverAbsolutePath(),
                                             chromedriver_options)
@@ -250,7 +269,7 @@ def search(  # pylint: disable=invalid-name
     login.LinkedIn.login(email, password)
     linkedinsearchconnect = connect.LinkedInSearchConnect(
         keyword=keyword,
-        location=''.join(location).split(','),
+        location=''.join(location).split(',') if location else None,
         industry=None,
         title=None,
         firstname=None,
@@ -260,7 +279,7 @@ def search(  # pylint: disable=invalid-name
         profile_language=None,
         max_connection_limit=limit)
     linkedinsearchconnect.get_search_results_page()
-    linkedinsearchconnect.send_connection_request()
+    linkedinsearchconnect.send_connection_requests()
   except Exception as exc:  # pylint: disable=broad-except
     if debug:
       raise exc

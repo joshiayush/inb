@@ -50,8 +50,9 @@ from selenium.webdriver.common import (
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
-from linkedin import (driver, settings, message)
+from linkedin import (driver, settings)
 from linkedin.DOM import javascript
+from linkedin.message import template
 from linkedin.invitation import status
 
 logger = logging.getLogger(__name__)
@@ -351,7 +352,7 @@ class _ElementsPathSelectors:
   @staticmethod
   def _get_search_results_person_li_card_info_footer_xpath(
       position: int) -> str:
-    return f'{_ElementsPathSelectors._get_search_results_person_li_card_info_container_xpath(position)}/div[2]'  # pylint: disable=line-too-long
+    return f'{_ElementsPathSelectors._get_search_results_person_li_card_info_container_xpath(position)}/div[3]'  # pylint: disable=line-too-long
 
   @staticmethod
   def get_search_results_person_li_card_mutual_connections_info_container_xpath(
@@ -514,10 +515,23 @@ def _GetSearchResultsPersonLiObjects() -> list[_Person]:
           _ElementsPathSelectors.
           get_search_results_person_li_location_info_card_container_xpath(
               i + 1)).text
-      mutual_connections = _GetElementByXPath(
-          _ElementsPathSelectors.
-          get_search_results_person_li_card_mutual_connections_info_container_xpath(  # pylint: disable=line-too-long
-              i + 1)).text
+      # @TODO(joshiayush): Some users on LinkedIn does not have information of
+      # shared connections in the
+      # _ElementsPathSelectors.
+      #     get_search_results_person_li_card_mutual_connections_info_container_xpath(  # pylint: disable=line-too-long
+      #         i + 1)).text
+      # path.  To comabt this we must modify our API to quickly raise an exception
+      # when this happens so that we can quickly catch it and replace the
+      # `mutual_connections` variable with `'Shared connections not found :('` string.
+      #
+      # mutual_connections = _GetElementByXPath(
+      #     _ElementsPathSelectors.
+      #     get_search_results_person_li_card_mutual_connections_info_container_xpath(  # pylint: disable=line-too-long
+      #         i + 1)).text
+      mutual_connections = (
+          "Automation using 'search' command could not scrape information of\n"
+          '  shared connections properly.\n'
+          '  Please be kind an send us a pull request :)')
       profileurl = _GetElementByXPath(
           _ElementsPathSelectors.get_search_results_person_li_card_link_xpath(
               i + 1)).get_attribute('href')
@@ -584,7 +598,7 @@ class LinkedInSearchConnect:
     self._current_company = current_company
     self._profile_language = profile_language
     if template_file is not None:
-      self._invitation_message = message.template.ReadTemplate(template_file)
+      self._invitation_message = template.ReadTemplate(template_file)
     else:
       self._invitation_message = None
 
@@ -773,7 +787,7 @@ class LinkedInSearchConnect:
       apply_current_filters_button.click()
       del apply_current_filters_button
 
-  def send_connection_request(self) -> None:
+  def send_connection_requests(self) -> None:
     self._apply_filters_to_search_results()
 
     invitation_count = 0
