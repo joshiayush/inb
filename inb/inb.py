@@ -80,6 +80,11 @@ def _SendAndSearchCommandCommonOptions(f: function) -> function:  # pylint: disa
       '--debug',
       is_flag=True,
       help=_('Prints out debugging information at runtime.'))(f)
+  f = click.option(
+      '--force-chromedriver',
+      is_flag=True,
+      help=_(('Forces the bot to only use the chromedriver that comes with '
+              'the repository even if it is not compatible.')))(f)
   return f
 
 
@@ -105,7 +110,7 @@ def Inb():
 @_SendAndSearchCommandCommonOptions
 def send(  # pylint: disable=invalid-name
     email: str, password: str, limit: int, headless: bool, maximized: bool,
-    debug: bool) -> None:
+    debug: bool, force_chromedriver: bool) -> None:
   """Sends invitations on LinkedIn to people in your MyNetwork page.
 
   Usage:
@@ -167,8 +172,9 @@ def send(  # pylint: disable=invalid-name
         *chromedriver_options, driver.CHROMEDRIVER_OPTIONS['start-maximized']
     ]
   try:
-    driver.GChromeDriverInstance.initialize(settings.ChromeDriverAbsolutePath(),
-                                            chromedriver_options)
+    driver.GChromeDriverInstance.initialize(
+        settings.ChromeDriverAbsolutePath(force_chromedriver),
+        chromedriver_options)
     from linkedin import (login, connect)  # pylint: disable=import-outside-toplevel
     login.LinkedIn.login(email, password)
     linkedinconnect = connect.LinkedInConnect(max_connection_limit=limit)
@@ -199,7 +205,8 @@ def send(  # pylint: disable=invalid-name
 @_SendAndSearchCommandCommonOptions
 def search(  # pylint: disable=invalid-name
     email: str, password: str, keyword: str, location: str, limit: int,
-    headless: bool, maximized: bool, debug: bool) -> None:
+    headless: bool, maximized: bool, debug: bool,
+    force_chromedriver: bool) -> None:
   """Searches for the specific keyword given and sends invitation to them.
 
   Usage:
@@ -263,8 +270,9 @@ def search(  # pylint: disable=invalid-name
         *chromedriver_options, driver.CHROMEDRIVER_OPTIONS['start-maximized']
     ]
   try:
-    driver.GChromeDriverInstance.initialize(settings.ChromeDriverAbsolutePath(),
-                                            chromedriver_options)
+    driver.GChromeDriverInstance.initialize(
+        settings.ChromeDriverAbsolutePath(force_chromedriver),
+        chromedriver_options)
     from linkedin import (login, connect)  # pylint: disable=import-outside-toplevel
     login.LinkedIn.login(email, password)
     linkedinsearchconnect = connect.LinkedInSearchConnect(

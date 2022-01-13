@@ -65,7 +65,8 @@ LOGGING_TO_STREAM_ENABLED = False
 if not os.path.exists(LOG_DIR_PATH):
   os.mkdir(LOG_DIR_PATH)
 
-LOG_FORMAT_STR = '%(asctime)s:%(name)s:%(levelname)s:%(funcName)s\n%(message)s'  # pylint: disable=line-too-long
+LOG_FORMAT_STR = (
+    '%(asctime)s:%(name)s:%(levelname)s:%(funcName)s\n%(message)s')
 
 INB_VERSION = '1.0.0'
 
@@ -86,10 +87,13 @@ def TurnOnLoggingToStream() -> None:
   logger.addHandler(stream_handler)
 
 
-_CHROME_BINARY_NOT_FOUND_MSG = _('Google Chrome binary is not present in path %s.')
+_CHROME_BINARY_NOT_FOUND_MSG = _(
+    'Google Chrome binary is not present in path %s.'
+)
 _CHROME_BINARIES_NOT_FOUND_MSG = _(
     'Google Chrome binary is not present in the following paths\n'
-    '%s')
+    '%s'
+)
 
 _CHROME_DRIVER_BINARY = 'chromedriver'
 _CHROME_DRIVER_ZIP_FILE = None
@@ -445,7 +449,7 @@ def _GetInstalledChromeDriverDirectoryPath() -> str:
   return os.path.join(dir_path[:last_inb_indx:], 'driver')
 
 
-def ChromeDriverAbsolutePath() -> str:
+def ChromeDriverAbsolutePath(force_chromedriver: bool = False) -> str:
   """Returns the absolute filesystem path to the `chromedriver` installed inside
   the `driver` directory.
 
@@ -462,7 +466,8 @@ def ChromeDriverAbsolutePath() -> str:
   Returns:
     Absolute path to `chromedriver`.
   """
-  if _CheckIfChromeDriverIsCompatibleWithGoogleChromeInstalled():
+  if (force_chromedriver or
+      _CheckIfChromeDriverIsCompatibleWithGoogleChromeInstalled()):
     return os.path.join(_GetInstalledChromeDriverDirectoryPath(),
                         _CHROME_DRIVER_BINARY)
   _InstallGoogleChromeCompatibleChromeDriver()
