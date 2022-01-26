@@ -67,11 +67,11 @@ class TestProtectedDriverClass(unittest.TestCase):  # pylint: disable=missing-cl
   @lib.IgnoreWarnings(ResourceWarning)
   @mock.patch('selenium.webdriver.ChromeOptions.add_argument')
   def test_enable_webdriver_chrome_with_only_path(
-      self, mock_add_argument: mock.Mock) -> None:
+      self, mk_add_argument: mock.Mock) -> None:
     try:
       self.driver.enable_webdriver_chrome(settings.ChromeDriverAbsolutePath(),
                                           None)
-      mock_add_argument.assert_not_called()
+      mk_add_argument.assert_not_called()
     except exceptions.WebDriverException as exc:
       self.fail('enable_webdriver_chrome(%(path)s, None) failed with %(msg)s.' %
                 {
@@ -91,10 +91,10 @@ class TestProtectedDriverClass(unittest.TestCase):  # pylint: disable=missing-cl
        'Check if the x bit is OK in case environment PATH exists.'))
   @mock.patch('selenium.webdriver.ChromeOptions.add_argument')
   def test_enable_webdriver_chrome_with_path_set_to_none(
-      self, mock_add_argument: mock.Mock) -> None:
+      self, mk_add_argument: mock.Mock) -> None:
     try:
       self.driver.enable_webdriver_chrome(None, None)
-      mock_add_argument.assert_not_called()
+      mk_add_argument.assert_not_called()
     except exceptions.WebDriverException as exc:
       self.fail('enable_webdriver_chrome(%(path)s, None) failed with %(msg)s.' %
                 {
@@ -114,11 +114,11 @@ class TestProtectedDriverClass(unittest.TestCase):  # pylint: disable=missing-cl
        'Check if the x bit is OK in case environment PATH exists.'))
   @mock.patch('selenium.webdriver.ChromeOptions.add_argument')
   def test_enable_webdriver_chrome_with_path_set_to_none_but_options_given(
-      self, mock_add_argument: mock.Mock) -> None:
+      self, mk_add_argument: mock.Mock) -> None:
     try:
       self.driver.enable_webdriver_chrome(settings.ChromeDriverAbsolutePath(),
                                           _GetAddArgumentCallingOrder())
-      mock_add_argument.assert_has_calls(
+      mk_add_argument.assert_has_calls(
           [mock.call(option) for option in _GetAddArgumentCallingOrder()])
     except exceptions.WebDriverException as exc:
       self.fail(
@@ -136,11 +136,11 @@ class TestProtectedDriverClass(unittest.TestCase):  # pylint: disable=missing-cl
   @lib.IgnoreWarnings(ResourceWarning)
   @mock.patch('selenium.webdriver.ChromeOptions.add_argument')
   def test_enable_webdriver_chrome_with_path_and_options(
-      self, mock_add_argument: mock.Mock) -> None:
+      self, mk_add_argument: mock.Mock) -> None:
     try:
       self.driver.enable_webdriver_chrome(settings.ChromeDriverAbsolutePath(),
                                           _GetAddArgumentCallingOrder())
-      mock_add_argument.assert_has_calls(
+      mk_add_argument.assert_has_calls(
           [mock.call(option) for option in _GetAddArgumentCallingOrder()])
     except exceptions.WebDriverException as exc:
       self.fail(
@@ -189,7 +189,7 @@ class TestGetGlobalChromeDriverInstanceMethod(unittest.TestCase):
 
   @lib.IgnoreWarnings(ResourceWarning)
   @mock.patch('logging.Logger.critical')
-  def test_with_invalid_fields(self, mock_logger_critical: mock.Mock) -> None:
+  def test_with_invalid_fields(self, mk_logger_critical: mock.Mock) -> None:
     driver.GChromeDriverInstance.initialize(
         settings.ChromeDriverAbsolutePath()
         [:settings.ChromeDriverAbsolutePath().find('chromedriver')],
@@ -198,7 +198,7 @@ class TestGetGlobalChromeDriverInstanceMethod(unittest.TestCase):
     with self.assertRaises(exceptions.WebDriverException):
       _ = driver.GetGlobalChromeDriverInstance()
 
-    mock_logger_critical.assert_called()
+    mk_logger_critical.assert_called()
 
   @lib.IgnoreWarnings(ResourceWarning)
   @unittest.skipIf(
@@ -229,12 +229,12 @@ class TestDisableGlobalChromeDriverInstanceMethod(unittest.TestCase):
   @lib.IgnoreWarnings(ResourceWarning)
   @mock.patch('selenium.webdriver.Chrome.quit')
   def test_disable_global_chromedriver_instance_method(
-      self, mock_quit: mock.Mock) -> None:
+      self, mk_quit: mock.Mock) -> None:
     driver.GChromeDriverInstance.initialize(settings.ChromeDriverAbsolutePath(),
                                             _GetAddArgumentCallingOrder())
     driver_ = driver.GetGlobalChromeDriverInstance()
     self.assertIsInstance(driver_, webdriver.Chrome)
     self.assertEqual(driver_, driver._DRIVER.driver)  # pylint: disable=protected-access
     driver.DisableGlobalChromeDriverInstance()
-    mock_quit.assert_called()
+    mk_quit.assert_called()
     self.assertIsNone(driver._DRIVER.driver)  # pylint: disable=protected-access

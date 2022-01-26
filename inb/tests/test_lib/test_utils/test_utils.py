@@ -75,9 +75,8 @@ class TestIgnoreWarningsUtilityFunction(unittest.TestCase):
   @lib.IgnoreWarnings(ResourceWarning)
   @mock.patch('warnings.simplefilter')
   @mock.patch('warnings.catch_warnings')
-  def test_with_subclass_of_builtin_warning(
-      self, mock_catch_warnings: mock.Mock,
-      mock_simplefilter: mock.Mock) -> None:
+  def test_with_subclass_of_builtin_warning(self, mk_catch_warnings: mock.Mock,
+                                            mk_simplefilter: mock.Mock) -> None:
     warnings_ = [
         UserWarning,
         DeprecationWarning,
@@ -99,8 +98,8 @@ class TestIgnoreWarningsUtilityFunction(unittest.TestCase):
           pass
 
         func()
-        mock_catch_warnings.assert_called()
-        mock_simplefilter.assert_called_with('ignore', warning)
+        mk_catch_warnings.assert_called()
+        mk_simplefilter.assert_called_with('ignore', warning)
 
 
 @unittest.skipIf(
