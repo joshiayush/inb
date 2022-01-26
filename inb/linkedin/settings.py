@@ -103,7 +103,7 @@ _CHROME_DRIVER_ZIP_FILE = None
 #
 # This version must be changed with the installed 'chromedriver' version that
 # comes with the repository.
-_GOOGLE_CHROME_COMPATIBLE_VERSION_WITH_INSTALLED_CHROMEDRIVER = '97.0.4692.71'
+_GOOGLE_CHROME_COMPATIBLE_VERSION_WITH_INSTALLED_CHROMEDRIVER = '97.0.4692.99'
 
 
 def _ExtractChromeDriverZip(chromedriver_zip: str) -> None:
