@@ -28,38 +28,3 @@
 # THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
-import unittest
-
-from tests.test_lib.test_utils.test_utils import (  # pylint: disable=unused-import
-    TestCustomTypeUtilityFunction, TestWhichUtilityFunction,
-    TestIgnoreWarningsUtilityFunction,
-    TestRemoveFilePermissionsAndAddFilePermissionsFunction,
-)
-from tests.test_linkedin.test_settings import (  # pylint: disable=unused-import
-    TestProtectedGetGoogleChromeBinaryVersionFunction,
-    TestProtectedCheckIfChromeDriverIsCompatibleWithGoogleChromeInstalledFunction,  # pylint: disable=line-too-long
-    TestProtectedGetPlatformSpecificChromeDriverCompatibleVersionUrlFunction,
-)
-
-from tests.test_linkedin.test_driver import (  # pylint: disable=unused-import
-    TestProtectedDriverClass, TestProtectedMemberDriver,
-    TestGChromeDriverInstanceClass, TestGetGlobalChromeDriverInstanceMethod,
-    TestDisableGlobalChromeDriverInstanceMethod,
-)
-
-from tests.test_linkedin.test_login.test_login import (  # pylint: disable=unused-import
-    TestLoginApiLinkedInClass,)
-
-from tests.test_linkedin.test_message.test_template import (  # pylint: disable=unused-import
-    TestFunctionReadTemplate, TestProtectedFunctionLoadMessageTemplate,
-    TestProtectedFunctionCheckIfTemplateFileIsSupported,
-)
-
-from tests.test_linkedin.test_invitation.test_invitation import (  # pylint: disable=unused-import
-    TestGlobalVarSuccessAndFailureRate,
-    TestProtectedReplaceTemplateVarWithTemplateValue,
-)
-
-if __name__ == '__main__':
-  unittest.main(verbosity=2)

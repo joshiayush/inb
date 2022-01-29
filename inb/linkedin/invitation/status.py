@@ -1,3 +1,5 @@
+# pylint: disable=missing-module-docstring
+
 # Copyright 2021, joshiayus Inc.
 # All rights reserved.
 #
@@ -46,7 +48,7 @@ _SEND_INVITATION_STATUS_TEMPL = """  {{status}}  {{name}}
   Success:  {{success}}  Failure: {{failure}}  Elapsed time: {{elapsed_time}}
 """
 
-_SEARCH_INVITATION_STATUS_TEMPL = """  {{status}}  {{name}}  • {{degree}}
+_SEARCH_INVITATION_STATUS_TEMPL = """  {{status}}  {{name}}
   {{occupation}}
   {{location}}
   {{mutual_connections}}
@@ -89,7 +91,7 @@ class Invitation(object):
 
   @staticmethod
   def _replace_template_var_with_template_value(
-      message_template: str, replace_template_var_with: List[tuple]) -> None:
+      message_template: str, replace_template_var_with: List[tuple]) -> str:
     for replace_template_var_with_value_pair in replace_template_var_with:
       message_template = message_template.replace(
           *replace_template_var_with_value_pair)
@@ -136,7 +138,7 @@ class Invitation(object):
       start_time: int) -> None:
     self.set_invitation_fields(name=person.name,
                                occupation=person.occupation,
-                               location=None,
+                               location=getattr(person, 'location', None),
                                mutual_connections=person.mutual_connections,
                                profileid=person.profileid,
                                profileurl=person.profileurl,
