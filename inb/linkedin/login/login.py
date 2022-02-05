@@ -11,13 +11,6 @@ from linkedin import login
 login.LinkedIn.login('mohika@gmail.com', 'secretpassword')
 ```
 
-Note: This module does not inform you about the invalidness of the credentials
-in case the user name and password fields are incorrect.  So if the user is
-using the bot in headless mode there's no way to tell the user that the fields
-were incorrect and you need to restart the bot with valid fields.
-
-@TODO(joshiayush): Show user that the given fields were invalid.
-
   :author: Ayush Joshi, ayush854032@gmail.com
   :copyright: Copyright (c) 2019 Creative Commons
   :license: BSD 3-Clause License, see license for details
@@ -58,11 +51,9 @@ import sys
 import logging
 import traceback
 
-from selenium.common.exceptions import NoSuchElementException
+from selenium.common import exceptions
 
 from linkedin import (driver, settings)
-
-from selenium.webdriver.common import keys
 
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.DEBUG)
@@ -99,9 +90,45 @@ class _ElementsPathSelectors:
     """
     return 'password'
 
+  @staticmethod
+  def get_sign_in_element_relative_xpath() -> str:
+    return '//button[@aria-label="Sign in"]'
+
+  @staticmethod
+  def get_error_for_username_element_id() -> str:
+    return 'error-for-username'
+
+  @staticmethod
+  def get_error_for_password_element_id() -> str:
+    return 'error-for-password'
+
 
 class LinkedIn:
   """LinkedIn login routine."""
+
+  _LINKEDIN_SIGN_IN_PAGE_TITLE = 'LinkedIn Login, Sign in | LinkedIn'
+
+  @staticmethod
+  def _check_if_credentials_are_invalid() -> None:
+    if driver.GetGlobalChromeDriverInstance(
+    ).title != LinkedIn._LINKEDIN_SIGN_IN_PAGE_TITLE:
+      return
+
+    if 'hidden' not in driver.GetGlobalChromeDriverInstance(
+    ).find_element_by_id(
+        _ElementsPathSelectors.get_error_for_username_element_id(
+        )).get_attribute('class'):
+      raise RuntimeError(
+          driver.GetGlobalChromeDriverInstance().find_element_by_id(
+              _ElementsPathSelectors.get_error_for_username_element_id()).text)
+
+    if 'hidden' not in driver.GetGlobalChromeDriverInstance(
+    ).find_element_by_id(
+        _ElementsPathSelectors.get_error_for_password_element_id(
+        )).get_attribute('class'):
+      raise RuntimeError(
+          driver.GetGlobalChromeDriverInstance().find_element_by_id(
+              _ElementsPathSelectors.get_error_for_password_element_id()).text)
 
   @staticmethod
   def login(username: str, password: str) -> None:
@@ -128,23 +155,33 @@ class LinkedIn:
         settings.GetLinkedInLoginPageUrl())
 
     try:
-      uname_inp_box = driver.GetGlobalChromeDriverInstance().find_element_by_id(
-          _ElementsPathSelectors.get_username_element_id())
-    except NoSuchElementException as exc:
+      username_inpbox = driver.GetGlobalChromeDriverInstance(
+      ).find_element_by_id(_ElementsPathSelectors.get_username_element_id())
+    except exceptions.NoSuchElementException as exc:
       logger.critical(traceback.format_exc())
       raise exc
     else:
-      uname_inp_box.clear()
-      uname_inp_box.send_keys(username)
+      username_inpbox.clear()
+      username_inpbox.send_keys(username)
 
     try:
-      pswd_inp_box = driver.GetGlobalChromeDriverInstance().find_element_by_id(
-          _ElementsPathSelectors.get_password_element_id())
-    except NoSuchElementException as exc:
+      password_inpbox = driver.GetGlobalChromeDriverInstance(
+      ).find_element_by_id(_ElementsPathSelectors.get_password_element_id())
+    except exceptions.NoSuchElementException as exc:
       logger.critical(traceback.format_exc())
       raise exc
     else:
-      pswd_inp_box.clear()
-      pswd_inp_box.send_keys(password)
+      password_inpbox.clear()
+      password_inpbox.send_keys(password)
 
-    pswd_inp_box.send_keys(keys.Keys.RETURN)
+    try:
+      sign_in_button = driver.GetGlobalChromeDriverInstance(
+      ).find_element_by_xpath(
+          _ElementsPathSelectors.get_sign_in_element_relative_xpath())
+    except exceptions.NoSuchElementException as exc:
+      logger.critical(traceback.format_exc())
+      raise exc
+    else:
+      sign_in_button.click()
+
+    LinkedIn._check_if_credentials_are_invalid()
