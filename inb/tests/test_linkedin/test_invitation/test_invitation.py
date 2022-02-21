@@ -51,6 +51,8 @@ class TestGlobalVarSuccessAndFailureRate(unittest.TestCase):  # pylint: disable=
         'status': None,
         'elapsed_time': None,
     }
+    status._SUCCESS_RATE = 0  # pylint: disable=protected-access
+    status._FAILURE_RATE = 0  # pylint: disable=protected-access
 
   def test_global_var_failure_rate(self) -> None:
     self._invitation_fields['status'] = 'failed'
