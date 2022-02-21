@@ -29,8 +29,6 @@
 
 from __future__ import annotations
 
-from typing import List
-
 import os
 import unittest
 
@@ -42,7 +40,7 @@ import lib
 from linkedin import (driver, settings)
 
 
-def _GetAddArgumentCallingOrder() -> List[str]:
+def _GetAddArgumentCallingOrder() -> list[str]:
   return [
       driver.CHROMEDRIVER_OPTIONS['no-sandbox'],
       driver.CHROMEDRIVER_OPTIONS['disable-dev-shm-usage'],
