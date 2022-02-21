@@ -70,7 +70,7 @@ logger.addHandler(file_handler)
 
 
 class _ElementsPathSelectors:
-  """Serves elements path selectors needed for scraping users information from
+  """Serves elements' path selectors needed for scraping users information from
   the search results page.
   """
 
