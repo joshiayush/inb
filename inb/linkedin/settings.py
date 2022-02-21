@@ -35,6 +35,8 @@ import pathlib
 import logging
 import subprocess
 
+import lib
+
 from urllib import (request, parse)
 
 try:
@@ -466,6 +468,9 @@ def ChromeDriverAbsolutePath(force_chromedriver: bool = False) -> str:
   Returns:
     Absolute path to `chromedriver`.
   """
+  chromedriver_env_path = lib.Which(_CHROME_DRIVER_BINARY)
+  if chromedriver_env_path and force_chromedriver is False:
+    return chromedriver_env_path
   if (force_chromedriver or
       _CheckIfChromeDriverIsCompatibleWithGoogleChromeInstalled()):
     return os.path.join(_GetInstalledChromeDriverDirectoryPath(),
