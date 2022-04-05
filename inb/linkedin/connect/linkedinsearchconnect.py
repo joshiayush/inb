@@ -289,7 +289,7 @@ class _ElementsPathSelectors:
     Returns:
       Person `li` element's parent element i.e., `ul`.
     """
-    return '//*[@id="main"]/div/div/div[2]/ul'
+    return '//*[@id="main"]/div/div/div[1]/ul'
 
   @staticmethod
   def get_search_results_person_li_xpath(positiion: int) -> str:
