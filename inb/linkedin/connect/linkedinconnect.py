@@ -64,7 +64,7 @@ class _ElementsPathSelectors:
 
   @staticmethod
   def _get_suggestion_box_person_li_parent_xpath() -> str:
-    return '/html/body/div[6]/div[3]/div/div/div/div/div[2]/div/div/main/div[3]/section/section/section/div/ul'  # pylint: disable=line-too-long
+    return '/html/body/div[6]/div[3]/div/div/div/div/div[2]/div/div/main/div[2]/section/section/section/div/ul'  # pylint: disable=line-too-long
 
   @staticmethod
   def get_suggestion_box_li_root_xpath(positiion: int) -> str:
