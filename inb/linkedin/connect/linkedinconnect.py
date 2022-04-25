@@ -233,8 +233,26 @@ def _GetSuggestionBoxPersonLiObject() -> _Person:
 
 
 class LinkedInConnect(object):
+  """Interface to interact with the LinkedIn's `MyNetwork` page.
+
+  This interface gives functions to request the `MyNetwork` page and send
+  connection requests to LinkedIn users.
+  """
 
   def __init__(self, max_connection_limit: int):
+    """Initializes the instance of `LinkedinInConnect` class with the given
+    `max_connection_limit`.
+
+    The given `max_connection_limit` should be between 0 and 80 otherwise an
+    exception is raised with the message
+    `settings.CONNECTION_LIMIT_EXCEED_EXCEPTION_MESSAGE`.  If the argument
+    `max_connection_limit` is `None` then the `self._max_connection_limit` is
+    set to 20.
+
+    Args:
+      max_connection_limit:  The maximum number of connections a non-premium
+                              account can send.
+    """
     if max_connection_limit is None:
       max_connection_limit = 20
     elif not 0 < max_connection_limit <= 80:
