@@ -114,7 +114,7 @@ class _ElementsPathSelectors:
     Returns:
       All filters button `xpath`.
     """
-    return '//div[@id="search-reusables__filters-bar"]//button[@aria-label="All filters"]'  # pylint: disable=line-too-long
+    return '//div[@id="search-reusables__filters-bar"]//button[starts-with(@aria-label, "Show all filters.")]'  # pylint: disable=line-too-long
 
   @staticmethod
   def get_available_location_options_xpath() -> str:
@@ -425,7 +425,7 @@ class _ElementsPathSelectors:
     Returns:
       `xpath` to the actions container of the person `li` at `position`.
     """
-    return f'{_ElementsPathSelectors._get_search_results_person_li_card_container_xpath(position)}/div[3]'  # pylint: disable=line-too-long
+    return f'{_ElementsPathSelectors._get_search_results_person_li_card_container_xpath(position)}/div[3]/div'  # pylint: disable=line-too-long
 
   @staticmethod
   def get_search_results_person_li_connect_button_xpath(position: int) -> str:
