@@ -60,56 +60,110 @@ if settings.LOGGING_TO_STREAM_ENABLED:
 logger.addHandler(file_handler)
 
 
-class _ElementsPathSelectors:
+class _MyNetworkPageElementsPathSelectors:
+  """Serves elements' path selectors needed for scraping users information from
+  the MyNetwork page.
+  """
 
   @staticmethod
   def _get_suggestion_box_person_li_parent_xpath() -> str:
+    """Returns the xpath of the parent element of the suggestion box."""
     return '/html/body/div[6]/div[3]/div/div/div/div/div[2]/div/div/main/div[2]/section/section/section/div/ul'  # pylint: disable=line-too-long
 
   @staticmethod
   def get_suggestion_box_li_root_xpath(positiion: int) -> str:
-    return _ElementsPathSelectors._get_suggestion_box_person_li_parent_xpath(
+    """Returns the xpath of the root element of the suggestion box.
+
+    Args:
+      position: The position of the li element.
+    """
+    return _MyNetworkPageElementsPathSelectors._get_suggestion_box_person_li_parent_xpath(  # pylint: disable=line-too-long
     ) + '/li[' + str(positiion) + ']'
 
   @staticmethod
   def _get_suggestion_box_li_card_container_xpath(position: int) -> str:
-    return _ElementsPathSelectors.get_suggestion_box_li_root_xpath(
+    """Returns the xpath of the card container element of the suggestion box.
+
+    Args:
+      position: The position of the li element.
+    """
+    return _MyNetworkPageElementsPathSelectors.get_suggestion_box_li_root_xpath(
         position) + '/div/section'
 
   @staticmethod
   def _get_suggestion_box_li_card_info_container_xpath(position: int) -> str:
-    return _ElementsPathSelectors._get_suggestion_box_li_card_container_xpath(  # pylint: disable=line-too-long
+    """Returns the xpath of the card info container element of the suggestion
+    box.
+
+    Args:
+      position: The position of the li element.
+    """
+    return _MyNetworkPageElementsPathSelectors._get_suggestion_box_li_card_container_xpath(  # pylint: disable=line-too-long
         position) + '/div[1]'
 
   @staticmethod
   def get_suggestion_box_li_card_link_xpath(position: int) -> str:
-    return _ElementsPathSelectors._get_suggestion_box_li_card_info_container_xpath(  # pylint: disable=line-too-long
+    """Returns the xpath of the card link element of the suggestion box.
+
+    Args:
+      position: The position of the li element.
+    """
+    return _MyNetworkPageElementsPathSelectors._get_suggestion_box_li_card_info_container_xpath(  # pylint: disable=line-too-long
         position) + '/a'
 
   @staticmethod
   def get_suggestion_box_li_card_name_xpath(position: int) -> str:
-    return _ElementsPathSelectors.get_suggestion_box_li_card_link_xpath(
+    """Returns the xpath of the card name element of the suggestion box.
+
+    Args:
+      position: The position of the li element.
+    """
+    return _MyNetworkPageElementsPathSelectors.get_suggestion_box_li_card_link_xpath(  # pylint: disable=line-too-long
         position) + '/span[2]'
 
   @staticmethod
   def get_suggestion_box_li_card_occupation_xpath(position: int) -> str:
-    return _ElementsPathSelectors.get_suggestion_box_li_card_link_xpath(
+    """Returns the xpath of the card occupation element of the suggestion
+    box.
+
+    Args:
+      position: The position of the li element.
+    """
+    return _MyNetworkPageElementsPathSelectors.get_suggestion_box_li_card_link_xpath(  # pylint: disable=line-too-long
         position) + '/span[4]'
 
   @staticmethod
   def _get_suggestion_box_li_card_bottom_container_xpath(position: int) -> str:
-    return _ElementsPathSelectors._get_suggestion_box_li_card_container_xpath(  # pylint: disable=line-too-long
+    """Returns the xpath of the card bottom container element of the suggestion
+    box.
+
+    Args:
+      position: The position of the li element.
+    """
+    return _MyNetworkPageElementsPathSelectors._get_suggestion_box_li_card_container_xpath(  # pylint: disable=line-too-long
         position) + '/div[2]'
 
   @staticmethod
   def get_suggestion_box_li_card_member_mutual_connections_xpath(
       position: int) -> str:
-    return _ElementsPathSelectors._get_suggestion_box_li_card_bottom_container_xpath(  # pylint: disable=line-too-long
+    """Returns the xpath of the card member mutual connections element of the
+    suggestion box.
+
+    Args:
+      position: The position of the li element.
+    """
+    return _MyNetworkPageElementsPathSelectors._get_suggestion_box_li_card_bottom_container_xpath(  # pylint: disable=line-too-long
         position) + '/div/div/button/span'
 
   @staticmethod
   def get_suggestion_box_li_card_invite_button_xpath(position: int) -> str:  # pylint: disable=line-too-long
-    return _ElementsPathSelectors._get_suggestion_box_li_card_bottom_container_xpath(  # pylint: disable=line-too-long
+    """Returns the xpath of the card invite button element of the suggestion
+    box.
+
+    Args:
+      position: The position of the li element.
+    """
+    return _MyNetworkPageElementsPathSelectors._get_suggestion_box_li_card_bottom_container_xpath(  # pylint: disable=line-too-long
         position) + '/footer/button'
 
 
@@ -163,7 +217,7 @@ def _GetElementByXPath(xpath: str, wait: int = 60) -> webelement.WebElement:
   ```python
   # Taking the name out from the `DOM` using an explicit wait routine.
   name = _GetElementByXPath(
-      _ElementsPathSelectors.get_suggestion_box_li_card_name_xpath(
+      _MyNetworkPageElementsPathSelectors.get_suggestion_box_li_card_name_xpath(
           position)).text
   ```
 
@@ -212,21 +266,22 @@ def _GetSuggestionBoxPersonLiObject() -> _Person:
   person_li_position = 1
   while True:
     profileid = _GetElementByXPath(
-        _ElementsPathSelectors.get_suggestion_box_li_card_link_xpath(
+        _MyNetworkPageElementsPathSelectors.
+        get_suggestion_box_li_card_link_xpath(
             person_li_position)).get_attribute('href')
     name = _GetElementByXPath(
-        _ElementsPathSelectors.get_suggestion_box_li_card_name_xpath(
-            person_li_position)).text
+        _MyNetworkPageElementsPathSelectors.
+        get_suggestion_box_li_card_name_xpath(person_li_position)).text
     occupation = _GetElementByXPath(
-        _ElementsPathSelectors.get_suggestion_box_li_card_occupation_xpath(
-            person_li_position)).text
+        _MyNetworkPageElementsPathSelectors.
+        get_suggestion_box_li_card_occupation_xpath(person_li_position)).text
     mutual_connections = _GetElementByXPath(
-        _ElementsPathSelectors.
+        _MyNetworkPageElementsPathSelectors.
         get_suggestion_box_li_card_member_mutual_connections_xpath(
             person_li_position)).text
     connect_button = _GetElementByXPath(
-        _ElementsPathSelectors.get_suggestion_box_li_card_invite_button_xpath(
-            person_li_position))
+        _MyNetworkPageElementsPathSelectors.
+        get_suggestion_box_li_card_invite_button_xpath(person_li_position))
     profileurl = settings.GetLinkedInUrl() + profileid
     yield _Person(name, occupation, mutual_connections, profileid, profileurl,
                   connect_button)
