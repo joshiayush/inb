@@ -1,5 +1,3 @@
-# pylint: disable=missing-module-docstring
-
 # Copyright 2021, joshiayus Inc.
 # All rights reserved.
 #
@@ -28,6 +26,33 @@
 # THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
+"""Module `linkedinconnect.py` serves as a interface between the user and
+the LinkedIn's `MyNetwork` page.  It allows the user to send invitations to
+the people in the `MyNetwork` page.
+
+The `linkedinconnect.py` module is a wrapper around the `selenium` module
+and in some places it is an extension to the `selenium` module.
+
+  * `selenium` module is used to interact with the `MyNetwork` page.
+
+You can directly use the following class to interact with the `MyNetwork` page:
+
+  * `LinkedInConnect`
+
+  ```python
+  # Initializing the `LinkedInConnect` class.
+  linkedinconnect = connect.LinkedInConnect(max_connection_limit=limit)
+
+  # Get the `MyNetwork` page.
+  linkedinconnect.get_my_network_page()
+
+  # Send invitation requests to people.
+  linkedinconnect.send_connection_requests()
+  ```
+
+Author: Ayush Joshi <ayush854032@gmail.com>
+"""
 
 from __future__ import annotations
 
