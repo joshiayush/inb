@@ -135,10 +135,13 @@ class _Person:
     self.name = name
     self.occupation = occupation
     self.mutual_connections = mutual_connections
-    # Note: 'profileid' and 'profileurl' should not be dumped into the console
-    # rather they should be put inside the log records i.e., our history
-    # database.
+
+    # profileid should not be dumped into the console rather it should be put
+    # inside the log records i.e., our history database.
     self.profileid = profileid
+
+    # profileurl should not be dumped into the console rather it should be put
+    # inside the log records i.e., our history database.
     self.profileurl = profileurl
     self.connect_button = connect_button
 
@@ -293,25 +296,43 @@ class LinkedInConnect(object):
     function sends connection request on LinkedIn.  `Invitation` API handles
     the printing of the information on the console.
     """
+
+    # Cleaning un-neccessary elements from the DOM is neccessary so to avoid
+    # `ElementNotInteractableException`.
     cleaners.Cleaner.clear_message_overlay()
 
+    # Set invitation count to 0 before sending any invitation request.
     invitation_count = 0
     start_time = time.time()
 
     invitation = status.Invitation()
+
+    # Iterate over the person elements in the `ul` list on the Suggestion Box
+    # on the MyNetwork page of the DOM.
     for person in _GetSuggestionBoxPersonLiObject():
+
+      # Check if the invitation count is equal to the maximum number of
+      # connections a non-premium account can send.
       if invitation_count == self._max_connection_limit:
         break
       try:
+        # Move to the element on the page to avoid
+        # `ElementNotInteractableException`.
         action_chains.ActionChains(
             driver.GetGlobalChromeDriverInstance()).move_to_element(
                 person.connect_button).click().perform()
         invitation.display_invitation_status_on_console(person, 'sent',
                                                         start_time)
+
+        # Increment the invitation count.
         invitation_count += 1
       except (exceptions.ElementNotInteractableException,
               exceptions.ElementClickInterceptedException) as exc:
         logger.critical(traceback.format_exc())
+
+        # If the element is not interactable or click intercepted then we
+        # assume that the page is unable to send the invitation request and
+        # there's a serious problem so we just break the loop.
         if isinstance(exc, exceptions.ElementClickInterceptedException):
           break
         invitation.display_invitation_status_on_console(person, 'failed',
