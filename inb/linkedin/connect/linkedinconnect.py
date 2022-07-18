@@ -69,6 +69,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 
 from linkedin import (driver, settings)
 from linkedin.DOM import (cleaners, javascript)
+from linkedin.connect import pathselectorbuilder
 from linkedin.invitation import status
 
 logger = logging.getLogger(__name__)
@@ -91,105 +92,184 @@ class _MyNetworkPageElementsPathSelectors:
   """
 
   @staticmethod
-  def _get_suggestion_box_person_li_parent_xpath() -> str:
-    """Returns the xpath of the parent element of the suggestion box."""
-    return '/html/body/div[6]/div[3]/div/div/div/div/div[2]/div/div/main/div[2]/section/section/section/div/ul'  # pylint: disable=line-too-long
+  def _get_suggestion_box_person_li_parent_xpath(
+  ) -> pathselectorbuilder.PathSelectorBuilder:
+    """Returns the xpath of the parent element of the suggestion box with its
+    label.
+
+    Returns:
+      A tuple of the xpath of the parent element of the suggestion box with its
+      label.
+    """
+    return pathselectorbuilder.PathSelectorBuilder(
+        'Suggestion box person <li> parent element',
+        '/html/body/div[6]/div[3]/div/div/div/div/div[2]/div/div/main/div[2]/section/section/section/div/ul'  # pylint: disable=line-too-long
+    )
 
   @staticmethod
-  def get_suggestion_box_li_root_xpath(positiion: int) -> str:
-    """Returns the xpath of the root element of the suggestion box.
+  def get_suggestion_box_li_root_xpath(
+      positiion: int) -> pathselectorbuilder.PathSelectorBuilder:
+    """Returns the xpath of the root element of the suggestion box and its
+    label.
 
     Args:
       position: The position of the li element.
+
+    Returns:
+      A tuple of the xpath of the root element of the suggestion box and its
+      label.
     """
-    return _MyNetworkPageElementsPathSelectors._get_suggestion_box_person_li_parent_xpath(  # pylint: disable=line-too-long
-    ) + '/li[' + str(positiion) + ']'
+    return pathselectorbuilder.PathSelectorBuilder(
+        'Suggestion Box <li> element',
+        _MyNetworkPageElementsPathSelectors.
+        _get_suggestion_box_person_li_parent_xpath() + '/li[' + str(positiion) +
+        ']')
 
   @staticmethod
-  def _get_suggestion_box_li_card_container_xpath(position: int) -> str:
-    """Returns the xpath of the card container element of the suggestion box.
+  def _get_suggestion_box_li_card_container_xpath(
+      position: int) -> pathselectorbuilder.PathSelectorBuilder:
+    """Returns the xpath of the card container element of the suggestion box and
+    its label.
 
     Args:
       position: The position of the li element.
+
+    Returns:
+      A tuple of the xpath of the card container element of the suggestion box
+      and its label.
     """
-    return _MyNetworkPageElementsPathSelectors.get_suggestion_box_li_root_xpath(
-        position) + '/div/section'
+    return pathselectorbuilder.PathSelectorBuilder(
+        'Suggestion Box <li> element card container',
+        _MyNetworkPageElementsPathSelectors.get_suggestion_box_li_root_xpath(
+            position) + '/div/section')
 
   @staticmethod
-  def _get_suggestion_box_li_card_info_container_xpath(position: int) -> str:
+  def _get_suggestion_box_li_card_info_container_xpath(
+      position: int) -> pathselectorbuilder.PathSelectorBuilder:
     """Returns the xpath of the card info container element of the suggestion
-    box.
+    box and its label.
 
     Args:
       position: The position of the li element.
+
+    Returns:
+      A tuple of the xpath of the card info container element of the suggestion
+      box and its label.
     """
-    return _MyNetworkPageElementsPathSelectors._get_suggestion_box_li_card_container_xpath(  # pylint: disable=line-too-long
-        position) + '/div[1]'
+    return pathselectorbuilder.PathSelectorBuilder(
+        'Suggestion Box <li> element card info container',
+        _MyNetworkPageElementsPathSelectors.
+        _get_suggestion_box_li_card_container_xpath(position) + '/div[1]')
 
   @staticmethod
-  def get_suggestion_box_li_card_link_xpath(position: int) -> str:
-    """Returns the xpath of the card link element of the suggestion box.
+  def get_suggestion_box_li_card_link_xpath(
+      position: int) -> pathselectorbuilder.PathSelectorBuilder:
+    """Returns the xpath of the card link element of the suggestion box and its
+    label.
 
     Args:
       position: The position of the li element.
+
+    Returns:
+      A tuple of the xpath of the card link element of the suggestion box and
+      its label.
     """
-    return _MyNetworkPageElementsPathSelectors._get_suggestion_box_li_card_info_container_xpath(  # pylint: disable=line-too-long
-        position) + '/a'
+    return pathselectorbuilder.PathSelectorBuilder(
+        'Suggestion Box <li> element card link container',
+        _MyNetworkPageElementsPathSelectors.
+        _get_suggestion_box_li_card_info_container_xpath(position) + '/a')
 
   @staticmethod
-  def get_suggestion_box_li_card_name_xpath(position: int) -> str:
-    """Returns the xpath of the card name element of the suggestion box.
+  def get_suggestion_box_li_card_name_xpath(
+      position: int) -> pathselectorbuilder.PathSelectorBuilder:
+    """Returns the xpath of the card name element of the suggestion box and its
+    label.
 
     Args:
       position: The position of the li element.
+
+    Returns:
+      A tuple of the xpath of the card name element of the suggestion box and
+      its label.
     """
-    return _MyNetworkPageElementsPathSelectors.get_suggestion_box_li_card_link_xpath(  # pylint: disable=line-too-long
-        position) + '/span[2]'
+    return pathselectorbuilder.PathSelectorBuilder(
+        'Suggestion Box <li> element card name container',
+        _MyNetworkPageElementsPathSelectors.
+        get_suggestion_box_li_card_link_xpath(position) + '/span[2]')
 
   @staticmethod
-  def get_suggestion_box_li_card_occupation_xpath(position: int) -> str:
+  def get_suggestion_box_li_card_occupation_xpath(
+      position: int) -> pathselectorbuilder.PathSelectorBuilder:
     """Returns the xpath of the card occupation element of the suggestion
-    box.
+    box and its label.
 
     Args:
       position: The position of the li element.
+
+    Returns:
+      A tuple of the xpath of the card occupation element of the suggestion
+      box and its label.
     """
-    return _MyNetworkPageElementsPathSelectors.get_suggestion_box_li_card_link_xpath(  # pylint: disable=line-too-long
-        position) + '/span[4]'
+    return pathselectorbuilder.PathSelectorBuilder(
+        'Suggestion Box <li> element card occupation container',
+        _MyNetworkPageElementsPathSelectors.
+        get_suggestion_box_li_card_link_xpath(position) + '/span[4]')
 
   @staticmethod
-  def _get_suggestion_box_li_card_bottom_container_xpath(position: int) -> str:
+  def _get_suggestion_box_li_card_bottom_container_xpath(
+      position: int) -> pathselectorbuilder.PathSelectorBuilder:
     """Returns the xpath of the card bottom container element of the suggestion
-    box.
+    box and its label.
 
     Args:
       position: The position of the li element.
+
+    Returns:
+      A tuple of the xpath of the card bottom container element of the
+      suggestion box and its label.
     """
-    return _MyNetworkPageElementsPathSelectors._get_suggestion_box_li_card_container_xpath(  # pylint: disable=line-too-long
-        position) + '/div[2]'
+    return pathselectorbuilder.PathSelectorBuilder(
+        'Suggestion Box <li> element card bottom container',
+        _MyNetworkPageElementsPathSelectors.
+        _get_suggestion_box_li_card_container_xpath(position) + '/div[2]')
 
   @staticmethod
   def get_suggestion_box_li_card_member_mutual_connections_xpath(
-      position: int) -> str:
+      position: int) -> pathselectorbuilder.PathSelectorBuilder:
     """Returns the xpath of the card member mutual connections element of the
-    suggestion box.
+    suggestion box and its label.
 
     Args:
       position: The position of the li element.
+
+    Returns:
+      A tuple of the xpath of the card member mutual connections element of
+      the suggestion box and its label.
     """
-    return _MyNetworkPageElementsPathSelectors._get_suggestion_box_li_card_bottom_container_xpath(  # pylint: disable=line-too-long
-        position) + '/div/div/button/span'
+    return pathselectorbuilder.PathSelectorBuilder(
+        'Suggestion Box <li> element card member mutual connections container',
+        _MyNetworkPageElementsPathSelectors.
+        _get_suggestion_box_li_card_bottom_container_xpath(position) +
+        '/div/div/button/span')
 
   @staticmethod
-  def get_suggestion_box_li_card_invite_button_xpath(position: int) -> str:  # pylint: disable=line-too-long
+  def get_suggestion_box_li_card_invite_button_xpath(
+      position: int) -> pathselectorbuilder.PathSelectorBuilder:
     """Returns the xpath of the card invite button element of the suggestion
-    box.
+    box and its label.
 
     Args:
       position: The position of the li element.
+
+    Returns:
+      A tuple of the xpath of the card invite button element of the suggestion
+      box and its label.
     """
-    return _MyNetworkPageElementsPathSelectors._get_suggestion_box_li_card_bottom_container_xpath(  # pylint: disable=line-too-long
-        position) + '/footer/button'
+    return pathselectorbuilder.PathSelectorBuilder(
+        'Suggestion Box <li> element card invite button',
+        _MyNetworkPageElementsPathSelectors.
+        _get_suggestion_box_li_card_bottom_container_xpath(position) +
+        '/footer/button')
 
 
 class _Person:
@@ -225,7 +305,8 @@ class _Person:
     self.connect_button = connect_button
 
 
-def _GetElementByXPath(xpath: str, wait: int = 60) -> webelement.WebElement:
+def _GetElementByXPath(xpath: pathselectorbuilder.PathSelectorBuilder,
+                       wait: int = 60) -> webelement.WebElement:
   """Returns an element from the `DOM` whose `xpath` is known.
 
   Function tries to find out an element from the `DOM` at the given `xpath`
@@ -257,9 +338,11 @@ def _GetElementByXPath(xpath: str, wait: int = 60) -> webelement.WebElement:
   while True:
     try:
       return WebDriverWait(driver.GetGlobalChromeDriverInstance(), wait).until(
-          EC.presence_of_element_located((by.By.XPATH, xpath)))
+          EC.presence_of_element_located((by.By.XPATH, str(xpath))))
     except exceptions.TimeoutException as exc:
-      logger.critical(traceback.format_exc())
+      logger.critical('%s Element could not be found at: %s for label: %s',
+                      traceback.format_exc().strip('\n').strip(), str(xpath),
+                      xpath.path_label)
       if isinstance(exc, exceptions.TimeoutException):
         javascript.JS.load_page()
         continue

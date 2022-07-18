@@ -53,6 +53,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from linkedin import (driver, settings)
 from linkedin.DOM import javascript
 from linkedin.message import template
+from linkedin.connect import pathselectorbuilder
 from linkedin.invitation import status
 
 logger = logging.getLogger(__name__)
@@ -75,384 +76,486 @@ class _ElementsPathSelectors:
   """
 
   @staticmethod
-  def get_global_nav_typeahead_input_box_xpath() -> str:
-    """Global nav typeahead input box `xpath`.
-
-    Element present at this xpath lets you type in a keyword and the searches
-    for people on LinkedIn that matches that keyword.
+  def get_global_nav_typeahead_input_box_xpath(
+  ) -> pathselectorbuilder.PathSelectorBuilder:
+    """Returns the path selector for the global nav typeahead input box.
 
     Returns:
-      Global nav typeahead input box `xpath`.
+      The path selector for the global nav typeahead input box and its label.
     """
-    return '//*[@id="global-nav-typeahead"]/input'
+    return pathselectorbuilder.PathSelectorBuilder(
+        'Global <nav> typeahead input box',
+        '//*[@id="global-nav-typeahead"]/input')
 
   @staticmethod
-  def get_filter_by_people_button_xpath() -> str:
-    """Filter by people button `xpath`.
-
-    Button present at this xpath lets you filter down the results that matches
-    the keyword you typed in to only LinkedIn's `users` and removes all the
-    `pages`, `jobs`, `services`, `groups`, `posts`, `courses` and `schools` that
-    matches that keyword.
+  def get_filter_by_people_button_xpath(
+  ) -> pathselectorbuilder.PathSelectorBuilder:
+    """Returns the path selector for the filter by people button.
 
     Returns:
-      Filter by people button `xpath`.
+      The path selector for the filter by people button and its label.
     """
-    return '//div[@id="search-reusables__filters-bar"]//button[@aria-label="People"]'  # pylint: disable=line-too-long
+    return pathselectorbuilder.PathSelectorBuilder(
+        'Filter by people button',
+        '//div[@id="search-reusables__filters-bar"]//button[@aria-label="People"]'  # pylint: disable=line-too-long
+    )
 
   @staticmethod
-  def get_all_filters_button_xpath() -> str:
-    """All filters button `xpath`.
-
-    Button present at this xpath lets you add more filters to your search
-    results.  It lets you filter down your search results by the
-    `connection degree`, `location`, `current company`, `past company`,
-    `school`, `industry`, `profile langauge`, `service categories` and
-    `keywords` related to `first name`, `last name`, `title`, `compnay`, and
-    `school`.
+  def get_all_filters_button_xpath() -> pathselectorbuilder.PathSelectorBuilder:
+    """Returns the path selector for the all filters button.
 
     Returns:
-      All filters button `xpath`.
+      The path selector for the all filters button and its label.
     """
-    return '//div[@id="search-reusables__filters-bar"]//button[starts-with(@aria-label, "Show all filters.")]'  # pylint: disable=line-too-long
+    return pathselectorbuilder.PathSelectorBuilder(
+        'All filters button',
+        '//div[@id="search-reusables__filters-bar"]//button[starts-with(@aria-label, "Show all filters.")]'  # pylint: disable=line-too-long
+    )
 
   @staticmethod
-  def get_available_location_options_xpath() -> str:
-    """Regexp `xpath` for available location options on the `filters` frame.
-
-    This `xpath` contains regex expression so all the elements that matches this
-    `xpath` will be returned in case you use this `xpath` with
-    `driver.find_elements_by_xpath()` method.  This expression is used to select
-    various checkboxes avialable for location filter on the `filters` frame.
+  def get_available_location_options_xpath(
+  ) -> pathselectorbuilder.PathSelectorBuilder:
+    """Returns the path selector for the available location options.
 
     Returns:
-      Regexp `xpath` for available location options on the `filters` frame.
+      The path selector for the available location options and its label.
     """
-    return '//input[starts-with(@id, "advanced-filter-geoUrn-")]'
+    return pathselectorbuilder.PathSelectorBuilder(
+        'Available location options',
+        '//input[starts-with(@id, "advanced-filter-geoUrn-")]')
 
   @staticmethod
-  def get_available_location_labels_xpath() -> str:
-    """Regexp `xpath` for available location labels on the `filters` frame.
-
-    This `xpath` contains regex expression so all the elements that matches this
-    `xpath` will be returned in case you use this `xpath` with
-    `driver.find_elements_by_xpath()` method.  This expression is used to select
-    various avialable location labels on the `filters` frame.
+  def get_available_location_labels_xpath(
+  ) -> pathselectorbuilder.PathSelectorBuilder:
+    """Returns the path selector for the available location labels.
 
     Returns:
-      Regexp `xpath` for available location labels on the `filters` frame.
+      The path selector for the available location labels and its label.
     """
-    return '//label[starts-with(@for, "advanced-filter-geoUrn-")]'
+    return pathselectorbuilder.PathSelectorBuilder(
+        'Available location labels',
+        '//label[starts-with(@for, "advanced-filter-geoUrn-")]')
 
   @staticmethod
-  def get_available_industry_options_xpath() -> str:
-    """Regexp `xpath` for available industry options on the `filters` frame.
-
-    This `xpath` contains regex expression so all the elements that matches this
-    `xpath` will be returned in case you use this `xpath` with
-    `driver.find_elements_by_xpath()` method.  This expression is used to select
-    various checkboxes avialable for industry filter on the `filters` frame.
+  def get_available_industry_options_xpath(
+  ) -> pathselectorbuilder.PathSelectorBuilder:
+    """Returns the path selector for the available industry options.
 
     Returns:
-      Regexp `xpath` for available industry options on the `filters` frame.
+      The path selector for the available industry options and its label.
     """
-    return '//input[starts-with(@id, "advanced-filter-industry-")]'
+    return pathselectorbuilder.PathSelectorBuilder(
+        'Available industry options',
+        '//input[starts-with(@id, "advanced-filter-industry-")]')
 
   @staticmethod
-  def get_available_industry_labels_xpath() -> str:
-    """Regexp `xpath` for available industry labels on the `filters` frame.
-
-    This `xpath` contains regex expression so all the elements that matches this
-    `xpath` will be returned in case you use this `xpath` with
-    `driver.find_elements_by_xpath()` method.  This expression is used to select
-    various avialable industry labels on the `filters` frame.
+  def get_available_industry_labels_xpath(
+  ) -> pathselectorbuilder.PathSelectorBuilder:
+    """Returns the path selector for the available industry labels.
 
     Returns:
-      Regexp `xpath` for available industry labels on the `filters` frame.
+      The path selector for the available industry labels and its label.
     """
-    return '//label[starts-with(@for, "advanced-filter-industry-")]'
+    return pathselectorbuilder.PathSelectorBuilder(
+        'Available industry labels',
+        '//label[starts-with(@for, "advanced-filter-industry-")]')
 
   @staticmethod
-  def get_available_profile_language_options_xpath() -> str:
-    """Regexp `xpath` for available profile language options on the `filters`
-    frame.
-
-    This `xpath` contains regex expression so all the elements that matches this
-    `xpath` will be returned in case you use this `xpath` with
-    `driver.find_elements_by_xpath()` method.  This expression is used to select
-    various checkboxes avialable for profile language filter on the `filters`
-    frame.
+  def get_available_profile_language_options_xpath(
+  ) -> pathselectorbuilder.PathSelectorBuilder:
+    """Returns the path selector for the available profile language options.
 
     Returns:
-      Regexp `xpath` for available profile language options on the `filters`
-        frame.
+      The path selector for the available profile language options and its
+      label.
     """
-    return '//input[starts-with(@id, "advanced-filter-profileLanguage-")]'
+    return pathselectorbuilder.PathSelectorBuilder(
+        'Available profile language options',
+        '//input[starts-with(@id, "advanced-filter-profileLanguage-")]')
 
   @staticmethod
-  def get_available_profile_langauge_labels_xpath() -> str:
-    """Regexp `xpath` for available profile language labels on the `filters`
-    frame.
-
-    This `xpath` contains regex expression so all the elements that matches this
-    `xpath` will be returned in case you use this `xpath` with
-    `driver.find_elements_by_xpath()` method.  This expression is used to select
-    various checkboxes avialable profile language labels on the `filters` frame.
+  def get_available_profile_langauge_labels_xpath(
+  ) -> pathselectorbuilder.PathSelectorBuilder:
+    """Returns the path selector for the available profile language labels.
 
     Returns:
-      Regexp `xpath` for available profile language labels on the `filters`
-        frame.
+      The path selector for the available profile language labels and its
+      label.
     """
-    return '//label[starts-with(@for, "advanced-filter-profileLanguage-")]'
+    return pathselectorbuilder.PathSelectorBuilder(
+        'Available profile language labels',
+        '//label[starts-with(@for, "advanced-filter-profileLanguage-")]')
 
   @staticmethod
-  def get_first_name_input_element_container_xpath() -> str:
-    """Regexp `xpath` for the first name input element on the `filters` page.
-
-    Input element present that matches this `xpath` is used to enter the first
-    name of the person you want to search for.
+  def get_first_name_input_element_container_xpath(
+  ) -> pathselectorbuilder.PathSelectorBuilder:
+    """Returns the path selector for the first name input element container.
 
     Returns:
-      Regexp `xpath` for the first name input element on the `filters` page.
+      The path selector for the first name input element container and its
+      label.
     """
-    return '//label[contains(text(), "First name")]'
+    return pathselectorbuilder.PathSelectorBuilder(
+        'First name <input> element container',
+        '//label[contains(text(), "First name")]')
 
   @staticmethod
-  def get_last_name_input_element_container_xpath() -> str:
-    """Regexp `xpath` for the last name input element on the `filters` page.
-
-    Input element present that matches this `xpath` is used to enter the last
-    name of the person you want to search for.
+  def get_last_name_input_element_container_xpath(
+  ) -> pathselectorbuilder.PathSelectorBuilder:
+    """Returns the path selector for the last name input element container.
 
     Returns:
-      Regexp `xpath` for the last name input element on the `filters` page.
+      The path selector for the last name input element container and its
+      label.
     """
-    return '//label[contains(text(), "Last name")]'
+    return pathselectorbuilder.PathSelectorBuilder(
+        'Last name <input> element container',
+        '//label[contains(text(), "Last name")]')
 
   @staticmethod
-  def get_title_input_element_container_xpath() -> str:
-    """Regexp `xpath` for the title input element on the `filters` page.
-
-    Input element present that matches this `xpath` is used to enter the title
-    of the person you want to search for.
+  def get_title_input_element_container_xpath(
+  ) -> pathselectorbuilder.PathSelectorBuilder:
+    """Returns the path selector for the title input element container.
 
     Returns:
-      Regexp `xpath` for the title input element on the `filters` page.
+      The path selector for the title input element container and its label.
     """
-    return '//label[contains(text(), "Title")]'
+    return pathselectorbuilder.PathSelectorBuilder(
+        'Title <input> element container', '//label[contains(text(), "Title")]')
 
   @staticmethod
-  def get_current_company_input_element_container_xpath() -> str:
-    """Regexp `xpath` for the current company input element on the `filters`
-    page.
-
-    Input element present that matches this `xpath` is used to enter the current
-    company of the person you want to search for.
+  def get_current_company_input_element_container_xpath(
+  ) -> pathselectorbuilder.PathSelectorBuilder:
+    """Returns the path selector for the current company input element
+    container.
 
     Returns:
-      Regexp `xpath` for the current company input element on the `filters`
-        page.
+      The path selector for the current company input element container and
+      its label.
     """
-    return '//label[contains(text(), "Company")]'
+    return pathselectorbuilder.PathSelectorBuilder(
+        'Current company <input> element container',
+        '//label[contains(text(), "Company")]')
 
   @staticmethod
-  def get_school_input_element_container_xpath() -> str:
-    """Regexp `xpath` for the school input element on the `filters` page.
-
-    Input element present that matches this `xpath` is used to enter the school
-    the person you want to search for.
+  def get_school_input_element_container_xpath(
+  ) -> pathselectorbuilder.PathSelectorBuilder:
+    """Returns the path selector for the school input element container.
 
     Returns:
-      Regexp `xpath` for the school input element on the `filters` page.
+      The path selector for the school input element container and its label.
     """
-    return '//label[contains(text(), "School")]'
+    return pathselectorbuilder.PathSelectorBuilder(
+        'School <input> element container',
+        '//label[contains(text(), "School")]')
 
   @staticmethod
-  def get_apply_current_filters_button_xpath() -> str:
-    """Apply current filters button `xpath`.
-
-    Button present at this `xpath` is used to apply the filters program has
-    selected so far.
+  def get_apply_current_filters_button_xpath(
+  ) -> pathselectorbuilder.PathSelectorBuilder:
+    """Returns the path selector for the apply current filters button.
 
     Returns:
-      Apply current filters button `xpath`.
+      The path selector for the apply current filters button and its label.
     """
-    return '//div[@id="artdeco-modal-outlet"]//button[@aria-label="Apply current filters to show results"]'  # pylint: disable=line-too-long
+    return pathselectorbuilder.PathSelectorBuilder(
+        'Apply current filters <button>',
+        '//div[@id="artdeco-modal-outlet"]//button[@aria-label="Apply current filters to show results"]'  # pylint: disable=line-too-long
+    )
 
   @staticmethod
-  def get_search_results_person_li_parent_xpath() -> str:
-    """Person `li` element's parent element i.e., `ul`.
-
-    This is the parent element that contains all the `li` tags for LinkedIn
-    users.
+  def get_search_results_person_li_parent_xpath(
+  ) -> pathselectorbuilder.PathSelectorBuilder:
+    """Returns the path selector for the search results person li parent.
 
     Returns:
-      Person `li` element's parent element i.e., `ul`.
+      The path selector for the search results person li parent and its
+      label.
     """
-    return '//*[@id="main"]/div/div/div[1]/ul'
+    return pathselectorbuilder.PathSelectorBuilder(
+        'Search results person <li> parent',
+        '//*[@id="main"]/div/div/div[1]/ul')
 
   @staticmethod
-  def get_search_results_person_li_xpath(positiion: int) -> str:
-    """Search results person `li` xpath located at `position`.
-
-    This function returns the `li` tag inside the parent `ul` tag located at
-    `position` that contains the information of a LinkedIn user.
+  def get_search_results_person_li_xpath(
+      positiion: int) -> pathselectorbuilder.PathSelectorBuilder:
+    """Returns the path selector for the search results person li.
 
     Args:
       position: `li` position.
 
     Returns:
-      Search results person `li` xpath located at `position`.
+      The path selector for the search results person li and its label.
     """
-    return f'{_ElementsPathSelectors.get_search_results_person_li_parent_xpath()}/li[{positiion}]'  # pylint: disable=line-too-long
+    return pathselectorbuilder.PathSelectorBuilder(
+        'Search results person <li>',
+        f'{_ElementsPathSelectors.get_search_results_person_li_parent_xpath()}/li[{positiion}]'  # pylint: disable=line-too-long
+    )
 
   @staticmethod
-  def _get_search_results_person_li_card_container_xpath(position: int) -> str:
-    """`xpath` for person's card container.
-
-    This function returns the card container of an `li` tag located at
-    `position` inside the `ul` parent element.
+  def _get_search_results_person_li_card_container_xpath(
+      position: int) -> pathselectorbuilder.PathSelectorBuilder:
+    """Returns the path selector for the search results person li card
+    container.
 
     Args:
       position: `li` position.
 
     Returns:
-      `xpath` for person's card container.
+      The path selector for the search results person li card container and
+      its label.
     """
-    return f'{_ElementsPathSelectors.get_search_results_person_li_xpath(position)}/div/div'  # pylint: disable=line-too-long
+    return pathselectorbuilder.PathSelectorBuilder(
+        'Search results person <li> card container',
+        f'{_ElementsPathSelectors.get_search_results_person_li_xpath(position)}/div/div'  # pylint: disable=line-too-long
+    )
 
   @staticmethod
   def _get_search_results_person_li_card_info_container_xpath(
-      position: int) -> str:
-    """`xpath` for person's information card container.
-
-    This function returns `xpath` for parent element that contains the person's
-    information located at `position`.
-
-    Returns:
-      `xpath` for person's information card container.
-    """
-    return f'{_ElementsPathSelectors._get_search_results_person_li_card_container_xpath(position)}/div[2]'  # pylint: disable=line-too-long
-
-  @staticmethod
-  def _get_search_results_person_li_card_info_nav_xpath(position: int) -> str:
-    """`xpath` to person card information nav bar.
-
-    Element at this `xpath` is a container that contains the person name and
-    the connection degree information.
+      position: int) -> pathselectorbuilder.PathSelectorBuilder:
+    """Returns the path selector for the search results person li card
+    info container.
 
     Args:
       position: `li` position.
 
     Returns:
-      `xpath` to person card information nav bar.
+      The path selector for the search results person li card info container
+      and its label.
     """
-    return f'{_ElementsPathSelectors._get_search_results_person_li_card_info_container_xpath(position)}/div[1]/div[1]/div'  # pylint: disable=line-too-long
+    return pathselectorbuilder.PathSelectorBuilder(
+        'Search results person <li> card info container',
+        f'{_ElementsPathSelectors._get_search_results_person_li_card_container_xpath(position)}/div[2]'  # pylint: disable=line-too-long
+    )
+
+  @staticmethod
+  def _get_search_results_person_li_card_info_nav_xpath(
+      position: int) -> pathselectorbuilder.PathSelectorBuilder:
+    """Returns the path selector for the search results person li card
+    info nav.
+
+    Args:
+      position: `li` position.
+
+    Returns:
+      The path selector for the search results person li card info nav and
+      its label.
+    """
+    return pathselectorbuilder.PathSelectorBuilder(
+        'Search results person <li> card info <nav>',
+        f'{_ElementsPathSelectors._get_search_results_person_li_card_info_container_xpath(position)}/div[1]/div[1]/div'  # pylint: disable=line-too-long
+    )
 
   @staticmethod
   def _get_search_results_person_li_card_info_footer_xpath(
-      position: int) -> str:
-    return f'{_ElementsPathSelectors._get_search_results_person_li_card_info_container_xpath(position)}/div[3]'  # pylint: disable=line-too-long
+      position: int) -> pathselectorbuilder.PathSelectorBuilder:
+    """Returns the path selector for the search results person li card
+    info footer.
+
+    Args:
+      position: `li` position.
+
+    Returns:
+      The path selector for the search results person li card info footer
+      and its label.
+    """
+    return pathselectorbuilder.PathSelectorBuilder(
+        'Search results person <li> card info <footer>',
+        f'{_ElementsPathSelectors._get_search_results_person_li_card_info_container_xpath(position)}/div[3]'  # pylint: disable=line-too-long
+    )
 
   @staticmethod
   def get_search_results_person_li_card_mutual_connections_info_container_xpath(
-      position: int) -> str:
-    return f'{_ElementsPathSelectors._get_search_results_person_li_card_info_footer_xpath(position)}/div/div[2]/span'  # pylint: disable=line-too-long
-
-  @staticmethod
-  def get_search_results_person_li_card_link_xpath(position: int) -> str:
-    return f'{_ElementsPathSelectors._get_search_results_person_li_card_info_nav_xpath(position)}/span[1]/span/a'  # pylint: disable=line-too-long
-
-  @staticmethod
-  def get_search_results_person_li_card_name_xpath(position: int) -> str:
-    """`xpath` to the direct element that contains person name.
-
-    This element is a direct container element that contains person name that
-    is located at `position` inside `ul`.
+      position: int) -> pathselectorbuilder.PathSelectorBuilder:
+    """Returns the path selector for the search results person li card
+    mutual connections info container.
 
     Args:
       position: `li` position.
 
     Returns:
-      `xpath` to the direct element that contains person name.
+      The path selector for the search results person li card mutual
+      connections info container and its label.
     """
-    return f'{_ElementsPathSelectors._get_search_results_person_li_card_info_nav_xpath(position)}/span[1]/span/a/span/span[1]'  # pylint: disable=line-too-long
+    return pathselectorbuilder.PathSelectorBuilder(
+        'Search results person <li> card mutual connections info container',
+        f'{_ElementsPathSelectors._get_search_results_person_li_card_info_footer_xpath(position)}/div/div[2]/span'  # pylint: disable=line-too-long
+    )
 
   @staticmethod
-  def get_search_results_person_li_card_degree_info_xpath(position: int) -> str:
-    """`xpath` to the direct element that contains degree of connection that
-    person is with you.
-
-    This element is a direct container element that contains the degree of
-    connection that person is with you that is located at `position` inside
-    `ul`.
+  def get_search_results_person_li_card_link_xpath(
+      position: int) -> pathselectorbuilder.PathSelectorBuilder:
+    """Returns the path selector for the search results person li card
+    link.
 
     Args:
       position: `li` position.
 
     Returns:
-      `xpath` to the direct element that contains degree of connection that
-        person is with you.
+      The path selector for the search results person li card link and
+      its label.
     """
-    return f'{_ElementsPathSelectors._get_search_results_person_li_card_info_nav_xpath(position)}/span[2]/div/span/span[2]'  # pylint: disable=line-too-long
+    return pathselectorbuilder.PathSelectorBuilder(
+        'Search results person <li> card link',
+        f'{_ElementsPathSelectors._get_search_results_person_li_card_info_nav_xpath(position)}/span[1]/span/a'  # pylint: disable=line-too-long
+    )
+
+  @staticmethod
+  def get_search_results_person_li_card_name_xpath(
+      position: int) -> pathselectorbuilder.PathSelectorBuilder:
+    """Returns the path selector for the search results person li card
+    name.
+
+    Args:
+      position: `li` position.
+
+    Returns:
+      The path selector for the search results person li card name and
+      its label.
+    """
+    return pathselectorbuilder.PathSelectorBuilder(
+        'Search results person <li> card name',
+        f'{_ElementsPathSelectors._get_search_results_person_li_card_info_nav_xpath(position)}/span[1]/span/a/span/span[1]'  # pylint: disable=line-too-long
+    )
+
+  @staticmethod
+  def get_search_results_person_li_card_degree_info_xpath(
+      position: int) -> pathselectorbuilder.PathSelectorBuilder:
+    """Returns the path selector for the search results person li card
+    degree info.
+
+    Args:
+      position: `li` position.
+
+    Returns:
+      The path selector for the search results person li card degree info
+      and its label.
+    """
+    return pathselectorbuilder.PathSelectorBuilder(
+        'Search results person <li> card degree info',
+        f'{_ElementsPathSelectors._get_search_results_person_li_card_info_nav_xpath(position)}/span[2]/div/span/span[2]'  # pylint: disable=line-too-long
+    )
 
   @staticmethod
   def _get_search_results_person_li_occupation_and_location_info_card_container_xpath(  # pylint: disable=line-too-long
-      position: int) -> str:
-    return f'{_ElementsPathSelectors._get_search_results_person_li_card_info_container_xpath(position)}/div[1]/div[2]'  # pylint: disable=line-too-long
+      position: int) -> pathselectorbuilder.PathSelectorBuilder:
+    """Returns the path selector for the search results person li occupation
+    and location info card container.
+
+    Args:
+      position: `li` position.
+
+    Returns:
+      The path selector for the search results person li occupation and
+      location info card container and its label.
+    """
+    return pathselectorbuilder.PathSelectorBuilder(
+        'Search results person <li> occupation and location info card container',
+        f'{_ElementsPathSelectors._get_search_results_person_li_card_info_container_xpath(position)}/div[1]/div[2]'  # pylint: disable=line-too-long
+    )
 
   @staticmethod
   def get_search_results_person_li_occupation_info_card_container_xpath(
-      position: int) -> str:
-    return f'{_ElementsPathSelectors._get_search_results_person_li_occupation_and_location_info_card_container_xpath(position)}/div/div[1]'  # pylint: disable=line-too-long
+      position: int) -> pathselectorbuilder.PathSelectorBuilder:
+    """Returns the path selector for the search results person li occupation
+    info card container.
+
+    Args:
+      position: `li` position.
+
+    Returns:
+      The path selector for the search results person li occupation info
+      card container and its label.
+    """
+    return pathselectorbuilder.PathSelectorBuilder(
+        'Search results person <li> occupation info card container',
+        f'{_ElementsPathSelectors._get_search_results_person_li_occupation_and_location_info_card_container_xpath(position)}/div/div[1]'  # pylint: disable=line-too-long
+    )
 
   @staticmethod
   def get_search_results_person_li_location_info_card_container_xpath(
-      position: int) -> str:
-    return f'{_ElementsPathSelectors._get_search_results_person_li_occupation_and_location_info_card_container_xpath(position)}/div/div[2]'  # pylint: disable=line-too-long
+      position: int) -> pathselectorbuilder.PathSelectorBuilder:
+    """Returns the path selector for the search results person li location
+    info card container.
+
+    Args:
+      position: `li` position.
+
+    Returns:
+      The path selector for the search results person li location info
+      card container and its label.
+    """
+    return pathselectorbuilder.PathSelectorBuilder(
+        'Search results person <li> location info card container',
+        f'{_ElementsPathSelectors._get_search_results_person_li_occupation_and_location_info_card_container_xpath(position)}/div/div[2]'  # pylint: disable=line-too-long
+    )
 
   @staticmethod
   def _get_search_results_person_li_card_actions_container_xpath(
-      position: int) -> str:
-    """`xpath` to the actions container of the person `li` at `position`.
+      position: int) -> pathselectorbuilder.PathSelectorBuilder:
+    """Returns the path selector for the search results person li card
+    actions container.
 
-    Element located at this `xpath` is the parent element for the connect
+    Args:
+      position: `li` position.
+
+    Returns:
+      The path selector for the search results person li card actions
+      container and its label.
+    """
+    return pathselectorbuilder.PathSelectorBuilder(
+        'Search results person <li> card actions container',
+        f'{_ElementsPathSelectors._get_search_results_person_li_card_container_xpath(position)}/div[3]/div'  # pylint: disable=line-too-long
+    )
+
+  @staticmethod
+  def get_search_results_person_li_connect_button_xpath(
+      position: int) -> pathselectorbuilder.PathSelectorBuilder:
+    """Returns the path selector for the search results person li connect
     button.
 
     Args:
       position: `li` position.
 
     Returns:
-      `xpath` to the actions container of the person `li` at `position`.
+      The path selector for the search results person li connect button
+      and its label.
     """
-    return f'{_ElementsPathSelectors._get_search_results_person_li_card_container_xpath(position)}/div[3]/div'  # pylint: disable=line-too-long
+    return pathselectorbuilder.PathSelectorBuilder(
+        'Search results person <li> connect button',
+        f'{_ElementsPathSelectors._get_search_results_person_li_card_actions_container_xpath(position)}/button'  # pylint: disable=line-too-long
+    )
 
   @staticmethod
-  def get_search_results_person_li_connect_button_xpath(position: int) -> str:
-    """`xpath` to the person connect button.
-
-    Args:
-      position: `li` position.
+  def get_send_invite_modal_xpath() -> pathselectorbuilder.PathSelectorBuilder:
+    """Returns the path selector for the send invite modal.
 
     Returns:
-      `xpath` to the person connect button.
+      The path selector for the send invite modal and its label.
     """
-    return f'{_ElementsPathSelectors._get_search_results_person_li_card_actions_container_xpath(position)}/button'  # pylint: disable=line-too-long
+    return pathselectorbuilder.PathSelectorBuilder(
+        'Send invite modal', '//div[@aria-labelledby="send-invite-modal"]')
 
   @staticmethod
-  def get_send_invite_modal_xpath() -> str:
-    """"""
-    return '//div[@aria-labelledby="send-invite-modal"]'
+  def get_send_now_button_xpath() -> pathselectorbuilder.PathSelectorBuilder:
+    """Returns the path selector for the send now button.
+
+    Returns:
+      The path selector for the send now button and its label.
+    """
+    return pathselectorbuilder.PathSelectorBuilder(
+        'Send now <button>', '//button[@aria-label="Send now"]')
 
   @staticmethod
-  def get_send_now_button_xpath() -> str:
-    """"""
-    return '//button[@aria-label="Send now"]'
+  def get_goto_next_page_button_xpath(
+  ) -> pathselectorbuilder.PathSelectorBuilder:
+    """Returns the path selector for the goto next page button.
 
-  @staticmethod
-  def get_goto_next_page_button_xpath() -> str:
-    """"""
-    return '//main[@id="main"]//button[@aria-label="Next"]'
+    Returns:
+      The path selector for the goto next page button and its label.
+    """
+    return pathselectorbuilder.PathSelectorBuilder(
+        'Goto next page <button>',
+        '//main[@id="main"]//button[@aria-label="Next"]')
 
 
 class _Person:
@@ -475,17 +578,19 @@ class _Person:
     return re_.search(profileurl).group(0)
 
 
-def _GetElementByXPath(xpath: str, wait: int = 60) -> webelement.WebElement:
+def _GetElementByXPath(xpath: pathselectorbuilder.PathSelectorBuilder,
+                       wait: int = 60) -> webelement.WebElement:
   while True:
     try:
       return WebDriverWait(driver.GetGlobalChromeDriverInstance(), wait).until(
-          EC.presence_of_element_located((by.By.XPATH, xpath)))
-    except (exceptions.TimeoutException,
-            exceptions.NoSuchElementException) as error:
-      logger.error(traceback.format_exc())
+          EC.presence_of_element_located((by.By.XPATH, str(xpath))))
+    except exceptions.TimeoutException as error:
+      logger.critical('%s Element could not be found at: %s for label: %s',
+                      traceback.format_exc().strip('\n').strip(), str(xpath),
+                      xpath.path_label)
       if isinstance(error, exceptions.TimeoutException):
         javascript.JS.load_page()
-      continue
+        continue
 
 
 def _GetLiElementsFromPage(wait: int = 60) -> list[webelement.WebElement]:
