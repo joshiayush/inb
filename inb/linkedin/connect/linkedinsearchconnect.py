@@ -50,7 +50,7 @@ from selenium.webdriver.common import (
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
-from linkedin import (driver, settings)
+from linkedin import (driver, settings, connect)
 from linkedin.DOM import javascript
 from linkedin.message import template
 from linkedin.connect import (pathselectorbuilder, utils)
@@ -584,9 +584,6 @@ def _GetLiElementsFromPage(wait: int = 60) -> list[webelement.WebElement]:
       wait).find_elements_by_tag_name('li')
 
 
-_LINKEDIN_MAX_INVITATION_LIMIT = 80
-
-
 def _GetSearchResultsPersonLiObjects() -> list[_Person]:
   person_li_count = 0
   while True:
@@ -633,7 +630,7 @@ def _GetSearchResultsPersonLiObjects() -> list[_Person]:
                     profileurl, connect_button)
       person_li_count += 1
 
-    if person_li_count == _LINKEDIN_MAX_INVITATION_LIMIT:
+    if person_li_count == connect.LINKEDIN_MAX_INVITATION_LIMIT:
       return
 
     def goto_next_page() -> None:  # pylint: disable=redefined-builtin

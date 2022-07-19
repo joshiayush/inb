@@ -29,3 +29,5 @@
 
 from linkedin.connect.linkedinconnect import LinkedInConnect
 from linkedin.connect.linkedinsearchconnect import LinkedInSearchConnect
+
+LINKEDIN_MAX_INVITATION_LIMIT = 80

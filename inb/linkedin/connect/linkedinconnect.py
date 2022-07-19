@@ -65,7 +65,7 @@ from selenium.common import exceptions
 from selenium.webdriver.remote import webelement
 from selenium.webdriver.common import action_chains
 
-from linkedin import (driver, settings)
+from linkedin import (driver, settings, connect)
 from linkedin.DOM import cleaners
 from linkedin.connect import (pathselectorbuilder, utils)
 from linkedin.invitation import status
@@ -303,9 +303,6 @@ class _Person:
     self.connect_button = connect_button
 
 
-_LINKEDIN_MAX_INVITATION_LIMIT = 80
-
-
 def _GetSuggestionBoxPersonLiObject() -> _Person:
   """Generator function returns a `_Person` instance by collecting a user's
   information from the `DOM`.
@@ -348,7 +345,7 @@ def _GetSuggestionBoxPersonLiObject() -> _Person:
     profileurl = settings.GetLinkedInUrl() + profileid
     yield _Person(name, occupation, mutual_connections, profileid, profileurl,
                   connect_button)
-    if person_li_position == _LINKEDIN_MAX_INVITATION_LIMIT:
+    if person_li_position == connect.LINKEDIN_MAX_INVITATION_LIMIT:
       return
     person_li_position += 1
 
