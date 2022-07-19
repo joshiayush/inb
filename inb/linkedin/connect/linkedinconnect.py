@@ -63,13 +63,11 @@ import traceback
 
 from selenium.common import exceptions
 from selenium.webdriver.remote import webelement
-from selenium.webdriver.common import (by, action_chains)
-from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.common import action_chains
 
 from linkedin import (driver, settings)
-from linkedin.DOM import (cleaners, javascript)
-from linkedin.connect import pathselectorbuilder
+from linkedin.DOM import cleaners
+from linkedin.connect import (pathselectorbuilder, utils)
 from linkedin.invitation import status
 
 logger = logging.getLogger(__name__)
@@ -305,49 +303,6 @@ class _Person:
     self.connect_button = connect_button
 
 
-def _GetElementByXPath(xpath: pathselectorbuilder.PathSelectorBuilder,
-                       wait: int = 60) -> webelement.WebElement:
-  """Returns an element from the `DOM` whose `xpath` is known.
-
-  Function tries to find out an element from the `DOM` at the given `xpath`
-  using the `WebDriverWait` API.  This function loads the page further
-  immediately after the `WebDriverWait` API has raised `TimeoutException`
-  in an hope that the element could be at the bottom of the page.
-
-  THE MAIN CAVEAT here is that this function should only be used when you are
-  completely sure that the element is going to reveal itself once you have
-  scrolled the page a bit otherwise this function is going to stuck in an
-  infinite loop and can only be stopped by the `KeyboardInterrupt` exception
-  triggered explicitly.
-
-  ```python
-  # Taking the name out from the `DOM` using an explicit wait routine.
-  name = _GetElementByXPath(
-      _MyNetworkPageElementsPathSelectors.get_suggestion_box_li_card_name_xpath(
-          position)).text
-  ```
-
-  Args:
-    xpath:  Element `xpath`.
-    wait:   Time we should wait for until the element has popped itself to the
-              `DOM`.
-
-  Returns:
-    `WebElement` located at the given `xpath`.
-  """
-  while True:
-    try:
-      return WebDriverWait(driver.GetGlobalChromeDriverInstance(), wait).until(
-          EC.presence_of_element_located((by.By.XPATH, str(xpath))))
-    except exceptions.TimeoutException as exc:
-      logger.critical('%s Element could not be found at: %s for label: %s',
-                      traceback.format_exc().strip('\n').strip(), str(xpath),
-                      xpath.path_label)
-      if isinstance(exc, exceptions.TimeoutException):
-        javascript.JS.load_page()
-        continue
-
-
 _LINKEDIN_MAX_INVITATION_LIMIT = 80
 
 
@@ -359,9 +314,9 @@ def _GetSuggestionBoxPersonLiObject() -> _Person:
   `person_li_position` value by one and collects the information of the next
   user in the `ul` list on the `DOM`.
 
-  This function uses `_GetElementByXPath()` protected method which internally
-  makes the browser to wait explicitly until the requested element arrives on
-  the `DOM`.
+  This function uses `utils.GetElementByXPath()` protected method which
+  internally makes the browser to wait explicitly until the requested element
+  arrives on the `DOM`.
 
   Does not raises `StopIteration` exception instead returns silently when the
   `person_li_position` count becomes equal to the global variable
@@ -373,21 +328,21 @@ def _GetSuggestionBoxPersonLiObject() -> _Person:
   """
   person_li_position = 1
   while True:
-    profileid = _GetElementByXPath(
+    profileid = utils.GetElementByXPath(
         _MyNetworkPageElementsPathSelectors.
         get_suggestion_box_li_card_link_xpath(
             person_li_position)).get_attribute('href')
-    name = _GetElementByXPath(
+    name = utils.GetElementByXPath(
         _MyNetworkPageElementsPathSelectors.
         get_suggestion_box_li_card_name_xpath(person_li_position)).text
-    occupation = _GetElementByXPath(
+    occupation = utils.GetElementByXPath(
         _MyNetworkPageElementsPathSelectors.
         get_suggestion_box_li_card_occupation_xpath(person_li_position)).text
-    mutual_connections = _GetElementByXPath(
+    mutual_connections = utils.GetElementByXPath(
         _MyNetworkPageElementsPathSelectors.
         get_suggestion_box_li_card_member_mutual_connections_xpath(
             person_li_position)).text
-    connect_button = _GetElementByXPath(
+    connect_button = utils.GetElementByXPath(
         _MyNetworkPageElementsPathSelectors.
         get_suggestion_box_li_card_invite_button_xpath(person_li_position))
     profileurl = settings.GetLinkedInUrl() + profileid
@@ -451,7 +406,7 @@ class LinkedInConnect(object):
     on the page.  This explicit wait is important that we achieve using the
     `WebDriverWait` API because LinkedIn is a dynamic website and will not pop
     the elements on the page until requested.  Protected function
-    `_GetElementByXPath()` helps finding out the elements from the `DOM` by
+    `utils.GetElementByXPath()` helps finding out the elements from the `DOM` by
     explicitly requesting elements from the dynamic page by triggering a scroll
     down event.
 

@@ -53,7 +53,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from linkedin import (driver, settings)
 from linkedin.DOM import javascript
 from linkedin.message import template
-from linkedin.connect import pathselectorbuilder
+from linkedin.connect import (pathselectorbuilder, utils)
 from linkedin.invitation import status
 
 logger = logging.getLogger(__name__)
@@ -578,23 +578,8 @@ class _Person:
     return re_.search(profileurl).group(0)
 
 
-def _GetElementByXPath(xpath: pathselectorbuilder.PathSelectorBuilder,
-                       wait: int = 60) -> webelement.WebElement:
-  while True:
-    try:
-      return WebDriverWait(driver.GetGlobalChromeDriverInstance(), wait).until(
-          EC.presence_of_element_located((by.By.XPATH, str(xpath))))
-    except exceptions.TimeoutException as error:
-      logger.critical('%s Element could not be found at: %s for label: %s',
-                      traceback.format_exc().strip('\n').strip(), str(xpath),
-                      xpath.path_label)
-      if isinstance(error, exceptions.TimeoutException):
-        javascript.JS.load_page()
-        continue
-
-
 def _GetLiElementsFromPage(wait: int = 60) -> list[webelement.WebElement]:
-  return _GetElementByXPath(
+  return utils.GetElementByXPath(
       _ElementsPathSelectors.get_search_results_person_li_parent_xpath(),
       wait).find_elements_by_tag_name('li')
 
@@ -606,17 +591,17 @@ def _GetSearchResultsPersonLiObjects() -> list[_Person]:
   person_li_count = 0
   while True:
     for i in range(len(_GetLiElementsFromPage())):
-      name = _GetElementByXPath(
+      name = utils.GetElementByXPath(
           _ElementsPathSelectors.get_search_results_person_li_card_name_xpath(
               i + 1)).text
-      degree = _GetElementByXPath(
+      degree = utils.GetElementByXPath(
           _ElementsPathSelectors.
           get_search_results_person_li_card_degree_info_xpath(i + 1)).text
-      occupation = _GetElementByXPath(
+      occupation = utils.GetElementByXPath(
           _ElementsPathSelectors.
           get_search_results_person_li_occupation_info_card_container_xpath(
               i + 1)).text
-      location = _GetElementByXPath(
+      location = utils.GetElementByXPath(
           _ElementsPathSelectors.
           get_search_results_person_li_location_info_card_container_xpath(
               i + 1)).text
@@ -629,7 +614,7 @@ def _GetSearchResultsPersonLiObjects() -> list[_Person]:
       # when this happens so that we can quickly catch it and replace the
       # `mutual_connections` variable with `'Shared connections not found :('` string.
       #
-      # mutual_connections = _GetElementByXPath(
+      # mutual_connections = utils.GetElementByXPath(
       #     _ElementsPathSelectors.
       #     get_search_results_person_li_card_mutual_connections_info_container_xpath(  # pylint: disable=line-too-long
       #         i + 1)).text
@@ -637,10 +622,10 @@ def _GetSearchResultsPersonLiObjects() -> list[_Person]:
           "Automation using 'search' command could not scrape information of\n"
           '  shared connections properly.\n'
           '  Please be kind an send us a pull request :)')
-      profileurl = _GetElementByXPath(
+      profileurl = utils.GetElementByXPath(
           _ElementsPathSelectors.get_search_results_person_li_card_link_xpath(
               i + 1)).get_attribute('href')
-      connect_button = _GetElementByXPath(
+      connect_button = utils.GetElementByXPath(
           _ElementsPathSelectors.
           get_search_results_person_li_connect_button_xpath(i + 1))
       yield _Person(name, degree, occupation, location, mutual_connections,
@@ -718,16 +703,16 @@ class LinkedInSearchConnect:
     typeahead_input_box.send_keys(keys.Keys.RETURN)
 
   def _get_element_by_xpath(self,
-                            xpath: str,
-                            wait: int = 60) -> webdriver.Chrome:
+                            xpath: pathselectorbuilder.PathSelectorBuilder,
+                            wait: int = 10) -> webdriver.Chrome:
     return WebDriverWait(driver.GetGlobalChromeDriverInstance(), wait).until(
-        EC.presence_of_element_located((by.By.XPATH, xpath)))
+        EC.presence_of_element_located((by.By.XPATH, str(xpath))))
 
   def _get_elements_by_xpath(self,
-                             xpath: str,
-                             wait: int = 60) -> webdriver.Chrome:
+                             xpath: pathselectorbuilder.PathSelectorBuilder,
+                             wait: int = 10) -> webdriver.Chrome:
     return WebDriverWait(driver.GetGlobalChromeDriverInstance(), wait).until(
-        EC.presence_of_all_elements_located((by.By.XPATH, xpath)))
+        EC.presence_of_all_elements_located((by.By.XPATH, str(xpath))))
 
   def _check_if_any_filter_is_given(self) -> bool:
     return any([
@@ -755,11 +740,11 @@ class LinkedInSearchConnect:
       filters_present: list[str] = filter_dict.keys()
 
       def click_overlapped_element(element: webdriver.Chrome) -> None:
-        """Nested function click_overlapped_element() fixes the WebdriverException:
-        Element is not clickable at point (..., ...).
+        """Nested function click_overlapped_element() fixes the
+        WebdriverException: Element is not clickable at point (..., ...).
 
-        :Args:
-            - element: {webdriver.Chrome} Element.
+        Args:
+          element: {webdriver.Chrome} Element.
         """
         nonlocal self
         # @TODO: Validate if the current version of this function is efficient
