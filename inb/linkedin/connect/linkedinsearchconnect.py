@@ -37,7 +37,7 @@ import time
 import logging
 import traceback
 
-from typing import Optional
+from typing import (Optional, Union)
 
 from selenium import webdriver
 from selenium.common import exceptions
@@ -70,7 +70,7 @@ if settings.LOGGING_TO_STREAM_ENABLED:
 logger.addHandler(file_handler)
 
 
-class _ElementsPathSelectors:
+class _SearchResultsPageElementsPathSelectors:
   """Serves elements' path selectors needed for scraping users information from
   the search results page.
   """
@@ -288,7 +288,7 @@ class _ElementsPathSelectors:
     """
     return pathselectorbuilder.PathSelectorBuilder(
         'Search results person <li>',
-        f'{_ElementsPathSelectors.get_search_results_person_li_parent_xpath()}/li[{positiion}]'  # pylint: disable=line-too-long
+        f'{_SearchResultsPageElementsPathSelectors.get_search_results_person_li_parent_xpath()}/li[{positiion}]'  # pylint: disable=line-too-long
     )
 
   @staticmethod
@@ -306,7 +306,7 @@ class _ElementsPathSelectors:
     """
     return pathselectorbuilder.PathSelectorBuilder(
         'Search results person <li> card container',
-        f'{_ElementsPathSelectors.get_search_results_person_li_xpath(position)}/div/div'  # pylint: disable=line-too-long
+        f'{_SearchResultsPageElementsPathSelectors.get_search_results_person_li_xpath(position)}/div/div'  # pylint: disable=line-too-long
     )
 
   @staticmethod
@@ -324,7 +324,7 @@ class _ElementsPathSelectors:
     """
     return pathselectorbuilder.PathSelectorBuilder(
         'Search results person <li> card info container',
-        f'{_ElementsPathSelectors._get_search_results_person_li_card_container_xpath(position)}/div[2]'  # pylint: disable=line-too-long
+        f'{_SearchResultsPageElementsPathSelectors._get_search_results_person_li_card_container_xpath(position)}/div[2]'  # pylint: disable=line-too-long
     )
 
   @staticmethod
@@ -342,7 +342,7 @@ class _ElementsPathSelectors:
     """
     return pathselectorbuilder.PathSelectorBuilder(
         'Search results person <li> card info <nav>',
-        f'{_ElementsPathSelectors._get_search_results_person_li_card_info_container_xpath(position)}/div[1]/div[1]/div'  # pylint: disable=line-too-long
+        f'{_SearchResultsPageElementsPathSelectors._get_search_results_person_li_card_info_container_xpath(position)}/div[1]/div[1]/div'  # pylint: disable=line-too-long
     )
 
   @staticmethod
@@ -360,7 +360,7 @@ class _ElementsPathSelectors:
     """
     return pathselectorbuilder.PathSelectorBuilder(
         'Search results person <li> card info <footer>',
-        f'{_ElementsPathSelectors._get_search_results_person_li_card_info_container_xpath(position)}/div[3]'  # pylint: disable=line-too-long
+        f'{_SearchResultsPageElementsPathSelectors._get_search_results_person_li_card_info_container_xpath(position)}/div[3]'  # pylint: disable=line-too-long
     )
 
   @staticmethod
@@ -378,7 +378,7 @@ class _ElementsPathSelectors:
     """
     return pathselectorbuilder.PathSelectorBuilder(
         'Search results person <li> card mutual connections info container',
-        f'{_ElementsPathSelectors._get_search_results_person_li_card_info_footer_xpath(position)}/div/div[2]/span'  # pylint: disable=line-too-long
+        f'{_SearchResultsPageElementsPathSelectors._get_search_results_person_li_card_info_footer_xpath(position)}/div/div[2]/span'  # pylint: disable=line-too-long
     )
 
   @staticmethod
@@ -396,7 +396,7 @@ class _ElementsPathSelectors:
     """
     return pathselectorbuilder.PathSelectorBuilder(
         'Search results person <li> card link',
-        f'{_ElementsPathSelectors._get_search_results_person_li_card_info_nav_xpath(position)}/span[1]/span/a'  # pylint: disable=line-too-long
+        f'{_SearchResultsPageElementsPathSelectors._get_search_results_person_li_card_info_nav_xpath(position)}/span[1]/span/a'  # pylint: disable=line-too-long
     )
 
   @staticmethod
@@ -414,7 +414,7 @@ class _ElementsPathSelectors:
     """
     return pathselectorbuilder.PathSelectorBuilder(
         'Search results person <li> card name',
-        f'{_ElementsPathSelectors._get_search_results_person_li_card_info_nav_xpath(position)}/span[1]/span/a/span/span[1]'  # pylint: disable=line-too-long
+        f'{_SearchResultsPageElementsPathSelectors._get_search_results_person_li_card_info_nav_xpath(position)}/span[1]/span/a/span/span[1]'  # pylint: disable=line-too-long
     )
 
   @staticmethod
@@ -432,7 +432,7 @@ class _ElementsPathSelectors:
     """
     return pathselectorbuilder.PathSelectorBuilder(
         'Search results person <li> card degree info',
-        f'{_ElementsPathSelectors._get_search_results_person_li_card_info_nav_xpath(position)}/span[2]/div/span/span[2]'  # pylint: disable=line-too-long
+        f'{_SearchResultsPageElementsPathSelectors._get_search_results_person_li_card_info_nav_xpath(position)}/span[2]/div/span/span[2]'  # pylint: disable=line-too-long
     )
 
   @staticmethod
@@ -450,7 +450,7 @@ class _ElementsPathSelectors:
     """
     return pathselectorbuilder.PathSelectorBuilder(
         'Search results person <li> occupation and location info card container',
-        f'{_ElementsPathSelectors._get_search_results_person_li_card_info_container_xpath(position)}/div[1]/div[2]'  # pylint: disable=line-too-long
+        f'{_SearchResultsPageElementsPathSelectors._get_search_results_person_li_card_info_container_xpath(position)}/div[1]/div[2]'  # pylint: disable=line-too-long
     )
 
   @staticmethod
@@ -468,7 +468,7 @@ class _ElementsPathSelectors:
     """
     return pathselectorbuilder.PathSelectorBuilder(
         'Search results person <li> occupation info card container',
-        f'{_ElementsPathSelectors._get_search_results_person_li_occupation_and_location_info_card_container_xpath(position)}/div/div[1]'  # pylint: disable=line-too-long
+        f'{_SearchResultsPageElementsPathSelectors._get_search_results_person_li_occupation_and_location_info_card_container_xpath(position)}/div/div[1]'  # pylint: disable=line-too-long
     )
 
   @staticmethod
@@ -486,7 +486,7 @@ class _ElementsPathSelectors:
     """
     return pathselectorbuilder.PathSelectorBuilder(
         'Search results person <li> location info card container',
-        f'{_ElementsPathSelectors._get_search_results_person_li_occupation_and_location_info_card_container_xpath(position)}/div/div[2]'  # pylint: disable=line-too-long
+        f'{_SearchResultsPageElementsPathSelectors._get_search_results_person_li_occupation_and_location_info_card_container_xpath(position)}/div/div[2]'  # pylint: disable=line-too-long
     )
 
   @staticmethod
@@ -504,7 +504,7 @@ class _ElementsPathSelectors:
     """
     return pathselectorbuilder.PathSelectorBuilder(
         'Search results person <li> card actions container',
-        f'{_ElementsPathSelectors._get_search_results_person_li_card_container_xpath(position)}/div[3]/div'  # pylint: disable=line-too-long
+        f'{_SearchResultsPageElementsPathSelectors._get_search_results_person_li_card_container_xpath(position)}/div[3]/div'  # pylint: disable=line-too-long
     )
 
   @staticmethod
@@ -522,7 +522,7 @@ class _ElementsPathSelectors:
     """
     return pathselectorbuilder.PathSelectorBuilder(
         'Search results person <li> connect button',
-        f'{_ElementsPathSelectors._get_search_results_person_li_card_actions_container_xpath(position)}/button'  # pylint: disable=line-too-long
+        f'{_SearchResultsPageElementsPathSelectors._get_search_results_person_li_card_actions_container_xpath(position)}/button'  # pylint: disable=line-too-long
     )
 
   @staticmethod
@@ -559,96 +559,184 @@ class _ElementsPathSelectors:
 
 
 class _Person:
+  """A separate type for the LinkedIn user inside our program particularly
+  aimed for the `LinkedInSearchConnect` API.
+
+  Used inside the protected function `_GetSearchResultsPersonLiObject()`
+  after storing the person information from the `DOM` inside the local
+  variables like you can see below:
+
+  ```python
+  def _GetSearchResultsPersonLiObject() -> _Person:
+    ...
+    yield _Person(name, degree, occupation, location, mutual_connections,
+                  _Person.extract_profileid_from_profileurl(profileurl),
+                  profileurl, connect_button)
+  ```
+  """
 
   def __init__(self, name: str, degree: str, occupation: str, location: str,
                mutual_connections: str, profileid: str, profileurl: str,
                connect_button: webelement.WebElement):
+    """Initialize a `_Person` instance.
+
+    This helps in encapsulating data in one single entity to later use it for
+    log records of a user using `inb`.
+
+    Args:
+      name: Name of the person.
+      degree: The connection degree that person holds with you.
+      occupation: The occupation of the person.
+      location: The location of the person.
+      mutual_connections: The number of mutual connections that person has.
+      profileid: The profile ID of the person.
+      profileurl: The profile URL of the person.
+      connect_button: The web element connect button of the person.
+    """
     self.name = name
     self.degree = degree
     self.occupation = occupation
     self.location = location
     self.mutual_connections = mutual_connections
+
+    # profileid should not be dumped into the console rather it should be put
+    # inside the log records i.e., our history database.
     self.profileid = profileid
+
+    # profileurl should not be dumped into the console rather it should be put
+    # inside the log records i.e., our history database.
     self.profileurl = profileurl
     self.connect_button = connect_button
 
   @staticmethod
   def extract_profileid_from_profileurl(profileurl: str) -> str:
+    """Extracts the profile ID from the profile URL.
+
+    Args:
+      profileurl: The profile URL of the person.
+
+    Returns:
+      The profile ID of the person.
+    """
+    # The profile URL of the person looks like this:
+    # https://www.linkedin.com/in/<profileid>/
+    # So we need to extract the profile ID from the profile URL.
     re_ = re.compile(r'([a-z]+-?)+([a-zA-Z0-9]+)?', re.IGNORECASE)
     return re_.search(profileurl).group(0)
 
 
-def _GetLiElementsFromPage(wait: int = 60) -> list[webelement.WebElement]:
+def _GetLiElementsFromPage(wait: int = 10) -> list[webelement.WebElement]:  # pylint: disable=invalid-name
+  """Returns the list of `li` elements from the current page.
+
+  Args:
+    wait: The number of seconds to wait for the `li` elements to load.
+
+  Returns:
+    The list of `li` elements from the current page.
+  """
   return utils.GetElementByXPath(
-      _ElementsPathSelectors.get_search_results_person_li_parent_xpath(),
+      _SearchResultsPageElementsPathSelectors.
+      get_search_results_person_li_parent_xpath(),
       wait).find_elements_by_tag_name('li')
 
 
-def _GetSearchResultsPersonLiObjects() -> list[_Person]:
+def _GetSearchResultsPersonLiObject() -> _Person:  # pylint: disable=invalid-name
+  """Yields the `_Person` object for each person in the search results.
+
+  This function yields the `_Person` object for each person in the search
+  results while also keeping track of the page number and the page offset
+  using functions such as `load_page()` and `goto_next_page()`.
+
+  This function stops yielding as soon as the counter `person_li_count`
+  reaches `connect.LINKEDIN_MAX_INVITATION_LIMIT` because that's a limit
+  of connections a non-premium account can send.
+
+  Yields:
+    The `_Person` object for each person in the search results.
+  """
+  # The counter for the number of `li` elements in the search results.
   person_li_count = 0
   while True:
+    # Get the `li` number and start scraping the data from the `li` elements
+    # numberwise.
     for i in range(len(_GetLiElementsFromPage())):
       name = utils.GetElementByXPath(
-          _ElementsPathSelectors.get_search_results_person_li_card_name_xpath(
-              i + 1)).text
+          _SearchResultsPageElementsPathSelectors.
+          get_search_results_person_li_card_name_xpath(i + 1)).text
       degree = utils.GetElementByXPath(
-          _ElementsPathSelectors.
+          _SearchResultsPageElementsPathSelectors.
           get_search_results_person_li_card_degree_info_xpath(i + 1)).text
       occupation = utils.GetElementByXPath(
-          _ElementsPathSelectors.
+          _SearchResultsPageElementsPathSelectors.
           get_search_results_person_li_occupation_info_card_container_xpath(
               i + 1)).text
       location = utils.GetElementByXPath(
-          _ElementsPathSelectors.
+          _SearchResultsPageElementsPathSelectors.
           get_search_results_person_li_location_info_card_container_xpath(
               i + 1)).text
+
       # @TODO(joshiayush): Some users on LinkedIn does not have information of
-      # shared connections in the
-      # _ElementsPathSelectors.
-      #     get_search_results_person_li_card_mutual_connections_info_container_xpath(  # pylint: disable=line-too-long
-      #         i + 1)).text
-      # path.  To comabt this we must modify our API to quickly raise an exception
-      # when this happens so that we can quickly catch it and replace the
-      # `mutual_connections` variable with `'Shared connections not found :('` string.
-      #
-      # mutual_connections = utils.GetElementByXPath(
-      #     _ElementsPathSelectors.
-      #     get_search_results_person_li_card_mutual_connections_info_container_xpath(  # pylint: disable=line-too-long
-      #         i + 1)).text
+      # shared connections in the mutual connections info xpath.  To comabt this
+      # exception handling would be a better option.
+      # For now, just add a description of problem.
       mutual_connections = (
           "Automation using 'search' command could not scrape information of\n"
           '  shared connections properly.\n'
-          '  Please be kind an send us a pull request :)')
+          '  Please be kind and send us a pull request :)')
       profileurl = utils.GetElementByXPath(
-          _ElementsPathSelectors.get_search_results_person_li_card_link_xpath(
-              i + 1)).get_attribute('href')
+          _SearchResultsPageElementsPathSelectors.
+          get_search_results_person_li_card_link_xpath(i +
+                                                       1)).get_attribute('href')
       connect_button = utils.GetElementByXPath(
-          _ElementsPathSelectors.
+          _SearchResultsPageElementsPathSelectors.
           get_search_results_person_li_connect_button_xpath(i + 1))
+
+      # Yield the `_Person` object after calling
+      # `_Person.extract_profileid_from_profileurl()` on profile URL to get
+      # profile ID.
       yield _Person(name, degree, occupation, location, mutual_connections,
                     _Person.extract_profileid_from_profileurl(profileurl),
                     profileurl, connect_button)
       person_li_count += 1
 
+    # Stop yielding if the counter reaches the maximum invitation limit.
     if person_li_count == connect.LINKEDIN_MAX_INVITATION_LIMIT:
       return
 
-    def goto_next_page() -> None:  # pylint: disable=redefined-builtin
+    def goto_next_page() -> None:
+      """Goes to the next page.
+
+      Nested function used by function `_GetSearchResultsPersonLiObject()` to
+      go to the next page once all the `li` elements are scraped.
+      """
       next_button = driver.GetGlobalChromeDriverInstance(
-      ).find_element_by_xpath(
-          _ElementsPathSelectors.get_goto_next_page_button_xpath())
+      ).find_element_by_xpath(_SearchResultsPageElementsPathSelectors.
+                              get_goto_next_page_button_xpath())
+
+      # It is important to go over the button before performing click on it
+      # because for some reason if we don't do this we will encounter a
+      # `NoSuchElementException`.
       action_chains.ActionChains(
           driver.GetGlobalChromeDriverInstance()).move_to_element(
               next_button).click().perform()
 
     try:
+      # Try going to the next page.
       goto_next_page()
     except exceptions.NoSuchElementException:
+      # If the `NoSuchElementException` is raised that means that the button
+      # to go to the next page is present but we need to scroll the page first.
       javascript.JS.load_page()
       goto_next_page()
 
 
 class LinkedInSearchConnect:
+  """Interface to interact with the LinkedIn's Search bar to get search
+  results page.
+
+  This interface gives functions to request the Search results page and send
+  connection requests to LinkedIn users.
+  """
 
   def __init__(self,
                *,
@@ -663,6 +751,29 @@ class LinkedInSearchConnect:
                profile_language: str,
                max_connection_limit: int,
                template_file: Optional[str] = None) -> None:
+    """Initializes the instance of `LinkedinInSearchConnect` class with the
+    given information.
+
+    The given `max_connection_limit` should be between 0 and 80 otherwise an
+    exception is raised with the message
+    `settings.CONNECTION_LIMIT_EXCEED_EXCEPTION_MESSAGE`.  If the argument
+    `max_connection_limit` is `None` then the `self._max_connection_limit` is
+    set to 20.
+
+    Args:
+      keyword: The keyword to search for.
+      location: The location to search for.
+      title: The title to search for in the person's profile.
+      firstname: The first name to search for.
+      lastname: The last name to search for.
+      school: The school where the person can be.
+      industry: The industry where the person belongs.
+      current_company: The current company where the person works.
+      profile_language: The language of the person's profile.
+      max_connection_limit: The maximum number of connections a non-premium
+                            account can send.
+      template_file: The path to the message template file.
+    """
     if max_connection_limit is None:
       max_connection_limit = 20
     elif not 0 < max_connection_limit <= 80:
@@ -684,56 +795,126 @@ class LinkedInSearchConnect:
     self._industry = industry
     self._current_company = current_company
     self._profile_language = profile_language
+
     if template_file is not None:
+      # Read the invitation message if the template file path is given.
       self._invitation_message = template.ReadTemplate(template_file)
     else:
       self._invitation_message = None
 
   def get_search_results_page(self) -> None:
+    """Requests the search results page by entering the given `keyword` by
+    the user.
+    """
+    # Get the `PathSelectorBuilder` object for 'typeahead input box'.
+    typeahead_input_box_psb = _SearchResultsPageElementsPathSelectors.get_global_nav_typeahead_input_box_xpath()  # pylint: disable=line-too-long
+    # Get the 'typeahead input box' itself by its `xpath`.
     typeahead_input_box = self._get_element_by_xpath(
-        _ElementsPathSelectors.get_global_nav_typeahead_input_box_xpath())
+        str(typeahead_input_box_psb))
     try:
+      # Try clearing it before entering any input.
       typeahead_input_box.clear()
     except exceptions.InvalidElementStateException:
-      logger.error(traceback.format_exc())
+      logger.error('%s Element is in invalid state at: %s for label: %s',
+                   traceback.format_exc().strip('\n').strip(),
+                   str(typeahead_input_box_psb),
+                   typeahead_input_box_psb.path_label)
+    # Send the `keyword` entered by the user in the command line.
     typeahead_input_box.send_keys(self._keyword)
+    # Send `RETURN` key to start searching for results.
     typeahead_input_box.send_keys(keys.Keys.RETURN)
 
   def _get_element_by_xpath(self,
                             xpath: pathselectorbuilder.PathSelectorBuilder,
                             wait: int = 10) -> webdriver.Chrome:
+    """Returns a single `WebElement` that is located at the given
+    `PathSelectorBuilder` object.
+
+    Args:
+      xpath: `PathSelectorBuilder` object for the element to return.
+      wait: Explicit timeout if we fail to locate the element.
+
+    Returns:
+      `WebElement` located at the given `PathSelectorBuilder` object.
+    """
     return WebDriverWait(driver.GetGlobalChromeDriverInstance(), wait).until(
         EC.presence_of_element_located((by.By.XPATH, str(xpath))))
 
   def _get_elements_by_xpath(self,
                              xpath: pathselectorbuilder.PathSelectorBuilder,
-                             wait: int = 10) -> webdriver.Chrome:
+                             wait: int = 10) -> list[webdriver.Chrome]:
+    """Returns a list of `WebElement`s that is located at the given
+    `PathSelectorBuilder` object.
+
+    Args:
+      xpath: `PathSelectorBuilder` object for the elements to return.
+      wait: Explicit timeout if we fail to locate the elements.
+
+    Returns:
+      List of `WebElement`s located at the given `PathSelectorBuilder` object.
+    """
     return WebDriverWait(driver.GetGlobalChromeDriverInstance(), wait).until(
         EC.presence_of_all_elements_located((by.By.XPATH, str(xpath))))
 
   def _check_if_any_filter_is_given(self) -> bool:
+    """Returns a boolean `True` if user had given a filter along with its
+    search query in the command line.
+
+    Returns:
+      Boolean `True` if any filter is given, `False` otherwise.
+    """
     return any([
         self._location, self._industry, self._profile_language, self._firstname,
         self._lastname, self._title, self._current_company, self._school
     ])
 
   def _apply_filters_to_search_results(self):
+    """Applies filters to search results if given any."""
+
+    # This is the first most filter that must be applied to the page even
+    # if user has not given any filter over the command line.
+    # This filter narrows down the search results to just people and kicks
+    # out other useless things like posts, pages, groups, etc.
     filter_by_people_button = self._get_element_by_xpath(
-        _ElementsPathSelectors.get_filter_by_people_button_xpath())
+        _SearchResultsPageElementsPathSelectors.
+        get_filter_by_people_button_xpath())
     filter_by_people_button.click()
+
+    # Once the click operation has been performed we deletes the object
+    # because it's going to take a lot of space in the memory so the other
+    # objects in this function; we don't want stack overflow so we free-up
+    # the memory that's not in use anymore.
     del filter_by_people_button
 
     if self._check_if_any_filter_is_given():
+      # Bring out the Filters overlay if any filter is given.
       all_filters_button = self._get_element_by_xpath(
-          _ElementsPathSelectors.get_all_filters_button_xpath())
+          _SearchResultsPageElementsPathSelectors.get_all_filters_button_xpath(
+          ))
       all_filters_button.click()
+
+      # Delete the `all_filters_button` to free-up memory that is not in use
+      # anymore.
       del all_filters_button
 
-    def check_for_filter(
-        filter: str,  # pylint: disable=redefined-builtin
+    def apply_if_filter_is_valid(
+        filter: Union[str, list],  # pylint: disable=redefined-builtin
         filter_dict: dict[str, webdriver.Chrome]
     ) -> None:
+      """Clicks on the checkboxes that are there for filters.
+
+      Only clicks those checkboxes that are present in the given `filter` object
+      and if present in the given `filter_dict`.
+
+      Args:
+        filter: Filter given by the user over the command line.
+        filter_dict: Dictionary containing all filters in the filters overlay
+                     with their respective checkboxe webelement.
+      """
       nonlocal self
+
+      # Create a list of all the filters present on the overlay for a particular
+      # section by dumping all the keys of the given `filter_dict`.
       filters_present: list[str] = filter_dict.keys()
 
       def click_overlapped_element(element: webdriver.Chrome) -> None:
@@ -741,7 +922,7 @@ class LinkedInSearchConnect:
         WebdriverException: Element is not clickable at point (..., ...).
 
         Args:
-          element: {webdriver.Chrome} Element.
+          element: Element to perform click operation on.
         """
         nonlocal self
         # @TODO: Validate if the current version of this function is efficient
@@ -750,6 +931,8 @@ class LinkedInSearchConnect:
 
       if isinstance(filter, str):
         if filter in filters_present:
+          # Perform click operation once it has been confired that the user
+          # given filter is present on the overlay.
           click_overlapped_element(filter_dict[filter])
         else:
           raise RuntimeError('Given filter "' + filter + '" is not present.')
@@ -757,156 +940,215 @@ class LinkedInSearchConnect:
 
       if isinstance(filter, list):
         for fltr in filter:
+          # Iterate over the `filter` list and check if any of the filter is
+          # present on the filters overlay.
           if fltr in filters_present:
+            # Perform click operation once it has been confired that the user
+            # given filter is present on the overlay.
             click_overlapped_element(filter_dict[fltr])
             continue
           else:
             raise RuntimeError('Given filter "' + fltr + '" is not present.')
         return
 
-    if self._location:
-      available_location_options = self._get_elements_by_xpath(
-          _ElementsPathSelectors.get_available_location_options_xpath())
-      available_location_labels = self._get_elements_by_xpath(
-          _ElementsPathSelectors.get_available_location_labels_xpath())
-      available_locations: list[str] = [
-          label.find_element_by_tag_name('span').text
-          for label in available_location_labels
+    def apply_if_filter_is_valid_with_processed_filter_options_and_labels(
+        filter: Union[str, list],  # pylint: disable=redefined-builtin
+        options_psb: pathselectorbuilder.PathSelectorBuilder,
+        labels_psb: pathselectorbuilder.PathSelectorBuilder,
+        tag_name: str) -> None:
+      """Calls function `apply_if_filter_is_valid()` with processed data.
+
+      This function takes out the filters available for a particular section
+      in the filters overlay and sends them to the function
+      `apply_if_filter_is_valid()` which then checks if the user given
+      filter(s) is present on the overlay and then clicks on them.
+
+      Args:
+        filter: Filter given by the user over the command line.
+        options_psb: `PathSelectorBuilder` object for the options of the filter.
+        labels_psb: `PathSelectorBuilder` object for the labels of the filter.
+        tag_name: Tag name to search the labels in.
+      """
+      # Fetch the available filter options in a list.
+      available_filters_options = self._get_elements_by_xpath(options_psb)
+      # Fetch the available filter names in a list. Filter names are named as
+      # labels in the filters overlay.
+      available_filters: list[str] = [
+          label.find_element_by_tag_name(tag_name).text
+          for label in self._get_elements_by_xpath(labels_psb)
       ]
+      filters_dict: dict[str, webdriver.Chrome] = {}
+      for fltr, filter_option in zip(available_filters,
+                                     available_filters_options):
+        # Map each filter name with its checkbox webelement.
+        filters_dict[fltr] = filter_option
 
-      del available_location_labels
-      locations_dict: dict[str, webdriver.Chrome] = {}
-      for location, location_option in zip(available_locations,
-                                           available_location_options):
-        locations_dict[location] = location_option
-      del available_locations
-      del available_location_options
+      # Pass the `filter` object with the generated `filters_dict` to function
+      # `apply_if_filter_is_valid()`.
+      apply_if_filter_is_valid(filter, filters_dict)
 
-      check_for_filter(self._location, locations_dict)
-      del locations_dict
+    if self._location:
+      apply_if_filter_is_valid_with_processed_filter_options_and_labels(
+          self._location,
+          _SearchResultsPageElementsPathSelectors.
+          get_available_location_options_xpath(),
+          _SearchResultsPageElementsPathSelectors.
+          get_available_location_labels_xpath(), 'span')
 
     if self._industry:
-      available_industry_options = self._get_elements_by_xpath(
-          _ElementsPathSelectors.get_available_industry_options_xpath())
-      available_industry_labels = self._get_elements_by_xpath(
-          _ElementsPathSelectors.get_available_industry_labels_xpath())
-      available_industries: list[str] = [
-          label.find_element_by_tag_name('span').text
-          for label in available_industry_labels
-      ]
-
-      del available_industry_labels
-      industries_dict: dict[str, webdriver.Chrome] = {}
-      for industry, industry_option in zip(available_industries,
-                                           available_industry_options):
-        industries_dict[industry] = industry_option
-      del available_industries
-      del available_industry_options
-
-      check_for_filter(self._industry, industries_dict)
-      del industries_dict
+      apply_if_filter_is_valid_with_processed_filter_options_and_labels(
+          self._industry,
+          _SearchResultsPageElementsPathSelectors.
+          get_available_industry_options_xpath(),
+          _SearchResultsPageElementsPathSelectors.
+          get_available_industry_labels_xpath(), 'span')
 
     if self._profile_language:
-      available_profile_language_options = self._get_elements_by_xpath(
-          _ElementsPathSelectors.get_available_profile_language_options_xpath())
-      available_profile_language_lables = self._get_elements_by_xpath(
-          _ElementsPathSelectors.get_available_profile_langauge_labels_xpath())
-      available_profile_languages: list[str] = [
-          label.find_element_by_tag_name('span').text
-          for label in available_profile_language_lables
-      ]
+      apply_if_filter_is_valid_with_processed_filter_options_and_labels(
+          self._profile_language,
+          _SearchResultsPageElementsPathSelectors.
+          get_available_profile_language_options_xpath(),
+          _SearchResultsPageElementsPathSelectors.
+          get_available_profile_langauge_labels_xpath(), 'span')
 
-      del available_profile_language_lables
-      profile_languages_dict: dict[str, webdriver.Chrome] = {}
-      for profile_language, profile_language_option in zip(
-          available_profile_languages, available_profile_language_options):
-        profile_languages_dict[profile_language] = profile_language_option
-      del available_profile_languages
-      del available_profile_language_options
+    def apply_filter_with_its_input_value(
+        filter: str,  # pylint: disable=redefined-builtin
+        psb: pathselectorbuilder.PathSelectorBuilder,
+        tag_name: str) -> None:
+      """Sends the given `filter` value at the given `psb` location.
 
-      check_for_filter(self._profile_language, profile_languages_dict)
-      del profile_languages_dict
+      Args:
+        filter: Filter to enter inside the element located at given `psb`.
+        psb: `PathSelectorBuilder` object of the element where we want to put
+             the given `filter` in.
+        tag_name: Tag name by which we will locate the element.
+      """
+      input_element = self._get_elements_by_xpath(
+          str(psb)).find_element_by_tag_name(tag_name)
+      input_element.clear()
+      input_element.send_keys(filter)
 
     if self._firstname:
-      firstname_input_element = self._get_elements_by_xpath(
-          _ElementsPathSelectors.get_first_name_input_element_container_xpath(
-          )).find_element_by_tag_name('input')
-      firstname_input_element.clear()
-      firstname_input_element.send_keys(self._firstname)
-      del firstname_input_element
+      apply_filter_with_its_input_value(
+          self._firstname,
+          _SearchResultsPageElementsPathSelectors.
+          get_first_name_input_element_container_xpath(), 'input')
 
     if self._lastname:
-      lastname_input_element = self._get_element_by_xpath(
-          _ElementsPathSelectors.get_last_name_input_element_container_xpath(
-          )).find_element_by_tag_name('input')
-      lastname_input_element.clear()
-      lastname_input_element.send_keys(self._lastname)
-      del lastname_input_element
+      apply_filter_with_its_input_value(
+          self._lastname,
+          _SearchResultsPageElementsPathSelectors.
+          get_last_name_input_element_container_xpath(), 'input')
 
     if self._title:
-      title_input_element = self._get_element_by_xpath(
-          _ElementsPathSelectors.get_title_input_element_container_xpath(
-          )).find_element_by_tag_name('input')
-      title_input_element.clear()
-      title_input_element.send_keys(self._title)
-      del title_input_element
+      apply_filter_with_its_input_value(
+          self._title,
+          _SearchResultsPageElementsPathSelectors.
+          get_title_input_element_container_xpath(), 'input')
 
     if self._current_company:
-      current_company_input_element = self._get_element_by_xpath(
-          _ElementsPathSelectors.
-          get_current_company_input_element_container_xpath(
-          )).find_element_by_tag_name('input')
-      current_company_input_element.clear()
-      current_company_input_element.send_keys(self._current_company)
-      del current_company_input_element
+      apply_filter_with_its_input_value(
+          self._current_company,
+          _SearchResultsPageElementsPathSelectors.
+          get_current_company_input_element_container_xpath(), 'input')
 
     if self._school:
-      school_input_element = self._get_element_by_xpath(
-          _ElementsPathSelectors.get_school_input_element_container_xpath(
-          )).find_element_by_tag_name('input')
-      school_input_element.clear()
-      school_input_element.send_keys(self._school)
-      del school_input_element
+      apply_filter_with_its_input_value(
+          self._school,
+          _SearchResultsPageElementsPathSelectors.
+          get_school_input_element_container_xpath(), 'input')
 
     if self._check_if_any_filter_is_given():
+      # If any filter was given that means we have marked some checkboxes
+      # so now we need to proceed by clicking on the 'Apply current filter'
+      # button.
       apply_current_filters_button = self._get_element_by_xpath(
-          _ElementsPathSelectors.get_apply_current_filters_button_xpath())
+          _SearchResultsPageElementsPathSelectors.
+          get_apply_current_filters_button_xpath())
       apply_current_filters_button.click()
+
+      # Delete `apply_current_filters_button` to free-up memory that is not
+      # in use anymore.
       del apply_current_filters_button
 
   def send_connection_requests(self) -> None:
+    """Sends connection requests to people in search results page carried out
+    by the driver program.
+
+    Sends connection requests to people in the Search results page.  Explicitly
+    waits until the elements that contains user information pops themselves up
+    on the page.  This explicit wait is important that we achieve using the
+    `WebDriverWait` API because LinkedIn is a dynamic website and will not pop
+    the elements on the page until requested.  Protected function
+    `utils.GetElementByXPath()` helps finding out the elements from the `DOM` by
+    explicitly requesting elements from the dynamic page by triggering a scroll
+    down event.
+
+    You will also see the user's information printed on the console as this
+    function sends connection request on LinkedIn.  `Invitation` API handles
+    the printing of the information on the console.
+    """
+
+    # Apply all the user given (if any) filter information on the
+    # 'Search results' page.
     self._apply_filters_to_search_results()
 
+    # Set invitation count to 0 before sending any invitation request.
     invitation_count = 0
     start_time = time.time()
 
     invitation = status.Invitation()
-    for person in _GetSearchResultsPersonLiObjects():
+
+    # Request the generator function to yield `_Person` objects that are
+    # generated on the 'Search results' page.
+    for person in _GetSearchResultsPersonLiObject():
+
+      # If the text on the `connect_button` is 'Pending' (means we've already
+      # sent invitation and it is on pending) or the aria-label of
+      # `connect_button` is either of ('Follow', 'Message') than we want to
+      # continue the loop as clicking on these buttons will not have a
+      # desirable result.
       if (person.connect_button.text == 'Pending' or
           person.connect_button.get_attribute('aria-label')
           in ('Follow', 'Message')):
         continue
       try:
+        # Move to the element on the page to avoid
+        # `ElementNotInteractableException`.
         action_chains.ActionChains(
             driver.GetGlobalChromeDriverInstance()).move_to_element(
                 person.connect_button).click().perform()
+
+        # Get the 'Send now' button from the dialog that appears after clicking
+        # on the `connect_button`.
         send_now_button = self._get_element_by_xpath(
-            _ElementsPathSelectors.get_send_invite_modal_xpath(
-            )).find_element_by_xpath(
-                _ElementsPathSelectors.get_send_now_button_xpath())
+            _SearchResultsPageElementsPathSelectors.get_send_invite_modal_xpath(
+            )).find_element_by_xpath(_SearchResultsPageElementsPathSelectors.
+                                     get_send_now_button_xpath())
+
+        # Move to the element on the page to avoid
+        # `ElementNotInteractableException`.
         action_chains.ActionChains(
             driver.GetGlobalChromeDriverInstance()).move_to_element(
                 send_now_button).click().perform()
         invitation.display_invitation_status_on_console(person, 'sent',
                                                         start_time)
+
+        # Increment the invitation count.
         invitation_count += 1
       except (exceptions.ElementNotInteractableException,
               exceptions.ElementClickInterceptedException) as exc:
         logger.error(traceback.format_exc())
+
+        # If the element is not interactable or click intercepted then we
+        # assume that the page is unable to send the invitation request and
+        # there's a serious problem so we just break the loop.
         if isinstance(exc, exceptions.ElementClickInterceptedException):
           break
         invitation.display_invitation_status_on_console(person, 'failed',
                                                         start_time)
 
+      # Check if the invitation count is equal to the maximum number of
+      # connections a non-premium account can send.
       if invitation_count == self._max_connection_limit:
         break

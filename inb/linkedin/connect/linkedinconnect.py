@@ -323,6 +323,7 @@ def _GetSuggestionBoxPersonLiObject() -> _Person:
   `_LINKEDIN_MAX_INVITATION_LIMIT` is neccessary as LinkedIn limits the number
   of connections a non-premium account can send in a week.
   """
+  # The counter for the `li` elements in the `MyNetwork` page.
   person_li_position = 1
   while True:
     profileid = utils.GetElementByXPath(
@@ -343,8 +344,12 @@ def _GetSuggestionBoxPersonLiObject() -> _Person:
         _MyNetworkPageElementsPathSelectors.
         get_suggestion_box_li_card_invite_button_xpath(person_li_position))
     profileurl = settings.GetLinkedInUrl() + profileid
+
+    # Yield the `_Person` object with the scraped data.
     yield _Person(name, occupation, mutual_connections, profileid, profileurl,
                   connect_button)
+
+    # Stop yielding if the counter reaches the maximum invitation limit.
     if person_li_position == connect.LINKEDIN_MAX_INVITATION_LIMIT:
       return
     person_li_position += 1
@@ -395,8 +400,7 @@ class LinkedInConnect(object):
         settings.GetLinkedInMyNetworkPageUrl())
 
   def send_connection_requests(self) -> None:
-    """Function sends connection requests to people on your `My Network`
-    page.
+    """Sends connection requests to people on your `My Network` page.
 
     Sends connection requests to people on your `My Network` page.  Explicitly
     waits until the elements that contains user information pops themselves up
