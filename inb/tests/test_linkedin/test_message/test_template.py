@@ -60,7 +60,7 @@ class TestTemplateBaseClass(unittest.TestCase):  # pylint: disable=missing-class
       os.remove(self._TEST_MSG_TEMPLATE_F)
 
 
-class TestProtectedFunctionCheckIfTemplateFileIsSupported(
+class TestProtectedFunctionCheckIfTemplateFileIsSupported(  # pylint: disable=missing-class-docstring
     TestTemplateBaseClass):
 
   def test_function_with_unsupported_file_extensions(self) -> None:

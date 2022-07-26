@@ -27,7 +27,7 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-"""Path selector builder for DOM elements."""
+"""Path selector builder for document_object_module elements."""
 
 from __future__ import annotations
 
@@ -35,7 +35,7 @@ from typing import Union
 
 
 class PathSelectorBuilder:
-  """Builds a path selector for a DOM element."""
+  """Builds a path selector for a document_object_module element."""
 
   def __init__(self, path_label: str, path_selector: Union[PathSelectorBuilder,
                                                            str]):

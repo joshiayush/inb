@@ -51,7 +51,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
 from linkedin import (driver, settings, connect)
-from linkedin.DOM import javascript
+from linkedin.document_object_module import javascript
 from linkedin.message import template
 from linkedin.connect import (pathselectorbuilder, utils)
 from linkedin.invitation import status
@@ -563,8 +563,8 @@ class _Person:
   aimed for the `LinkedInSearchConnect` API.
 
   Used inside the protected function `_GetSearchResultsPersonLiObject()`
-  after storing the person information from the `DOM` inside the local
-  variables like you can see below:
+  after storing the person information from the `document_object_module` inside
+  the local variables like you can see below:
 
   ```python
   def _GetSearchResultsPersonLiObject() -> _Person:
@@ -1080,9 +1080,9 @@ class LinkedInSearchConnect:
     on the page.  This explicit wait is important that we achieve using the
     `WebDriverWait` API because LinkedIn is a dynamic website and will not pop
     the elements on the page until requested.  Protected function
-    `utils.GetElementByXPath()` helps finding out the elements from the `DOM` by
-    explicitly requesting elements from the dynamic page by triggering a scroll
-    down event.
+    `utils.GetElementByXPath()` helps finding out the elements from the
+    `document_object_module` by explicitly requesting elements from the dynamic
+    page by triggering a scroll down event.
 
     You will also see the user's information printed on the console as this
     function sends connection request on LinkedIn.  `Invitation` API handles

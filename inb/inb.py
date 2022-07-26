@@ -41,7 +41,7 @@ from linkedin import settings
 try:
   from gettext import gettext as _  # pylint: disable=unused-import
 except ImportError:
-  _ = lambda msg: msg
+  _ = lambda msg: msg  # pylint: disable=unnecessary-lambda-assignment
 
 
 def _SendAndSearchCommandCommonOptions(f: function) -> function:  # pylint: disable=undefined-variable

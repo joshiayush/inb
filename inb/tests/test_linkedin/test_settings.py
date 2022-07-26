@@ -170,7 +170,7 @@ class TestProtectedCheckIfChromeDriverIsCompatibleWithGoogleChromeInstalledFunct
         settings._CheckIfChromeDriverIsCompatibleWithGoogleChromeInstalled())  # pylint: disable=protected-access
 
 
-class TestProtectedGetPlatformSpecificChromeDriverCompatibleVersionUrlFunction(  # pylint: disable=missing-module-docstring
+class TestProtectedGetPlatformSpecificChromeDriverCompatibleVersionUrlFunction(  # pylint: disable=missing-class-docstring
     unittest.TestCase):
   _CHROME_DRIVER_BINARY_RELEASE = (
       '95.0.4638.69',

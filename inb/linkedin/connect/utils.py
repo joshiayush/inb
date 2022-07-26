@@ -40,7 +40,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
 from linkedin import (driver, settings)
-from linkedin.DOM import javascript
+from linkedin.document_object_module import javascript
 from linkedin.connect import pathselectorbuilder
 
 logger = logging.getLogger(__name__)
@@ -59,12 +59,14 @@ logger.addHandler(file_handler)
 
 def GetElementByXPath(xpath: pathselectorbuilder.PathSelectorBuilder,
                       wait: int = 10) -> webelement.WebElement:
-  """Returns an element from the `DOM` whose `xpath` is known.
+  """Returns an element from the `document_object_module` whose `xpath` is
+  known.
 
-  Function tries to find out an element from the `DOM` at the given `xpath`
-  using the `WebDriverWait` API.  This function loads the page further
-  immediately after the `WebDriverWait` API has raised `TimeoutException`
-  in an hope that the element could be at the bottom of the page.
+  Function tries to find out an element from the `document_object_module` at
+  the given `xpath` using the `WebDriverWait` API.  This function loads the page
+  further immediately after the `WebDriverWait` API has raised
+  `TimeoutException` in an hope that the element could be at the bottom of the
+  page.
 
   THE MAIN CAVEAT here is that this function should only be used when you are
   completely sure that the element is going to reveal itself once you have
@@ -73,7 +75,8 @@ def GetElementByXPath(xpath: pathselectorbuilder.PathSelectorBuilder,
   triggered explicitly.
 
   ```python
-  # Taking the name out from the `DOM` using an explicit wait routine.
+  # Taking the name out from the `document_object_module` using an explicit wait
+  # routine.
   name = _GetElementByXPath(
       _MyNetworkPageElementsPathSelectors.get_suggestion_box_li_card_name_xpath(
           position)).text
@@ -82,7 +85,7 @@ def GetElementByXPath(xpath: pathselectorbuilder.PathSelectorBuilder,
   Args:
     xpath:  Element `xpath`.
     wait:   Time we should wait for until the element has popped itself to the
-              `DOM`.
+              `document_object_module`.
 
   Returns:
     `WebElement` located at the given `xpath`.

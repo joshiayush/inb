@@ -27,6 +27,8 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+"""LinkedIn Connect offeres a simple way to send invitations to your network."""
+
 from linkedin.connect.linkedinconnect import LinkedInConnect
 from linkedin.connect.linkedinsearchconnect import LinkedInSearchConnect
 

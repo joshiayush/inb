@@ -1,3 +1,5 @@
+# pylint: disable=missing-module-docstring
+
 # Copyright 2021, joshiayus Inc.
 # All rights reserved.
 #
@@ -79,7 +81,7 @@ class TestProtectedDriverClass(unittest.TestCase):  # pylint: disable=missing-cl
     else:
       self.assertIsInstance(
           self.driver.driver, webdriver.Chrome,
-          ('Expected self.driver.driver to be webdriver.Chrome, received '
+          ('Expected self.driver.driver to be webdriver.Chrome, received ' # pylint: disable=consider-using-f-string
            '%(type)s') % {'type': lib.Type(self.driver.driver)})
 
   @lib.IgnoreWarnings(ResourceWarning)
@@ -102,7 +104,7 @@ class TestProtectedDriverClass(unittest.TestCase):  # pylint: disable=missing-cl
     else:
       self.assertIsInstance(
           self.driver.driver, webdriver.Chrome,
-          ('Expected self.driver.driver to be webdriver.Chrome, received '
+          ('Expected self.driver.driver to be webdriver.Chrome, received '  # pylint: disable=consider-using-f-string
            '%(type)s') % {'type': lib.Type(self.driver.driver)})
 
   @lib.IgnoreWarnings(ResourceWarning)
@@ -128,7 +130,7 @@ class TestProtectedDriverClass(unittest.TestCase):  # pylint: disable=missing-cl
     else:
       self.assertIsInstance(
           self.driver.driver, webdriver.Chrome,
-          ('Expected self.driver.driver to be webdriver.Chrome, received '
+          ('Expected self.driver.driver to be webdriver.Chrome, received '  # pylint: disable=consider-using-f-string
            '%(type)s') % {'type': lib.Type(self.driver.driver)})
 
   @lib.IgnoreWarnings(ResourceWarning)
@@ -150,7 +152,7 @@ class TestProtectedDriverClass(unittest.TestCase):  # pylint: disable=missing-cl
     else:
       self.assertIsInstance(
           self.driver.driver, webdriver.Chrome,
-          ('Expected self.driver.driver to be webdriver.Chrome, received '
+          ('Expected self.driver.driver to be webdriver.Chrome, received '  # pylint: disable=consider-using-f-string
            '%(type)s') % {'type': lib.Type(self.driver.driver)})
 
   def tearDown(self) -> None:
@@ -174,7 +176,7 @@ class TestGChromeDriverInstanceClass(unittest.TestCase):
                      _GetAddArgumentCallingOrder())
 
 
-class TestGetGlobalChromeDriverInstanceMethod(unittest.TestCase):
+class TestGetGlobalChromeDriverInstanceMethod(unittest.TestCase):  # pylint: disable=missing-class-docstring
 
   def setUp(self) -> None:
     driver.GChromeDriverInstance.initialize(settings.ChromeDriverAbsolutePath(),
@@ -208,7 +210,8 @@ class TestGetGlobalChromeDriverInstanceMethod(unittest.TestCase):
     """Note: This test case should be ran over command line as root using,
 
     ```shell
-    python3 inb/test.py TestGetGlobalChromeDriverInstanceMethod.test_when_x_bit_is_off
+    python3 inb/test.py TestGetGlobalChromeDriverInstanceMethod
+      .test_when_x_bit_is_off
     ```
     """
     lib.RemoveFilePermissions(settings.ChromeDriverAbsolutePath(), 'x')
@@ -222,7 +225,7 @@ class TestGetGlobalChromeDriverInstanceMethod(unittest.TestCase):
     driver.DisableGlobalChromeDriverInstance()
 
 
-class TestDisableGlobalChromeDriverInstanceMethod(unittest.TestCase):
+class TestDisableGlobalChromeDriverInstanceMethod(unittest.TestCase):  # pylint: disable=missing-class-docstring
 
   @lib.IgnoreWarnings(ResourceWarning)
   @mock.patch('selenium.webdriver.Chrome.quit')

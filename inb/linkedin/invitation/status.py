@@ -1,5 +1,3 @@
-# pylint: disable=missing-module-docstring
-
 # Copyright 2021, joshiayus Inc.
 # All rights reserved.
 #
@@ -29,6 +27,8 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+"""Invitation module to send invitation status to console."""
+
 from __future__ import annotations
 
 import time
@@ -57,6 +57,10 @@ _SEARCH_INVITATION_STATUS_TEMPL = """  {{status}}  {{name}}
 
 
 class Invitation(object):
+  """Invitation API offeres the following methods to send invitation status to
+  console.
+  """
+
   _SLEEP_TIME_AFTER_LOGGING = 0.18
 
   def set_invitation_fields(self, name: str, occupation: str, location: str,

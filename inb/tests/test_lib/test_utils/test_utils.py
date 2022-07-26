@@ -1,3 +1,5 @@
+# pylint: disable=missing-module-docstring
+
 # Copyright 2021, joshiayus Inc.
 # All rights reserved.
 #
@@ -41,7 +43,7 @@ import lib
 from linkedin import settings
 
 
-class TestCustomTypeUtilityFunction(unittest.TestCase):
+class TestCustomTypeUtilityFunction(unittest.TestCase):  # pylint: disable=missing-class-docstring
 
   def test_with_primitive_types(self) -> None:
     types_ = [
@@ -70,7 +72,7 @@ class TestWhichUtilityFunction(unittest.TestCase):
     self.assertEqual(lib.Which(sys.executable), sys.executable)
 
 
-class TestIgnoreWarningsUtilityFunction(unittest.TestCase):
+class TestIgnoreWarningsUtilityFunction(unittest.TestCase):  # pylint: disable=missing-class-docstring
 
   @lib.IgnoreWarnings(ResourceWarning)
   @mock.patch('warnings.simplefilter')
@@ -113,7 +115,8 @@ class TestRemoveFilePermissionsAndAddFilePermissionsFunction(unittest.TestCase):
   this test should be ran over command line as root using,
 
   ```shell
-  python3 inb/test.py TestRemoveFilePermissionsAndAddFilePermissionsFunction[.test_name]
+  python3 inb/test.py TestRemoveFilePermissionsAndAddFilePermissionsFunction[
+    .test_name]
   ```
   """
 

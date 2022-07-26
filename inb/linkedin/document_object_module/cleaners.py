@@ -1,3 +1,5 @@
+# pylint: disable=missing-module-docstring
+
 # Copyright 2021, joshiayus Inc.
 # All rights reserved.
 #
@@ -72,7 +74,7 @@ class _CleanerElementsSelectors:
     return "//*[@id='msg-overlay']"
 
 
-class Cleaner:
+class Cleaner:  # pylint: disable=missing-class-docstring
 
   @staticmethod
   def clear_message_overlay(wait: int = 60) -> None:

@@ -1,3 +1,5 @@
+# pylint: disable=missing-module-docstring
+
 # Copyright 2021, joshiayus Inc.
 # All rights reserved.
 #
@@ -42,7 +44,7 @@ from urllib import (request, parse)
 try:
   from gettext import gettext as _  # pylint: disable=unused-import
 except ImportError:
-  _ = lambda msg: msg
+  _ = lambda msg: msg  # pylint: disable=unnecessary-lambda-assignment
 
 CONNECTION_LIMIT_EXCEED_EXCEPTION_MESSAGE = """Invalid connection limit %d.
 LinkedIn does not allow to send over 80 invitations per-day to a non-premium
@@ -141,48 +143,47 @@ def _RetrieveChromeDriverZip(url: str, dest: str, verbose: bool = True) -> str:
   Returns:
     Destination where the file is placed after installing.
   """
-  u = request.urlopen(url)
+  with request.urlopen(url) as u:
+    scheme, netloc, path, query, fragment = parse.urlsplit(url)  # pylint: disable=unused-variable
+    filename = os.path.basename(path)
+    if not filename:
+      filename = 'downloaded'
+    global _CHROME_DRIVER_ZIP_FILE
+    _CHROME_DRIVER_ZIP_FILE = filename
+    if dest:
+      filename = os.path.join(dest, filename)
 
-  scheme, netloc, path, query, fragment = parse.urlsplit(url)  # pylint: disable=unused-variable
-  filename = os.path.basename(path)
-  if not filename:
-    filename = 'downloaded'
-  global _CHROME_DRIVER_ZIP_FILE
-  _CHROME_DRIVER_ZIP_FILE = filename
-  if dest:
-    filename = os.path.join(dest, filename)
-
-  with open(filename, 'wb') as f:
-    if verbose:
-      meta = u.info()
-      if hasattr(meta, 'getheaders'):
-        meta_func = meta.getheaders
-      else:
-        meta_func = meta.get_all
-      meta_length = meta_func('Content-Length')
-      file_size = None
-      if meta_length:
-        file_size = int(meta_length[0])
-        click.echo(_('Downloading: %s Bytes: %s') % (url, file_size))
-
-    file_size_dl = 0
-    block_size = 8192
-    while True:
-      buffer = u.read(block_size)
-      if not buffer:
-        break
-
-      file_size_dl += len(buffer)
-      f.write(buffer)
-
+    with open(filename, 'wb') as f:
       if verbose:
-        status = '{0:16}'.format(file_size_dl)  # pylint: disable=consider-using-f-string
-        if file_size:
-          status += '   [{0:6.2f}%]'.format(file_size_dl * 100 / file_size)  # pylint: disable=consider-using-f-string
-        status += chr(13)
-        click.echo(f'{status}\r', None, False)
-    if verbose:
-      click.echo('')
+        meta = u.info()
+        if hasattr(meta, 'getheaders'):
+          meta_func = meta.getheaders
+        else:
+          meta_func = meta.get_all
+        meta_length = meta_func('Content-Length')
+        file_size = None
+        if meta_length:
+          file_size = int(meta_length[0])
+          click.echo(_('Downloading: %s Bytes: %s') % (url, file_size))
+
+      file_size_dl = 0
+      block_size = 8192
+      while True:
+        buffer = u.read(block_size)
+        if not buffer:
+          break
+
+        file_size_dl += len(buffer)
+        f.write(buffer)
+
+        if verbose:
+          status = '{0:16}'.format(file_size_dl)  # pylint: disable=consider-using-f-string
+          if file_size:
+            status += '   [{0:6.2f}%]'.format(file_size_dl * 100 / file_size)  # pylint: disable=consider-using-f-string
+          status += chr(13)
+          click.echo(f'{status}\r', None, False)
+      if verbose:
+        click.echo('')
 
   return filename
 
@@ -432,8 +433,7 @@ def _InstallGoogleChromeCompatibleChromeDriver() -> None:
   """
   _RetrieveChromeDriverZip(
       _GetPlatformSpecificChromeDriverCompatibleVersionUrl(
-          _GetGoogleChromeBinaryVersion()),
-      True if LOGGING_TO_STREAM_ENABLED else False)
+          _GetGoogleChromeBinaryVersion()), bool(LOGGING_TO_STREAM_ENABLED))
   _ExtractChromeDriverZip(
       os.path.join(_GetInstalledChromeDriverDirectoryPath(),
                    _CHROME_DRIVER_ZIP_FILE))

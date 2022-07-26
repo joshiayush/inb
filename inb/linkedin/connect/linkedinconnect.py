@@ -66,7 +66,7 @@ from selenium.webdriver.remote import webelement
 from selenium.webdriver.common import action_chains
 
 from linkedin import (driver, settings, connect)
-from linkedin.DOM import cleaners
+from linkedin.document_object_module import cleaners
 from linkedin.connect import (pathselectorbuilder, utils)
 from linkedin.invitation import status
 
@@ -275,8 +275,8 @@ class _Person:
   aimed for the `LinkedInConnect` API.
 
   Used inside the protected function `_GetSuggestionBoxPersonLiObject()`
-  after storing the person information from the `DOM` inside the local
-  variables like you can see below:
+  after storing the person information from the `document_object_module`
+  inside the local variables like you can see below:
 
   ```python
   def _GetSuggestionBoxPersonLiObject(position: int) -> _Person:
@@ -305,15 +305,15 @@ class _Person:
 
 def _GetSuggestionBoxPersonLiObject() -> _Person:
   """Generator function returns a `_Person` instance by collecting a user's
-  information from the `DOM`.
+  information from the `document_object_module`.
 
   Every time this generator function is called it increases its
   `person_li_position` value by one and collects the information of the next
-  user in the `ul` list on the `DOM`.
+  user in the `ul` list on the `document_object_module`.
 
   This function uses `utils.GetElementByXPath()` protected method which
   internally makes the browser to wait explicitly until the requested element
-  arrives on the `DOM`.
+  arrives on the `document_object_module`.
 
   Does not raises `StopIteration` exception instead returns silently when the
   `person_li_position` count becomes equal to the global variable
@@ -407,17 +407,17 @@ class LinkedInConnect(object):
     on the page.  This explicit wait is important that we achieve using the
     `WebDriverWait` API because LinkedIn is a dynamic website and will not pop
     the elements on the page until requested.  Protected function
-    `utils.GetElementByXPath()` helps finding out the elements from the `DOM` by
-    explicitly requesting elements from the dynamic page by triggering a scroll
-    down event.
+    `utils.GetElementByXPath()` helps finding out the elements from the
+    `document_object_module` by explicitly requesting elements from the dynamic
+    page by triggering a scroll down event.
 
     You will also see the user's information printed on the console as this
     function sends connection request on LinkedIn.  `Invitation` API handles
     the printing of the information on the console.
     """
 
-    # Cleaning un-neccessary elements from the DOM is neccessary so to avoid
-    # `ElementNotInteractableException`.
+    # Cleaning un-neccessary elements from the `document_object_module`` is
+    # neccessary so to avoid `ElementNotInteractableException`.
     cleaners.Cleaner.clear_message_overlay()
 
     # Set invitation count to 0 before sending any invitation request.
@@ -427,7 +427,7 @@ class LinkedInConnect(object):
     invitation = status.Invitation()
 
     # Iterate over the person elements in the `ul` list on the Suggestion Box
-    # on the MyNetwork page of the DOM.
+    # on the MyNetwork page of the document_object_module.
     for person in _GetSuggestionBoxPersonLiObject():
 
       # Check if the invitation count is equal to the maximum number of

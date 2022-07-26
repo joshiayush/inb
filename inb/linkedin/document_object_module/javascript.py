@@ -1,3 +1,5 @@
+# pylint: disable=missing-module-docstring
+
 # Copyright 2021, joshiayus Inc.
 # All rights reserved.
 #
@@ -44,7 +46,7 @@ _SCROLL_TO_BOTTOM_SCRIPT = (
     'scrollingElement.scrollTop = scrollingElement.scrollHeight;')
 
 
-class JS:
+class JS:  # pylint: disable=missing-module-docstring
   """Utility JavaScript scripts to use at runtime."""
 
   @staticmethod

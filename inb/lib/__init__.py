@@ -27,5 +27,7 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+"""Exports library methods to be used by inb modules."""
+
 from lib.utils import (Type, Which, IgnoreWarnings, RemoveFilePermissions,
                        AddFilePermissions)
