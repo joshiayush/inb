@@ -32,14 +32,11 @@
 import re
 import os
 import sys
-import click
 import pathlib
 import logging
 import subprocess
 
 import lib
-
-from urllib import (request, parse)
 
 try:
   from gettext import gettext as _  # pylint: disable=unused-import
@@ -126,7 +123,7 @@ def _ExtractChromeDriverZip(chromedriver_zip: str) -> None:
     zip_f.extractall(driver_dir)
 
 
-def _RetrieveChromeDriverZip(url: str, dest: str, verbose: bool = True) -> str:
+def _RetrieveChromeDriverZip(url: str, dest: str) -> str:
   """Utility function to download `chromedriver` zip file at the specified URL.
 
   Utility function to download and store `chromedriver` zip file in the
@@ -143,49 +140,8 @@ def _RetrieveChromeDriverZip(url: str, dest: str, verbose: bool = True) -> str:
   Returns:
     Destination where the file is placed after installing.
   """
-  with request.urlopen(url) as u:
-    scheme, netloc, path, query, fragment = parse.urlsplit(url)  # pylint: disable=unused-variable
-    filename = os.path.basename(path)
-    if not filename:
-      filename = 'downloaded'
-    global _CHROME_DRIVER_ZIP_FILE
-    _CHROME_DRIVER_ZIP_FILE = filename
-    if dest:
-      filename = os.path.join(dest, filename)
-
-    with open(filename, 'wb') as f:
-      if verbose:
-        meta = u.info()
-        if hasattr(meta, 'getheaders'):
-          meta_func = meta.getheaders
-        else:
-          meta_func = meta.get_all
-        meta_length = meta_func('Content-Length')
-        file_size = None
-        if meta_length:
-          file_size = int(meta_length[0])
-          click.echo(_('Downloading: %s Bytes: %s') % (url, file_size))
-
-      file_size_dl = 0
-      block_size = 8192
-      while True:
-        buffer = u.read(block_size)
-        if not buffer:
-          break
-
-        file_size_dl += len(buffer)
-        f.write(buffer)
-
-        if verbose:
-          status = '{0:16}'.format(file_size_dl)  # pylint: disable=consider-using-f-string
-          if file_size:
-            status += '   [{0:6.2f}%]'.format(file_size_dl * 100 / file_size)  # pylint: disable=consider-using-f-string
-          status += chr(13)
-          click.echo(f'{status}\r', None, False)
-      if verbose:
-        click.echo('')
-
-  return filename
+  import wget
+  return wget.download(url, dest)
 
 
 def _GetGoogleChromeBinaryVersion() -> str:
@@ -433,7 +389,7 @@ def _InstallGoogleChromeCompatibleChromeDriver() -> None:
   """
   _RetrieveChromeDriverZip(
       _GetPlatformSpecificChromeDriverCompatibleVersionUrl(
-          _GetGoogleChromeBinaryVersion()), bool(LOGGING_TO_STREAM_ENABLED))
+          _GetGoogleChromeBinaryVersion()))
   _ExtractChromeDriverZip(
       os.path.join(_GetInstalledChromeDriverDirectoryPath(),
                    _CHROME_DRIVER_ZIP_FILE))
