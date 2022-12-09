@@ -101,7 +101,6 @@ CHROMEDRIVER_OPTIONS = {
     'disable-extensions': '--disable-extensions',
     # disable notifications when running chromedriver for automation testing
     'disable-notifications': '--disable-notifications',
-    # @TODO(joshiayush): Add useful arguments here...
 }
 
 
