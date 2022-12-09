@@ -4,8 +4,8 @@ running process.
 ```python
 GChromeDriverInstance.initialize('/path/to/chromedriver', ['--headless', ...])
 
-element = GetGlobalWebDriverChromeInstance().find_element_by_id('identifier')
-DisableGlobalWebDriverChromeInstance()
+element = GetGlobalChromeDriverInstance().find_element_by_id('identifier')
+DisableGlobalChromeDriverInstance()
 ```
 """
 
