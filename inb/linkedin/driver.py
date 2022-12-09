@@ -150,9 +150,8 @@ class _Driver(object):
     This function disables the `webdriver.Chrome` instance by calling the
     `quit()` method on the `webdriver.Chrome` instance.
     """
-    if not self.driver:
-      return
-    self.driver.quit()
+    if self.driver:
+      self.driver.quit()
     self.driver = None
 
   def __del__(self) -> None:
