@@ -8,7 +8,7 @@
   <h3 align="center">inb</h3>
 
   <p align="center">
-    Automate the world of LinkedIn!
+    Automatically connect to over <strong>900 million</strong> professionals on LinkedIn!
     <br />
     <a href="https://github.com/joshiayush/inb/tree/master/docs"><strong>Explore the docs »</strong></a>
     <br />
@@ -21,22 +21,15 @@
   </p>
 </div>
 
-# inb
+**inb** is an automation tool for LinkedIn that allows users to automate various tasks, such as sending connection requests, messaging connections, and endorsing skills. With **inb**, users can save time and streamline their LinkedIn outreach efforts.
 
-![inb](./media/inb.gif)
+The tool is written in Python and uses the **LinkedIn Voyager API** to interact with LinkedIn.
 
-Word **inb** is made up of two words "**in**" and "**b**" where "**in**" stands for [LinkedIn][_linkedin] which is an _American business and employment-oriented online service that operates via websites and mobile apps_ and "**b**" stands for bot. So by now you've already deduced that inb is a bot that automates [LinkedIn][_linkedin].
+**inb** is designed for professionals who want to expand their network and increase their visibility on LinkedIn. It can be used for personal or business purposes, and is ideal for individuals who want to grow their network without spending hours manually sending connection requests and messages.
 
-**Features include:**
+The tool is open source and available on GitHub, so users can contribute to the development of the project and customize it to their specific needs. To get started, simply download the tool from GitHub and follow the instructions in the **`README`** file.
 
-- Automatically send invitation to people in your MyNetwork page.
-- Automatically send invitation to people based on their industry, location, name and profile id.
-- Personalize connection request messages.
-
-**Features planned to include:**
-
-- Automatically remove connections.
-- [Information Gathering][_inb_info_gathering_issue] module to gather information of a person or a company on LinkedIn
+> No **"official"** API access required - Just use a valid LinkedIn account!
 
 <div align="right">
   <a href="#top">
@@ -45,71 +38,6 @@ Word **inb** is made up of two words "**in**" and "**b**" where "**in**" stands 
   
   </a>
 </div>
-
-## Technologies Used
-
-<div align="center">
-
-![Bash][bash]
-![Python][python]
-![Python Selenium][python_selenium]
-![Chromedriver][chromedriver]
-
-</div>
-
-<div align="right">
-  <a href="#top">
-  
-  ![Back to top][back_to_top]
-  
-  </a>
-</div>
-
-# Commence
-
-To get a local copy up and running follow the steps below.
-
-## Prerequisites
-
-You must have a `Python 3.7.x` version or higher. We recommend setting up a virtual environment using `virtualenv`.
-
-### Ubuntu
-
-**Step 1: Install Virtualenv**
-
-First, we will update our `apt`, then we will install the **virtualenv** module.
-
-```shell
-sudo apt update
-sudo apt install python-virtualenv
-```
-
-**Step 2: Create a Virtual Environment & Install Python 3**
-
-Virtualenv works by creating a folder that houses the necessary Python executables in the bin directory. In this instance, we are
-installing `Python 3.7.12` while setting up the virtual environment in the project's directory.
-
-```shell
-virtualenv -p /usr/bin/python3 .
-```
-
-<p align="right"><a href="#virtualenv_imp_note">Important note!</a></p>
-
-**Step 3: Activate Your Virtual Environment**
-
-From the project's root directory execute the following command.
-
-```shell
-source bin/activate
-```
-
-<p align="right"><a href="#virtualenv_imp_note">Important note!</a></p>
-
-<div id="virtualenv_imp_note">
-  <strong>Note: Virtual environment setup and activation step should be done after cloning the repository.</strong>
-</div>
-
-<!-- @TODO(@): Add installation steps for Windows and MacOS. -->
 
 ## Installation
 
@@ -133,15 +61,36 @@ python3 -m pip install [-r] requirements.txt
   </a>
 </div>
 
-# Usage
+## Usage
 
-To send invitations to people on LinkedIn you must execute the following command. The following command will send invitations to 20 people that are in your `MyNetwork` page.
+To send invitations to people on LinkedIn you could use:
 
-```
+```shell
 python3 inb/inb.py send --email ayush854032@gmail.com --password xxx-xxx-xxx
 ```
 
-Go to our [Wiki][_inb_wiki] for more usage instructions.
+A Quick Usage guide:
+
+```
+Usage: inb.py [OPTIONS] COMMAND [ARGS]...
+
+  inb version 1.0.0
+
+  Command line utility to automate the world of LinkedIn.
+
+  Quick start:
+
+    python3 inb/inb.py send --email "username" --password "password"
+
+Options:
+  --help  Show this message and exit.
+
+Commands:
+  search  Searches for the specific keyword given and sends invitation to...
+  send    Sends invitations on LinkedIn to people in your MyNetwork page.
+```
+
+> **Any problems encountered in non-linux environment should be reported immediately before passing comments on the portability of this tool as I've only built and tested it on Linux!**
 
 <div align="right">
   <a href="#top">
@@ -151,9 +100,7 @@ Go to our [Wiki][_inb_wiki] for more usage instructions.
   </a>
 </div>
 
-# Contribution
-
-Contributions are what makes the open source community such an amazing place to learn, inspire, and create. Any contributions you make are **greatly appreciated**.
+## Contribution
 
 If you have a suggestion that would make this better, please fork the repo and create a pull request. You can also simply open an issue with the tag "enhancement", "bug", or "documentation". Don't forget to give the project a star! Thanks again!
 
@@ -167,103 +114,15 @@ Project [**inb**][_inb] is hosted on [GitHub][_github]. If you want to contribut
   </a>
 </div>
 
-# License
-
-Distributed under the MIT License. See [`LICENSE`][_inb_license_f] for more information. Please do not use project [**inb**][_inb] if you have any issue with MIT License.
-
-<div align="right">
-  <a href="#top">
-  
-  ![Back to top][back_to_top]
-  
-  </a>
-</div>
-
-# Developers
-
-- [**joshiayush**](https://www.github.com/joshiayush)
-
-  <a href="https://github.com/joshiayush">
-  <img src="./media/github.png" alt="Logo" width="40" height="40">
-  </a>
-  <a href="https://www.linkedin.com/in/ayush-joshi-3600a01b7/">
-  <img src="./media/linkedin.png" alt="Logo" width="40" height="40">
-  </a>
-  <a href="http://twitter.com/joshiayushjoshi">
-  <img src="./media/twitter.png" alt="Logo" width="40" height="40">
-  </a>
-  <a href="https://stackoverflow.com/users/13910122/ayush">
-  <img src="./media/stack-overflow.png" alt="Logo" width="40" height="40">
-  </a>
-
-<!-- Contibutors who have contributed non-trivial changes are encouraged to add their details here. -->
-
-<div align="right">
-  <a href="#top">
-  
-  ![Back to top][back_to_top]
-  
-  </a>
-</div>
-
-# Acknowledgments
-
-A big thanks goes to the following resources who have helped in the development of project [**inb**][_inb].
-
-- [Flaticon](https://www.flaticon.com/)
-- [Shields.io](https://shields.io/)
-- [Best-README-Template](https://github.com/othneildrew/Best-README-Template)
-- [Selenium With Python](https://selenium-python.readthedocs.io/)
-- [Stack Overflow](https://www.stackoverflow.com)
-
-<div align="right">
-  <a href="#top">
-  
-  ![Back to top][back_to_top]
-  
-  </a>
-</div>
-
-# Maintainership
-
-We're actively seeking maintainers that will triage issues and pull requests and cut releases. If you are interested in maintaining project [**inb**][_inb], send an email to ayush854032@gmail.com with a subject "**Interested in maintaining project inb**".
-
-<div align="right">
-  <a href="#top">
-  
-  ![Back to top][back_to_top]
-  
-  </a>
-</div>
-
 <!-- Definitions -->
 
 [_github]: https://www.github.com
-[_linkedin]: https://www.linkedin.com
 [_inb]: https://www.github.com/joshiayush/inb
 
-<!-- Shields and attached links -->
+<!-- Attached links -->
 
-[developer_linkedin]: https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555
-[developer_linkedin_url]: https://www.linkedin.com/in/ayush-joshi-3600a01b7/
 [back_to_top]: https://img.shields.io/badge/-Back%20to%20top-lightgrey
-
-<!-- Technologies used -->
-
-[bash]: https://img.shields.io/badge/-Bash-blue?style=for-the-badge
-[python]: https://img.shields.io/badge/-Python-blue?style=for-the-badge
-[python_selenium]: https://img.shields.io/badge/-Python%20Selenium-blue?style=for-the-badge
-[chromedriver]: https://img.shields.io/badge/-Chromedriver-blue?style=for-the-badge
-
-<!-- Issues -->
-
-[_inb_info_gathering_issue]: https://github.com/joshiayush/inb/issues/16
-
-<!-- Wiki -->
-
-[_inb_wiki]: https://github.com/joshiayush/inb/wiki
 
 <!-- Files -->
 
 [_inb_contrib_f]: https://github.com/joshiayush/inb/blob/master/CONTRIBUTING.md
-[_inb_license_f]: https://github.com/joshiayush/inb/blob/master/LICENSE
