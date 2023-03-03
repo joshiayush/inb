@@ -27,47 +27,78 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# pylint: disable=missing-module-docstring
+"""Authentication Cookie-Repository Management Package."""
 
 import os
 import time
 import pickle
 import pathlib
 
-from typing import Any
+from requests import cookies
 
+from api import settings
 from api import exceptions as linkedin_api_exceptions
 
 
-class CookieRepository(object):  # pylint: disable=missing-class-docstring
+class CookieRepository(object):
+  """Creates a 'Cookie Repository' in the given directory."""
 
-  def __init__(self, username: str, cookies: Any, cookie_dir: str) -> None:
-    self.cookies = cookies
+  def __init__(self, username: str, cookies_: cookies.RequestsCookieJar,
+               cookie_dir: str) -> None:
+    self.cookies = cookies_
     self.username = username
+
+    if cookie_dir is None:
+      cookie_dir = settings.INB_COOKIE_DIR
     self.cookie_dir = pathlib.Path(cookie_dir)
 
+  def get_cookie_dir(self) -> str:
+    """Returns a 'fs' compatible path of the cookie directory."""
+    return self.cookie_dir.__fspath__()
+
   def _get_cookies_jar_file_path(self) -> pathlib.Path:
+    """Returns the cookies jar file path that is generated after combining the
+    given cookie directory with the label 'username'.
+
+    Returns:
+      Cookies jar file path.
+    """
     return self.cookie_dir / self.username
 
   def save(self) -> None:
+    """Saves the constructor initialized cookies in the constructor initialized
+    cookies directory path.
+    """
     if not os.path.exists(self.cookie_dir.__fspath__()):
       os.makedirs(self.cookie_dir.__fspath__())
+
+    # Every user has a Cookie Repository in the 'cookies directory' with a file
+    # name equal to their 'username'.
     cookie_jar_file_path = self._get_cookies_jar_file_path()
     with open(cookie_jar_file_path, 'wb') as jar_file:
       pickle.dump(self.cookies, jar_file)
 
-  def get_cookies(self) -> Any:
+  def get_cookies(self) -> cookies.RequestsCookieJar:
+    """Returns the 'RequestCookieJar' instance of the cookies saved in the
+    cookies directory for the instantiated username.
+
+    Returns:
+      'cookies.RequestsCookieJar' instance of user cookies.
+    """
+    # Every user has a Cookie Repository in the 'cookies directory' with a file
+    # name equal to their 'username'.
     cookie_jar_file_path = self._get_cookies_jar_file_path()
     if not os.path.exists(cookie_jar_file_path):
       return None
-    cookies = None
+
+    cookies_ = None
     with open(cookie_jar_file_path, 'rb') as jar_file:
-      cookies = pickle.load(jar_file)
+      cookies_ = pickle.load(jar_file)
 
     # We still need to check if the cookies have expired.
-    for cookie in cookies:
+    for cookie in cookies_:
       if cookie.name == 'JSESSIONID' and cookie.value:
         if cookie.expires and cookie.expires > time.time():
           raise linkedin_api_exceptions.LinkedInSessionExpiredException()
         break
-    return cookies
+    return cookies_

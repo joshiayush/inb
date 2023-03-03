@@ -29,5 +29,11 @@
 
 """LinkedIn API exceptions."""
 
+LinkedInChallengeException = type('LinkedInChallengeException', (Exception,),
+                                  {})
+
+LinkedInUnauthorizedException = type('LinkedInUnauthorizedException',
+                                     (Exception,), {})
+
 LinkedInSessionExpiredException = type('LinkedInSessionExpiredException',
-                                       (Exception,))
+                                       (Exception,), {})

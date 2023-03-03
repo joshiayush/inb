@@ -66,28 +66,36 @@ python3 -m pip install [-r] requirements.txt
 To send invitations to people on LinkedIn you could use:
 
 ```shell
-python3 inb/inb.py send --email ayush854032@gmail.com --password xxx-xxx-xxx
+python3 inb/inb.py search --email ayush854032@gmail.com --password xxx-xxx-xxx --keyword 'Software Engineer'
 ```
 
-A Quick Usage guide:
+A quick usage guide:
 
 ```
-Usage: inb.py [OPTIONS] COMMAND [ARGS]...
+Usage: inb.py search [OPTIONS]
 
-  inb version 1.0.0
+  Searches for the specific keyword given and sends invitation to them.
 
-  Command line utility to automate the world of LinkedIn.
+  Usage:
 
-  Quick start:
-
-    python3 inb/inb.py send --email "username" --password "password"
+    python3 inb/inb.py search --email "username" --password "password"
+    --keyword "Software developer"
 
 Options:
-  --help  Show this message and exit.
-
-Commands:
-  search  Searches for the specific keyword given and sends invitation to...
-  send    Sends invitations on LinkedIn to people in your MyNetwork page.
+  --email TEXT              LinkedIn username.  [required]
+  --password TEXT           LinkedIn password.  [required]
+  --keyword TEXT            Keyword to search for.  [required]
+  --regions LIST            Search people based on these regions.
+  --connection-of TEXT      Profile id for mutual connection.
+  --network_depths LIST     Network depths to dig into.
+  --network-depth TEXT      Network depth to dig into.
+  --industries LIST         Search people from these industries.
+  --current-company TEXT    Search people working at this company.
+  --profile-languages LIST  Person profile languages.
+  --schools LIST            Search for profiles mentioning this school.
+  --refresh-cookies         Update cookies if given.
+  --debug                   Prints out debugging information at runtime.
+  --help                    Show this message and exit.
 ```
 
 > **Any problems encountered in non-linux environment should be reported immediately before passing comments on the portability of this tool as I've only built and tested it on Linux!**
