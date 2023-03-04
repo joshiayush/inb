@@ -28,11 +28,14 @@
 # THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 """Command line interface for automation tool inb."""
 
+import time
 import click
 
-from api import linkedin_api
+from api import linkedin_api, client
+from api.invitation import status
 
 try:
   from gettext import gettext as _  # pylint: disable=unused-import
@@ -102,6 +105,10 @@ def Inb():
               is_flag=True,
               required=False,
               help=_('Update cookies if given.'))
+@click.option('--limit',
+              type=int,
+              required=False,
+              help=_('Number of invitations to send.'))
 @click.option('--debug',
               is_flag=True,
               required=False,
@@ -110,7 +117,7 @@ def search(  # pylint: disable=invalid-name
     email: str, password: str, keyword: str, regions: str, connection_of: str,
     network_depths: list, network_depth: str, industries: list,
     current_company: str, profile_languages: list, schools: list,
-    refresh_cookies: bool, debug: bool) -> None:
+    refresh_cookies: bool, limit: int, debug: bool) -> None:
   """Searches for the specific keyword given and sends invitation to them.
 
   Usage:
@@ -123,6 +130,8 @@ def search(  # pylint: disable=invalid-name
                                    authenticate=True,
                                    debug=debug,
                                    refresh_cookies=refresh_cookies)
+
+  count = 0
   search_results = linkedin.search_people(keywords=keyword,
                                           regions=regions,
                                           connection_of=connection_of,
@@ -132,10 +141,30 @@ def search(  # pylint: disable=invalid-name
                                           current_company=current_company,
                                           profile_languages=profile_languages,
                                           schools=schools)
+  start_time = time.time()
   for result in search_results:
-    linkedin.add_connection(profile_pub_id=result['public_id'],
-                            message='',
-                            profile_urn=result['urn_id'])
+    if limit is not None and count >= limit:
+      break
+
+    public_id = result['public_id']
+    person = status.Person(
+        name=result['name'],
+        occupation=result['jobtitle'],
+        location=result['location'],
+        profileid=result['public_id'],
+        profileurl=f'{client.Client.LINKEDIN_BASE_URL}/in/{public_id}')
+    invitation = status.Invitation()
+    if linkedin.add_connection(profile_pub_id=result['public_id'],
+                               message='',
+                               profile_urn=result['urn_id']) is True:
+      invitation.display_invitation_status_on_console(person=person,
+                                                      status='sent',
+                                                      start_time=start_time)
+      count += 1
+    else:
+      invitation.display_invitation_status_on_console(person=person,
+                                                      status='failed',
+                                                      start_time=start_time)
 
 
 Inb.add_command(search)

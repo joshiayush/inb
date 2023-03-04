@@ -116,13 +116,15 @@ class Client(object):
     """Request cookies for the established session."""
     return requests.get(Client.LINKEDIN_AUTH_URL,
                         headers=Client.API_AUTH_REQUEST_HEADERS,
-                        proxies=self.proxies).cookies
+                        proxies=self.proxies,
+                        timeout=60.0).cookies
 
   def _fetch_metadata(self) -> None:
     result_ = requests.get(Client.LINKEDIN_BASE_URL,
                            cookies=self.session.cookies,
                            headers=Client.API_AUTH_REQUEST_HEADERS,
-                           proxies=self.proxies)
+                           proxies=self.proxies,
+                           timeout=60.0)
     soup_ = bs4.BeautifulSoup(result_.text, 'lxml')
 
     if client_application_instance_raw := soup_.find(
@@ -149,7 +151,8 @@ class Client(object):
                             data=payload_,
                             cookies=self.session.cookies,
                             headers=Client.API_AUTH_REQUEST_HEADERS,
-                            proxies=self.proxies)
+                            proxies=self.proxies,
+                            timeout=60.0)
     data_ = result_.json()
     if data_ and data_['login_result'] != 'PASS':
       raise linkedin_api_exceptions.LinkedInChallengeException(
@@ -157,8 +160,8 @@ class Client(object):
     if result_.status_code == 401:
       raise linkedin_api_exceptions.LinkedInUnauthorizedException()
     if result_.status_code != 200:
-      raise Exception(f'Received "{result_.status_code}" as a status code for'
-                      f' payload "{payload_.__repr__()}"')
+      raise Exception(f'Received "{result_.status_code}" as a status code for'  # pylint: disable=broad-exception-raised
+                      f' payload "{repr(payload_)}"')
 
     self._set_session_cookies(result_.cookies)
     self._cookie_repository.cookies = result_.cookies

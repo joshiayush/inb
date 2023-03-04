@@ -194,7 +194,12 @@ class LinkedIn(object):  # pylint: disable=missing-class-docstring
     if keywords:
       params_['keywords'] = keywords
 
-    data_ = self.search(params_, **kwargs)
+    search_limit_ = kwargs.get('limit', None)
+    search_offset_ = kwargs.get('offset', None)
+    data_ = self.search(
+        params_,
+        limit=search_limit_ if search_limit_ is not None else -1,
+        offset=search_offset_ if search_offset_ is not None else 0)
     result_ = []
     for item in data_:
       if not kwargs.get('include_private_profiles',

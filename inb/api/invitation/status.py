@@ -26,6 +26,7 @@
 # THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+
 """Invitation module to send invitation status to console."""
 
 from __future__ import annotations
@@ -33,26 +34,38 @@ from __future__ import annotations
 import time
 import click
 
-from typing import Any, List
-
 _SUCCESS_RATE = 0
 _FAILURE_RATE = 0
 
 _SENT_STATUS_SYMBOL = '✔'
 _FAILED_STATUS_SYMBOL = '✘'
 
-_SEND_INVITATION_STATUS_TEMPL = """  {{status}}  {{name}}
-  {{occupation}}
-  {{mutual_connections}}
-  Success:  {{success}}  Failure: {{failure}}  Elapsed time: {{elapsed_time}}
-"""
-
 _SEARCH_INVITATION_STATUS_TEMPL = """  {{status}}  {{name}}
   {{occupation}}
   {{location}}
-  {{mutual_connections}}
-  Success:  {{success}}  Failure: {{failure}}  Elapsed time: {{elapsed_time}}
+  Success: {{success}}  Failure: {{failure}}  Elapsed time: {{elapsed_time}}
 """
+
+
+class Person:
+  """A separate type for the LinkedIn user inside our program particularly
+  aimed for the `LinkedIn` API.
+  """
+
+  def __init__(
+      self,
+      *,
+      name: str,
+      occupation: str,
+      location: str,
+      profileid: str,
+      profileurl: str,
+  ):
+    self.name = name
+    self.occupation = occupation
+    self.location = location
+    self.profileid = profileid
+    self.profileurl = profileurl
 
 
 class Invitation(object):
@@ -63,13 +76,11 @@ class Invitation(object):
   _SLEEP_TIME_AFTER_LOGGING = 0.18
 
   def set_invitation_fields(self, name: str, occupation: str, location: str,
-                            mutual_connections: str, profileid: str,
-                            profileurl: str, status: str,
+                            profileid: str, profileurl: str, status: str,
                             elapsed_time: int) -> None:
     self._name = name
     self._occupation = occupation
     self._location = location
-    self._mutual_connections = mutual_connections
     self._profileid = profileid
     self._profileurl = profileurl
 
@@ -94,31 +105,17 @@ class Invitation(object):
 
   @staticmethod
   def _replace_template_var_with_template_value(
-      message_template: str, replace_template_var_with: List[tuple]) -> str:
+      message_template: str, replace_template_var_with: list[tuple]) -> str:
     for replace_template_var_with_value_pair in replace_template_var_with:
       message_template = message_template.replace(
           *replace_template_var_with_value_pair)
     return message_template
-
-  def _fill_send_message_template(self) -> str:
-    replace_template_var_with = [('{{status}}', self._status),
-                                 ('{{name}}', self._name),
-                                 ('{{occupation}}', self._occupation),
-                                 ('{{mutual_connections}}',
-                                  self._mutual_connections),
-                                 ('{{success}}', str(self._success_rate)),
-                                 ('{{failure}}', str(self._failure_rate)),
-                                 ('{{elapsed_time}}', str(self._elapsed_time))]
-    return self._replace_template_var_with_template_value(
-        _SEND_INVITATION_STATUS_TEMPL, replace_template_var_with)
 
   def _fill_search_message_template(self) -> str:
     replace_template_var_with = [('{{status}}', self._status),
                                  ('{{name}}', self._name),
                                  ('{{occupation}}', self._occupation),
                                  ('{{location}}', self._location),
-                                 ('{{mutual_connections}}',
-                                  self._mutual_connections),
                                  ('{{success}}', str(self._success_rate)),
                                  ('{{failure}}', str(self._failure_rate)),
                                  ('{{elapsed_time}}', str(self._elapsed_time))]
@@ -127,22 +124,19 @@ class Invitation(object):
 
   def _send_status_to_console(self, sleep: bool = True) -> None:
     click.echo('', None, True, True)
-    click.echo(
-        self._fill_send_message_template() if self._location is None else
-        self._fill_search_message_template(), None, True, True)
+    click.echo(self._fill_search_message_template(), None, True, True)
     click.echo('', None, True, True)
     if sleep is True:
       time.sleep(self._SLEEP_TIME_AFTER_LOGGING)
 
   def display_invitation_status_on_console(
       self,
-      person: Any,
+      person: Person,
       status: str,  # pylint: disable=redefined-outer-name
       start_time: int) -> None:
     self.set_invitation_fields(name=person.name,
                                occupation=person.occupation,
-                               location=getattr(person, 'location', None),
-                               mutual_connections=person.mutual_connections,
+                               location=person.location,
                                profileid=person.profileid,
                                profileurl=person.profileurl,
                                status=status,
