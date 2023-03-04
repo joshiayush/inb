@@ -1,3 +1,5 @@
+# pylint: disable=missing-module-docstring
+
 # Copyright 2021, joshiayus Inc.
 # All rights reserved.
 #
@@ -27,33 +29,44 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-"""A configuration file for all the directory paths and logging settings."""
+from api import settings
 
-import os
-import pathlib
 
-USER_HOME_DIR = pathlib.Path.home()
-INB_USER_DIR = USER_HOME_DIR / '.inb/'
-INB_COOKIE_DIR = INB_USER_DIR / 'cookies/'
-INB_LOG_DIR = INB_USER_DIR / 'logs'
+def test_user_home_dir():
+  assert settings.USER_HOME_DIR.is_dir()
 
-# Variable's value decides whether logging to stream is allowed
-# in the entire project.
-LOGGING_TO_STREAM_ENABLED = False
 
-# Create the required directories for storing bot related data.
-if not os.path.exists(INB_USER_DIR):
-  os.makedirs(INB_USER_DIR)
-if not os.path.exists(INB_COOKIE_DIR):
-  os.makedirs(INB_COOKIE_DIR)
+def test_inb_user_dir():
+  assert settings.INB_USER_DIR.is_dir()
+  assert str(settings.INB_USER_DIR).startswith(str(settings.USER_HOME_DIR))
 
-# We want to create the log directory if it does not exists
-# otherwise the file handlers for loggers used in other modules
-# will complain about its absence.
-if not os.path.exists(INB_LOG_DIR):
-  os.makedirs(INB_LOG_DIR)
 
-LOG_FORMAT_STR = (
-    '%(asctime)s:%(name)s:%(levelname)s:%(funcName)s\n%(message)s')
+def test_inb_cookie_dir():
+  assert settings.INB_COOKIE_DIR.is_dir()
+  assert str(settings.INB_COOKIE_DIR).startswith(str(settings.INB_USER_DIR))
+  assert str(settings.INB_COOKIE_DIR).endswith('/cookies')
 
-INB_VERSION = '1.0.0'
+
+def test_inb_log_dir():
+  assert settings.INB_LOG_DIR.is_dir()
+  assert str(settings.INB_LOG_DIR).startswith(str(settings.USER_HOME_DIR))
+  assert str(settings.INB_LOG_DIR).endswith('/.inb/logs')
+
+
+def test_logging_to_stream_enabled():
+  assert not settings.LOGGING_TO_STREAM_ENABLED
+
+
+def test_log_format_str():
+  assert 'asctime' in settings.LOG_FORMAT_STR
+  assert 'name' in settings.LOG_FORMAT_STR
+  assert 'levelname' in settings.LOG_FORMAT_STR
+  assert 'funcName' in settings.LOG_FORMAT_STR
+  assert 'message' in settings.LOG_FORMAT_STR
+
+  assert settings.LOG_FORMAT_STR.startswith('%(asctime)s')
+  assert settings.LOG_FORMAT_STR.endswith('%(message)s')
+
+
+def test_inb_version():
+  assert settings.INB_VERSION == '1.0.0'
