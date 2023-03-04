@@ -54,7 +54,7 @@ class CookieRepository(object):
 
   def get_cookie_dir(self) -> str:
     """Returns a 'fs' compatible path of the cookie directory."""
-    return self.cookie_dir.__fspath__()
+    return os.fspath(self.cookie_dir)
 
   def _get_cookies_jar_file_path(self) -> pathlib.Path:
     """Returns the cookies jar file path that is generated after combining the
@@ -69,8 +69,8 @@ class CookieRepository(object):
     """Saves the constructor initialized cookies in the constructor initialized
     cookies directory path.
     """
-    if not os.path.exists(self.cookie_dir.__fspath__()):
-      os.makedirs(self.cookie_dir.__fspath__())
+    if not os.path.exists(os.fspath(self.cookie_dir)):
+      os.makedirs(os.fspath(self.cookie_dir))
 
     # Every user has a Cookie Repository in the 'cookies directory' with a file
     # name equal to their 'username'.
