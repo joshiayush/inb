@@ -1,3 +1,5 @@
+# pylint: disable=missing-module-docstring
+
 # Copyright 2021, joshiayus Inc.
 # All rights reserved.
 #
@@ -27,28 +29,26 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-name: Python unittests
+from api.utils import utils
 
-on:
-  push:
-    branches: [master]
-  pull_request:
-    branches: [master]
 
-jobs:
-  build:
-    runs-on: ubuntu-latest
+def test_get_id_from_urn():
+  urn = 'urn:li:fs_miniProfile:1234567890abcdef'
+  assert utils.get_id_from_urn(urn) == '1234567890abcdef'
 
-    steps:
-      - uses: actions/checkout@v2
-      - name: Set up Python 3.7
-        uses: actions/setup-python@v2
-        with:
-          python-version: "3.7"
-      - name: Install dependencies
-        run: |
-          python -m pip install --upgrade pip
-          if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-      - name: Test with unittest
-        run: |
-          python3 -m unittest discover -s ${{github.workspace}}/inb/tests/ -t ${{github.workspace}}/inb/ -v
+  urn = 'urn:li:fs_miniProfile:abc1234567890def'
+  assert utils.get_id_from_urn(urn) == 'abc1234567890def'
+
+  urn = 'urn:li:fs_miniProfile:12:34:56:78:90'
+  assert utils.get_id_from_urn(urn) == '12'
+
+
+def test_generate_tracking_id():
+  tracking_id = utils.generate_tracking_id()
+  assert len(tracking_id) == 24
+  assert isinstance(tracking_id, str)
+
+  for char in tracking_id:
+    assert char.isalnum() or char in ['+', '/', '=']
+
+  assert tracking_id != utils.generate_tracking_id()

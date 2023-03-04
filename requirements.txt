@@ -1,5 +1,6 @@
 altgraph==0.17
 astroid==2.9.0
+attrs==22.2.0
 beautifulsoup4==4.11.2
 bs4==0.0.1
 CacheControl==0.12.6
@@ -13,11 +14,13 @@ commonmark==0.9.1
 configparser==5.0.2
 crayons==0.4.0
 cryptography==3.4.7
+exceptiongroup==1.1.0
 fernet==1.0.1
 grpcio==1.38.1
 httplib2==0.19.1
 idna==2.10
 importlib-metadata==4.5.0
+iniconfig==2.0.0
 isort==5.10.1
 lazy-object-proxy==1.6.0
 lxml==4.9.2
@@ -26,8 +29,10 @@ msgpack==1.0.2
 nameparser==1.0.6
 packaging==20.9
 platformdirs==2.4.0
+pluggy==1.0.0
 proto-plus==1.18.1
 protobuf==3.17.3
+psutil==5.9.4
 pyaes==1.6.1
 pyasn1==0.4.8
 pyasn1-modules==0.2.8
@@ -40,6 +45,7 @@ pyinstaller-hooks-contrib==2021.4
 pylint==2.12.2
 pyparsing==2.4.7
 PySocks==1.7.1
+pytest==7.2.2
 python-dateutil==2.8.1
 pytz==2021.1
 requests==2.25.1
@@ -48,6 +54,7 @@ six==1.16.0
 smmap==4.0.0
 soupsieve==2.4
 toml==0.10.2
+tomli==2.0.1
 tqdm==4.62.3
 typed-ast==1.5.1
 typing-extensions==3.10.0.0
