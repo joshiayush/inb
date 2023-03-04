@@ -36,8 +36,7 @@ import pathlib
 
 from requests import cookies
 
-from api import settings
-from api import exceptions as linkedin_api_exceptions
+from api import settings, exceptions as linkedin_api_exceptions
 
 
 class CookieRepository(object):

@@ -44,7 +44,7 @@ LOGGING_TO_STREAM_ENABLED = False
 # We want to create the log directory if it does not exists otherwise the file
 # handlers for loggers used in other modules will complain about its absence.
 if not os.path.exists(INB_LOG_DIR):
-  os.mkdir(INB_LOG_DIR)
+  os.makedirs(INB_LOG_DIR)
 
 LOG_FORMAT_STR = (
     '%(asctime)s:%(name)s:%(levelname)s:%(funcName)s\n%(message)s')
