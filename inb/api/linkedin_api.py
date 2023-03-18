@@ -26,8 +26,9 @@
 # THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 """API to send data to Voyager end-points and trigger actions accordingly."""
+
+from __future__ import annotations
 
 from typing import Callable
 
@@ -36,10 +37,11 @@ import json
 import time
 import random
 import logging
+import requests
 import operator
 
-from urllib.parse import urlencode
 from requests import cookies
+from urllib.parse import urlencode
 
 from api import client, settings
 from api.utils import utils
@@ -59,10 +61,12 @@ logger.addHandler(file_handler)
 
 
 def default_evade() -> None:
+  """Sleeps for a random amount of time in bound (2,5)."""
   time.sleep(random.randint(2, 5))
 
 
-class LinkedIn(object):  # pylint: disable=missing-class-docstring
+class LinkedIn(object):
+  """API creating an interface between `LinkedIn Voyager API` and `inb`."""
 
   MAX_SEARCH_COUNT = 49
 
@@ -71,6 +75,7 @@ class LinkedIn(object):  # pylint: disable=missing-class-docstring
   def __init__(self,
                username: str,
                password: str,
+               /,
                *,
                authenticate: bool = True,
                refresh_cookies: bool = False,
@@ -78,6 +83,39 @@ class LinkedIn(object):  # pylint: disable=missing-class-docstring
                proxies: dict = None,
                cookies_: cookies.RequestsCookieJar = None,
                cookies_dir: str = None) -> None:
+    """Initializes a LinkedIn client for the Voyager API.
+    
+    This client allows you to interact with LinkedIn's Voyager API, which
+    provides access to LinkedIn data such as search results, profile data,
+    and more. Once initialized, the client can be used to make API requests
+    to LinkedIn.
+
+    Client need not to authenticate repeatedly once the authentication cookies
+    are set in the very first authentication routine, but in any case the
+    authentication fails, fallback to the normal authentication by setting the
+    `authentication` to `True`. Alternatively, you can pass in an existing
+    `cookies.RequestsCookieJar` object using the `cookies_` parameter, which
+    will bypass the authentication process. Note that if the authentication
+    fails, the client will fallback to the normal authentication by setting
+    the `authentication` parameter to `True`.
+
+    If you encounter a `LinkedInSessionExpiredException`, you can re-claim new
+    cookies from LinkedIn's authentication server by setting the
+    `refresh_cookies` parameter to `True`.
+
+    Args:
+      username:        Your LinkedIn username.
+      password:        Your LinkedIn password.
+      authenticate:    Whether to authenticate with LinkedIn. Defaults to True.
+      refresh_cookies: Whether to refresh the authentication cookies if the
+                       authentication fails. Defaults to False.
+      debug:           Whether to enable debug logging. Defaults to False.
+      proxies:         A dictionary of proxy settings. Defaults to None.
+      cookies_:        An existing cookie jar to use for authentication.
+                       Defaults to None.
+      cookies_dir:     The directory to store authentication cookies in.
+                       Defaults to None.
+    """
     self.client = client.Client(debug=debug,
                                 refresh_cookies=refresh_cookies,
                                 proxies=proxies,
@@ -97,7 +135,36 @@ class LinkedIn(object):  # pylint: disable=missing-class-docstring
              uri: str,
              evade: Callable = default_evade,
              base_request: bool = False,
-             **kwargs):
+             **kwargs) -> requests.Response:
+    """Performs an HTTP GET request to the LinkedIn Voyager API or to the
+    LinkedIn website.
+
+    The request URL is obtained by concatenating the `uri` argument with the
+    LinkedIn API base URL (`VOYAGER_API_BASE_URL`) or with the LinkedIn
+    website base URL (`LINKEDIN_BASE_URL`), depending on the value of the
+    `base_request` argument.
+
+    The `evade` function is called before performing the request, to avoid
+    being detected as a bot.
+
+    Any additional keyword arguments are passed to the `requests.Session.get`
+    method.
+
+    Args:
+      uri:          The path to append to the base URL to obtain the request
+                    URL.
+      evade:        A function that takes no arguments and is called before
+                    performing the request to avoid being detected as a bot.
+                    Defaults to `default_evade`.
+      base_request: Whether the request should be sent to the LinkedIn Voyager
+                    API (False) or to the LinkedIn website (True). Defaults to
+                    False.
+      **kwargs:     Any additional keyword arguments are passed to the
+                    `requests.Session.get` method.
+
+    Returns:
+      The HTTP response object.
+    """
     evade()
     if not base_request:
       url = self.client.VOYAGER_API_BASE_URL
@@ -111,6 +178,28 @@ class LinkedIn(object):  # pylint: disable=missing-class-docstring
             evade: Callable = default_evade,
             base_request: bool = False,
             **kwargs):
+    """Sends a POST request to the LinkedIn API.
+
+    This method sends an HTTP POST request to the LinkedIn API endpoint
+    specified by the given URI. The request is made using the session object
+    managed by the LinkedIn client. The URL for the request is constructed by
+    concatenating the LinkedIn API base URL and the given URI. The optional
+    `evade` parameter can be used to specify a function that should be called
+    before making the request to evade detection by LinkedIn.
+
+    Args:
+      uri:          The URI path of the LinkedIn API endpoint to request.
+      evade:        A function to be called before making the
+                    request to evade detection. Defaults to `default_evade`.
+      base_request: If `True`, the URL for the request will
+                    be constructed using the LinkedIn base URL instead of the
+                    API base URL. Defaults to `False`.
+      **kwargs:     Any additional keyword arguments are passed directly to the
+                    `requests.post` method.
+
+    Returns:
+      The HTTP response returned by the server.
+    """
     evade()
     if not base_request:
       url = self.client.VOYAGER_API_BASE_URL
@@ -120,9 +209,22 @@ class LinkedIn(object):  # pylint: disable=missing-class-docstring
     return self.client.session.post(url, **kwargs)
 
   def search(self, params: dict, limit: int = -1, offset: int = 0) -> list:
+    """Performs a search on LinkedIn with given parameters and returns the
+    results.
+
+    Args:
+      params: Dictionary of parameters for the search query.
+      limit:  Maximum number of results to return. Defaults to -1 (i.e.,
+              return all results).
+      offset: Number of results to skip before returning results. Defaults
+              to 0.
+
+    Returns:
+      A list of search results in JSON format, with each element representing
+      a profile or company that matches the search criteria.
+    """
     count_ = LinkedIn.MAX_SEARCH_COUNT
-    if limit is None:
-      limit = -1
+    limit = -1 if limit is None else limit
 
     results_ = []
     while True:
@@ -158,39 +260,52 @@ class LinkedIn(object):  # pylint: disable=missing-class-docstring
         new_elems.extend(elem.get('elements', {}))
       results_ = [*results_, *new_elems]
 
+      # Breaks out the infinite loop if the maximum number of search results has
+      # been reached, the maximum number of repeated requests has been exceeded,
+      # or no new search results are returned.
       if ((-1 <= limit <= len(results_)) or len(results_) / count_ >=
           LinkedIn._MAX_REPEATED_REQUEST) or len(new_elems) == 0:
         break
     return results_
 
-  def search_people(self, *, keywords: str = None, **kwargs) -> list:
+  def search_people(self, *, keywords: str = None, **kwargs) -> list[dict]:
+    """Search for people on LinkedIn and return a list of results.
+    
+    Also, filters the search results by the given filter queries in `kwargs`
+    and applies them to the `filters` parameter for the search function.
+    
+    Args:
+      keywords: Keywords to search for.
+    """
     filters_ = ['resultType->PEOPLE']
-    if kwargs.get('connection_of', None):
-      filters_ = [*filters_, f'connectionOf->{kwargs.get("connection_of")}']
-    if kwargs.get('network_depths', None):
-      filters_ = [
-          *filters_, f'network->{"|".join(kwargs.get("network_depths"))}'
-      ]
-    elif kwargs.get('network_depth', None):
-      filters_ = [*filters_, f'network->{kwargs.get("network_depth")}']
-    if kwargs.get('regions', None):
-      filters_ = [*filters_, f'geoUrn->{"|".join(kwargs.get("regions"))}']
-    if kwargs.get('industries', None):
-      filters_ = [*filters_, f'industry->{"|".join(kwargs.get("industries"))}']
-    if kwargs.get('current_company', None):
-      filters_ = [
-          *filters_,
-          f'currentCompany->{"|".join(kwargs.get("current_company"))}'
-      ]
-    if kwargs.get('profile_languages', None):
-      filters_ = [
-          *filters_,
-          f'profileLanguage->{"|".join(kwargs.get("profile_languages"))}'
-      ]
-    if kwargs.get('schools', None):
-      filters_ = [*filters_, f'schools->{"|".join(kwargs.get("schools"))}']
 
-    params_ = {'filters': f'List({",".join(filters_)})'}
+    def add_to_filter(key: str, to: str, /, *, value_type: type) -> None:
+      """Adds the given key-mapped value to the non-local `filters_` list from
+      the non-local `kwargs`.
+      
+      Args:
+        key:        Key to which the filter value is mapped.
+        to:         Label for the url.
+        value_type: Type of the value.
+      """
+      nonlocal kwargs, filters_
+      if kwargs.get(key, None) is None:
+        return
+      if isinstance(value_type, str):
+        filters_ = [*filters_, f'{to}->{kwargs.get(key)}']
+      elif isinstance(value_type, list):
+        filters_ = [*filters_, f"{to}->{'|'.join(kwargs.get(key))}"]
+
+    add_to_filter('connection_of', 'connectionOf', value_type=str)
+    add_to_filter('network_depths', 'network', value_type=list)
+    add_to_filter('network_depth', 'network', value_type=str)
+    add_to_filter('regions', 'geoUrn', value_type=list)
+    add_to_filter('schools', 'schools', value_type=list)
+    add_to_filter('industries', 'industry', value_type=list)
+    add_to_filter('current_company', 'currentCompany', value_type=list)
+    add_to_filter('profile_languages', 'profileLanguage', value_type=list)
+
+    params_ = {'filters': f"List({','.join(filters_)})"}
     if keywords:
       params_['keywords'] = keywords
 
@@ -200,8 +315,11 @@ class LinkedIn(object):  # pylint: disable=missing-class-docstring
         params_,
         limit=search_limit_ if search_limit_ is not None else -1,
         offset=search_offset_ if search_offset_ is not None else 0)
+
     result_ = []
     for item in data_:
+      # Do not include a private profile if `include_private_profiles` is set
+      # to `False` or `publicIdentifier` is absent.
       if not kwargs.get('include_private_profiles',
                         None) and 'publicIdentifier' not in item:
         continue
@@ -219,6 +337,17 @@ class LinkedIn(object):  # pylint: disable=missing-class-docstring
     return result_
 
   def get_profile(self, public_id: str = None, urn_id: str = None) -> dict:
+    """This function fetches the complete profile details for a given LinkedIn
+    member using either their public ID or their URN ID. The function returns a
+    dictionary containing the profile information.
+
+    Args:
+      public_id: Profile public id.
+      urn_id:    Profile urn id.
+    """
+    assert public_id is None and urn_id is None, (
+        'Expected any one of public_id or urn_id')
+
     result_ = self._fetch(
         f'/identity/profiles/{public_id or urn_id}/profileView')
 
@@ -256,8 +385,25 @@ class LinkedIn(object):  # pylint: disable=missing-class-docstring
   def add_connection(self,
                      profile_pub_id: str,
                      *,
-                     message: str = None,
+                     message: str = '',
                      profile_urn: str = None) -> bool:
+    """Sends a request to LinkedIn to send a connection invitation to the
+    profile with the given public ID or URN ID. If a message is provided, it is
+    included in the invitation.
+
+    Args:
+      profile_pub_id: Public ID of the LinkedIn profile to send connection
+                      invitation to.
+      message:        Message to include in the connection invitation. Must be
+                      300 characters or less.
+      profile_urn:    URN ID of the LinkedIn profile to send connection
+                      invitation to. If not provided, the function will get it
+                      by making a call to get_profile function.
+
+    Returns:
+      `True` if the request was successful and the invitation was sent,
+      `False` otherwise.
+    """
     if len(message) > 300:
       self._logger.warning(
           'Message "%s" too long - trimming it down to 300 characters...',
@@ -289,6 +435,14 @@ class LinkedIn(object):  # pylint: disable=missing-class-docstring
     return result_.status_code != 201
 
   def remove_connection(self, profile_pub_id: str) -> bool:
+    """Removes a connection with a LinkedIn user specified by their public ID.
+    
+    Args:
+      profile_pub_id: Public ID of the LinkedIn user to remove connection with.
+
+    Returns:
+      `True` if connection removal was unsuccessful, `False` otherwise.
+    """
     result_ = self._post(
         f'/identity/profiles/{profile_pub_id}/profileActions?action=disconnect',
         headers={'accept': 'application/vnd.linkedin.normalized+json+2.1'},

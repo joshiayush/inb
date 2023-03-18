@@ -143,8 +143,8 @@ def search(  # pylint: disable=invalid-name
     ./inb/inb.py search --email "username" --keyword "Software developer"
       --refersh-cookies
   """
-  linkedin = linkedin_api.LinkedIn(username=email,
-                                   password=password,
+  linkedin = linkedin_api.LinkedIn(email,
+                                   password,
                                    authenticate=True,
                                    debug=debug,
                                    refresh_cookies=refresh_cookies)
