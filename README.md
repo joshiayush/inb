@@ -66,7 +66,8 @@ python3 -m pip install [-r] requirements.txt
 To send invitations to people on LinkedIn you could use:
 
 ```shell
-python3 inb/inb.py search --email ayush854032@gmail.com --password xxx-xxx-xxx --keyword 'Software Engineer'
+./inb/inb.py search --email ayush854032@gmail.com --password xxx-xxx-xxx \
+  --keyword 'Software Engineer'
 ```
 
 A quick usage guide:
@@ -74,12 +75,25 @@ A quick usage guide:
 ```
 Usage: inb.py search [OPTIONS]
 
-  Searches for the specific keyword given and sends invitation to them.
+   Searches for the specific keyword given and sends invitation to them.
 
   Usage:
 
-    python3 inb/inb.py search --email "username" --password "password"
-    --keyword "Software developer"
+    ./inb/inb.py search --email "username" --password "password"
+      --keyword "Software developer"
+
+  inb supports cookie based authentication - use --refresh-cookies in case
+  you encounter error LinkedInSessionExpiredException.
+
+    ./inb/inb.py search --email "username" --password "password"
+      --keyword "Software developer" --refersh-cookies
+
+  Also, for security purpose you can omit the --pasword argument over the
+  command-line and later on executing the tool you'll be prompted to enter
+  your password which will be hidden even after pressing keystrokes.
+
+    ./inb/inb.py search --email "username" --keyword "Software developer"
+      --refersh-cookies
 
 Options:
   --email TEXT              LinkedIn username.  [required]
@@ -94,6 +108,7 @@ Options:
   --profile-languages LIST  Person profile languages.
   --schools LIST            Search for profiles mentioning this school.
   --refresh-cookies         Update cookies if given.
+  --limit INTEGER           Number of invitations to send.
   --debug                   Prints out debugging information at runtime.
   --help                    Show this message and exit.
 ```
