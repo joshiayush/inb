@@ -40,7 +40,7 @@ pycodestyle==2.7.0
 pycparser==2.20
 pyfiglet==0.8.post1
 Pygments==2.9.0
-pyinstaller==4.7
+pyinstaller==5.9.0
 pyinstaller-hooks-contrib==2021.4
 pylint==2.12.2
 pyparsing==2.4.7
