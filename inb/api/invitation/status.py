@@ -26,11 +26,11 @@
 # THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
-
 """Invitation module to send invitation status to console."""
 
 from __future__ import annotations
 
+import sys
 import time
 import click
 
@@ -48,9 +48,7 @@ _SEARCH_INVITATION_STATUS_TEMPL = """  {{status}}  {{name}}
 
 
 class Person:
-  """A separate type for the LinkedIn user inside our program particularly
-  aimed for the `LinkedIn` API.
-  """
+  """A separate type for the LinkedIn user."""
 
   def __init__(
       self,
@@ -69,8 +67,10 @@ class Person:
 
 
 class Invitation(object):
-  """Invitation API offeres the following methods to send invitation status to
-  console.
+  """Invitation API to set invitation status on console.
+  
+  Use function `display_invitation_status_on_console()` to print out
+  invitation status on console for the given `Person` instance.
   """
 
   _SLEEP_TIME_AFTER_LOGGING = 0.18
@@ -78,6 +78,21 @@ class Invitation(object):
   def set_invitation_fields(self, name: str, occupation: str, location: str,
                             profileid: str, profileurl: str, status: str,
                             elapsed_time: int) -> None:
+    """Sets the invitation status fields from the given `Person` instance.
+    
+    Note, setting the success rate of the instance will not reflect in the
+    actual success and failure counts for that you have to directly update
+    the values of the global `_SUCCESS_RATE` and `_FAILURE_RATE` variables.
+
+    Args:
+      name:         Name of the person.
+      occupation:   Occupation of the person.
+      location:     Location of the person.
+      profileid:    Profile ID of the person.
+      profileurl:   Profile URL of the person.
+      status:       Status of this invitation.
+      elapsed_time: Time elapsed till now.
+    """
     self._name = name
     self._occupation = occupation
     self._location = location
@@ -98,6 +113,7 @@ class Invitation(object):
       _FAILURE_RATE += 1
       self._failure_rate = _FAILURE_RATE
 
+    # Try to trim the elapsed time to upto 4 digits.
     try:
       self._elapsed_time = str(elapsed_time)[0:5] + 's'
     except IndexError:
@@ -106,12 +122,23 @@ class Invitation(object):
   @staticmethod
   def _replace_template_var_with_template_value(
       message_template: str, replace_template_var_with: list[tuple]) -> str:
+    """Replaces all the template variables in `_SEARCH_INVITATION_STATUS_TEMPL`
+    with their actual values.
+    
+    Args:
+      message_template:          The template message.
+      replace_template_var_with: A list containing the replacement values for
+                                  the template variables.
+    """
     for replace_template_var_with_value_pair in replace_template_var_with:
       message_template = message_template.replace(
           *replace_template_var_with_value_pair)
     return message_template
 
   def _fill_search_message_template(self) -> str:
+    """Fills the `_SEARCH_INVITATION_STATUS_TEMPL` with the properties inside
+    `Person` instance.
+    """
     replace_template_var_with = [('{{status}}', self._status),
                                  ('{{name}}', self._name),
                                  ('{{occupation}}', self._occupation),
@@ -123,9 +150,20 @@ class Invitation(object):
         _SEARCH_INVITATION_STATUS_TEMPL, replace_template_var_with)
 
   def _send_status_to_console(self, sleep: bool = True) -> None:
-    click.echo('', None, True, True)
-    click.echo(self._fill_search_message_template(), None, True, True)
-    click.echo('', None, True, True)
+    """Private method to echo the invitation status on the console.
+    
+    This method fills the `_SEARCH_INVITATION_STATUS_TEMPL` with the given
+    `Person` information and logs them off to the console using the `click`
+    library which also takes care of the internationalization for us. Also,
+    the library automatically detects the colors being used in the terminal
+    and colorifies the given message accordingly.
+
+    Args:
+      sleep: Whether to sleep for `_SLEEP_TIME_AFTER_LOGGING` after logging.
+    """
+    click.echo('', sys.stdout, True, True)
+    click.echo(self._fill_search_message_template(), sys.stdout, True, True)
+    click.echo('', sys.stdout, True, True)
     if sleep is True:
       time.sleep(self._SLEEP_TIME_AFTER_LOGGING)
 
@@ -134,6 +172,18 @@ class Invitation(object):
       person: Person,
       status: str,  # pylint: disable=redefined-outer-name
       start_time: int) -> None:
+    """Display the invitation status on the console for the given `Person`
+    instance.
+
+    The `set_invitation_fields()` method must be called before
+    `_send_status_to_console()` method otherwise it will result in an error
+    due to unknown definition of `self` attributes.
+
+    Args:
+      person:     Person instance with meta information.
+      status:     Status of the current invitation.
+      start_time: Clock in time of the invitation process.
+    """
     self.set_invitation_fields(name=person.name,
                                occupation=person.occupation,
                                location=person.location,

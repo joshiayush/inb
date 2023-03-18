@@ -29,6 +29,7 @@
 # (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
+import sys
 import pytest
 
 from unittest import mock
@@ -121,9 +122,9 @@ def test_invitation_send_status_to_console(invitation):  # pylint: disable=redef
   with mock.patch('click.echo') as mk_click_echo:
     invitation._send_status_to_console()  # pylint: disable=protected-access
     mk_click_echo.assert_has_calls([
-        mock.call('', None, True, True),
-        mock.call(expected_output, None, True, True),
-        mock.call('', None, True, True)
+        mock.call('', sys.stdout, True, True),
+        mock.call(expected_output, sys.stdout, True, True),
+        mock.call('', sys.stdout, True, True)
     ])
 
 
@@ -154,9 +155,9 @@ def test_invitation_display_invitation_status_on_console(
                        '  San Francisco\n'
                        '  Success: 1  Failure: 0  Elapsed time: 10.0s\n')
     mk_echo.assert_has_calls([
-        mock.call('', None, True, True),
-        mock.call(expected_output, None, True, True),
-        mock.call('', None, True, True)
+        mock.call('', sys.stdout, True, True),
+        mock.call(expected_output, sys.stdout, True, True),
+        mock.call('', sys.stdout, True, True)
     ])
     mock_sleep.assert_called_with(status.Invitation._SLEEP_TIME_AFTER_LOGGING)  # pylint: disable=protected-access
 
@@ -178,8 +179,8 @@ def test_invitation_display_invitation_status_on_console(
                        '  San Francisco\n'
                        '  Success: 0  Failure: 1  Elapsed time: 10.0s\n')
     mk_echo.assert_has_calls([
-        mock.call('', None, True, True),
-        mock.call(expected_output, None, True, True),
-        mock.call('', None, True, True)
+        mock.call('', sys.stdout, True, True),
+        mock.call(expected_output, sys.stdout, True, True),
+        mock.call('', sys.stdout, True, True)
     ])
     mock_sleep.assert_called_with(status.Invitation._SLEEP_TIME_AFTER_LOGGING)  # pylint: disable=protected-access
