@@ -20,6 +20,7 @@ import time
 import click
 
 import api
+
 from api import linkedin_api, client
 from api.invitation import status
 

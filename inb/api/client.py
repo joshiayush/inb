@@ -11,7 +11,6 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
 """Client simulator for Voyager API."""
 
 import sys
@@ -145,8 +144,9 @@ class Client(object):
     if result_.status_code == 401:
       raise linkedin_api_exceptions.LinkedInUnauthorizedException()
     if result_.status_code != 200:
-      raise Exception(f'Received "{result_.status_code}" as a status code for'  # pylint: disable=broad-exception-raised
-                      f' payload "{repr(payload_)}"')
+      raise linkedin_api_exceptions.LinkedInUnexpectedStatusException(
+          f'Received "{result_.status_code}" as a status code for'
+          f' payload "{repr(payload_)}"')
 
     self._set_session_cookies(result_.cookies)
     self._cookie_repository.cookies = result_.cookies

@@ -22,3 +22,6 @@ LinkedInUnauthorizedException = type('LinkedInUnauthorizedException',
 
 LinkedInSessionExpiredException = type('LinkedInSessionExpiredException',
                                        (Exception,), {})
+
+LinkedInUnexpectedStatusException = type('LinkedInUnexpectedStatusException',
+                                         (Exception,), {})
