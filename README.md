@@ -60,7 +60,8 @@ git clone https://github.com/joshiayush/inb.git
 To use the app with docker, you can use the following command:
 
 ```shell
-docker build -t inb . && docker run -it inb
+docker build -t inb . && docker run -it inb search --email ayush854032@gmail.com --password xxx-xxx-xxx \
+  --keyword 'Software Engineer'
 ```
 
 <div align="right">
