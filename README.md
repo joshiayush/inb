@@ -39,13 +39,39 @@ The tool is open source and available on GitHub, so users can contribute to the 
   </a>
 </div>
 
-## Installation
+## Clone
 
 Clone the repository.
 
 ```shell
 git clone https://github.com/joshiayush/inb.git
 ```
+
+<div align="right">
+  <a href="#top">
+  
+  ![Back to top][back_to_top]
+  
+  </a>
+</div>
+
+## Docker usage
+
+To use the app with docker, you can use the following command:
+
+```shell
+docker build -t inb . && docker run -it inb
+```
+
+<div align="right">
+  <a href="#top">
+  
+  ![Back to top][back_to_top]
+  
+  </a>
+</div>
+
+## Installation
 
 Next step is to install all the dependencies required for project **inb** listed in the `requirements.txt` file.
 
