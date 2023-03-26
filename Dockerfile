@@ -6,4 +6,4 @@ COPY requirements.txt .
 RUN pip install --no-cache-dir -r requirements.txt
 
 COPY inb /app
-CMD [ "python", "inb.py" ]
+ENTRYPOINT [ "python", "inb.py" ]
