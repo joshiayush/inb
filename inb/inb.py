@@ -151,13 +151,13 @@ def search(  # pylint: disable=invalid-name
     if limit is not None and count >= limit:
       break
 
-    public_id = result['public_id']
     person = status.Person(
         name=result['name'],
         occupation=result['jobtitle'],
         location=result['location'],
         profileid=result['public_id'],
-        profileurl=f'{client.Client.LINKEDIN_BASE_URL}/in/{public_id}')
+        profileurl=f'{client.Client.LINKEDIN_BASE_URL}/in/{result["public_id"]}'
+    )
     invitation = status.Invitation()
     if linkedin.add_connection(profile_pub_id=result['public_id'],
                                message='',
