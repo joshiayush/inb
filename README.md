@@ -113,14 +113,14 @@ Usage: inb.py search [OPTIONS]
   you encounter error LinkedInSessionExpiredException.
 
     ./inb/inb.py search --email "username" --password "password"
-      --keyword "Software developer" --refersh-cookies
+      --keyword "Software developer" --refresh-cookies
 
   Also, for security purpose you can omit the --pasword argument over the
   command-line and later on executing the tool you'll be prompted to enter
   your password which will be hidden even after pressing keystrokes.
 
     ./inb/inb.py search --email "username" --keyword "Software developer"
-      --refersh-cookies
+      --refresh-cookies
 
 Options:
   --email TEXT              LinkedIn username.  [required]
