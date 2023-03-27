@@ -129,6 +129,11 @@ def search(  # pylint: disable=invalid-name
 
     ./inb/inb.py search --email "username" --keyword "Software developer"
       --refersh-cookies
+
+  Multiple parameters should be used passing the same parameters multiple times.
+  
+      ./inb/inb.py search --email "username" --password "password"
+        --regions "India" --regions "United States" --regions "United Kingdom"
   """
   linkedin = linkedin_api.LinkedIn(email,
                                    password,

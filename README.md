@@ -128,6 +128,11 @@ Usage: inb.py search [OPTIONS]
     ./inb/inb.py search --email "username" --keyword "Software developer"
       --refresh-cookies
 
+  Multiple parameters should be used passing the same parameters multiple times.
+  
+      ./inb/inb.py search --email "username" --password "password"
+        --regions "India" --regions "United States" --regions "United Kingdom"
+
 Options:
   --email TEXT              LinkedIn username.  [required]
   --password TEXT           LinkedIn password.  [required]
