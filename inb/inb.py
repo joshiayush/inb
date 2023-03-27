@@ -62,7 +62,7 @@ def Inb():
               required=True,
               help=_('Keyword to search for.'))
 @click.option('--regions',
-              type=list,
+              multiple=True,
               required=False,
               help=_('Search people based on these regions.'))
 @click.option('--connection-of',
@@ -70,7 +70,7 @@ def Inb():
               required=False,
               help=_('Profile id for mutual connection.'))
 @click.option('--network_depths',
-              type=list,
+              multiple=True,
               required=False,
               help=_('Network depths to dig into.'))
 @click.option('--network-depth',
@@ -78,7 +78,7 @@ def Inb():
               required=False,
               help=_('Network depth to dig into.'))
 @click.option('--industries',
-              type=list,
+              multiple=True,
               required=False,
               help=_('Search people from these industries.'))
 @click.option('--current-company',
@@ -86,11 +86,11 @@ def Inb():
               required=False,
               help=_('Search people working at this company.'))
 @click.option('--profile-languages',
-              type=list,
+              multiple=True,
               required=False,
               help=_('Person profile languages.'))
 @click.option('--schools',
-              type=list,
+              multiple=True,
               required=False,
               help=_('Search for profiles mentioning this school.'))
 @click.option('--refresh-cookies',
