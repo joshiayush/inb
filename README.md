@@ -132,14 +132,14 @@ Options:
   --email TEXT              LinkedIn username.  [required]
   --password TEXT           LinkedIn password.  [required]
   --keyword TEXT            Keyword to search for.  [required]
-  --regions LIST            Search people based on these regions.
+  --regions MULTIPLE            Search people based on these regions.
   --connection-of TEXT      Profile id for mutual connection.
-  --network_depths LIST     Network depths to dig into.
+  --network_depths MULTIPLE     Network depths to dig into.
   --network-depth TEXT      Network depth to dig into.
-  --industries LIST         Search people from these industries.
+  --industries MULTIPLE         Search people from these industries.
   --current-company TEXT    Search people working at this company.
-  --profile-languages LIST  Person profile languages.
-  --schools LIST            Search for profiles mentioning this school.
+  --profile-languages MULTIPLE  Person profile languages.
+  --schools MULTIPLE            Search for profiles mentioning this school.
   --refresh-cookies         Update cookies if given.
   --limit INTEGER           Number of invitations to send.
   --debug                   Prints out debugging information at runtime.
