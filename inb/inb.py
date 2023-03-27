@@ -62,7 +62,7 @@ def Inb():
               required=True,
               help=_('Keyword to search for.'))
 @click.option('--regions',
-              type=list,
+              multiple=True,
               required=False,
               help=_('Search people based on these regions.'))
 @click.option('--connection-of',
@@ -70,7 +70,7 @@ def Inb():
               required=False,
               help=_('Profile id for mutual connection.'))
 @click.option('--network_depths',
-              type=list,
+              multiple=True,
               required=False,
               help=_('Network depths to dig into.'))
 @click.option('--network-depth',
@@ -78,7 +78,7 @@ def Inb():
               required=False,
               help=_('Network depth to dig into.'))
 @click.option('--industries',
-              type=list,
+              multiple=True,
               required=False,
               help=_('Search people from these industries.'))
 @click.option('--current-company',
@@ -86,11 +86,11 @@ def Inb():
               required=False,
               help=_('Search people working at this company.'))
 @click.option('--profile-languages',
-              type=list,
+              multiple=True,
               required=False,
               help=_('Person profile languages.'))
 @click.option('--schools',
-              type=list,
+              multiple=True,
               required=False,
               help=_('Search for profiles mentioning this school.'))
 @click.option('--refresh-cookies',
@@ -101,6 +101,11 @@ def Inb():
               type=int,
               required=False,
               help=_('Number of invitations to send.'))
+@click.option('--nofollow',
+              is_flag=True,
+              required=False,
+              help=_(
+                  'Unfollows the LinkedIn profile after sending invitation.'))
 @click.option('--debug',
               is_flag=True,
               required=False,
@@ -109,7 +114,7 @@ def search(  # pylint: disable=invalid-name
     email: str, password: str, keyword: str, regions: list, connection_of: str,
     network_depths: list, network_depth: str, industries: list,
     current_company: str, profile_languages: list, schools: list,
-    refresh_cookies: bool, limit: int, debug: bool) -> None:
+    refresh_cookies: bool, limit: int, nofollow: bool, debug: bool) -> None:
   """Searches for the specific keyword given and sends invitation to them.
 
   Usage:
@@ -129,6 +134,11 @@ def search(  # pylint: disable=invalid-name
 
     ./inb/inb.py search --email "username" --keyword "Software developer"
       --refersh-cookies
+
+  Multiple parameters should be used passing the same parameters multiple times.
+  
+      ./inb/inb.py search --email "username" --password "password"
+        --regions "India" --regions "United States" --regions "United Kingdom"
   """
   linkedin = linkedin_api.LinkedIn(email,
                                    password,
@@ -162,6 +172,8 @@ def search(  # pylint: disable=invalid-name
     if linkedin.add_connection(profile_pub_id=result['public_id'],
                                message='',
                                profile_urn=result['urn_id']) is True:
+      if nofollow is True:
+        linkedin.unfollow_connection(result['urn_id'])
       invitation.display_invitation_status_on_console(person=person,
                                                       status='sent',
                                                       start_time=start_time)

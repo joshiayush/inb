@@ -432,10 +432,26 @@ class LinkedIn(object):
       profile_pub_id: Public ID of the LinkedIn user to remove connection with.
 
     Returns:
-      `True` if connection removal was unsuccessful, `False` otherwise.
+      `True` if connection removal was successful, `False` otherwise.
     """
     result_ = self._post(
         f'/identity/profiles/{profile_pub_id}/profileActions?action=disconnect',
         headers={'accept': 'application/vnd.linkedin.normalized+json+2.1'},
     )
+    return result_.status_code != 200
+
+  def unfollow_connection(self, profile_urn_id: str) -> bool:
+    """Unfollows a connection once the connection request has been made.
+    
+    Args:
+      profile_urn_id: URN ID of the LinkedIn user to unfollow.
+
+    Returns:
+      `True` if the unfollow action was successful, `False` otherwise.
+    """
+    payload = {'urn': f'urn:li:fs_followingInfo:{profile_urn_id}'}
+    result_ = self._post(
+        '/feed/follows?action=unfollowByEntityUrn',
+        headers={'accept': 'application/vnd.linkedin.normalized+json+2.1'},
+        data=json.dumps(payload))
     return result_.status_code != 200

@@ -55,13 +55,18 @@ git clone https://github.com/joshiayush/inb.git
   </a>
 </div>
 
-## Docker usage
+## Docker
 
-To use the app with docker, you can use the following command:
+To use the app with docker, you can use the following command, to build the app:
+
+```shel
+docker build -t inb .
+```
+
+Then, this one to run it:
 
 ```shell
-docker build -t inb . && docker run -it inb search --email ayush854032@gmail.com --password xxx-xxx-xxx \
-  --keyword 'Software Engineer'
+docker run -it inb search --email username@service.domain --password xxx-xxx-xxx --keyword 'Software Engineer'
 ```
 
 <div align="right">
@@ -90,54 +95,30 @@ python3 -m pip install [-r] requirements.txt
 
 ## Usage
 
-To send invitations to people on LinkedIn you could use:
+**A quick usage guide on `search`:**
+
+Usage: `inb.py search [OPTIONS]`, searches for the specific keyword given and sends invitation to them. To send invitations to people on LinkedIn you could use:
 
 ```shell
-./inb/inb.py search --email ayush854032@gmail.com --password xxx-xxx-xxx \
-  --keyword 'Software Engineer'
+./inb/inb.py search --email username@service.domain --password xxx-xxx-xxx --keyword 'Software Engineer'
 ```
 
-A quick usage guide:
+[`inb`][_inb] supports cookie based authentication - use `--refresh-cookies` in case you encounter error `LinkedInSessionExpiredException`.
 
+```shell
+./inb/inb.py search --email username@service.domain --password xxx-xxx-xxx --keyword 'Software developer' --refersh-cookies
 ```
-Usage: inb.py search [OPTIONS]
 
-   Searches for the specific keyword given and sends invitation to them.
+Also, for security purpose you can omit the `--pasword` argument over the command-line and later on executing the tool you'll be prompted to enter your password which will be hidden even after pressing keystrokes.
 
-  Usage:
+```shell
+./inb/inb.py search --email username@service.domain --keyword 'Software developer' --refersh-cookies
+```
 
-    ./inb/inb.py search --email "username" --password "password"
-      --keyword "Software developer"
+And the best part is here, you can send connection request and not follow the LinkedIn profile. It will prevent your LinkedIn feed from going terrible.
 
-  inb supports cookie based authentication - use --refresh-cookies in case
-  you encounter error LinkedInSessionExpiredException.
-
-    ./inb/inb.py search --email "username" --password "password"
-      --keyword "Software developer" --refresh-cookies
-
-  Also, for security purpose you can omit the --pasword argument over the
-  command-line and later on executing the tool you'll be prompted to enter
-  your password which will be hidden even after pressing keystrokes.
-
-    ./inb/inb.py search --email "username" --keyword "Software developer"
-      --refresh-cookies
-
-Options:
-  --email TEXT              LinkedIn username.  [required]
-  --password TEXT           LinkedIn password.  [required]
-  --keyword TEXT            Keyword to search for.  [required]
-  --regions LIST            Search people based on these regions.
-  --connection-of TEXT      Profile id for mutual connection.
-  --network_depths LIST     Network depths to dig into.
-  --network-depth TEXT      Network depth to dig into.
-  --industries LIST         Search people from these industries.
-  --current-company TEXT    Search people working at this company.
-  --profile-languages LIST  Person profile languages.
-  --schools LIST            Search for profiles mentioning this school.
-  --refresh-cookies         Update cookies if given.
-  --limit INTEGER           Number of invitations to send.
-  --debug                   Prints out debugging information at runtime.
-  --help                    Show this message and exit.
+```shell
+./inb/inb.py search --email username@service.domain --keyword 'Software developer' --refersh-cookies --nofollow
 ```
 
 > **Any problems encountered in non-linux environment should be reported immediately before passing comments on the portability of this tool as I've only built and tested it on Linux!**
