@@ -53,7 +53,7 @@ def person_with_missing_fields():
 
 def test_person_properties_with_missing_fields(person_with_missing_fields):
   assert person_with_missing_fields.name == 'John Smith'
-  assert person_with_missing_fields.occupation == None
+  assert person_with_missing_fields.occupation is None
   assert person_with_missing_fields.location == 'San Francisco, CA'
   assert person_with_missing_fields.profileid == 'john-smith'
   assert person_with_missing_fields.profileurl == 'https://www.linkedin.com/in/john-smith'
