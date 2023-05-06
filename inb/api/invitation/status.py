@@ -117,8 +117,14 @@ class Invitation(object):
                                   the template variables.
     """
     for replace_template_var_with_value_pair in replace_template_var_with:
-      message_template = message_template.replace(
-          *replace_template_var_with_value_pair)
+      # fallback to when of the tuple items be None
+      if replace_template_var_with_value_pair[1] is not None:
+        message_template = message_template.replace(
+            *replace_template_var_with_value_pair)
+      else:
+        # fill with an empty line
+        message_template = message_template.replace(
+            replace_template_var_with_value_pair[0], '')
     return message_template
 
   def _fill_search_message_template(self) -> str:
