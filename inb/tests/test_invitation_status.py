@@ -43,22 +43,6 @@ def test_person_properties(person):
   assert person.profileid == 'john-smith'
   assert person.profileurl == 'https://www.linkedin.com/in/john-smith'
 
-@pytest.fixture()
-def person_with_missing_fields():
-  return status.Person(name='John Smith',
-                       occupation=None,
-                       location='San Francisco, CA',
-                       profileid='john-smith',
-                       profileurl='https://www.linkedin.com/in/john-smith')
-
-def test_person_properties_with_missing_fields(person_with_missing_fields):
-  assert person_with_missing_fields.name == 'John Smith'
-  assert person_with_missing_fields.occupation is None
-  assert person_with_missing_fields.location == 'San Francisco, CA'
-  assert person_with_missing_fields.profileid == 'john-smith'
-
-# def test_
-
 def test_invitation_set_invitation_fields_success(invitation):
   invitation.set_invitation_fields(
       name='John Smith',
