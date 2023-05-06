@@ -117,12 +117,13 @@ class Invitation(object):
                                   the template variables.
     """
     for replace_template_var_with_value_pair in replace_template_var_with:
-      # fallback to when of the tuple items be None
+      # if the value to be replaced is not None
       if replace_template_var_with_value_pair[1] is not None:
+        # then, replace the template variable with the value
         message_template = message_template.replace(
             *replace_template_var_with_value_pair)
       else:
-        # fill with an empty line
+        # provide an empty string as the valid value
         message_template = message_template.replace(
             replace_template_var_with_value_pair[0], '')
     return message_template
