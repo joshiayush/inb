@@ -43,6 +43,7 @@ def test_person_properties(person):
   assert person.profileid == 'john-smith'
   assert person.profileurl == 'https://www.linkedin.com/in/john-smith'
 
+
 def test_invitation_set_invitation_fields_success(invitation):
   invitation.set_invitation_fields(
       name='John Smith',
@@ -110,6 +111,7 @@ def test_invitation_send_status_to_console(invitation):
         mock.call(expected_output, sys.stdout, True, True),
         mock.call('', sys.stdout, True, True)
     ])
+
 
 def test_invitation_send_status_to_console_with_empty_values(invitation):
   status._SUCCESS_RATE = 0
