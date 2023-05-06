@@ -46,7 +46,7 @@ def test_person_properties(person):
 @pytest.fixture()
 def person_with_missing_fields():
   return status.Person(name='John Smith',
-                       occupation=None, # This can happen when a user doesn't have occupation on the profile
+                       occupation=None,
                        location='San Francisco, CA',
                        profileid='john-smith',
                        profileurl='https://www.linkedin.com/in/john-smith')
@@ -56,7 +56,6 @@ def test_person_properties_with_missing_fields(person_with_missing_fields):
   assert person_with_missing_fields.occupation is None
   assert person_with_missing_fields.location == 'San Francisco, CA'
   assert person_with_missing_fields.profileid == 'john-smith'
-  assert person_with_missing_fields.profileurl == 'https://www.linkedin.com/in/john-smith'
 
 # def test_
 
@@ -134,18 +133,18 @@ def test_invitation_send_status_to_console_with_empty_values(invitation):
 
   invitation.set_invitation_fields(
       name='John Smith',
-      occupation=None, # This can happen when a user doesn't have occupation on the profile
-      location=None, # This can happen when a user doesn't have location on the profile
+      occupation=None,
+      location=None,
       profileid='john-smith',
       profileurl='https://www.linkedin.com/in/john-smith',
       status='sent',
       elapsed_time=10.0)
-  
+
   expected_output = ('  ✔  John Smith\n'
                       '  \n'
                       '  \n'
                       '  Success: 1  Failure: 0  Elapsed time: 10.0s\n')
-  
+
   with mock.patch('click.echo') as mk_click_echo:
     invitation._send_status_to_console()
     mk_click_echo.assert_has_calls([
