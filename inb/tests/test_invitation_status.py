@@ -113,6 +113,33 @@ def test_invitation_send_status_to_console(invitation):
     ])
 
 
+def test_invitation_send_status_to_console_with_empty_values(invitation):
+  status._SUCCESS_RATE = 0
+  status._FAILURE_RATE = 0
+
+  invitation.set_invitation_fields(
+      name='John Smith',
+      occupation=None,
+      location=None,
+      profileid='john-smith',
+      profileurl='https://www.linkedin.com/in/john-smith',
+      status='sent',
+      elapsed_time=10.0)
+
+  expected_output = ('  ✔  John Smith\n'
+                     '  NaN\n'
+                     '  NaN\n'
+                     '  Success: 1  Failure: 0  Elapsed time: 10.0s\n')
+
+  with mock.patch('click.echo') as mk_click_echo:
+    invitation._send_status_to_console()
+    mk_click_echo.assert_has_calls([
+        mock.call('', sys.stdout, True, True),
+        mock.call(expected_output, sys.stdout, True, True),
+        mock.call('', sys.stdout, True, True)
+    ])
+
+
 @pytest.fixture
 def mock_sleep():
   with mock.patch('time.sleep') as mk_sleep:
