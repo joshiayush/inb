@@ -127,9 +127,9 @@ def test_invitation_send_status_to_console_with_empty_values(invitation):
       elapsed_time=10.0)
 
   expected_output = ('  ✔  John Smith\n'
-                      '  \n'
-                      '  \n'
-                      '  Success: 1  Failure: 0  Elapsed time: 10.0s\n')
+                     '  NaN\n'
+                     '  NaN\n'
+                     '  Success: 1  Failure: 0  Elapsed time: 10.0s\n')
 
   with mock.patch('click.echo') as mk_click_echo:
     invitation._send_status_to_console()
