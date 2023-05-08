@@ -121,7 +121,8 @@ class Invitation(object):
       template_value = replace_template_var_with_value_pair[1]
 
       if template_value is not None:
-        message_template = message_template.replace(template_var, template_value)
+        message_template = message_template.replace(
+          template_var, template_value)
       else:
         message_template = message_template.replace(template_var, 'NaN')
     return message_template
