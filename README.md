@@ -1,10 +1,6 @@
 <div id="top"></div>
 
 <div align="center">
-  <a href="https://github.com/joshiayush/inb">
-    <img src="./media/linkedin.png" alt="Logo" width="80" height="80">
-  </a>
-
   <h3 align="center">inb</h3>
 
   <p align="center">
@@ -30,6 +26,34 @@ The tool is written in Python and uses the **LinkedIn Voyager API** to interact 
 The tool is open source and available on GitHub, so users can contribute to the development of the project and customize it to their specific needs. To get started, simply download the tool from GitHub and follow the instructions in the **`README`** file.
 
 > No **"official"** API access required - Just use a valid LinkedIn account!
+
+<div align="right">
+  <a href="#top">
+  
+  ![Back to top][back_to_top]
+  
+  </a>
+</div>
+
+## Sponsor
+
+<a href="https://nubela.co/proxycurl?utm_campaign=influencer_marketing&utm_source=github&utm_medium=social&utm_content=ayush_joshi_inb_repo">
+
+<img src="media/logo_proxycurl_artboard_1.png" width="400px" height="170px" />
+
+</a>
+
+Scrape public LinkedIn profile data at scale with [Proxycurl APIs](https://nubela.co/proxycurl?utm_campaign=influencer_marketing&utm_source=github&utm_medium=social&utm_content=ayush_joshi_inb_repo).
+
+- Scraping Public profiles are battle tested in court in HiQ VS LinkedIn case.
+- GDPR, CCPA, SOC2 compliant
+- High rate Limit - 300 requests/minute
+- Fast APIs respond in ~2s
+- Fresh data - 88% of data is scraped real-time, other 12% are not older than 29 days
+- High accuracy
+- Tons of data points returned per profile
+
+Built for developers, by developers.
 
 <div align="right">
   <a href="#top">
