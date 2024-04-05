@@ -38,8 +38,8 @@ The tool is open source and available on GitHub, so users can contribute to the 
 ## Sponsor
 
 <a href="https://nubela.co/proxycurl?utm_campaign=influencer_marketing&utm_source=github&utm_medium=social&utm_content=ayush_joshi_inb_repo">
-
-<img src="media/logo_proxycurl_artboard_1.png" width="400px" height="170px" />
+<img src="https://github.com/josephlimtech/linkedin-profile-scraper-api/blob/master/Proxycurl_scrape_LinkedIn.png" width="350px" height="100%" alt="Proxycurl APIs enrich people and company profiles with structured data" />
+</a><br><br/>
 
 </a>
 
