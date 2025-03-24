@@ -130,19 +130,19 @@ Usage: `inb.py search [OPTIONS]`, searches for the specific keyword given and se
 [`inb`][_inb] supports cookie based authentication - use `--refresh-cookies` in case you encounter error `LinkedInSessionExpiredException`.
 
 ```shell
-./inb/inb.py search --email username@service.domain --password xxx-xxx-xxx --keyword 'Software developer' --refersh-cookies
+./inb/inb.py search --email username@service.domain --password xxx-xxx-xxx --keyword 'Software developer' --refresh-cookies
 ```
 
 Also, for security purpose you can omit the `--pasword` argument over the command-line and later on executing the tool you'll be prompted to enter your password which will be hidden even after pressing keystrokes.
 
 ```shell
-./inb/inb.py search --email username@service.domain --keyword 'Software developer' --refersh-cookies
+./inb/inb.py search --email username@service.domain --keyword 'Software developer' --refresh-cookies
 ```
 
 And the best part is here, you can send connection request and not follow the LinkedIn profile. It will prevent your LinkedIn feed from going terrible.
 
 ```shell
-./inb/inb.py search --email username@service.domain --keyword 'Software developer' --refersh-cookies --nofollow
+./inb/inb.py search --email username@service.domain --keyword 'Software developer' --refresh-cookies --nofollow
 ```
 
 > **Any problems encountered in non-linux environment should be reported immediately before passing comments on the portability of this tool as I've only built and tested it on Linux!**
